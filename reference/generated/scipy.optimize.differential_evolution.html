@@ -1,0 +1,849 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>scipy.optimize.differential_evolution &#8212; SciPy v1.7.0.dev0+1036.4ec6f29 Manual</title>
+    
+  <link href="../../_static/css/theme.css" rel="stylesheet" />
+  <link href="../../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css" />
+    
+  <link rel="preload" as="script" href="../../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="scipy.optimize.shgo" href="scipy.optimize.shgo.html" />
+    <link rel="prev" title="scipy.optimize.brute" href="scipy.optimize.brute.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+
+<a class="navbar-brand" href="../../index.html">
+  <img src="../../_static/scipyshiny_small.png" class="logo" alt="logo">
+</a>      
+
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../getting_started.html">
+  Getting started
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../tutorial/index.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../index.html">
+  API reference
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../dev/index.html">
+  Development
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../release.html">
+  Release notes
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/scipy/scipy" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.html">
+   Clustering package (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.vq.html">
+   K-means clustering and vector quantization (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster.vq
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.hierarchy.html">
+   Hierarchical clustering (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster.hierarchy
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../constants.html">
+   Constants (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.constants
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../fft.html">
+   Discrete Fourier transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fft
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../fftpack.html">
+   Legacy discrete Fourier transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fftpack
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../integrate.html">
+   Integration and ODEs (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.integrate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../interpolate.html">
+   Interpolation (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.interpolate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../io.html">
+   Input and output (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.io
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.html">
+   Linear algebra (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.blas.html">
+   Low-level BLAS functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.blas
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.lapack.html">
+   Low-level LAPACK functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.lapack
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.cython_blas.html">
+   BLAS Functions for Cython
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.cython_lapack.html">
+   LAPACK functions for Cython
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.interpolative.html">
+   Interpolative matrix decomposition (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.interpolative
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../misc.html">
+   Miscellaneous routines (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.misc
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ndimage.html">
+   Multidimensional image processing (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.ndimage
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../odr.html">
+   Orthogonal distance regression (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.odr
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="reference internal" href="../optimize.html">
+   Optimization and root finding (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.optimize
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../optimize.nonlin.html">
+   Nonlinear solvers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../optimize.cython_optimize.html">
+   Cython optimize zeros API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../signal.html">
+   Signal processing (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.signal
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.html">
+   Sparse matrices (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.linalg.html">
+   Sparse linear algebra (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.csgraph.html">
+   Compressed sparse graph routines (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.csgraph
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial.html">
+   Spatial algorithms and data structures (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial.distance.html">
+   Distance computations (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial.distance
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../special.html">
+   Special functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.special
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.html">
+   Statistical functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats._result_classes.html">
+   Result classes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.mstats.html">
+   Statistical functions for masked arrays (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.mstats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.qmc.html">
+   Quasi-Monte Carlo submodule (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.qmc
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ccallback.html">
+   Low-level callback functions
+  </a>
+ </li>
+</ul>
+
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="scipy-optimize-differential-evolution">
+<h1>scipy.optimize.differential_evolution<a class="headerlink" href="#scipy-optimize-differential-evolution" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.optimize.differential_evolution">
+<span class="sig-prename descclassname"><span class="pre">scipy.optimize.</span></span><span class="sig-name descname"><span class="pre">differential_evolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'best1bin'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.5,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recombination</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polish</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'latinhypercube'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updating</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'immediate'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/master/scipy/optimize/_differentialevolution.py#L22-L331"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.optimize.differential_evolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the global minimum of a multivariate function.</p>
+<p>Differential Evolution is stochastic in nature (does not use gradient
+methods) to find the minimum, and can search large areas of candidate
+space, but often requires larger numbers of function evaluations than
+conventional gradient-based techniques.</p>
+<p>The algorithm is due to Storn and Price <a class="reference internal" href="#r108fc14fa019-1" id="id1">[1]</a>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>func</strong><span class="classifier">callable</span></dt><dd><p>The objective function to be minimized. Must be in the form
+<code class="docutils literal notranslate"><span class="pre">f(x,</span> <span class="pre">*args)</span></code>, where <code class="docutils literal notranslate"><span class="pre">x</span></code> is the argument in the form of a 1-D array
+and <code class="docutils literal notranslate"><span class="pre">args</span></code> is a  tuple of any additional fixed parameters needed to
+completely specify the function.</p>
+</dd>
+<dt><strong>bounds</strong><span class="classifier">sequence or <a class="reference internal" href="scipy.optimize.Bounds.html#scipy.optimize.Bounds" title="scipy.optimize.Bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bounds</span></code></a></span></dt><dd><p>Bounds for variables. There are two ways to specify the bounds:
+1. Instance of <a class="reference internal" href="scipy.optimize.Bounds.html#scipy.optimize.Bounds" title="scipy.optimize.Bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bounds</span></code></a> class.
+2. <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code> pairs for each element in <code class="docutils literal notranslate"><span class="pre">x</span></code>, defining the finite
+lower and upper bounds for the optimizing argument of <em class="xref py py-obj">func</em>. It is
+required to have <code class="docutils literal notranslate"><span class="pre">len(bounds)</span> <span class="pre">==</span> <span class="pre">len(x)</span></code>. <code class="docutils literal notranslate"><span class="pre">len(bounds)</span></code> is used
+to determine the number of parameters in <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
+</dd>
+<dt><strong>args</strong><span class="classifier">tuple, optional</span></dt><dd><p>Any additional fixed parameters needed to
+completely specify the objective function.</p>
+</dd>
+<dt><strong>strategy</strong><span class="classifier">str, optional</span></dt><dd><p>The differential evolution strategy to use. Should be one of:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>‘best1bin’</p></li>
+<li><p>‘best1exp’</p></li>
+<li><p>‘rand1exp’</p></li>
+<li><p>‘randtobest1exp’</p></li>
+<li><p>‘currenttobest1exp’</p></li>
+<li><p>‘best2exp’</p></li>
+<li><p>‘rand2exp’</p></li>
+<li><p>‘randtobest1bin’</p></li>
+<li><p>‘currenttobest1bin’</p></li>
+<li><p>‘best2bin’</p></li>
+<li><p>‘rand2bin’</p></li>
+<li><p>‘rand1bin’</p></li>
+</ul>
+</div></blockquote>
+<p>The default is ‘best1bin’.</p>
+</dd>
+<dt><strong>maxiter</strong><span class="classifier">int, optional</span></dt><dd><p>The maximum number of generations over which the entire population is
+evolved. The maximum number of function evaluations (with no polishing)
+is: <code class="docutils literal notranslate"><span class="pre">(maxiter</span> <span class="pre">+</span> <span class="pre">1)</span> <span class="pre">*</span> <span class="pre">popsize</span> <span class="pre">*</span> <span class="pre">len(x)</span></code></p>
+</dd>
+<dt><strong>popsize</strong><span class="classifier">int, optional</span></dt><dd><p>A multiplier for setting the total population size. The population has
+<code class="docutils literal notranslate"><span class="pre">popsize</span> <span class="pre">*</span> <span class="pre">len(x)</span></code> individuals. This keyword is overridden if an
+initial population is supplied via the <em class="xref py py-obj">init</em> keyword. When using
+<code class="docutils literal notranslate"><span class="pre">init='sobol'</span></code> the population size is calculated as the next power
+of 2 after <code class="docutils literal notranslate"><span class="pre">popsize</span> <span class="pre">*</span> <span class="pre">len(x)</span></code>.</p>
+</dd>
+<dt><strong>tol</strong><span class="classifier">float, optional</span></dt><dd><p>Relative tolerance for convergence, the solving stops when
+<code class="docutils literal notranslate"><span class="pre">np.std(pop)</span> <span class="pre">&lt;=</span> <span class="pre">atol</span> <span class="pre">+</span> <span class="pre">tol</span> <span class="pre">*</span> <span class="pre">np.abs(np.mean(population_energies))</span></code>,
+where and <em class="xref py py-obj">atol</em> and <em class="xref py py-obj">tol</em> are the absolute and relative tolerance
+respectively.</p>
+</dd>
+<dt><strong>mutation</strong><span class="classifier">float or tuple(float, float), optional</span></dt><dd><p>The mutation constant. In the literature this is also known as
+differential weight, being denoted by F.
+If specified as a float it should be in the range [0, 2].
+If specified as a tuple <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code> dithering is employed. Dithering
+randomly changes the mutation constant on a generation by generation
+basis. The mutation constant for that generation is taken from
+<code class="docutils literal notranslate"><span class="pre">U[min,</span> <span class="pre">max)</span></code>. Dithering can help speed convergence significantly.
+Increasing the mutation constant increases the search radius, but will
+slow down convergence.</p>
+</dd>
+<dt><strong>recombination</strong><span class="classifier">float, optional</span></dt><dd><p>The recombination constant, should be in the range [0, 1]. In the
+literature this is also known as the crossover probability, being
+denoted by CR. Increasing this value allows a larger number of mutants
+to progress into the next generation, but at the risk of population
+stability.</p>
+</dd>
+<dt><strong>seed</strong><span class="classifier">{None, int, <a class="reference external" href="https://numpy.org/devdocs/reference/random/generator.html#numpy.random.Generator" title="(in NumPy v1.21.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code></a>,</span></dt><dd><blockquote>
+<div><p><a class="reference external" href="https://numpy.org/devdocs/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v1.21.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a>}, optional</p>
+</div></blockquote>
+<p>If <em class="xref py py-obj">seed</em> is None (or <em class="xref py py-obj">np.random</em>), the <a class="reference external" href="https://numpy.org/devdocs/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v1.21.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a>
+singleton is used.
+If <em class="xref py py-obj">seed</em> is an int, a new <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance is used,
+seeded with <em class="xref py py-obj">seed</em>.
+If <em class="xref py py-obj">seed</em> is already a <code class="docutils literal notranslate"><span class="pre">Generator</span></code> or <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance then
+that instance is used.
+Specify <em class="xref py py-obj">seed</em> for repeatable minimizations.</p>
+</dd>
+<dt><strong>disp</strong><span class="classifier">bool, optional</span></dt><dd><p>Prints the evaluated <em class="xref py py-obj">func</em> at every iteration.</p>
+</dd>
+<dt><strong>callback</strong><span class="classifier">callable, <em class="xref py py-obj">callback(xk, convergence=val)</em>, optional</span></dt><dd><p>A function to follow the progress of the minimization. <code class="docutils literal notranslate"><span class="pre">xk</span></code> is
+the current value of <code class="docutils literal notranslate"><span class="pre">x0</span></code>. <code class="docutils literal notranslate"><span class="pre">val</span></code> represents the fractional
+value of the population convergence.  When <code class="docutils literal notranslate"><span class="pre">val</span></code> is greater than one
+the function halts. If callback returns <em class="xref py py-obj">True</em>, then the minimization
+is halted (any polishing is still carried out).</p>
+</dd>
+<dt><strong>polish</strong><span class="classifier">bool, optional</span></dt><dd><p>If True (default), then <a class="reference internal" href="scipy.optimize.minimize.html#scipy.optimize.minimize" title="scipy.optimize.minimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.minimize</span></code></a> with the <em class="xref py py-obj">L-BFGS-B</em>
+method is used to polish the best population member at the end, which
+can improve the minimization slightly. If a constrained problem is
+being studied then the <em class="xref py py-obj">trust-constr</em> method is used instead.</p>
+</dd>
+<dt><strong>init</strong><span class="classifier">str or array-like, optional</span></dt><dd><p>Specify which type of population initialization is performed. Should be
+one of:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>‘latinhypercube’</p></li>
+<li><p>‘sobol’</p></li>
+<li><p>‘halton’</p></li>
+<li><p>‘random’</p></li>
+<li><p>array specifying the initial population. The array should have
+shape <code class="docutils literal notranslate"><span class="pre">(M,</span> <span class="pre">len(x))</span></code>, where M is the total population size and
+len(x) is the number of parameters.
+<em class="xref py py-obj">init</em> is clipped to <em class="xref py py-obj">bounds</em> before use.</p></li>
+</ul>
+</div></blockquote>
+<p>The default is ‘latinhypercube’. Latin Hypercube sampling tries to
+maximize coverage of the available parameter space.</p>
+<p>‘sobol’ and ‘halton’ are superior alternatives and maximize even more
+the parameter space. ‘sobol’ will enforce an initial population
+size which is calculated as the next power of 2 after
+<code class="docutils literal notranslate"><span class="pre">popsize</span> <span class="pre">*</span> <span class="pre">len(x)</span></code>. ‘halton’ has no requirements but is a bit less
+efficient. See <a class="reference internal" href="../stats.qmc.html#module-scipy.stats.qmc" title="scipy.stats.qmc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.qmc</span></code></a> for more details.</p>
+<p>‘random’ initializes the population randomly - this has the drawback
+that clustering can occur, preventing the whole of parameter space
+being covered. Use of an array to specify a population could be used,
+for example, to create a tight bunch of initial guesses in an location
+where the solution is known to exist, thereby reducing time for
+convergence.</p>
+</dd>
+<dt><strong>atol</strong><span class="classifier">float, optional</span></dt><dd><p>Absolute tolerance for convergence, the solving stops when
+<code class="docutils literal notranslate"><span class="pre">np.std(pop)</span> <span class="pre">&lt;=</span> <span class="pre">atol</span> <span class="pre">+</span> <span class="pre">tol</span> <span class="pre">*</span> <span class="pre">np.abs(np.mean(population_energies))</span></code>,
+where and <em class="xref py py-obj">atol</em> and <em class="xref py py-obj">tol</em> are the absolute and relative tolerance
+respectively.</p>
+</dd>
+<dt><strong>updating</strong><span class="classifier">{‘immediate’, ‘deferred’}, optional</span></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">'immediate'</span></code>, the best solution vector is continuously updated
+within a single generation <a class="reference internal" href="#r108fc14fa019-4" id="id2">[4]</a>. This can lead to faster convergence as
+trial vectors can take advantage of continuous improvements in the best
+solution.
+With <code class="docutils literal notranslate"><span class="pre">'deferred'</span></code>, the best solution vector is updated once per
+generation. Only <code class="docutils literal notranslate"><span class="pre">'deferred'</span></code> is compatible with parallelization, and
+the <em class="xref py py-obj">workers</em> keyword can over-ride this option.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.2.0.</span></p>
+</div>
+</dd>
+<dt><strong>workers</strong><span class="classifier">int or map-like callable, optional</span></dt><dd><p>If <em class="xref py py-obj">workers</em> is an int the population is subdivided into <em class="xref py py-obj">workers</em>
+sections and evaluated in parallel
+(uses <a class="reference external" href="https://docs.python.org/dev/library/multiprocessing.html#module-multiprocessing" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">multiprocessing.Pool</span></code></a>).
+Supply -1 to use all available CPU cores.
+Alternatively supply a map-like callable, such as
+<em class="xref py py-obj">multiprocessing.Pool.map</em> for evaluating the population in parallel.
+This evaluation is carried out as <code class="docutils literal notranslate"><span class="pre">workers(func,</span> <span class="pre">iterable)</span></code>.
+This option will override the <em class="xref py py-obj">updating</em> keyword to
+<code class="docutils literal notranslate"><span class="pre">updating='deferred'</span></code> if <code class="docutils literal notranslate"><span class="pre">workers</span> <span class="pre">!=</span> <span class="pre">1</span></code>.
+Requires that <em class="xref py py-obj">func</em> be pickleable.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.2.0.</span></p>
+</div>
+</dd>
+<dt><strong>constraints</strong><span class="classifier">{NonLinearConstraint, LinearConstraint, Bounds}</span></dt><dd><p>Constraints on the solver, over and above those applied by the <em class="xref py py-obj">bounds</em>
+kwd. Uses the approach by Lampinen <a class="reference internal" href="#r108fc14fa019-5" id="id3">[5]</a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.4.0.</span></p>
+</div>
+</dd>
+<dt><strong>x0</strong><span class="classifier">None or array-like, optional</span></dt><dd><p>Provides an initial guess to the minimization. Once the population has
+been initialized this vector replaces the first (best) member. This
+replacement is done even if <em class="xref py py-obj">init</em> is given an initial population.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.7.0.</span></p>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>res</strong><span class="classifier">OptimizeResult</span></dt><dd><p>The optimization result represented as a <a class="reference internal" href="scipy.optimize.OptimizeResult.html#scipy.optimize.OptimizeResult" title="scipy.optimize.OptimizeResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptimizeResult</span></code></a> object.
+Important attributes are: <code class="docutils literal notranslate"><span class="pre">x</span></code> the solution array, <code class="docutils literal notranslate"><span class="pre">success</span></code> a
+Boolean flag indicating if the optimizer exited successfully and
+<code class="docutils literal notranslate"><span class="pre">message</span></code> which describes the cause of the termination. See
+<a class="reference internal" href="scipy.optimize.OptimizeResult.html#scipy.optimize.OptimizeResult" title="scipy.optimize.OptimizeResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptimizeResult</span></code></a> for a description of other attributes. If <em class="xref py py-obj">polish</em>
+was employed, and a lower minimum was obtained by the polishing, then
+OptimizeResult also contains the <code class="docutils literal notranslate"><span class="pre">jac</span></code> attribute.
+If the eventual solution does not satisfy the applied constraints
+<code class="docutils literal notranslate"><span class="pre">success</span></code> will be <em class="xref py py-obj">False</em>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Differential evolution is a stochastic population based method that is
+useful for global optimization problems. At each pass through the population
+the algorithm mutates each candidate solution by mixing with other candidate
+solutions to create a trial candidate. There are several strategies <a class="reference internal" href="#r108fc14fa019-2" id="id4">[2]</a> for
+creating trial candidates, which suit some problems more than others. The
+‘best1bin’ strategy is a good starting point for many systems. In this
+strategy two members of the population are randomly chosen. Their difference
+is used to mutate the best member (the ‘best’ in ‘best1bin’), <span class="math notranslate nohighlight">\(b_0\)</span>,
+so far:</p>
+<div class="math notranslate nohighlight">
+\[b' = b_0 + mutation * (population[rand0] - population[rand1])\]</div>
+<p>A trial vector is then constructed. Starting with a randomly chosen ith
+parameter the trial is sequentially filled (in modulo) with parameters from
+<code class="docutils literal notranslate"><span class="pre">b'</span></code> or the original candidate. The choice of whether to use <code class="docutils literal notranslate"><span class="pre">b'</span></code> or the
+original candidate is made with a binomial distribution (the ‘bin’ in
+‘best1bin’) - a random number in [0, 1) is generated. If this number is
+less than the <em class="xref py py-obj">recombination</em> constant then the parameter is loaded from
+<code class="docutils literal notranslate"><span class="pre">b'</span></code>, otherwise it is loaded from the original candidate. The final
+parameter is always loaded from <code class="docutils literal notranslate"><span class="pre">b'</span></code>. Once the trial candidate is built
+its fitness is assessed. If the trial is better than the original candidate
+then it takes its place. If it is also better than the best overall
+candidate it also replaces that.
+To improve your chances of finding a global minimum use higher <em class="xref py py-obj">popsize</em>
+values, with higher <em class="xref py py-obj">mutation</em> and (dithering), but lower <em class="xref py py-obj">recombination</em>
+values. This has the effect of widening the search radius, but slowing
+convergence.
+By default the best solution vector is updated continuously within a single
+iteration (<code class="docutils literal notranslate"><span class="pre">updating='immediate'</span></code>). This is a modification <a class="reference internal" href="#r108fc14fa019-4" id="id5">[4]</a> of the
+original differential evolution algorithm which can lead to faster
+convergence as trial vectors can immediately benefit from improved
+solutions. To use the original Storn and Price behaviour, updating the best
+solution once per iteration, set <code class="docutils literal notranslate"><span class="pre">updating='deferred'</span></code>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.15.0.</span></p>
+</div>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="r108fc14fa019-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Storn, R and Price, K, Differential Evolution - a Simple and
+Efficient Heuristic for Global Optimization over Continuous Spaces,
+Journal of Global Optimization, 1997, 11, 341 - 359.</p>
+</dd>
+<dt class="label" id="r108fc14fa019-2"><span class="brackets"><a class="fn-backref" href="#id4">2</a></span></dt>
+<dd><p><a class="reference external" href="http://www1.icsi.berkeley.edu/~storn/code.html">http://www1.icsi.berkeley.edu/~storn/code.html</a></p>
+</dd>
+<dt class="label" id="r108fc14fa019-3"><span class="brackets">3</span></dt>
+<dd><p><a class="reference external" href="http://en.wikipedia.org/wiki/Differential_evolution">http://en.wikipedia.org/wiki/Differential_evolution</a></p>
+</dd>
+<dt class="label" id="r108fc14fa019-4"><span class="brackets">4</span><span class="fn-backref">(<a href="#id2">1</a>,<a href="#id5">2</a>)</span></dt>
+<dd><p>Wormington, M., Panaccione, C., Matney, K. M., Bowen, D. K., -
+Characterization of structures from X-ray scattering data using
+genetic algorithms, Phil. Trans. R. Soc. Lond. A, 1999, 357,
+2827-2848</p>
+</dd>
+<dt class="label" id="r108fc14fa019-5"><span class="brackets"><a class="fn-backref" href="#id3">5</a></span></dt>
+<dd><p>Lampinen, J., A constraint handling approach for the differential
+evolution algorithm. Proceedings of the 2002 Congress on
+Evolutionary Computation. CEC’02 (Cat. No. 02TH8600). Vol. 2. IEEE,
+2002.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Let us consider the problem of minimizing the Rosenbrock function. This
+function is implemented in <a class="reference internal" href="scipy.optimize.rosen.html#scipy.optimize.rosen" title="scipy.optimize.rosen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rosen</span></code></a> in <a class="reference internal" href="../optimize.html#module-scipy.optimize" title="scipy.optimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize</span></code></a>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">rosen</span><span class="p">,</span> <span class="n">differential_evolution</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">differential_evolution</span><span class="p">(</span><span class="n">rosen</span><span class="p">,</span> <span class="n">bounds</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">fun</span>
+<span class="go">(array([1., 1., 1., 1., 1.]), 1.9216496320061384e-19)</span>
+</pre></div>
+</div>
+<p>Now repeat, but with parallelization.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">differential_evolution</span><span class="p">(</span><span class="n">rosen</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">updating</span><span class="o">=</span><span class="s1">&#39;deferred&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                                <span class="n">workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">fun</span>
+<span class="go">(array([1., 1., 1., 1., 1.]), 1.9216496320061384e-19)</span>
+</pre></div>
+</div>
+<p>Let’s try and do a constrained minimization</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">NonlinearConstraint</span><span class="p">,</span> <span class="n">Bounds</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">constr_f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># the sum of x[0] and x[1] must be less than 1.9</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nlc</span> <span class="o">=</span> <span class="n">NonlinearConstraint</span><span class="p">(</span><span class="n">constr_f</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="mf">1.9</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># specify limits using a `Bounds` object.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bounds</span> <span class="o">=</span> <span class="n">Bounds</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">differential_evolution</span><span class="p">(</span><span class="n">rosen</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="p">(</span><span class="n">nlc</span><span class="p">),</span>
+<span class="gp">... </span>                                <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">fun</span>
+<span class="go">(array([0.96633867, 0.93363577]), 0.0011361355854792312)</span>
+</pre></div>
+</div>
+<p>Next find the minimum of the Ackley function
+(<a class="reference external" href="https://en.wikipedia.org/wiki/Test_functions_for_optimization">https://en.wikipedia.org/wiki/Test_functions_for_optimization</a>).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">differential_evolution</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">ackley</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">arg1</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">... </span>    <span class="n">arg2</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="o">-</span><span class="mf">20.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">arg1</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">arg2</span><span class="p">)</span> <span class="o">+</span> <span class="mf">20.</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">e</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">differential_evolution</span><span class="p">(</span><span class="n">ackley</span><span class="p">,</span> <span class="n">bounds</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">fun</span>
+<span class="go">(array([ 0.,  0.]), 4.4408920985006262e-16)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+    <a class='left-prev' id="prev-link" href="scipy.optimize.brute.html" title="previous page">scipy.optimize.brute</a>
+    <a class='right-next' id="next-link" href="scipy.optimize.shgo.html" title="next page">scipy.optimize.shgo</a>
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2008-2021, The SciPy community.<br/>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.<br/>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,2057 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>LAPACK functions for Cython &#8212; SciPy v1.7.0.dev0+1036.4ec6f29 Manual</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/scipy.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Interpolative matrix decomposition (scipy.linalg.interpolative)" href="linalg.interpolative.html" />
+    <link rel="prev" title="BLAS Functions for Cython" href="linalg.cython_blas.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+
+<a class="navbar-brand" href="../index.html">
+  <img src="../_static/scipyshiny_small.png" class="logo" alt="logo">
+</a>      
+
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../getting_started.html">
+  Getting started
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../tutorial/index.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="index.html">
+  API reference
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../dev/index.html">
+  Development
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../release.html">
+  Release notes
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/scipy/scipy" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="cluster.html">
+   Clustering package (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="cluster.vq.html">
+   K-means clustering and vector quantization (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster.vq
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="cluster.hierarchy.html">
+   Hierarchical clustering (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster.hierarchy
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="constants.html">
+   Constants (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.constants
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="fft.html">
+   Discrete Fourier transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fft
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="fftpack.html">
+   Legacy discrete Fourier transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fftpack
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="integrate.html">
+   Integration and ODEs (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.integrate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="interpolate.html">
+   Interpolation (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.interpolate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="io.html">
+   Input and output (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.io
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="linalg.html">
+   Linear algebra (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="linalg.blas.html">
+   Low-level BLAS functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.blas
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="linalg.lapack.html">
+   Low-level LAPACK functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.lapack
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="linalg.cython_blas.html">
+   BLAS Functions for Cython
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   LAPACK functions for Cython
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="linalg.interpolative.html">
+   Interpolative matrix decomposition (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.interpolative
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="misc.html">
+   Miscellaneous routines (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.misc
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="ndimage.html">
+   Multidimensional image processing (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.ndimage
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="odr.html">
+   Orthogonal distance regression (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.odr
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="optimize.html">
+   Optimization and root finding (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.optimize
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="optimize.nonlin.html">
+   Nonlinear solvers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="optimize.cython_optimize.html">
+   Cython optimize zeros API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="signal.html">
+   Signal processing (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.signal
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse.html">
+   Sparse matrices (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse.linalg.html">
+   Sparse linear algebra (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse.csgraph.html">
+   Compressed sparse graph routines (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.csgraph
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="spatial.html">
+   Spatial algorithms and data structures (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="spatial.distance.html">
+   Distance computations (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial.distance
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="special.html">
+   Special functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.special
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="stats.html">
+   Statistical functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="stats._result_classes.html">
+   Result classes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="stats.mstats.html">
+   Statistical functions for masked arrays (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.mstats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="stats.qmc.html">
+   Quasi-Monte Carlo submodule (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.qmc
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="ccallback.html">
+   Low-level callback functions
+  </a>
+ </li>
+</ul>
+
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <span class="target" id="module-scipy.linalg.cython_lapack"></span><section id="lapack-functions-for-cython">
+<h1>LAPACK functions for Cython<a class="headerlink" href="#lapack-functions-for-cython" title="Permalink to this headline">¶</a></h1>
+<p>Usable from Cython via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cimport</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cython_lapack</span>
+</pre></div>
+</div>
+<p>This module provides Cython-level wrappers for all primary routines included
+in LAPACK 3.4.0 except for <code class="docutils literal notranslate"><span class="pre">zcgesv</span></code> since its interface is not consistent
+from LAPACK 3.4.0 to 3.6.0. It also provides some of the
+fixed-api auxiliary routines.</p>
+<p>These wrappers do not check for alignment of arrays.
+Alignment should be checked before these wrappers are used.</p>
+<p>Raw function pointers (Fortran-style pointer arguments):</p>
+<ul class="simple">
+<li><p>cbbcsd</p></li>
+<li><p>cbdsqr</p></li>
+<li><p>cgbbrd</p></li>
+<li><p>cgbcon</p></li>
+<li><p>cgbequ</p></li>
+<li><p>cgbequb</p></li>
+<li><p>cgbrfs</p></li>
+<li><p>cgbsv</p></li>
+<li><p>cgbsvx</p></li>
+<li><p>cgbtf2</p></li>
+<li><p>cgbtrf</p></li>
+<li><p>cgbtrs</p></li>
+<li><p>cgebak</p></li>
+<li><p>cgebal</p></li>
+<li><p>cgebd2</p></li>
+<li><p>cgebrd</p></li>
+<li><p>cgecon</p></li>
+<li><p>cgeequ</p></li>
+<li><p>cgeequb</p></li>
+<li><p>cgees</p></li>
+<li><p>cgeesx</p></li>
+<li><p>cgeev</p></li>
+<li><p>cgeevx</p></li>
+<li><p>cgehd2</p></li>
+<li><p>cgehrd</p></li>
+<li><p>cgelq2</p></li>
+<li><p>cgelqf</p></li>
+<li><p>cgels</p></li>
+<li><p>cgelsd</p></li>
+<li><p>cgelss</p></li>
+<li><p>cgelsy</p></li>
+<li><p>cgemqrt</p></li>
+<li><p>cgeql2</p></li>
+<li><p>cgeqlf</p></li>
+<li><p>cgeqp3</p></li>
+<li><p>cgeqr2</p></li>
+<li><p>cgeqr2p</p></li>
+<li><p>cgeqrf</p></li>
+<li><p>cgeqrfp</p></li>
+<li><p>cgeqrt</p></li>
+<li><p>cgeqrt2</p></li>
+<li><p>cgeqrt3</p></li>
+<li><p>cgerfs</p></li>
+<li><p>cgerq2</p></li>
+<li><p>cgerqf</p></li>
+<li><p>cgesc2</p></li>
+<li><p>cgesdd</p></li>
+<li><p>cgesv</p></li>
+<li><p>cgesvd</p></li>
+<li><p>cgesvx</p></li>
+<li><p>cgetc2</p></li>
+<li><p>cgetf2</p></li>
+<li><p>cgetrf</p></li>
+<li><p>cgetri</p></li>
+<li><p>cgetrs</p></li>
+<li><p>cggbak</p></li>
+<li><p>cggbal</p></li>
+<li><p>cgges</p></li>
+<li><p>cggesx</p></li>
+<li><p>cggev</p></li>
+<li><p>cggevx</p></li>
+<li><p>cggglm</p></li>
+<li><p>cgghrd</p></li>
+<li><p>cgglse</p></li>
+<li><p>cggqrf</p></li>
+<li><p>cggrqf</p></li>
+<li><p>cgtcon</p></li>
+<li><p>cgtrfs</p></li>
+<li><p>cgtsv</p></li>
+<li><p>cgtsvx</p></li>
+<li><p>cgttrf</p></li>
+<li><p>cgttrs</p></li>
+<li><p>cgtts2</p></li>
+<li><p>chbev</p></li>
+<li><p>chbevd</p></li>
+<li><p>chbevx</p></li>
+<li><p>chbgst</p></li>
+<li><p>chbgv</p></li>
+<li><p>chbgvd</p></li>
+<li><p>chbgvx</p></li>
+<li><p>chbtrd</p></li>
+<li><p>checon</p></li>
+<li><p>cheequb</p></li>
+<li><p>cheev</p></li>
+<li><p>cheevd</p></li>
+<li><p>cheevr</p></li>
+<li><p>cheevx</p></li>
+<li><p>chegs2</p></li>
+<li><p>chegst</p></li>
+<li><p>chegv</p></li>
+<li><p>chegvd</p></li>
+<li><p>chegvx</p></li>
+<li><p>cherfs</p></li>
+<li><p>chesv</p></li>
+<li><p>chesvx</p></li>
+<li><p>cheswapr</p></li>
+<li><p>chetd2</p></li>
+<li><p>chetf2</p></li>
+<li><p>chetrd</p></li>
+<li><p>chetrf</p></li>
+<li><p>chetri</p></li>
+<li><p>chetri2</p></li>
+<li><p>chetri2x</p></li>
+<li><p>chetrs</p></li>
+<li><p>chetrs2</p></li>
+<li><p>chfrk</p></li>
+<li><p>chgeqz</p></li>
+<li><p>chla_transtype</p></li>
+<li><p>chpcon</p></li>
+<li><p>chpev</p></li>
+<li><p>chpevd</p></li>
+<li><p>chpevx</p></li>
+<li><p>chpgst</p></li>
+<li><p>chpgv</p></li>
+<li><p>chpgvd</p></li>
+<li><p>chpgvx</p></li>
+<li><p>chprfs</p></li>
+<li><p>chpsv</p></li>
+<li><p>chpsvx</p></li>
+<li><p>chptrd</p></li>
+<li><p>chptrf</p></li>
+<li><p>chptri</p></li>
+<li><p>chptrs</p></li>
+<li><p>chsein</p></li>
+<li><p>chseqr</p></li>
+<li><p>clabrd</p></li>
+<li><p>clacgv</p></li>
+<li><p>clacn2</p></li>
+<li><p>clacon</p></li>
+<li><p>clacp2</p></li>
+<li><p>clacpy</p></li>
+<li><p>clacrm</p></li>
+<li><p>clacrt</p></li>
+<li><p>cladiv</p></li>
+<li><p>claed0</p></li>
+<li><p>claed7</p></li>
+<li><p>claed8</p></li>
+<li><p>claein</p></li>
+<li><p>claesy</p></li>
+<li><p>claev2</p></li>
+<li><p>clag2z</p></li>
+<li><p>clags2</p></li>
+<li><p>clagtm</p></li>
+<li><p>clahef</p></li>
+<li><p>clahqr</p></li>
+<li><p>clahr2</p></li>
+<li><p>claic1</p></li>
+<li><p>clals0</p></li>
+<li><p>clalsa</p></li>
+<li><p>clalsd</p></li>
+<li><p>clangb</p></li>
+<li><p>clange</p></li>
+<li><p>clangt</p></li>
+<li><p>clanhb</p></li>
+<li><p>clanhe</p></li>
+<li><p>clanhf</p></li>
+<li><p>clanhp</p></li>
+<li><p>clanhs</p></li>
+<li><p>clanht</p></li>
+<li><p>clansb</p></li>
+<li><p>clansp</p></li>
+<li><p>clansy</p></li>
+<li><p>clantb</p></li>
+<li><p>clantp</p></li>
+<li><p>clantr</p></li>
+<li><p>clapll</p></li>
+<li><p>clapmr</p></li>
+<li><p>clapmt</p></li>
+<li><p>claqgb</p></li>
+<li><p>claqge</p></li>
+<li><p>claqhb</p></li>
+<li><p>claqhe</p></li>
+<li><p>claqhp</p></li>
+<li><p>claqp2</p></li>
+<li><p>claqps</p></li>
+<li><p>claqr0</p></li>
+<li><p>claqr1</p></li>
+<li><p>claqr2</p></li>
+<li><p>claqr3</p></li>
+<li><p>claqr4</p></li>
+<li><p>claqr5</p></li>
+<li><p>claqsb</p></li>
+<li><p>claqsp</p></li>
+<li><p>claqsy</p></li>
+<li><p>clar1v</p></li>
+<li><p>clar2v</p></li>
+<li><p>clarcm</p></li>
+<li><p>clarf</p></li>
+<li><p>clarfb</p></li>
+<li><p>clarfg</p></li>
+<li><p>clarfgp</p></li>
+<li><p>clarft</p></li>
+<li><p>clarfx</p></li>
+<li><p>clargv</p></li>
+<li><p>clarnv</p></li>
+<li><p>clarrv</p></li>
+<li><p>clartg</p></li>
+<li><p>clartv</p></li>
+<li><p>clarz</p></li>
+<li><p>clarzb</p></li>
+<li><p>clarzt</p></li>
+<li><p>clascl</p></li>
+<li><p>claset</p></li>
+<li><p>clasr</p></li>
+<li><p>classq</p></li>
+<li><p>claswp</p></li>
+<li><p>clasyf</p></li>
+<li><p>clatbs</p></li>
+<li><p>clatdf</p></li>
+<li><p>clatps</p></li>
+<li><p>clatrd</p></li>
+<li><p>clatrs</p></li>
+<li><p>clatrz</p></li>
+<li><p>clauu2</p></li>
+<li><p>clauum</p></li>
+<li><p>cpbcon</p></li>
+<li><p>cpbequ</p></li>
+<li><p>cpbrfs</p></li>
+<li><p>cpbstf</p></li>
+<li><p>cpbsv</p></li>
+<li><p>cpbsvx</p></li>
+<li><p>cpbtf2</p></li>
+<li><p>cpbtrf</p></li>
+<li><p>cpbtrs</p></li>
+<li><p>cpftrf</p></li>
+<li><p>cpftri</p></li>
+<li><p>cpftrs</p></li>
+<li><p>cpocon</p></li>
+<li><p>cpoequ</p></li>
+<li><p>cpoequb</p></li>
+<li><p>cporfs</p></li>
+<li><p>cposv</p></li>
+<li><p>cposvx</p></li>
+<li><p>cpotf2</p></li>
+<li><p>cpotrf</p></li>
+<li><p>cpotri</p></li>
+<li><p>cpotrs</p></li>
+<li><p>cppcon</p></li>
+<li><p>cppequ</p></li>
+<li><p>cpprfs</p></li>
+<li><p>cppsv</p></li>
+<li><p>cppsvx</p></li>
+<li><p>cpptrf</p></li>
+<li><p>cpptri</p></li>
+<li><p>cpptrs</p></li>
+<li><p>cpstf2</p></li>
+<li><p>cpstrf</p></li>
+<li><p>cptcon</p></li>
+<li><p>cpteqr</p></li>
+<li><p>cptrfs</p></li>
+<li><p>cptsv</p></li>
+<li><p>cptsvx</p></li>
+<li><p>cpttrf</p></li>
+<li><p>cpttrs</p></li>
+<li><p>cptts2</p></li>
+<li><p>crot</p></li>
+<li><p>cspcon</p></li>
+<li><p>cspmv</p></li>
+<li><p>cspr</p></li>
+<li><p>csprfs</p></li>
+<li><p>cspsv</p></li>
+<li><p>cspsvx</p></li>
+<li><p>csptrf</p></li>
+<li><p>csptri</p></li>
+<li><p>csptrs</p></li>
+<li><p>csrscl</p></li>
+<li><p>cstedc</p></li>
+<li><p>cstegr</p></li>
+<li><p>cstein</p></li>
+<li><p>cstemr</p></li>
+<li><p>csteqr</p></li>
+<li><p>csycon</p></li>
+<li><p>csyconv</p></li>
+<li><p>csyequb</p></li>
+<li><p>csymv</p></li>
+<li><p>csyr</p></li>
+<li><p>csyrfs</p></li>
+<li><p>csysv</p></li>
+<li><p>csysvx</p></li>
+<li><p>csyswapr</p></li>
+<li><p>csytf2</p></li>
+<li><p>csytrf</p></li>
+<li><p>csytri</p></li>
+<li><p>csytri2</p></li>
+<li><p>csytri2x</p></li>
+<li><p>csytrs</p></li>
+<li><p>csytrs2</p></li>
+<li><p>ctbcon</p></li>
+<li><p>ctbrfs</p></li>
+<li><p>ctbtrs</p></li>
+<li><p>ctfsm</p></li>
+<li><p>ctftri</p></li>
+<li><p>ctfttp</p></li>
+<li><p>ctfttr</p></li>
+<li><p>ctgevc</p></li>
+<li><p>ctgex2</p></li>
+<li><p>ctgexc</p></li>
+<li><p>ctgsen</p></li>
+<li><p>ctgsja</p></li>
+<li><p>ctgsna</p></li>
+<li><p>ctgsy2</p></li>
+<li><p>ctgsyl</p></li>
+<li><p>ctpcon</p></li>
+<li><p>ctpmqrt</p></li>
+<li><p>ctpqrt</p></li>
+<li><p>ctpqrt2</p></li>
+<li><p>ctprfb</p></li>
+<li><p>ctprfs</p></li>
+<li><p>ctptri</p></li>
+<li><p>ctptrs</p></li>
+<li><p>ctpttf</p></li>
+<li><p>ctpttr</p></li>
+<li><p>ctrcon</p></li>
+<li><p>ctrevc</p></li>
+<li><p>ctrexc</p></li>
+<li><p>ctrrfs</p></li>
+<li><p>ctrsen</p></li>
+<li><p>ctrsna</p></li>
+<li><p>ctrsyl</p></li>
+<li><p>ctrti2</p></li>
+<li><p>ctrtri</p></li>
+<li><p>ctrtrs</p></li>
+<li><p>ctrttf</p></li>
+<li><p>ctrttp</p></li>
+<li><p>ctzrzf</p></li>
+<li><p>cunbdb</p></li>
+<li><p>cuncsd</p></li>
+<li><p>cung2l</p></li>
+<li><p>cung2r</p></li>
+<li><p>cungbr</p></li>
+<li><p>cunghr</p></li>
+<li><p>cungl2</p></li>
+<li><p>cunglq</p></li>
+<li><p>cungql</p></li>
+<li><p>cungqr</p></li>
+<li><p>cungr2</p></li>
+<li><p>cungrq</p></li>
+<li><p>cungtr</p></li>
+<li><p>cunm2l</p></li>
+<li><p>cunm2r</p></li>
+<li><p>cunmbr</p></li>
+<li><p>cunmhr</p></li>
+<li><p>cunml2</p></li>
+<li><p>cunmlq</p></li>
+<li><p>cunmql</p></li>
+<li><p>cunmqr</p></li>
+<li><p>cunmr2</p></li>
+<li><p>cunmr3</p></li>
+<li><p>cunmrq</p></li>
+<li><p>cunmrz</p></li>
+<li><p>cunmtr</p></li>
+<li><p>cupgtr</p></li>
+<li><p>cupmtr</p></li>
+<li><p>dbbcsd</p></li>
+<li><p>dbdsdc</p></li>
+<li><p>dbdsqr</p></li>
+<li><p>ddisna</p></li>
+<li><p>dgbbrd</p></li>
+<li><p>dgbcon</p></li>
+<li><p>dgbequ</p></li>
+<li><p>dgbequb</p></li>
+<li><p>dgbrfs</p></li>
+<li><p>dgbsv</p></li>
+<li><p>dgbsvx</p></li>
+<li><p>dgbtf2</p></li>
+<li><p>dgbtrf</p></li>
+<li><p>dgbtrs</p></li>
+<li><p>dgebak</p></li>
+<li><p>dgebal</p></li>
+<li><p>dgebd2</p></li>
+<li><p>dgebrd</p></li>
+<li><p>dgecon</p></li>
+<li><p>dgeequ</p></li>
+<li><p>dgeequb</p></li>
+<li><p>dgees</p></li>
+<li><p>dgeesx</p></li>
+<li><p>dgeev</p></li>
+<li><p>dgeevx</p></li>
+<li><p>dgehd2</p></li>
+<li><p>dgehrd</p></li>
+<li><p>dgejsv</p></li>
+<li><p>dgelq2</p></li>
+<li><p>dgelqf</p></li>
+<li><p>dgels</p></li>
+<li><p>dgelsd</p></li>
+<li><p>dgelss</p></li>
+<li><p>dgelsy</p></li>
+<li><p>dgemqrt</p></li>
+<li><p>dgeql2</p></li>
+<li><p>dgeqlf</p></li>
+<li><p>dgeqp3</p></li>
+<li><p>dgeqr2</p></li>
+<li><p>dgeqr2p</p></li>
+<li><p>dgeqrf</p></li>
+<li><p>dgeqrfp</p></li>
+<li><p>dgeqrt</p></li>
+<li><p>dgeqrt2</p></li>
+<li><p>dgeqrt3</p></li>
+<li><p>dgerfs</p></li>
+<li><p>dgerq2</p></li>
+<li><p>dgerqf</p></li>
+<li><p>dgesc2</p></li>
+<li><p>dgesdd</p></li>
+<li><p>dgesv</p></li>
+<li><p>dgesvd</p></li>
+<li><p>dgesvj</p></li>
+<li><p>dgesvx</p></li>
+<li><p>dgetc2</p></li>
+<li><p>dgetf2</p></li>
+<li><p>dgetrf</p></li>
+<li><p>dgetri</p></li>
+<li><p>dgetrs</p></li>
+<li><p>dggbak</p></li>
+<li><p>dggbal</p></li>
+<li><p>dgges</p></li>
+<li><p>dggesx</p></li>
+<li><p>dggev</p></li>
+<li><p>dggevx</p></li>
+<li><p>dggglm</p></li>
+<li><p>dgghrd</p></li>
+<li><p>dgglse</p></li>
+<li><p>dggqrf</p></li>
+<li><p>dggrqf</p></li>
+<li><p>dgsvj0</p></li>
+<li><p>dgsvj1</p></li>
+<li><p>dgtcon</p></li>
+<li><p>dgtrfs</p></li>
+<li><p>dgtsv</p></li>
+<li><p>dgtsvx</p></li>
+<li><p>dgttrf</p></li>
+<li><p>dgttrs</p></li>
+<li><p>dgtts2</p></li>
+<li><p>dhgeqz</p></li>
+<li><p>dhsein</p></li>
+<li><p>dhseqr</p></li>
+<li><p>disnan</p></li>
+<li><p>dlabad</p></li>
+<li><p>dlabrd</p></li>
+<li><p>dlacn2</p></li>
+<li><p>dlacon</p></li>
+<li><p>dlacpy</p></li>
+<li><p>dladiv</p></li>
+<li><p>dlae2</p></li>
+<li><p>dlaebz</p></li>
+<li><p>dlaed0</p></li>
+<li><p>dlaed1</p></li>
+<li><p>dlaed2</p></li>
+<li><p>dlaed3</p></li>
+<li><p>dlaed4</p></li>
+<li><p>dlaed5</p></li>
+<li><p>dlaed6</p></li>
+<li><p>dlaed7</p></li>
+<li><p>dlaed8</p></li>
+<li><p>dlaed9</p></li>
+<li><p>dlaeda</p></li>
+<li><p>dlaein</p></li>
+<li><p>dlaev2</p></li>
+<li><p>dlaexc</p></li>
+<li><p>dlag2</p></li>
+<li><p>dlag2s</p></li>
+<li><p>dlags2</p></li>
+<li><p>dlagtf</p></li>
+<li><p>dlagtm</p></li>
+<li><p>dlagts</p></li>
+<li><p>dlagv2</p></li>
+<li><p>dlahqr</p></li>
+<li><p>dlahr2</p></li>
+<li><p>dlaic1</p></li>
+<li><p>dlaln2</p></li>
+<li><p>dlals0</p></li>
+<li><p>dlalsa</p></li>
+<li><p>dlalsd</p></li>
+<li><p>dlamch</p></li>
+<li><p>dlamrg</p></li>
+<li><p>dlaneg</p></li>
+<li><p>dlangb</p></li>
+<li><p>dlange</p></li>
+<li><p>dlangt</p></li>
+<li><p>dlanhs</p></li>
+<li><p>dlansb</p></li>
+<li><p>dlansf</p></li>
+<li><p>dlansp</p></li>
+<li><p>dlanst</p></li>
+<li><p>dlansy</p></li>
+<li><p>dlantb</p></li>
+<li><p>dlantp</p></li>
+<li><p>dlantr</p></li>
+<li><p>dlanv2</p></li>
+<li><p>dlapll</p></li>
+<li><p>dlapmr</p></li>
+<li><p>dlapmt</p></li>
+<li><p>dlapy2</p></li>
+<li><p>dlapy3</p></li>
+<li><p>dlaqgb</p></li>
+<li><p>dlaqge</p></li>
+<li><p>dlaqp2</p></li>
+<li><p>dlaqps</p></li>
+<li><p>dlaqr0</p></li>
+<li><p>dlaqr1</p></li>
+<li><p>dlaqr2</p></li>
+<li><p>dlaqr3</p></li>
+<li><p>dlaqr4</p></li>
+<li><p>dlaqr5</p></li>
+<li><p>dlaqsb</p></li>
+<li><p>dlaqsp</p></li>
+<li><p>dlaqsy</p></li>
+<li><p>dlaqtr</p></li>
+<li><p>dlar1v</p></li>
+<li><p>dlar2v</p></li>
+<li><p>dlarf</p></li>
+<li><p>dlarfb</p></li>
+<li><p>dlarfg</p></li>
+<li><p>dlarfgp</p></li>
+<li><p>dlarft</p></li>
+<li><p>dlarfx</p></li>
+<li><p>dlargv</p></li>
+<li><p>dlarnv</p></li>
+<li><p>dlarra</p></li>
+<li><p>dlarrb</p></li>
+<li><p>dlarrc</p></li>
+<li><p>dlarrd</p></li>
+<li><p>dlarre</p></li>
+<li><p>dlarrf</p></li>
+<li><p>dlarrj</p></li>
+<li><p>dlarrk</p></li>
+<li><p>dlarrr</p></li>
+<li><p>dlarrv</p></li>
+<li><p>dlartg</p></li>
+<li><p>dlartgp</p></li>
+<li><p>dlartgs</p></li>
+<li><p>dlartv</p></li>
+<li><p>dlaruv</p></li>
+<li><p>dlarz</p></li>
+<li><p>dlarzb</p></li>
+<li><p>dlarzt</p></li>
+<li><p>dlas2</p></li>
+<li><p>dlascl</p></li>
+<li><p>dlasd0</p></li>
+<li><p>dlasd1</p></li>
+<li><p>dlasd2</p></li>
+<li><p>dlasd3</p></li>
+<li><p>dlasd4</p></li>
+<li><p>dlasd5</p></li>
+<li><p>dlasd6</p></li>
+<li><p>dlasd7</p></li>
+<li><p>dlasd8</p></li>
+<li><p>dlasda</p></li>
+<li><p>dlasdq</p></li>
+<li><p>dlasdt</p></li>
+<li><p>dlaset</p></li>
+<li><p>dlasq1</p></li>
+<li><p>dlasq2</p></li>
+<li><p>dlasq3</p></li>
+<li><p>dlasq4</p></li>
+<li><p>dlasq6</p></li>
+<li><p>dlasr</p></li>
+<li><p>dlasrt</p></li>
+<li><p>dlassq</p></li>
+<li><p>dlasv2</p></li>
+<li><p>dlaswp</p></li>
+<li><p>dlasy2</p></li>
+<li><p>dlasyf</p></li>
+<li><p>dlat2s</p></li>
+<li><p>dlatbs</p></li>
+<li><p>dlatdf</p></li>
+<li><p>dlatps</p></li>
+<li><p>dlatrd</p></li>
+<li><p>dlatrs</p></li>
+<li><p>dlatrz</p></li>
+<li><p>dlauu2</p></li>
+<li><p>dlauum</p></li>
+<li><p>dopgtr</p></li>
+<li><p>dopmtr</p></li>
+<li><p>dorbdb</p></li>
+<li><p>dorcsd</p></li>
+<li><p>dorg2l</p></li>
+<li><p>dorg2r</p></li>
+<li><p>dorgbr</p></li>
+<li><p>dorghr</p></li>
+<li><p>dorgl2</p></li>
+<li><p>dorglq</p></li>
+<li><p>dorgql</p></li>
+<li><p>dorgqr</p></li>
+<li><p>dorgr2</p></li>
+<li><p>dorgrq</p></li>
+<li><p>dorgtr</p></li>
+<li><p>dorm2l</p></li>
+<li><p>dorm2r</p></li>
+<li><p>dormbr</p></li>
+<li><p>dormhr</p></li>
+<li><p>dorml2</p></li>
+<li><p>dormlq</p></li>
+<li><p>dormql</p></li>
+<li><p>dormqr</p></li>
+<li><p>dormr2</p></li>
+<li><p>dormr3</p></li>
+<li><p>dormrq</p></li>
+<li><p>dormrz</p></li>
+<li><p>dormtr</p></li>
+<li><p>dpbcon</p></li>
+<li><p>dpbequ</p></li>
+<li><p>dpbrfs</p></li>
+<li><p>dpbstf</p></li>
+<li><p>dpbsv</p></li>
+<li><p>dpbsvx</p></li>
+<li><p>dpbtf2</p></li>
+<li><p>dpbtrf</p></li>
+<li><p>dpbtrs</p></li>
+<li><p>dpftrf</p></li>
+<li><p>dpftri</p></li>
+<li><p>dpftrs</p></li>
+<li><p>dpocon</p></li>
+<li><p>dpoequ</p></li>
+<li><p>dpoequb</p></li>
+<li><p>dporfs</p></li>
+<li><p>dposv</p></li>
+<li><p>dposvx</p></li>
+<li><p>dpotf2</p></li>
+<li><p>dpotrf</p></li>
+<li><p>dpotri</p></li>
+<li><p>dpotrs</p></li>
+<li><p>dppcon</p></li>
+<li><p>dppequ</p></li>
+<li><p>dpprfs</p></li>
+<li><p>dppsv</p></li>
+<li><p>dppsvx</p></li>
+<li><p>dpptrf</p></li>
+<li><p>dpptri</p></li>
+<li><p>dpptrs</p></li>
+<li><p>dpstf2</p></li>
+<li><p>dpstrf</p></li>
+<li><p>dptcon</p></li>
+<li><p>dpteqr</p></li>
+<li><p>dptrfs</p></li>
+<li><p>dptsv</p></li>
+<li><p>dptsvx</p></li>
+<li><p>dpttrf</p></li>
+<li><p>dpttrs</p></li>
+<li><p>dptts2</p></li>
+<li><p>drscl</p></li>
+<li><p>dsbev</p></li>
+<li><p>dsbevd</p></li>
+<li><p>dsbevx</p></li>
+<li><p>dsbgst</p></li>
+<li><p>dsbgv</p></li>
+<li><p>dsbgvd</p></li>
+<li><p>dsbgvx</p></li>
+<li><p>dsbtrd</p></li>
+<li><p>dsfrk</p></li>
+<li><p>dsgesv</p></li>
+<li><p>dspcon</p></li>
+<li><p>dspev</p></li>
+<li><p>dspevd</p></li>
+<li><p>dspevx</p></li>
+<li><p>dspgst</p></li>
+<li><p>dspgv</p></li>
+<li><p>dspgvd</p></li>
+<li><p>dspgvx</p></li>
+<li><p>dsposv</p></li>
+<li><p>dsprfs</p></li>
+<li><p>dspsv</p></li>
+<li><p>dspsvx</p></li>
+<li><p>dsptrd</p></li>
+<li><p>dsptrf</p></li>
+<li><p>dsptri</p></li>
+<li><p>dsptrs</p></li>
+<li><p>dstebz</p></li>
+<li><p>dstedc</p></li>
+<li><p>dstegr</p></li>
+<li><p>dstein</p></li>
+<li><p>dstemr</p></li>
+<li><p>dsteqr</p></li>
+<li><p>dsterf</p></li>
+<li><p>dstev</p></li>
+<li><p>dstevd</p></li>
+<li><p>dstevr</p></li>
+<li><p>dstevx</p></li>
+<li><p>dsycon</p></li>
+<li><p>dsyconv</p></li>
+<li><p>dsyequb</p></li>
+<li><p>dsyev</p></li>
+<li><p>dsyevd</p></li>
+<li><p>dsyevr</p></li>
+<li><p>dsyevx</p></li>
+<li><p>dsygs2</p></li>
+<li><p>dsygst</p></li>
+<li><p>dsygv</p></li>
+<li><p>dsygvd</p></li>
+<li><p>dsygvx</p></li>
+<li><p>dsyrfs</p></li>
+<li><p>dsysv</p></li>
+<li><p>dsysvx</p></li>
+<li><p>dsyswapr</p></li>
+<li><p>dsytd2</p></li>
+<li><p>dsytf2</p></li>
+<li><p>dsytrd</p></li>
+<li><p>dsytrf</p></li>
+<li><p>dsytri</p></li>
+<li><p>dsytri2</p></li>
+<li><p>dsytri2x</p></li>
+<li><p>dsytrs</p></li>
+<li><p>dsytrs2</p></li>
+<li><p>dtbcon</p></li>
+<li><p>dtbrfs</p></li>
+<li><p>dtbtrs</p></li>
+<li><p>dtfsm</p></li>
+<li><p>dtftri</p></li>
+<li><p>dtfttp</p></li>
+<li><p>dtfttr</p></li>
+<li><p>dtgevc</p></li>
+<li><p>dtgex2</p></li>
+<li><p>dtgexc</p></li>
+<li><p>dtgsen</p></li>
+<li><p>dtgsja</p></li>
+<li><p>dtgsna</p></li>
+<li><p>dtgsy2</p></li>
+<li><p>dtgsyl</p></li>
+<li><p>dtpcon</p></li>
+<li><p>dtpmqrt</p></li>
+<li><p>dtpqrt</p></li>
+<li><p>dtpqrt2</p></li>
+<li><p>dtprfb</p></li>
+<li><p>dtprfs</p></li>
+<li><p>dtptri</p></li>
+<li><p>dtptrs</p></li>
+<li><p>dtpttf</p></li>
+<li><p>dtpttr</p></li>
+<li><p>dtrcon</p></li>
+<li><p>dtrevc</p></li>
+<li><p>dtrexc</p></li>
+<li><p>dtrrfs</p></li>
+<li><p>dtrsen</p></li>
+<li><p>dtrsna</p></li>
+<li><p>dtrsyl</p></li>
+<li><p>dtrti2</p></li>
+<li><p>dtrtri</p></li>
+<li><p>dtrtrs</p></li>
+<li><p>dtrttf</p></li>
+<li><p>dtrttp</p></li>
+<li><p>dtzrzf</p></li>
+<li><p>dzsum1</p></li>
+<li><p>icmax1</p></li>
+<li><p>ieeeck</p></li>
+<li><p>ilaclc</p></li>
+<li><p>ilaclr</p></li>
+<li><p>iladiag</p></li>
+<li><p>iladlc</p></li>
+<li><p>iladlr</p></li>
+<li><p>ilaprec</p></li>
+<li><p>ilaslc</p></li>
+<li><p>ilaslr</p></li>
+<li><p>ilatrans</p></li>
+<li><p>ilauplo</p></li>
+<li><p>ilaver</p></li>
+<li><p>ilazlc</p></li>
+<li><p>ilazlr</p></li>
+<li><p>izmax1</p></li>
+<li><p>sbbcsd</p></li>
+<li><p>sbdsdc</p></li>
+<li><p>sbdsqr</p></li>
+<li><p>scsum1</p></li>
+<li><p>sdisna</p></li>
+<li><p>sgbbrd</p></li>
+<li><p>sgbcon</p></li>
+<li><p>sgbequ</p></li>
+<li><p>sgbequb</p></li>
+<li><p>sgbrfs</p></li>
+<li><p>sgbsv</p></li>
+<li><p>sgbsvx</p></li>
+<li><p>sgbtf2</p></li>
+<li><p>sgbtrf</p></li>
+<li><p>sgbtrs</p></li>
+<li><p>sgebak</p></li>
+<li><p>sgebal</p></li>
+<li><p>sgebd2</p></li>
+<li><p>sgebrd</p></li>
+<li><p>sgecon</p></li>
+<li><p>sgeequ</p></li>
+<li><p>sgeequb</p></li>
+<li><p>sgees</p></li>
+<li><p>sgeesx</p></li>
+<li><p>sgeev</p></li>
+<li><p>sgeevx</p></li>
+<li><p>sgehd2</p></li>
+<li><p>sgehrd</p></li>
+<li><p>sgejsv</p></li>
+<li><p>sgelq2</p></li>
+<li><p>sgelqf</p></li>
+<li><p>sgels</p></li>
+<li><p>sgelsd</p></li>
+<li><p>sgelss</p></li>
+<li><p>sgelsy</p></li>
+<li><p>sgemqrt</p></li>
+<li><p>sgeql2</p></li>
+<li><p>sgeqlf</p></li>
+<li><p>sgeqp3</p></li>
+<li><p>sgeqr2</p></li>
+<li><p>sgeqr2p</p></li>
+<li><p>sgeqrf</p></li>
+<li><p>sgeqrfp</p></li>
+<li><p>sgeqrt</p></li>
+<li><p>sgeqrt2</p></li>
+<li><p>sgeqrt3</p></li>
+<li><p>sgerfs</p></li>
+<li><p>sgerq2</p></li>
+<li><p>sgerqf</p></li>
+<li><p>sgesc2</p></li>
+<li><p>sgesdd</p></li>
+<li><p>sgesv</p></li>
+<li><p>sgesvd</p></li>
+<li><p>sgesvj</p></li>
+<li><p>sgesvx</p></li>
+<li><p>sgetc2</p></li>
+<li><p>sgetf2</p></li>
+<li><p>sgetrf</p></li>
+<li><p>sgetri</p></li>
+<li><p>sgetrs</p></li>
+<li><p>sggbak</p></li>
+<li><p>sggbal</p></li>
+<li><p>sgges</p></li>
+<li><p>sggesx</p></li>
+<li><p>sggev</p></li>
+<li><p>sggevx</p></li>
+<li><p>sggglm</p></li>
+<li><p>sgghrd</p></li>
+<li><p>sgglse</p></li>
+<li><p>sggqrf</p></li>
+<li><p>sggrqf</p></li>
+<li><p>sgsvj0</p></li>
+<li><p>sgsvj1</p></li>
+<li><p>sgtcon</p></li>
+<li><p>sgtrfs</p></li>
+<li><p>sgtsv</p></li>
+<li><p>sgtsvx</p></li>
+<li><p>sgttrf</p></li>
+<li><p>sgttrs</p></li>
+<li><p>sgtts2</p></li>
+<li><p>shgeqz</p></li>
+<li><p>shsein</p></li>
+<li><p>shseqr</p></li>
+<li><p>slabad</p></li>
+<li><p>slabrd</p></li>
+<li><p>slacn2</p></li>
+<li><p>slacon</p></li>
+<li><p>slacpy</p></li>
+<li><p>sladiv</p></li>
+<li><p>slae2</p></li>
+<li><p>slaebz</p></li>
+<li><p>slaed0</p></li>
+<li><p>slaed1</p></li>
+<li><p>slaed2</p></li>
+<li><p>slaed3</p></li>
+<li><p>slaed4</p></li>
+<li><p>slaed5</p></li>
+<li><p>slaed6</p></li>
+<li><p>slaed7</p></li>
+<li><p>slaed8</p></li>
+<li><p>slaed9</p></li>
+<li><p>slaeda</p></li>
+<li><p>slaein</p></li>
+<li><p>slaev2</p></li>
+<li><p>slaexc</p></li>
+<li><p>slag2</p></li>
+<li><p>slag2d</p></li>
+<li><p>slags2</p></li>
+<li><p>slagtf</p></li>
+<li><p>slagtm</p></li>
+<li><p>slagts</p></li>
+<li><p>slagv2</p></li>
+<li><p>slahqr</p></li>
+<li><p>slahr2</p></li>
+<li><p>slaic1</p></li>
+<li><p>slaln2</p></li>
+<li><p>slals0</p></li>
+<li><p>slalsa</p></li>
+<li><p>slalsd</p></li>
+<li><p>slamch</p></li>
+<li><p>slamrg</p></li>
+<li><p>slangb</p></li>
+<li><p>slange</p></li>
+<li><p>slangt</p></li>
+<li><p>slanhs</p></li>
+<li><p>slansb</p></li>
+<li><p>slansf</p></li>
+<li><p>slansp</p></li>
+<li><p>slanst</p></li>
+<li><p>slansy</p></li>
+<li><p>slantb</p></li>
+<li><p>slantp</p></li>
+<li><p>slantr</p></li>
+<li><p>slanv2</p></li>
+<li><p>slapll</p></li>
+<li><p>slapmr</p></li>
+<li><p>slapmt</p></li>
+<li><p>slapy2</p></li>
+<li><p>slapy3</p></li>
+<li><p>slaqgb</p></li>
+<li><p>slaqge</p></li>
+<li><p>slaqp2</p></li>
+<li><p>slaqps</p></li>
+<li><p>slaqr0</p></li>
+<li><p>slaqr1</p></li>
+<li><p>slaqr2</p></li>
+<li><p>slaqr3</p></li>
+<li><p>slaqr4</p></li>
+<li><p>slaqr5</p></li>
+<li><p>slaqsb</p></li>
+<li><p>slaqsp</p></li>
+<li><p>slaqsy</p></li>
+<li><p>slaqtr</p></li>
+<li><p>slar1v</p></li>
+<li><p>slar2v</p></li>
+<li><p>slarf</p></li>
+<li><p>slarfb</p></li>
+<li><p>slarfg</p></li>
+<li><p>slarfgp</p></li>
+<li><p>slarft</p></li>
+<li><p>slarfx</p></li>
+<li><p>slargv</p></li>
+<li><p>slarnv</p></li>
+<li><p>slarra</p></li>
+<li><p>slarrb</p></li>
+<li><p>slarrc</p></li>
+<li><p>slarrd</p></li>
+<li><p>slarre</p></li>
+<li><p>slarrf</p></li>
+<li><p>slarrj</p></li>
+<li><p>slarrk</p></li>
+<li><p>slarrr</p></li>
+<li><p>slarrv</p></li>
+<li><p>slartg</p></li>
+<li><p>slartgp</p></li>
+<li><p>slartgs</p></li>
+<li><p>slartv</p></li>
+<li><p>slaruv</p></li>
+<li><p>slarz</p></li>
+<li><p>slarzb</p></li>
+<li><p>slarzt</p></li>
+<li><p>slas2</p></li>
+<li><p>slascl</p></li>
+<li><p>slasd0</p></li>
+<li><p>slasd1</p></li>
+<li><p>slasd2</p></li>
+<li><p>slasd3</p></li>
+<li><p>slasd4</p></li>
+<li><p>slasd5</p></li>
+<li><p>slasd6</p></li>
+<li><p>slasd7</p></li>
+<li><p>slasd8</p></li>
+<li><p>slasda</p></li>
+<li><p>slasdq</p></li>
+<li><p>slasdt</p></li>
+<li><p>slaset</p></li>
+<li><p>slasq1</p></li>
+<li><p>slasq2</p></li>
+<li><p>slasq3</p></li>
+<li><p>slasq4</p></li>
+<li><p>slasq6</p></li>
+<li><p>slasr</p></li>
+<li><p>slasrt</p></li>
+<li><p>slassq</p></li>
+<li><p>slasv2</p></li>
+<li><p>slaswp</p></li>
+<li><p>slasy2</p></li>
+<li><p>slasyf</p></li>
+<li><p>slatbs</p></li>
+<li><p>slatdf</p></li>
+<li><p>slatps</p></li>
+<li><p>slatrd</p></li>
+<li><p>slatrs</p></li>
+<li><p>slatrz</p></li>
+<li><p>slauu2</p></li>
+<li><p>slauum</p></li>
+<li><p>sopgtr</p></li>
+<li><p>sopmtr</p></li>
+<li><p>sorbdb</p></li>
+<li><p>sorcsd</p></li>
+<li><p>sorg2l</p></li>
+<li><p>sorg2r</p></li>
+<li><p>sorgbr</p></li>
+<li><p>sorghr</p></li>
+<li><p>sorgl2</p></li>
+<li><p>sorglq</p></li>
+<li><p>sorgql</p></li>
+<li><p>sorgqr</p></li>
+<li><p>sorgr2</p></li>
+<li><p>sorgrq</p></li>
+<li><p>sorgtr</p></li>
+<li><p>sorm2l</p></li>
+<li><p>sorm2r</p></li>
+<li><p>sormbr</p></li>
+<li><p>sormhr</p></li>
+<li><p>sorml2</p></li>
+<li><p>sormlq</p></li>
+<li><p>sormql</p></li>
+<li><p>sormqr</p></li>
+<li><p>sormr2</p></li>
+<li><p>sormr3</p></li>
+<li><p>sormrq</p></li>
+<li><p>sormrz</p></li>
+<li><p>sormtr</p></li>
+<li><p>spbcon</p></li>
+<li><p>spbequ</p></li>
+<li><p>spbrfs</p></li>
+<li><p>spbstf</p></li>
+<li><p>spbsv</p></li>
+<li><p>spbsvx</p></li>
+<li><p>spbtf2</p></li>
+<li><p>spbtrf</p></li>
+<li><p>spbtrs</p></li>
+<li><p>spftrf</p></li>
+<li><p>spftri</p></li>
+<li><p>spftrs</p></li>
+<li><p>spocon</p></li>
+<li><p>spoequ</p></li>
+<li><p>spoequb</p></li>
+<li><p>sporfs</p></li>
+<li><p>sposv</p></li>
+<li><p>sposvx</p></li>
+<li><p>spotf2</p></li>
+<li><p>spotrf</p></li>
+<li><p>spotri</p></li>
+<li><p>spotrs</p></li>
+<li><p>sppcon</p></li>
+<li><p>sppequ</p></li>
+<li><p>spprfs</p></li>
+<li><p>sppsv</p></li>
+<li><p>sppsvx</p></li>
+<li><p>spptrf</p></li>
+<li><p>spptri</p></li>
+<li><p>spptrs</p></li>
+<li><p>spstf2</p></li>
+<li><p>spstrf</p></li>
+<li><p>sptcon</p></li>
+<li><p>spteqr</p></li>
+<li><p>sptrfs</p></li>
+<li><p>sptsv</p></li>
+<li><p>sptsvx</p></li>
+<li><p>spttrf</p></li>
+<li><p>spttrs</p></li>
+<li><p>sptts2</p></li>
+<li><p>srscl</p></li>
+<li><p>ssbev</p></li>
+<li><p>ssbevd</p></li>
+<li><p>ssbevx</p></li>
+<li><p>ssbgst</p></li>
+<li><p>ssbgv</p></li>
+<li><p>ssbgvd</p></li>
+<li><p>ssbgvx</p></li>
+<li><p>ssbtrd</p></li>
+<li><p>ssfrk</p></li>
+<li><p>sspcon</p></li>
+<li><p>sspev</p></li>
+<li><p>sspevd</p></li>
+<li><p>sspevx</p></li>
+<li><p>sspgst</p></li>
+<li><p>sspgv</p></li>
+<li><p>sspgvd</p></li>
+<li><p>sspgvx</p></li>
+<li><p>ssprfs</p></li>
+<li><p>sspsv</p></li>
+<li><p>sspsvx</p></li>
+<li><p>ssptrd</p></li>
+<li><p>ssptrf</p></li>
+<li><p>ssptri</p></li>
+<li><p>ssptrs</p></li>
+<li><p>sstebz</p></li>
+<li><p>sstedc</p></li>
+<li><p>sstegr</p></li>
+<li><p>sstein</p></li>
+<li><p>sstemr</p></li>
+<li><p>ssteqr</p></li>
+<li><p>ssterf</p></li>
+<li><p>sstev</p></li>
+<li><p>sstevd</p></li>
+<li><p>sstevr</p></li>
+<li><p>sstevx</p></li>
+<li><p>ssycon</p></li>
+<li><p>ssyconv</p></li>
+<li><p>ssyequb</p></li>
+<li><p>ssyev</p></li>
+<li><p>ssyevd</p></li>
+<li><p>ssyevr</p></li>
+<li><p>ssyevx</p></li>
+<li><p>ssygs2</p></li>
+<li><p>ssygst</p></li>
+<li><p>ssygv</p></li>
+<li><p>ssygvd</p></li>
+<li><p>ssygvx</p></li>
+<li><p>ssyrfs</p></li>
+<li><p>ssysv</p></li>
+<li><p>ssysvx</p></li>
+<li><p>ssyswapr</p></li>
+<li><p>ssytd2</p></li>
+<li><p>ssytf2</p></li>
+<li><p>ssytrd</p></li>
+<li><p>ssytrf</p></li>
+<li><p>ssytri</p></li>
+<li><p>ssytri2</p></li>
+<li><p>ssytri2x</p></li>
+<li><p>ssytrs</p></li>
+<li><p>ssytrs2</p></li>
+<li><p>stbcon</p></li>
+<li><p>stbrfs</p></li>
+<li><p>stbtrs</p></li>
+<li><p>stfsm</p></li>
+<li><p>stftri</p></li>
+<li><p>stfttp</p></li>
+<li><p>stfttr</p></li>
+<li><p>stgevc</p></li>
+<li><p>stgex2</p></li>
+<li><p>stgexc</p></li>
+<li><p>stgsen</p></li>
+<li><p>stgsja</p></li>
+<li><p>stgsna</p></li>
+<li><p>stgsy2</p></li>
+<li><p>stgsyl</p></li>
+<li><p>stpcon</p></li>
+<li><p>stpmqrt</p></li>
+<li><p>stpqrt</p></li>
+<li><p>stpqrt2</p></li>
+<li><p>stprfb</p></li>
+<li><p>stprfs</p></li>
+<li><p>stptri</p></li>
+<li><p>stptrs</p></li>
+<li><p>stpttf</p></li>
+<li><p>stpttr</p></li>
+<li><p>strcon</p></li>
+<li><p>strevc</p></li>
+<li><p>strexc</p></li>
+<li><p>strrfs</p></li>
+<li><p>strsen</p></li>
+<li><p>strsna</p></li>
+<li><p>strsyl</p></li>
+<li><p>strti2</p></li>
+<li><p>strtri</p></li>
+<li><p>strtrs</p></li>
+<li><p>strttf</p></li>
+<li><p>strttp</p></li>
+<li><p>stzrzf</p></li>
+<li><p>xerbla_array</p></li>
+<li><p>zbbcsd</p></li>
+<li><p>zbdsqr</p></li>
+<li><p>zcgesv</p></li>
+<li><p>zcposv</p></li>
+<li><p>zdrscl</p></li>
+<li><p>zgbbrd</p></li>
+<li><p>zgbcon</p></li>
+<li><p>zgbequ</p></li>
+<li><p>zgbequb</p></li>
+<li><p>zgbrfs</p></li>
+<li><p>zgbsv</p></li>
+<li><p>zgbsvx</p></li>
+<li><p>zgbtf2</p></li>
+<li><p>zgbtrf</p></li>
+<li><p>zgbtrs</p></li>
+<li><p>zgebak</p></li>
+<li><p>zgebal</p></li>
+<li><p>zgebd2</p></li>
+<li><p>zgebrd</p></li>
+<li><p>zgecon</p></li>
+<li><p>zgeequ</p></li>
+<li><p>zgeequb</p></li>
+<li><p>zgees</p></li>
+<li><p>zgeesx</p></li>
+<li><p>zgeev</p></li>
+<li><p>zgeevx</p></li>
+<li><p>zgehd2</p></li>
+<li><p>zgehrd</p></li>
+<li><p>zgelq2</p></li>
+<li><p>zgelqf</p></li>
+<li><p>zgels</p></li>
+<li><p>zgelsd</p></li>
+<li><p>zgelss</p></li>
+<li><p>zgelsy</p></li>
+<li><p>zgemqrt</p></li>
+<li><p>zgeql2</p></li>
+<li><p>zgeqlf</p></li>
+<li><p>zgeqp3</p></li>
+<li><p>zgeqr2</p></li>
+<li><p>zgeqr2p</p></li>
+<li><p>zgeqrf</p></li>
+<li><p>zgeqrfp</p></li>
+<li><p>zgeqrt</p></li>
+<li><p>zgeqrt2</p></li>
+<li><p>zgeqrt3</p></li>
+<li><p>zgerfs</p></li>
+<li><p>zgerq2</p></li>
+<li><p>zgerqf</p></li>
+<li><p>zgesc2</p></li>
+<li><p>zgesdd</p></li>
+<li><p>zgesv</p></li>
+<li><p>zgesvd</p></li>
+<li><p>zgesvx</p></li>
+<li><p>zgetc2</p></li>
+<li><p>zgetf2</p></li>
+<li><p>zgetrf</p></li>
+<li><p>zgetri</p></li>
+<li><p>zgetrs</p></li>
+<li><p>zggbak</p></li>
+<li><p>zggbal</p></li>
+<li><p>zgges</p></li>
+<li><p>zggesx</p></li>
+<li><p>zggev</p></li>
+<li><p>zggevx</p></li>
+<li><p>zggglm</p></li>
+<li><p>zgghrd</p></li>
+<li><p>zgglse</p></li>
+<li><p>zggqrf</p></li>
+<li><p>zggrqf</p></li>
+<li><p>zgtcon</p></li>
+<li><p>zgtrfs</p></li>
+<li><p>zgtsv</p></li>
+<li><p>zgtsvx</p></li>
+<li><p>zgttrf</p></li>
+<li><p>zgttrs</p></li>
+<li><p>zgtts2</p></li>
+<li><p>zhbev</p></li>
+<li><p>zhbevd</p></li>
+<li><p>zhbevx</p></li>
+<li><p>zhbgst</p></li>
+<li><p>zhbgv</p></li>
+<li><p>zhbgvd</p></li>
+<li><p>zhbgvx</p></li>
+<li><p>zhbtrd</p></li>
+<li><p>zhecon</p></li>
+<li><p>zheequb</p></li>
+<li><p>zheev</p></li>
+<li><p>zheevd</p></li>
+<li><p>zheevr</p></li>
+<li><p>zheevx</p></li>
+<li><p>zhegs2</p></li>
+<li><p>zhegst</p></li>
+<li><p>zhegv</p></li>
+<li><p>zhegvd</p></li>
+<li><p>zhegvx</p></li>
+<li><p>zherfs</p></li>
+<li><p>zhesv</p></li>
+<li><p>zhesvx</p></li>
+<li><p>zheswapr</p></li>
+<li><p>zhetd2</p></li>
+<li><p>zhetf2</p></li>
+<li><p>zhetrd</p></li>
+<li><p>zhetrf</p></li>
+<li><p>zhetri</p></li>
+<li><p>zhetri2</p></li>
+<li><p>zhetri2x</p></li>
+<li><p>zhetrs</p></li>
+<li><p>zhetrs2</p></li>
+<li><p>zhfrk</p></li>
+<li><p>zhgeqz</p></li>
+<li><p>zhpcon</p></li>
+<li><p>zhpev</p></li>
+<li><p>zhpevd</p></li>
+<li><p>zhpevx</p></li>
+<li><p>zhpgst</p></li>
+<li><p>zhpgv</p></li>
+<li><p>zhpgvd</p></li>
+<li><p>zhpgvx</p></li>
+<li><p>zhprfs</p></li>
+<li><p>zhpsv</p></li>
+<li><p>zhpsvx</p></li>
+<li><p>zhptrd</p></li>
+<li><p>zhptrf</p></li>
+<li><p>zhptri</p></li>
+<li><p>zhptrs</p></li>
+<li><p>zhsein</p></li>
+<li><p>zhseqr</p></li>
+<li><p>zlabrd</p></li>
+<li><p>zlacgv</p></li>
+<li><p>zlacn2</p></li>
+<li><p>zlacon</p></li>
+<li><p>zlacp2</p></li>
+<li><p>zlacpy</p></li>
+<li><p>zlacrm</p></li>
+<li><p>zlacrt</p></li>
+<li><p>zladiv</p></li>
+<li><p>zlaed0</p></li>
+<li><p>zlaed7</p></li>
+<li><p>zlaed8</p></li>
+<li><p>zlaein</p></li>
+<li><p>zlaesy</p></li>
+<li><p>zlaev2</p></li>
+<li><p>zlag2c</p></li>
+<li><p>zlags2</p></li>
+<li><p>zlagtm</p></li>
+<li><p>zlahef</p></li>
+<li><p>zlahqr</p></li>
+<li><p>zlahr2</p></li>
+<li><p>zlaic1</p></li>
+<li><p>zlals0</p></li>
+<li><p>zlalsa</p></li>
+<li><p>zlalsd</p></li>
+<li><p>zlangb</p></li>
+<li><p>zlange</p></li>
+<li><p>zlangt</p></li>
+<li><p>zlanhb</p></li>
+<li><p>zlanhe</p></li>
+<li><p>zlanhf</p></li>
+<li><p>zlanhp</p></li>
+<li><p>zlanhs</p></li>
+<li><p>zlanht</p></li>
+<li><p>zlansb</p></li>
+<li><p>zlansp</p></li>
+<li><p>zlansy</p></li>
+<li><p>zlantb</p></li>
+<li><p>zlantp</p></li>
+<li><p>zlantr</p></li>
+<li><p>zlapll</p></li>
+<li><p>zlapmr</p></li>
+<li><p>zlapmt</p></li>
+<li><p>zlaqgb</p></li>
+<li><p>zlaqge</p></li>
+<li><p>zlaqhb</p></li>
+<li><p>zlaqhe</p></li>
+<li><p>zlaqhp</p></li>
+<li><p>zlaqp2</p></li>
+<li><p>zlaqps</p></li>
+<li><p>zlaqr0</p></li>
+<li><p>zlaqr1</p></li>
+<li><p>zlaqr2</p></li>
+<li><p>zlaqr3</p></li>
+<li><p>zlaqr4</p></li>
+<li><p>zlaqr5</p></li>
+<li><p>zlaqsb</p></li>
+<li><p>zlaqsp</p></li>
+<li><p>zlaqsy</p></li>
+<li><p>zlar1v</p></li>
+<li><p>zlar2v</p></li>
+<li><p>zlarcm</p></li>
+<li><p>zlarf</p></li>
+<li><p>zlarfb</p></li>
+<li><p>zlarfg</p></li>
+<li><p>zlarfgp</p></li>
+<li><p>zlarft</p></li>
+<li><p>zlarfx</p></li>
+<li><p>zlargv</p></li>
+<li><p>zlarnv</p></li>
+<li><p>zlarrv</p></li>
+<li><p>zlartg</p></li>
+<li><p>zlartv</p></li>
+<li><p>zlarz</p></li>
+<li><p>zlarzb</p></li>
+<li><p>zlarzt</p></li>
+<li><p>zlascl</p></li>
+<li><p>zlaset</p></li>
+<li><p>zlasr</p></li>
+<li><p>zlassq</p></li>
+<li><p>zlaswp</p></li>
+<li><p>zlasyf</p></li>
+<li><p>zlat2c</p></li>
+<li><p>zlatbs</p></li>
+<li><p>zlatdf</p></li>
+<li><p>zlatps</p></li>
+<li><p>zlatrd</p></li>
+<li><p>zlatrs</p></li>
+<li><p>zlatrz</p></li>
+<li><p>zlauu2</p></li>
+<li><p>zlauum</p></li>
+<li><p>zpbcon</p></li>
+<li><p>zpbequ</p></li>
+<li><p>zpbrfs</p></li>
+<li><p>zpbstf</p></li>
+<li><p>zpbsv</p></li>
+<li><p>zpbsvx</p></li>
+<li><p>zpbtf2</p></li>
+<li><p>zpbtrf</p></li>
+<li><p>zpbtrs</p></li>
+<li><p>zpftrf</p></li>
+<li><p>zpftri</p></li>
+<li><p>zpftrs</p></li>
+<li><p>zpocon</p></li>
+<li><p>zpoequ</p></li>
+<li><p>zpoequb</p></li>
+<li><p>zporfs</p></li>
+<li><p>zposv</p></li>
+<li><p>zposvx</p></li>
+<li><p>zpotf2</p></li>
+<li><p>zpotrf</p></li>
+<li><p>zpotri</p></li>
+<li><p>zpotrs</p></li>
+<li><p>zppcon</p></li>
+<li><p>zppequ</p></li>
+<li><p>zpprfs</p></li>
+<li><p>zppsv</p></li>
+<li><p>zppsvx</p></li>
+<li><p>zpptrf</p></li>
+<li><p>zpptri</p></li>
+<li><p>zpptrs</p></li>
+<li><p>zpstf2</p></li>
+<li><p>zpstrf</p></li>
+<li><p>zptcon</p></li>
+<li><p>zpteqr</p></li>
+<li><p>zptrfs</p></li>
+<li><p>zptsv</p></li>
+<li><p>zptsvx</p></li>
+<li><p>zpttrf</p></li>
+<li><p>zpttrs</p></li>
+<li><p>zptts2</p></li>
+<li><p>zrot</p></li>
+<li><p>zspcon</p></li>
+<li><p>zspmv</p></li>
+<li><p>zspr</p></li>
+<li><p>zsprfs</p></li>
+<li><p>zspsv</p></li>
+<li><p>zspsvx</p></li>
+<li><p>zsptrf</p></li>
+<li><p>zsptri</p></li>
+<li><p>zsptrs</p></li>
+<li><p>zstedc</p></li>
+<li><p>zstegr</p></li>
+<li><p>zstein</p></li>
+<li><p>zstemr</p></li>
+<li><p>zsteqr</p></li>
+<li><p>zsycon</p></li>
+<li><p>zsyconv</p></li>
+<li><p>zsyequb</p></li>
+<li><p>zsymv</p></li>
+<li><p>zsyr</p></li>
+<li><p>zsyrfs</p></li>
+<li><p>zsysv</p></li>
+<li><p>zsysvx</p></li>
+<li><p>zsyswapr</p></li>
+<li><p>zsytf2</p></li>
+<li><p>zsytrf</p></li>
+<li><p>zsytri</p></li>
+<li><p>zsytri2</p></li>
+<li><p>zsytri2x</p></li>
+<li><p>zsytrs</p></li>
+<li><p>zsytrs2</p></li>
+<li><p>ztbcon</p></li>
+<li><p>ztbrfs</p></li>
+<li><p>ztbtrs</p></li>
+<li><p>ztfsm</p></li>
+<li><p>ztftri</p></li>
+<li><p>ztfttp</p></li>
+<li><p>ztfttr</p></li>
+<li><p>ztgevc</p></li>
+<li><p>ztgex2</p></li>
+<li><p>ztgexc</p></li>
+<li><p>ztgsen</p></li>
+<li><p>ztgsja</p></li>
+<li><p>ztgsna</p></li>
+<li><p>ztgsy2</p></li>
+<li><p>ztgsyl</p></li>
+<li><p>ztpcon</p></li>
+<li><p>ztpmqrt</p></li>
+<li><p>ztpqrt</p></li>
+<li><p>ztpqrt2</p></li>
+<li><p>ztprfb</p></li>
+<li><p>ztprfs</p></li>
+<li><p>ztptri</p></li>
+<li><p>ztptrs</p></li>
+<li><p>ztpttf</p></li>
+<li><p>ztpttr</p></li>
+<li><p>ztrcon</p></li>
+<li><p>ztrevc</p></li>
+<li><p>ztrexc</p></li>
+<li><p>ztrrfs</p></li>
+<li><p>ztrsen</p></li>
+<li><p>ztrsna</p></li>
+<li><p>ztrsyl</p></li>
+<li><p>ztrti2</p></li>
+<li><p>ztrtri</p></li>
+<li><p>ztrtrs</p></li>
+<li><p>ztrttf</p></li>
+<li><p>ztrttp</p></li>
+<li><p>ztzrzf</p></li>
+<li><p>zunbdb</p></li>
+<li><p>zuncsd</p></li>
+<li><p>zung2l</p></li>
+<li><p>zung2r</p></li>
+<li><p>zungbr</p></li>
+<li><p>zunghr</p></li>
+<li><p>zungl2</p></li>
+<li><p>zunglq</p></li>
+<li><p>zungql</p></li>
+<li><p>zungqr</p></li>
+<li><p>zungr2</p></li>
+<li><p>zungrq</p></li>
+<li><p>zungtr</p></li>
+<li><p>zunm2l</p></li>
+<li><p>zunm2r</p></li>
+<li><p>zunmbr</p></li>
+<li><p>zunmhr</p></li>
+<li><p>zunml2</p></li>
+<li><p>zunmlq</p></li>
+<li><p>zunmql</p></li>
+<li><p>zunmqr</p></li>
+<li><p>zunmr2</p></li>
+<li><p>zunmr3</p></li>
+<li><p>zunmrq</p></li>
+<li><p>zunmrz</p></li>
+<li><p>zunmtr</p></li>
+<li><p>zupgtr</p></li>
+<li><p>zupmtr</p></li>
+</ul>
+</section>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+    <a class='left-prev' id="prev-link" href="linalg.cython_blas.html" title="previous page">BLAS Functions for Cython</a>
+    <a class='right-next' id="next-link" href="linalg.interpolative.html" title="next page">Interpolative matrix decomposition (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.linalg.interpolative</span></code>)</a>
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2008-2021, The SciPy community.<br/>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.<br/>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

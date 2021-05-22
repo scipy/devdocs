@@ -1,0 +1,737 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Integration and ODEs (scipy.integrate) &#8212; SciPy v1.7.0.dev0+1036.4ec6f29 Manual</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/scipy.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="scipy.integrate.quad" href="generated/scipy.integrate.quad.html" />
+    <link rel="prev" title="scipy.fftpack.convolve.destroy_convolve_cache" href="generated/scipy.fftpack.convolve.destroy_convolve_cache.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+
+<a class="navbar-brand" href="../index.html">
+  <img src="../_static/scipyshiny_small.png" class="logo" alt="logo">
+</a>      
+
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../getting_started.html">
+  Getting started
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../tutorial/index.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="index.html">
+  API reference
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../dev/index.html">
+  Development
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../release.html">
+  Release notes
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/scipy/scipy" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="cluster.html">
+   Clustering package (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="cluster.vq.html">
+   K-means clustering and vector quantization (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster.vq
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="cluster.hierarchy.html">
+   Hierarchical clustering (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster.hierarchy
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="constants.html">
+   Constants (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.constants
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="fft.html">
+   Discrete Fourier transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fft
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="fftpack.html">
+   Legacy discrete Fourier transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fftpack
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Integration and ODEs (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.integrate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="interpolate.html">
+   Interpolation (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.interpolate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="io.html">
+   Input and output (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.io
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="linalg.html">
+   Linear algebra (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="linalg.blas.html">
+   Low-level BLAS functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.blas
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="linalg.lapack.html">
+   Low-level LAPACK functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.lapack
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="linalg.cython_blas.html">
+   BLAS Functions for Cython
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="linalg.cython_lapack.html">
+   LAPACK functions for Cython
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="linalg.interpolative.html">
+   Interpolative matrix decomposition (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.interpolative
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="misc.html">
+   Miscellaneous routines (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.misc
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="ndimage.html">
+   Multidimensional image processing (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.ndimage
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="odr.html">
+   Orthogonal distance regression (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.odr
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="optimize.html">
+   Optimization and root finding (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.optimize
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="optimize.nonlin.html">
+   Nonlinear solvers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="optimize.cython_optimize.html">
+   Cython optimize zeros API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="signal.html">
+   Signal processing (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.signal
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse.html">
+   Sparse matrices (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse.linalg.html">
+   Sparse linear algebra (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="sparse.csgraph.html">
+   Compressed sparse graph routines (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.csgraph
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="spatial.html">
+   Spatial algorithms and data structures (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="spatial.distance.html">
+   Distance computations (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial.distance
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="special.html">
+   Special functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.special
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="stats.html">
+   Statistical functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="stats._result_classes.html">
+   Result classes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="stats.mstats.html">
+   Statistical functions for masked arrays (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.mstats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="stats.qmc.html">
+   Quasi-Monte Carlo submodule (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.qmc
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="ccallback.html">
+   Low-level callback functions
+  </a>
+ </li>
+</ul>
+
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#integrating-functions-given-function-object">
+   Integrating functions, given function object
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#integrating-functions-given-fixed-samples">
+   Integrating functions, given fixed samples
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#solving-initial-value-problems-for-ode-systems">
+   Solving initial value problems for ODE systems
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#old-api">
+     Old API
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#solving-boundary-value-problems-for-ode-systems">
+   Solving boundary value problems for ODE systems
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <span class="target" id="module-scipy.integrate"></span><section id="integration-and-odes-scipy-integrate">
+<h1>Integration and ODEs (<a class="reference internal" href="#module-scipy.integrate" title="scipy.integrate"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.integrate</span></code></a>)<a class="headerlink" href="#integration-and-odes-scipy-integrate" title="Permalink to this headline">¶</a></h1>
+<section id="integrating-functions-given-function-object">
+<h2>Integrating functions, given function object<a class="headerlink" href="#integrating-functions-given-function-object" title="Permalink to this headline">¶</a></h2>
+<table class="longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.integrate.quad.html#scipy.integrate.quad" title="scipy.integrate.quad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quad</span></code></a>(func, a, b[, args, full_output, …])</p></td>
+<td><p>Compute a definite integral.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.integrate.quad_vec.html#scipy.integrate.quad_vec" title="scipy.integrate.quad_vec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quad_vec</span></code></a>(f, a, b[, epsabs, epsrel, norm, …])</p></td>
+<td><p>Adaptive integration of a vector-valued function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.integrate.dblquad.html#scipy.integrate.dblquad" title="scipy.integrate.dblquad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dblquad</span></code></a>(func, a, b, gfun, hfun[, args, …])</p></td>
+<td><p>Compute a double integral.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.integrate.tplquad.html#scipy.integrate.tplquad" title="scipy.integrate.tplquad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tplquad</span></code></a>(func, a, b, gfun, hfun, qfun, rfun)</p></td>
+<td><p>Compute a triple (definite) integral.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.integrate.nquad.html#scipy.integrate.nquad" title="scipy.integrate.nquad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nquad</span></code></a>(func, ranges[, args, opts, full_output])</p></td>
+<td><p>Integration over multiple variables.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.integrate.fixed_quad.html#scipy.integrate.fixed_quad" title="scipy.integrate.fixed_quad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fixed_quad</span></code></a>(func, a, b[, args, n])</p></td>
+<td><p>Compute a definite integral using fixed-order Gaussian quadrature.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.integrate.quadrature.html#scipy.integrate.quadrature" title="scipy.integrate.quadrature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quadrature</span></code></a>(func, a, b[, args, tol, rtol, …])</p></td>
+<td><p>Compute a definite integral using fixed-tolerance Gaussian quadrature.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.integrate.romberg.html#scipy.integrate.romberg" title="scipy.integrate.romberg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">romberg</span></code></a>(function, a, b[, args, tol, rtol, …])</p></td>
+<td><p>Romberg integration of a callable function or method.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.integrate.quad_explain.html#scipy.integrate.quad_explain" title="scipy.integrate.quad_explain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quad_explain</span></code></a>([output])</p></td>
+<td><p>Print extra information about integrate.quad() parameters and returns.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.integrate.newton_cotes.html#scipy.integrate.newton_cotes" title="scipy.integrate.newton_cotes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">newton_cotes</span></code></a>(rn[, equal])</p></td>
+<td><p>Return weights and error coefficient for Newton-Cotes integration.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.integrate.IntegrationWarning.html#scipy.integrate.IntegrationWarning" title="scipy.integrate.IntegrationWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IntegrationWarning</span></code></a></p></td>
+<td><p>Warning on issues during integration.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.integrate.AccuracyWarning.html#scipy.integrate.AccuracyWarning" title="scipy.integrate.AccuracyWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AccuracyWarning</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="integrating-functions-given-fixed-samples">
+<h2>Integrating functions, given fixed samples<a class="headerlink" href="#integrating-functions-given-fixed-samples" title="Permalink to this headline">¶</a></h2>
+<table class="longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.integrate.trapezoid.html#scipy.integrate.trapezoid" title="scipy.integrate.trapezoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trapezoid</span></code></a>(y[, x, dx, axis])</p></td>
+<td><p>Integrate along the given axis using the composite trapezoidal rule.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.integrate.cumulative_trapezoid.html#scipy.integrate.cumulative_trapezoid" title="scipy.integrate.cumulative_trapezoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cumulative_trapezoid</span></code></a>(y[, x, dx, axis, initial])</p></td>
+<td><p>Cumulatively integrate y(x) using the composite trapezoidal rule.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.integrate.simpson.html#scipy.integrate.simpson" title="scipy.integrate.simpson"><code class="xref py py-obj docutils literal notranslate"><span class="pre">simpson</span></code></a>(y[, x, dx, axis, even])</p></td>
+<td><p>Integrate y(x) using samples along the given axis and the composite Simpson’s rule.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.integrate.romb.html#scipy.integrate.romb" title="scipy.integrate.romb"><code class="xref py py-obj docutils literal notranslate"><span class="pre">romb</span></code></a>(y[, dx, axis, show])</p></td>
+<td><p>Romberg integration using samples of a function.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="special.html#module-scipy.special" title="scipy.special"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.special</span></code></a> for orthogonal polynomials (special) for Gaussian
+quadrature roots and weights for other weighting factors and regions.</p>
+</div>
+</section>
+<section id="solving-initial-value-problems-for-ode-systems">
+<h2>Solving initial value problems for ODE systems<a class="headerlink" href="#solving-initial-value-problems-for-ode-systems" title="Permalink to this headline">¶</a></h2>
+<p>The solvers are implemented as individual classes, which can be used directly
+(low-level usage) or through a convenience function.</p>
+<table class="longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.integrate.solve_ivp.html#scipy.integrate.solve_ivp" title="scipy.integrate.solve_ivp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve_ivp</span></code></a>(fun, t_span, y0[, method, t_eval, …])</p></td>
+<td><p>Solve an initial value problem for a system of ODEs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.integrate.RK23.html#scipy.integrate.RK23" title="scipy.integrate.RK23"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RK23</span></code></a>(fun, t0, y0, t_bound[, max_step, rtol, …])</p></td>
+<td><p>Explicit Runge-Kutta method of order 3(2).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.integrate.RK45.html#scipy.integrate.RK45" title="scipy.integrate.RK45"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RK45</span></code></a>(fun, t0, y0, t_bound[, max_step, rtol, …])</p></td>
+<td><p>Explicit Runge-Kutta method of order 5(4).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.integrate.DOP853.html#scipy.integrate.DOP853" title="scipy.integrate.DOP853"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DOP853</span></code></a>(fun, t0, y0, t_bound[, max_step, …])</p></td>
+<td><p>Explicit Runge-Kutta method of order 8.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.integrate.Radau.html#scipy.integrate.Radau" title="scipy.integrate.Radau"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Radau</span></code></a>(fun, t0, y0, t_bound[, max_step, …])</p></td>
+<td><p>Implicit Runge-Kutta method of Radau IIA family of order 5.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.integrate.BDF.html#scipy.integrate.BDF" title="scipy.integrate.BDF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BDF</span></code></a>(fun, t0, y0, t_bound[, max_step, rtol, …])</p></td>
+<td><p>Implicit method based on backward-differentiation formulas.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.integrate.LSODA.html#scipy.integrate.LSODA" title="scipy.integrate.LSODA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LSODA</span></code></a>(fun, t0, y0, t_bound[, first_step, …])</p></td>
+<td><p>Adams/BDF method with automatic stiffness detection and switching.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.integrate.OdeSolver.html#scipy.integrate.OdeSolver" title="scipy.integrate.OdeSolver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OdeSolver</span></code></a>(fun, t0, y0, t_bound, vectorized)</p></td>
+<td><p>Base class for ODE solvers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.integrate.DenseOutput.html#scipy.integrate.DenseOutput" title="scipy.integrate.DenseOutput"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DenseOutput</span></code></a>(t_old, t)</p></td>
+<td><p>Base class for local interpolant over step made by an ODE solver.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.integrate.OdeSolution.html#scipy.integrate.OdeSolution" title="scipy.integrate.OdeSolution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OdeSolution</span></code></a>(ts, interpolants)</p></td>
+<td><p>Continuous ODE solution.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="old-api">
+<h3>Old API<a class="headerlink" href="#old-api" title="Permalink to this headline">¶</a></h3>
+<p>These are the routines developed earlier for SciPy. They wrap older solvers
+implemented in Fortran (mostly ODEPACK). While the interface to them is not
+particularly convenient and certain features are missing compared to the new
+API, the solvers themselves are of good quality and work fast as compiled
+Fortran code. In some cases, it might be worth using this old API.</p>
+<table class="longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.integrate.odeint.html#scipy.integrate.odeint" title="scipy.integrate.odeint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">odeint</span></code></a>(func, y0, t[, args, Dfun, col_deriv, …])</p></td>
+<td><p>Integrate a system of ordinary differential equations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.integrate.ode.html#scipy.integrate.ode" title="scipy.integrate.ode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ode</span></code></a>(f[, jac])</p></td>
+<td><p>A generic interface class to numeric integrators.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.integrate.complex_ode.html#scipy.integrate.complex_ode" title="scipy.integrate.complex_ode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">complex_ode</span></code></a>(f[, jac])</p></td>
+<td><p>A wrapper of ode for complex systems.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="solving-boundary-value-problems-for-ode-systems">
+<h2>Solving boundary value problems for ODE systems<a class="headerlink" href="#solving-boundary-value-problems-for-ode-systems" title="Permalink to this headline">¶</a></h2>
+<table class="longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.integrate.solve_bvp.html#scipy.integrate.solve_bvp" title="scipy.integrate.solve_bvp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve_bvp</span></code></a>(fun, bc, x, y[, p, S, fun_jac, …])</p></td>
+<td><p>Solve a boundary value problem for a system of ODEs.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+    <a class='left-prev' id="prev-link" href="generated/scipy.fftpack.convolve.destroy_convolve_cache.html" title="previous page">scipy.fftpack.convolve.destroy_convolve_cache</a>
+    <a class='right-next' id="next-link" href="generated/scipy.integrate.quad.html" title="next page">scipy.integrate.quad</a>
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2008-2021, The SciPy community.<br/>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.<br/>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

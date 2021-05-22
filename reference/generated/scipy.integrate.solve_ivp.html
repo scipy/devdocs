@@ -1,0 +1,930 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>scipy.integrate.solve_ivp &#8212; SciPy v1.7.0.dev0+1036.4ec6f29 Manual</title>
+    
+  <link href="../../_static/css/theme.css" rel="stylesheet" />
+  <link href="../../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css" />
+    
+  <link rel="preload" as="script" href="../../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="scipy.integrate.RK23" href="scipy.integrate.RK23.html" />
+    <link rel="prev" title="scipy.integrate.romb" href="scipy.integrate.romb.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+
+<a class="navbar-brand" href="../../index.html">
+  <img src="../../_static/scipyshiny_small.png" class="logo" alt="logo">
+</a>      
+
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../getting_started.html">
+  Getting started
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../tutorial/index.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../index.html">
+  API reference
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../dev/index.html">
+  Development
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../release.html">
+  Release notes
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/scipy/scipy" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.html">
+   Clustering package (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.vq.html">
+   K-means clustering and vector quantization (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster.vq
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.hierarchy.html">
+   Hierarchical clustering (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster.hierarchy
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../constants.html">
+   Constants (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.constants
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../fft.html">
+   Discrete Fourier transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fft
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../fftpack.html">
+   Legacy discrete Fourier transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fftpack
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="reference internal" href="../integrate.html">
+   Integration and ODEs (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.integrate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../interpolate.html">
+   Interpolation (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.interpolate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../io.html">
+   Input and output (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.io
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.html">
+   Linear algebra (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.blas.html">
+   Low-level BLAS functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.blas
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.lapack.html">
+   Low-level LAPACK functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.lapack
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.cython_blas.html">
+   BLAS Functions for Cython
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.cython_lapack.html">
+   LAPACK functions for Cython
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.interpolative.html">
+   Interpolative matrix decomposition (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.interpolative
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../misc.html">
+   Miscellaneous routines (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.misc
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ndimage.html">
+   Multidimensional image processing (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.ndimage
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../odr.html">
+   Orthogonal distance regression (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.odr
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../optimize.html">
+   Optimization and root finding (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.optimize
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../optimize.nonlin.html">
+   Nonlinear solvers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../optimize.cython_optimize.html">
+   Cython optimize zeros API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../signal.html">
+   Signal processing (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.signal
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.html">
+   Sparse matrices (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.linalg.html">
+   Sparse linear algebra (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.csgraph.html">
+   Compressed sparse graph routines (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.csgraph
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial.html">
+   Spatial algorithms and data structures (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial.distance.html">
+   Distance computations (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial.distance
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../special.html">
+   Special functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.special
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.html">
+   Statistical functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats._result_classes.html">
+   Result classes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.mstats.html">
+   Statistical functions for masked arrays (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.mstats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.qmc.html">
+   Quasi-Monte Carlo submodule (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.qmc
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ccallback.html">
+   Low-level callback functions
+  </a>
+ </li>
+</ul>
+
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="scipy-integrate-solve-ivp">
+<h1>scipy.integrate.solve_ivp<a class="headerlink" href="#scipy-integrate-solve-ivp" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.integrate.solve_ivp">
+<span class="sig-prename descclassname"><span class="pre">scipy.integrate.</span></span><span class="sig-name descname"><span class="pre">solve_ivp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fun</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_span</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'RK45'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_eval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dense_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">events</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectorized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/master/scipy/integrate/_ivp/ivp.py#L156-L663"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.integrate.solve_ivp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve an initial value problem for a system of ODEs.</p>
+<p>This function numerically integrates a system of ordinary differential
+equations given an initial value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dy</span> <span class="o">/</span> <span class="n">dt</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">y</span><span class="p">(</span><span class="n">t0</span><span class="p">)</span> <span class="o">=</span> <span class="n">y0</span>
+</pre></div>
+</div>
+<p>Here t is a 1-D independent variable (time), y(t) is an
+N-D vector-valued function (state), and an N-D
+vector-valued function f(t, y) determines the differential equations.
+The goal is to find y(t) approximately satisfying the differential
+equations, given an initial value y(t0)=y0.</p>
+<p>Some of the solvers support integration in the complex domain, but note
+that for stiff ODE solvers, the right-hand side must be
+complex-differentiable (satisfy Cauchy-Riemann equations <a class="reference internal" href="#r179348322575-11" id="id1">[11]</a>).
+To solve a problem in the complex domain, pass y0 with a complex data type.
+Another option always available is to rewrite your problem for real and
+imaginary parts separately.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>fun</strong><span class="classifier">callable</span></dt><dd><p>Right-hand side of the system. The calling signature is <code class="docutils literal notranslate"><span class="pre">fun(t,</span> <span class="pre">y)</span></code>.
+Here <em class="xref py py-obj">t</em> is a scalar, and there are two options for the ndarray <em class="xref py py-obj">y</em>:
+It can either have shape (n,); then <em class="xref py py-obj">fun</em> must return array_like with
+shape (n,). Alternatively, it can have shape (n, k); then <em class="xref py py-obj">fun</em>
+must return an array_like with shape (n, k), i.e., each column
+corresponds to a single column in <em class="xref py py-obj">y</em>. The choice between the two
+options is determined by <em class="xref py py-obj">vectorized</em> argument (see below). The
+vectorized implementation allows a faster approximation of the Jacobian
+by finite differences (required for stiff solvers).</p>
+</dd>
+<dt><strong>t_span</strong><span class="classifier">2-tuple of floats</span></dt><dd><p>Interval of integration (t0, tf). The solver starts with t=t0 and
+integrates until it reaches t=tf.</p>
+</dd>
+<dt><strong>y0</strong><span class="classifier">array_like, shape (n,)</span></dt><dd><p>Initial state. For problems in the complex domain, pass <em class="xref py py-obj">y0</em> with a
+complex data type (even if the initial value is purely real).</p>
+</dd>
+<dt><strong>method</strong><span class="classifier">string or <a class="reference internal" href="scipy.integrate.OdeSolver.html#scipy.integrate.OdeSolver" title="scipy.integrate.OdeSolver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OdeSolver</span></code></a>, optional</span></dt><dd><p>Integration method to use:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>‘RK45’ (default): Explicit Runge-Kutta method of order 5(4) <a class="reference internal" href="#r179348322575-1" id="id2">[1]</a>.
+The error is controlled assuming accuracy of the fourth-order
+method, but steps are taken using the fifth-order accurate
+formula (local extrapolation is done). A quartic interpolation
+polynomial is used for the dense output <a class="reference internal" href="#r179348322575-2" id="id3">[2]</a>. Can be applied in
+the complex domain.</p></li>
+<li><p>‘RK23’: Explicit Runge-Kutta method of order 3(2) <a class="reference internal" href="#r179348322575-3" id="id4">[3]</a>. The error
+is controlled assuming accuracy of the second-order method, but
+steps are taken using the third-order accurate formula (local
+extrapolation is done). A cubic Hermite polynomial is used for the
+dense output. Can be applied in the complex domain.</p></li>
+<li><p>‘DOP853’: Explicit Runge-Kutta method of order 8 <a class="reference internal" href="#r179348322575-13" id="id5">[13]</a>.
+Python implementation of the “DOP853” algorithm originally
+written in Fortran <a class="reference internal" href="#r179348322575-14" id="id6">[14]</a>. A 7-th order interpolation polynomial
+accurate to 7-th order is used for the dense output.
+Can be applied in the complex domain.</p></li>
+<li><p>‘Radau’: Implicit Runge-Kutta method of the Radau IIA family of
+order 5 <a class="reference internal" href="#r179348322575-4" id="id7">[4]</a>. The error is controlled with a third-order accurate
+embedded formula. A cubic polynomial which satisfies the
+collocation conditions is used for the dense output.</p></li>
+<li><p>‘BDF’: Implicit multi-step variable-order (1 to 5) method based
+on a backward differentiation formula for the derivative
+approximation <a class="reference internal" href="#r179348322575-5" id="id8">[5]</a>. The implementation follows the one described
+in <a class="reference internal" href="#r179348322575-6" id="id9">[6]</a>. A quasi-constant step scheme is used and accuracy is
+enhanced using the NDF modification. Can be applied in the
+complex domain.</p></li>
+<li><p>‘LSODA’: Adams/BDF method with automatic stiffness detection and
+switching <a class="reference internal" href="#r179348322575-7" id="id10">[7]</a>, <a class="reference internal" href="#r179348322575-8" id="id11">[8]</a>. This is a wrapper of the Fortran solver
+from ODEPACK.</p></li>
+</ul>
+</div></blockquote>
+<p>Explicit Runge-Kutta methods (‘RK23’, ‘RK45’, ‘DOP853’) should be used
+for non-stiff problems and implicit methods (‘Radau’, ‘BDF’) for
+stiff problems <a class="reference internal" href="#r179348322575-9" id="id12">[9]</a>. Among Runge-Kutta methods, ‘DOP853’ is recommended
+for solving with high precision (low values of <em class="xref py py-obj">rtol</em> and <em class="xref py py-obj">atol</em>).</p>
+<p>If not sure, first try to run ‘RK45’. If it makes unusually many
+iterations, diverges, or fails, your problem is likely to be stiff and
+you should use ‘Radau’ or ‘BDF’. ‘LSODA’ can also be a good universal
+choice, but it might be somewhat less convenient to work with as it
+wraps old Fortran code.</p>
+<p>You can also pass an arbitrary class derived from <a class="reference internal" href="scipy.integrate.OdeSolver.html#scipy.integrate.OdeSolver" title="scipy.integrate.OdeSolver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OdeSolver</span></code></a> which
+implements the solver.</p>
+</dd>
+<dt><strong>t_eval</strong><span class="classifier">array_like or None, optional</span></dt><dd><p>Times at which to store the computed solution, must be sorted and lie
+within <em class="xref py py-obj">t_span</em>. If None (default), use points selected by the solver.</p>
+</dd>
+<dt><strong>dense_output</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether to compute a continuous solution. Default is False.</p>
+</dd>
+<dt><strong>events</strong><span class="classifier">callable, or list of callables, optional</span></dt><dd><p>Events to track. If None (default), no events will be tracked.
+Each event occurs at the zeros of a continuous function of time and
+state. Each function must have the signature <code class="docutils literal notranslate"><span class="pre">event(t,</span> <span class="pre">y)</span></code> and return
+a float. The solver will find an accurate value of <em class="xref py py-obj">t</em> at which
+<code class="docutils literal notranslate"><span class="pre">event(t,</span> <span class="pre">y(t))</span> <span class="pre">=</span> <span class="pre">0</span></code> using a root-finding algorithm. By default, all
+zeros will be found. The solver looks for a sign change over each step,
+so if multiple zero crossings occur within one step, events may be
+missed. Additionally each <em class="xref py py-obj">event</em> function might have the following
+attributes:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>terminal: bool, optional</dt><dd><p>Whether to terminate integration if this event occurs.
+Implicitly False if not assigned.</p>
+</dd>
+<dt>direction: float, optional</dt><dd><p>Direction of a zero crossing. If <em class="xref py py-obj">direction</em> is positive,
+<em class="xref py py-obj">event</em> will only trigger when going from negative to positive,
+and vice versa if <em class="xref py py-obj">direction</em> is negative. If 0, then either
+direction will trigger event. Implicitly 0 if not assigned.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>You can assign attributes like <code class="docutils literal notranslate"><span class="pre">event.terminal</span> <span class="pre">=</span> <span class="pre">True</span></code> to any
+function in Python.</p>
+</dd>
+<dt><strong>vectorized</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether <em class="xref py py-obj">fun</em> is implemented in a vectorized fashion. Default is False.</p>
+</dd>
+<dt><strong>args</strong><span class="classifier">tuple, optional</span></dt><dd><p>Additional arguments to pass to the user-defined functions.  If given,
+the additional arguments are passed to all user-defined functions.
+So if, for example, <em class="xref py py-obj">fun</em> has the signature <code class="docutils literal notranslate"><span class="pre">fun(t,</span> <span class="pre">y,</span> <span class="pre">a,</span> <span class="pre">b,</span> <span class="pre">c)</span></code>,
+then <em class="xref py py-obj">jac</em> (if given) and any event functions must have the same
+signature, and <em class="xref py py-obj">args</em> must be a tuple of length 3.</p>
+</dd>
+<dt><strong>options</strong></dt><dd><p>Options passed to a chosen solver. All options available for already
+implemented solvers are listed below.</p>
+</dd>
+<dt><strong>first_step</strong><span class="classifier">float or None, optional</span></dt><dd><p>Initial step size. Default is <em class="xref py py-obj">None</em> which means that the algorithm
+should choose.</p>
+</dd>
+<dt><strong>max_step</strong><span class="classifier">float, optional</span></dt><dd><p>Maximum allowed step size. Default is np.inf, i.e., the step size is not
+bounded and determined solely by the solver.</p>
+</dd>
+<dt><strong>rtol, atol</strong><span class="classifier">float or array_like, optional</span></dt><dd><p>Relative and absolute tolerances. The solver keeps the local error
+estimates less than <code class="docutils literal notranslate"><span class="pre">atol</span> <span class="pre">+</span> <span class="pre">rtol</span> <span class="pre">*</span> <span class="pre">abs(y)</span></code>. Here <em class="xref py py-obj">rtol</em> controls a
+relative accuracy (number of correct digits). But if a component of <em class="xref py py-obj">y</em>
+is approximately below <em class="xref py py-obj">atol</em>, the error only needs to fall within
+the same <em class="xref py py-obj">atol</em> threshold, and the number of correct digits is not
+guaranteed. If components of y have different scales, it might be
+beneficial to set different <em class="xref py py-obj">atol</em> values for different components by
+passing array_like with shape (n,) for <em class="xref py py-obj">atol</em>. Default values are
+1e-3 for <em class="xref py py-obj">rtol</em> and 1e-6 for <em class="xref py py-obj">atol</em>.</p>
+</dd>
+<dt><strong>jac</strong><span class="classifier">array_like, sparse_matrix, callable or None, optional</span></dt><dd><p>Jacobian matrix of the right-hand side of the system with respect
+to y, required by the ‘Radau’, ‘BDF’ and ‘LSODA’ method. The
+Jacobian matrix has shape (n, n) and its element (i, j) is equal to
+<code class="docutils literal notranslate"><span class="pre">d</span> <span class="pre">f_i</span> <span class="pre">/</span> <span class="pre">d</span> <span class="pre">y_j</span></code>.  There are three ways to define the Jacobian:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>If array_like or sparse_matrix, the Jacobian is assumed to
+be constant. Not supported by ‘LSODA’.</p></li>
+<li><p>If callable, the Jacobian is assumed to depend on both
+t and y; it will be called as <code class="docutils literal notranslate"><span class="pre">jac(t,</span> <span class="pre">y)</span></code>, as necessary.
+For ‘Radau’ and ‘BDF’ methods, the return value might be a
+sparse matrix.</p></li>
+<li><p>If None (default), the Jacobian will be approximated by
+finite differences.</p></li>
+</ul>
+</div></blockquote>
+<p>It is generally recommended to provide the Jacobian rather than
+relying on a finite-difference approximation.</p>
+</dd>
+<dt><strong>jac_sparsity</strong><span class="classifier">array_like, sparse matrix or None, optional</span></dt><dd><p>Defines a sparsity structure of the Jacobian matrix for a finite-
+difference approximation. Its shape must be (n, n). This argument
+is ignored if <em class="xref py py-obj">jac</em> is not <em class="xref py py-obj">None</em>. If the Jacobian has only few
+non-zero elements in <em>each</em> row, providing the sparsity structure
+will greatly speed up the computations <a class="reference internal" href="#r179348322575-10" id="id13">[10]</a>. A zero entry means that
+a corresponding element in the Jacobian is always zero. If None
+(default), the Jacobian is assumed to be dense.
+Not supported by ‘LSODA’, see <em class="xref py py-obj">lband</em> and <em class="xref py py-obj">uband</em> instead.</p>
+</dd>
+<dt><strong>lband, uband</strong><span class="classifier">int or None, optional</span></dt><dd><p>Parameters defining the bandwidth of the Jacobian for the ‘LSODA’
+method, i.e., <code class="docutils literal notranslate"><span class="pre">jac[i,</span> <span class="pre">j]</span> <span class="pre">!=</span> <span class="pre">0</span> <span class="pre">only</span> <span class="pre">for</span> <span class="pre">i</span> <span class="pre">-</span> <span class="pre">lband</span> <span class="pre">&lt;=</span> <span class="pre">j</span> <span class="pre">&lt;=</span> <span class="pre">i</span> <span class="pre">+</span> <span class="pre">uband</span></code>.
+Default is None. Setting these requires your jac routine to return the
+Jacobian in the packed format: the returned array must have <code class="docutils literal notranslate"><span class="pre">n</span></code>
+columns and <code class="docutils literal notranslate"><span class="pre">uband</span> <span class="pre">+</span> <span class="pre">lband</span> <span class="pre">+</span> <span class="pre">1</span></code> rows in which Jacobian diagonals are
+written. Specifically <code class="docutils literal notranslate"><span class="pre">jac_packed[uband</span> <span class="pre">+</span> <span class="pre">i</span> <span class="pre">-</span> <span class="pre">j</span> <span class="pre">,</span> <span class="pre">j]</span> <span class="pre">=</span> <span class="pre">jac[i,</span> <span class="pre">j]</span></code>.
+The same format is used in <a class="reference internal" href="scipy.linalg.solve_banded.html#scipy.linalg.solve_banded" title="scipy.linalg.solve_banded"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg.solve_banded</span></code></a> (check for an
+illustration).  These parameters can be also used with <code class="docutils literal notranslate"><span class="pre">jac=None</span></code> to
+reduce the number of Jacobian elements estimated by finite differences.</p>
+</dd>
+<dt><strong>min_step</strong><span class="classifier">float, optional</span></dt><dd><p>The minimum allowed step size for ‘LSODA’ method.
+By default <em class="xref py py-obj">min_step</em> is zero.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl>
+<dt>Bunch object with the following fields defined:</dt><dd></dd>
+<dt><strong>t</strong><span class="classifier">ndarray, shape (n_points,)</span></dt><dd><p>Time points.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">ndarray, shape (n, n_points)</span></dt><dd><p>Values of the solution at <em class="xref py py-obj">t</em>.</p>
+</dd>
+<dt><strong>sol</strong><span class="classifier"><a class="reference internal" href="scipy.integrate.OdeSolution.html#scipy.integrate.OdeSolution" title="scipy.integrate.OdeSolution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OdeSolution</span></code></a> or None</span></dt><dd><p>Found solution as <a class="reference internal" href="scipy.integrate.OdeSolution.html#scipy.integrate.OdeSolution" title="scipy.integrate.OdeSolution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OdeSolution</span></code></a> instance; None if <em class="xref py py-obj">dense_output</em> was
+set to False.</p>
+</dd>
+<dt><strong>t_events</strong><span class="classifier">list of ndarray or None</span></dt><dd><p>Contains for each event type a list of arrays at which an event of
+that type event was detected. None if <em class="xref py py-obj">events</em> was None.</p>
+</dd>
+<dt><strong>y_events</strong><span class="classifier">list of ndarray or None</span></dt><dd><p>For each value of <em class="xref py py-obj">t_events</em>, the corresponding value of the solution.
+None if <em class="xref py py-obj">events</em> was None.</p>
+</dd>
+<dt><strong>nfev</strong><span class="classifier">int</span></dt><dd><p>Number of evaluations of the right-hand side.</p>
+</dd>
+<dt><strong>njev</strong><span class="classifier">int</span></dt><dd><p>Number of evaluations of the Jacobian.</p>
+</dd>
+<dt><strong>nlu</strong><span class="classifier">int</span></dt><dd><p>Number of LU decompositions.</p>
+</dd>
+<dt><strong>status</strong><span class="classifier">int</span></dt><dd><p>Reason for algorithm termination:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>-1: Integration step failed.</p></li>
+<li><p>0: The solver successfully reached the end of <em class="xref py py-obj">tspan</em>.</p></li>
+<li><p>1: A termination event occurred.</p></li>
+</ul>
+</div></blockquote>
+</dd>
+<dt><strong>message</strong><span class="classifier">string</span></dt><dd><p>Human-readable description of the termination reason.</p>
+</dd>
+<dt><strong>success</strong><span class="classifier">bool</span></dt><dd><p>True if the solver reached the interval end or a termination event
+occurred (<code class="docutils literal notranslate"><span class="pre">status</span> <span class="pre">&gt;=</span> <span class="pre">0</span></code>).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="r179348322575-1"><span class="brackets"><a class="fn-backref" href="#id2">1</a></span></dt>
+<dd><p>J. R. Dormand, P. J. Prince, “A family of embedded Runge-Kutta
+formulae”, Journal of Computational and Applied Mathematics, Vol. 6,
+No. 1, pp. 19-26, 1980.</p>
+</dd>
+<dt class="label" id="r179348322575-2"><span class="brackets"><a class="fn-backref" href="#id3">2</a></span></dt>
+<dd><p>L. W. Shampine, “Some Practical Runge-Kutta Formulas”, Mathematics
+of Computation,, Vol. 46, No. 173, pp. 135-150, 1986.</p>
+</dd>
+<dt class="label" id="r179348322575-3"><span class="brackets"><a class="fn-backref" href="#id4">3</a></span></dt>
+<dd><p>P. Bogacki, L.F. Shampine, “A 3(2) Pair of Runge-Kutta Formulas”,
+Appl. Math. Lett. Vol. 2, No. 4. pp. 321-325, 1989.</p>
+</dd>
+<dt class="label" id="r179348322575-4"><span class="brackets"><a class="fn-backref" href="#id7">4</a></span></dt>
+<dd><p>E. Hairer, G. Wanner, “Solving Ordinary Differential Equations II:
+Stiff and Differential-Algebraic Problems”, Sec. IV.8.</p>
+</dd>
+<dt class="label" id="r179348322575-5"><span class="brackets"><a class="fn-backref" href="#id8">5</a></span></dt>
+<dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Backward_differentiation_formula">Backward Differentiation Formula</a>
+on Wikipedia.</p>
+</dd>
+<dt class="label" id="r179348322575-6"><span class="brackets"><a class="fn-backref" href="#id9">6</a></span></dt>
+<dd><p>L. F. Shampine, M. W. Reichelt, “THE MATLAB ODE SUITE”, SIAM J. SCI.
+COMPUTE., Vol. 18, No. 1, pp. 1-22, January 1997.</p>
+</dd>
+<dt class="label" id="r179348322575-7"><span class="brackets"><a class="fn-backref" href="#id10">7</a></span></dt>
+<dd><p>A. C. Hindmarsh, “ODEPACK, A Systematized Collection of ODE
+Solvers,” IMACS Transactions on Scientific Computation, Vol 1.,
+pp. 55-64, 1983.</p>
+</dd>
+<dt class="label" id="r179348322575-8"><span class="brackets"><a class="fn-backref" href="#id11">8</a></span></dt>
+<dd><p>L. Petzold, “Automatic selection of methods for solving stiff and
+nonstiff systems of ordinary differential equations”, SIAM Journal
+on Scientific and Statistical Computing, Vol. 4, No. 1, pp. 136-148,
+1983.</p>
+</dd>
+<dt class="label" id="r179348322575-9"><span class="brackets"><a class="fn-backref" href="#id12">9</a></span></dt>
+<dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Stiff_equation">Stiff equation</a> on
+Wikipedia.</p>
+</dd>
+<dt class="label" id="r179348322575-10"><span class="brackets"><a class="fn-backref" href="#id13">10</a></span></dt>
+<dd><p>A. Curtis, M. J. D. Powell, and J. Reid, “On the estimation of
+sparse Jacobian matrices”, Journal of the Institute of Mathematics
+and its Applications, 13, pp. 117-120, 1974.</p>
+</dd>
+<dt class="label" id="r179348322575-11"><span class="brackets"><a class="fn-backref" href="#id1">11</a></span></dt>
+<dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Cauchy-Riemann_equations">Cauchy-Riemann equations</a> on
+Wikipedia.</p>
+</dd>
+<dt class="label" id="r179348322575-12"><span class="brackets"><a class="fn-backref" href="#id28">12</a></span></dt>
+<dd><p><a class="reference external" href="https://en.wikipedia.org/wiki/Lotka%E2%80%93Volterra_equations">Lotka-Volterra equations</a>
+on Wikipedia.</p>
+</dd>
+<dt class="label" id="r179348322575-13"><span class="brackets"><a class="fn-backref" href="#id5">13</a></span></dt>
+<dd><p>E. Hairer, S. P. Norsett G. Wanner, “Solving Ordinary Differential
+Equations I: Nonstiff Problems”, Sec. II.</p>
+</dd>
+<dt class="label" id="r179348322575-14"><span class="brackets"><a class="fn-backref" href="#id6">14</a></span></dt>
+<dd><p><a class="reference external" href="http://www.unige.ch/~hairer/software.html">Page with original Fortran code of DOP853</a>.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Basic exponential decay showing automatically chosen time points.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">solve_ivp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">exponential_decay</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="k">return</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">exponential_decay</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+<span class="go">[ 0.          0.11487653  1.26364188  3.06061781  4.81611105  6.57445806</span>
+<span class="go">  8.33328988 10.        ]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+<span class="go">[[2.         1.88836035 1.06327177 0.43319312 0.18017253 0.07483045</span>
+<span class="go">  0.03107158 0.01350781]</span>
+<span class="go"> [4.         3.7767207  2.12654355 0.86638624 0.36034507 0.14966091</span>
+<span class="go">  0.06214316 0.02701561]</span>
+<span class="go"> [8.         7.5534414  4.25308709 1.73277247 0.72069014 0.29932181</span>
+<span class="go">  0.12428631 0.05403123]]</span>
+</pre></div>
+</div>
+<p>Specifying points where the solution is desired.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">exponential_decay</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+<span class="gp">... </span>                <span class="n">t_eval</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+<span class="go">[ 0  1  2  4 10]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+<span class="go">[[2.         1.21305369 0.73534021 0.27066736 0.01350938]</span>
+<span class="go"> [4.         2.42610739 1.47068043 0.54133472 0.02701876]</span>
+<span class="go"> [8.         4.85221478 2.94136085 1.08266944 0.05403753]]</span>
+</pre></div>
+</div>
+<p>Cannon fired upward with terminal event upon impact. The <code class="docutils literal notranslate"><span class="pre">terminal</span></code> and
+<code class="docutils literal notranslate"><span class="pre">direction</span></code> fields of an event are applied by monkey patching a function.
+Here <code class="docutils literal notranslate"><span class="pre">y[0]</span></code> is position and <code class="docutils literal notranslate"><span class="pre">y[1]</span></code> is velocity. The projectile starts
+at position 0 with velocity +10. Note that the integration never reaches
+t=100 because the event is terminal.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">upward_cannon</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="k">return</span> <span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">hit_ground</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="k">return</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hit_ground</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hit_ground</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">upward_cannon</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">events</span><span class="o">=</span><span class="n">hit_ground</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t_events</span><span class="p">)</span>
+<span class="go">[array([40.])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+<span class="go">[0.00000000e+00 9.99900010e-05 1.09989001e-03 1.10988901e-02</span>
+<span class="go"> 1.11088891e-01 1.11098890e+00 1.11099890e+01 4.00000000e+01]</span>
+</pre></div>
+</div>
+<p>Use <em class="xref py py-obj">dense_output</em> and <em class="xref py py-obj">events</em> to find position, which is 100, at the apex
+of the cannonball’s trajectory. Apex is not defined as terminal, so both
+apex and hit_ground are found. There is no information at t=20, so the sol
+attribute is used to evaluate the solution. The sol attribute is returned
+by setting <code class="docutils literal notranslate"><span class="pre">dense_output=True</span></code>. Alternatively, the <em class="xref py py-obj">y_events</em> attribute
+can be used to access the solution at the time of the event.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">apex</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="k">return</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">upward_cannon</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+<span class="gp">... </span>                <span class="n">events</span><span class="o">=</span><span class="p">(</span><span class="n">hit_ground</span><span class="p">,</span> <span class="n">apex</span><span class="p">),</span> <span class="n">dense_output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t_events</span><span class="p">)</span>
+<span class="go">[array([40.]), array([20.])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+<span class="go">[0.00000000e+00 9.99900010e-05 1.09989001e-03 1.10988901e-02</span>
+<span class="go"> 1.11088891e-01 1.11098890e+00 1.11099890e+01 4.00000000e+01]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">sol</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t_events</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+<span class="go">[100.   0.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y_events</span><span class="p">)</span>
+<span class="go">[array([[-5.68434189e-14, -1.00000000e+01]]), array([[1.00000000e+02, 1.77635684e-15]])]</span>
+</pre></div>
+</div>
+<p>As an example of a system with additional parameters, we’ll implement
+the Lotka-Volterra equations <a class="reference internal" href="#r179348322575-12" id="id28">[12]</a>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">lotkavolterra</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">z</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">[</span><span class="n">a</span><span class="o">*</span><span class="n">x</span> <span class="o">-</span> <span class="n">b</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="o">-</span><span class="n">c</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="n">d</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">]</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>We pass in the parameter values a=1.5, b=1, c=3 and d=1 with the <em class="xref py py-obj">args</em>
+argument.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span><span class="n">lotkavolterra</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+<span class="gp">... </span>                <span class="n">dense_output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Compute a dense solution and plot it.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">sol</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">z</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="n">shadow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Lotka-Volterra System&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-integrate-solve_ivp-1.png" class="plot-directive" src="../../_images/scipy-integrate-solve_ivp-1.png" />
+</figure>
+</dd></dl>
+
+</section>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+    <a class='left-prev' id="prev-link" href="scipy.integrate.romb.html" title="previous page">scipy.integrate.romb</a>
+    <a class='right-next' id="next-link" href="scipy.integrate.RK23.html" title="next page">scipy.integrate.RK23</a>
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2008-2021, The SciPy community.<br/>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.<br/>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

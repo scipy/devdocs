@@ -1,0 +1,773 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>scipy.stats.multiscale_graphcorr &#8212; SciPy v1.7.0.dev0+1036.4ec6f29 Manual</title>
+    
+  <link href="../../_static/css/theme.css" rel="stylesheet" />
+  <link href="../../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css" />
+    
+  <link rel="preload" as="script" href="../../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="scipy.stats.ttest_1samp" href="scipy.stats.ttest_1samp.html" />
+    <link rel="prev" title="scipy.stats.theilslopes" href="scipy.stats.theilslopes.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+
+<a class="navbar-brand" href="../../index.html">
+  <img src="../../_static/scipyshiny_small.png" class="logo" alt="logo">
+</a>      
+
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../getting_started.html">
+  Getting started
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../tutorial/index.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../index.html">
+  API reference
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../dev/index.html">
+  Development
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../release.html">
+  Release notes
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/scipy/scipy" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.html">
+   Clustering package (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.vq.html">
+   K-means clustering and vector quantization (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster.vq
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.hierarchy.html">
+   Hierarchical clustering (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster.hierarchy
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../constants.html">
+   Constants (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.constants
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../fft.html">
+   Discrete Fourier transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fft
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../fftpack.html">
+   Legacy discrete Fourier transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fftpack
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../integrate.html">
+   Integration and ODEs (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.integrate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../interpolate.html">
+   Interpolation (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.interpolate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../io.html">
+   Input and output (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.io
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.html">
+   Linear algebra (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.blas.html">
+   Low-level BLAS functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.blas
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.lapack.html">
+   Low-level LAPACK functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.lapack
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.cython_blas.html">
+   BLAS Functions for Cython
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.cython_lapack.html">
+   LAPACK functions for Cython
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.interpolative.html">
+   Interpolative matrix decomposition (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.interpolative
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../misc.html">
+   Miscellaneous routines (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.misc
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ndimage.html">
+   Multidimensional image processing (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.ndimage
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../odr.html">
+   Orthogonal distance regression (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.odr
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../optimize.html">
+   Optimization and root finding (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.optimize
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../optimize.nonlin.html">
+   Nonlinear solvers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../optimize.cython_optimize.html">
+   Cython optimize zeros API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../signal.html">
+   Signal processing (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.signal
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.html">
+   Sparse matrices (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.linalg.html">
+   Sparse linear algebra (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.csgraph.html">
+   Compressed sparse graph routines (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.csgraph
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial.html">
+   Spatial algorithms and data structures (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial.distance.html">
+   Distance computations (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial.distance
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../special.html">
+   Special functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.special
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="reference internal" href="../stats.html">
+   Statistical functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats._result_classes.html">
+   Result classes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.mstats.html">
+   Statistical functions for masked arrays (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.mstats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.qmc.html">
+   Quasi-Monte Carlo submodule (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.qmc
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ccallback.html">
+   Low-level callback functions
+  </a>
+ </li>
+</ul>
+
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="scipy-stats-multiscale-graphcorr">
+<h1>scipy.stats.multiscale_graphcorr<a class="headerlink" href="#scipy-stats-multiscale-graphcorr" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.stats.multiscale_graphcorr">
+<span class="sig-prename descclassname"><span class="pre">scipy.stats.</span></span><span class="sig-name descname"><span class="pre">multiscale_graphcorr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">x</span></em>, <em class="sig-param"><span class="pre">y</span></em>, <em class="sig-param"><span class="pre">compute_distance=&lt;function</span> <span class="pre">_euclidean_dist&gt;</span></em>, <em class="sig-param"><span class="pre">reps=1000</span></em>, <em class="sig-param"><span class="pre">workers=1</span></em>, <em class="sig-param"><span class="pre">is_twosamp=False</span></em>, <em class="sig-param"><span class="pre">random_state=None</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/master/scipy/stats/stats.py#L5001-L5285"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.stats.multiscale_graphcorr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the Multiscale Graph Correlation (MGC) test statistic.</p>
+<p>Specifically, for each point, MGC finds the <span class="math notranslate nohighlight">\(k\)</span>-nearest neighbors for
+one property (e.g. cloud density), and the <span class="math notranslate nohighlight">\(l\)</span>-nearest neighbors for
+the other property (e.g. grass wetness) <a class="reference internal" href="#r882c1b4c2283-1" id="id1">[1]</a>. This pair <span class="math notranslate nohighlight">\((k, l)\)</span> is
+called the “scale”. A priori, however, it is not know which scales will be
+most informative. So, MGC computes all distance pairs, and then efficiently
+computes the distance correlations for all scales. The local correlations
+illustrate which scales are relatively informative about the relationship.
+The key, therefore, to successfully discover and decipher relationships
+between disparate data modalities is to adaptively determine which scales
+are the most informative, and the geometric implication for the most
+informative scales. Doing so not only provides an estimate of whether the
+modalities are related, but also provides insight into how the
+determination was made. This is especially important in high-dimensional
+data, where simple visualizations do not reveal relationships to the
+unaided human eye. Characterizations of this implementation in particular
+have been derived from and benchmarked within in <a class="reference internal" href="#r882c1b4c2283-2" id="id2">[2]</a>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>x, y</strong><span class="classifier">ndarray</span></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> have shapes <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">p)</span></code> and <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">q)</span></code> where <em class="xref py py-obj">n</em> is
+the number of samples and <em class="xref py py-obj">p</em> and <em class="xref py py-obj">q</em> are the number of dimensions,
+then the MGC independence test will be run.  Alternatively, <code class="docutils literal notranslate"><span class="pre">x</span></code> and
+<code class="docutils literal notranslate"><span class="pre">y</span></code> can have shapes <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">n)</span></code> if they are distance or similarity
+matrices, and <code class="docutils literal notranslate"><span class="pre">compute_distance</span></code> must be sent to <code class="docutils literal notranslate"><span class="pre">None</span></code>. If <code class="docutils literal notranslate"><span class="pre">x</span></code>
+and <code class="docutils literal notranslate"><span class="pre">y</span></code> have shapes <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">p)</span></code> and <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">p)</span></code>, an unpaired
+two-sample MGC test will be run.</p>
+</dd>
+<dt><strong>compute_distance</strong><span class="classifier">callable, optional</span></dt><dd><p>A function that computes the distance or similarity among the samples
+within each data matrix. Set to <code class="docutils literal notranslate"><span class="pre">None</span></code> if <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> are
+already distance matrices. The default uses the euclidean norm metric.
+If you are calling a custom function, either create the distance
+matrix before-hand or create a function of the form
+<code class="docutils literal notranslate"><span class="pre">compute_distance(x)</span></code> where <em class="xref py py-obj">x</em> is the data matrix for which
+pairwise distances are calculated.</p>
+</dd>
+<dt><strong>reps</strong><span class="classifier">int, optional</span></dt><dd><p>The number of replications used to estimate the null when using the
+permutation test. The default is <code class="docutils literal notranslate"><span class="pre">1000</span></code>.</p>
+</dd>
+<dt><strong>workers</strong><span class="classifier">int or map-like callable, optional</span></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">workers</span></code> is an int the population is subdivided into <code class="docutils literal notranslate"><span class="pre">workers</span></code>
+sections and evaluated in parallel (uses <code class="docutils literal notranslate"><span class="pre">multiprocessing.Pool</span>
+<span class="pre">&lt;multiprocessing&gt;</span></code>). Supply <code class="docutils literal notranslate"><span class="pre">-1</span></code> to use all cores available to the
+Process. Alternatively supply a map-like callable, such as
+<code class="docutils literal notranslate"><span class="pre">multiprocessing.Pool.map</span></code> for evaluating the p-value in parallel.
+This evaluation is carried out as <code class="docutils literal notranslate"><span class="pre">workers(func,</span> <span class="pre">iterable)</span></code>.
+Requires that <em class="xref py py-obj">func</em> be pickleable. The default is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+</dd>
+<dt><strong>is_twosamp</strong><span class="classifier">bool, optional</span></dt><dd><p>If <em class="xref py py-obj">True</em>, a two sample test will be run. If <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> have
+shapes <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">p)</span></code> and <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">p)</span></code>, this optional will be overriden and
+set to <code class="docutils literal notranslate"><span class="pre">True</span></code>. Set to <code class="docutils literal notranslate"><span class="pre">True</span></code> if <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> both have shapes
+<code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">p)</span></code> and a two sample test is desired. The default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.
+Note that this will not run if inputs are distance matrices.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">{None, int, <a class="reference external" href="https://numpy.org/devdocs/reference/random/generator.html#numpy.random.Generator" title="(in NumPy v1.21.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code></a>,</span></dt><dd><blockquote>
+<div><p><a class="reference external" href="https://numpy.org/devdocs/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v1.21.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a>}, optional</p>
+</div></blockquote>
+<p>If <em class="xref py py-obj">seed</em> is None (or <em class="xref py py-obj">np.random</em>), the <a class="reference external" href="https://numpy.org/devdocs/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v1.21.dev0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a>
+singleton is used.
+If <em class="xref py py-obj">seed</em> is an int, a new <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance is used,
+seeded with <em class="xref py py-obj">seed</em>.
+If <em class="xref py py-obj">seed</em> is already a <code class="docutils literal notranslate"><span class="pre">Generator</span></code> or <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance then
+that instance is used.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl>
+<dt><strong>stat</strong><span class="classifier">float</span></dt><dd><p>The sample MGC test statistic within <em class="xref py py-obj">[-1, 1]</em>.</p>
+</dd>
+<dt><strong>pvalue</strong><span class="classifier">float</span></dt><dd><p>The p-value obtained via permutation.</p>
+</dd>
+<dt><strong>mgc_dict</strong><span class="classifier">dict</span></dt><dd><p>Contains additional useful additional returns containing the following
+keys:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>mgc_map<span class="classifier">ndarray</span></dt><dd><p>A 2D representation of the latent geometry of the relationship.
+of the relationship.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>opt_scale<span class="classifier">(int, int)</span></dt><dd><p>The estimated optimal scale as a <em class="xref py py-obj">(x, y)</em> pair.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>null_dist<span class="classifier">list</span></dt><dd><p>The null distribution derived from the permuted matrices</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="scipy.stats.pearsonr.html#scipy.stats.pearsonr" title="scipy.stats.pearsonr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pearsonr</span></code></a></dt><dd><p>Pearson correlation coefficient and p-value for testing non-correlation.</p>
+</dd>
+<dt><a class="reference internal" href="scipy.stats.kendalltau.html#scipy.stats.kendalltau" title="scipy.stats.kendalltau"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kendalltau</span></code></a></dt><dd><p>Calculates Kendall’s tau.</p>
+</dd>
+<dt><a class="reference internal" href="scipy.stats.spearmanr.html#scipy.stats.spearmanr" title="scipy.stats.spearmanr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spearmanr</span></code></a></dt><dd><p>Calculates a Spearman rank-order correlation coefficient.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>A description of the process of MGC and applications on neuroscience data
+can be found in <a class="reference internal" href="#r882c1b4c2283-1" id="id3">[1]</a>. It is performed using the following steps:</p>
+<ol class="arabic simple">
+<li><p>Two distance matrices <span class="math notranslate nohighlight">\(D^X\)</span> and <span class="math notranslate nohighlight">\(D^Y\)</span> are computed and
+modified to be mean zero columnwise. This results in two
+<span class="math notranslate nohighlight">\(n \times n\)</span> distance matrices <span class="math notranslate nohighlight">\(A\)</span> and <span class="math notranslate nohighlight">\(B\)</span> (the
+centering and unbiased modification) <a class="reference internal" href="#r882c1b4c2283-3" id="id4">[3]</a>.</p></li>
+<li><p>For all values <span class="math notranslate nohighlight">\(k\)</span> and <span class="math notranslate nohighlight">\(l\)</span> from <span class="math notranslate nohighlight">\(1, ..., n\)</span>,</p>
+<ul class="simple">
+<li><p>The <span class="math notranslate nohighlight">\(k\)</span>-nearest neighbor and <span class="math notranslate nohighlight">\(l\)</span>-nearest neighbor graphs
+are calculated for each property. Here, <span class="math notranslate nohighlight">\(G_k (i, j)\)</span> indicates
+the <span class="math notranslate nohighlight">\(k\)</span>-smallest values of the <span class="math notranslate nohighlight">\(i\)</span>-th row of <span class="math notranslate nohighlight">\(A\)</span>
+and <span class="math notranslate nohighlight">\(H_l (i, j)\)</span> indicates the <span class="math notranslate nohighlight">\(l\)</span> smallested values of
+the <span class="math notranslate nohighlight">\(i\)</span>-th row of <span class="math notranslate nohighlight">\(B\)</span></p></li>
+<li><p>Let <span class="math notranslate nohighlight">\(\circ\)</span> denotes the entry-wise matrix product, then local
+correlations are summed and normalized using the following statistic:</p></li>
+</ul>
+</li>
+</ol>
+<div class="math notranslate nohighlight">
+\[c^{kl} = \frac{\sum_{ij} A G_k B H_l}
+              {\sqrt{\sum_{ij} A^2 G_k \times \sum_{ij} B^2 H_l}}\]</div>
+<ol class="arabic simple">
+<li><p>The MGC test statistic is the smoothed optimal local correlation of
+<span class="math notranslate nohighlight">\(\{ c^{kl} \}\)</span>. Denote the smoothing operation as <span class="math notranslate nohighlight">\(R(\cdot)\)</span>
+(which essentially set all isolated large correlations) as 0 and
+connected large correlations the same as before, see <a class="reference internal" href="#r882c1b4c2283-3" id="id5">[3]</a>.) MGC is,</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[MGC_n (x, y) = \max_{(k, l)} R \left(c^{kl} \left( x_n, y_n \right)
+                                            \right)\]</div>
+<p>The test statistic returns a value between <span class="math notranslate nohighlight">\((-1, 1)\)</span> since it is
+normalized.</p>
+<p>The p-value returned is calculated using a permutation test. This process
+is completed by first randomly permuting <span class="math notranslate nohighlight">\(y\)</span> to estimate the null
+distribution and then calculating the probability of observing a test
+statistic, under the null, at least as extreme as the observed test
+statistic.</p>
+<p>MGC requires at least 5 samples to run with reliable results. It can also
+handle high-dimensional data sets.
+In addition, by manipulating the input data matrices, the two-sample
+testing problem can be reduced to the independence testing problem <a class="reference internal" href="#r882c1b4c2283-4" id="id6">[4]</a>.
+Given sample data <span class="math notranslate nohighlight">\(U\)</span> and <span class="math notranslate nohighlight">\(V\)</span> of sizes <span class="math notranslate nohighlight">\(p \times n\)</span>
+<span class="math notranslate nohighlight">\(p \times m\)</span>, data matrix <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span> can be created as
+follows:</p>
+<div class="math notranslate nohighlight">
+\[X = [U | V] \in \mathcal{R}^{p \times (n + m)}
+Y = [0_{1 \times n} | 1_{1 \times m}] \in \mathcal{R}^{(n + m)}\]</div>
+<p>Then, the MGC statistic can be calculated as normal. This methodology can
+be extended to similar tests such as distance correlation <a class="reference internal" href="#r882c1b4c2283-4" id="id7">[4]</a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.4.0.</span></p>
+</div>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="r882c1b4c2283-1"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id3">2</a>)</span></dt>
+<dd><p>Vogelstein, J. T., Bridgeford, E. W., Wang, Q., Priebe, C. E.,
+Maggioni, M., &amp; Shen, C. (2019). Discovering and deciphering
+relationships across disparate data modalities. ELife.</p>
+</dd>
+<dt class="label" id="r882c1b4c2283-2"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>Panda, S., Palaniappan, S., Xiong, J., Swaminathan, A.,
+Ramachandran, S., Bridgeford, E. W., … Vogelstein, J. T. (2019).
+mgcpy: A Comprehensive High Dimensional Independence Testing Python
+Package. <a class="reference external" href="https://arxiv.org/abs/1907.02088">arXiv:1907.02088</a></p>
+</dd>
+<dt class="label" id="r882c1b4c2283-3"><span class="brackets">3</span><span class="fn-backref">(<a href="#id4">1</a>,<a href="#id5">2</a>)</span></dt>
+<dd><p>Shen, C., Priebe, C.E., &amp; Vogelstein, J. T. (2019). From distance
+correlation to multiscale graph correlation. Journal of the American
+Statistical Association.</p>
+</dd>
+<dt class="label" id="r882c1b4c2283-4"><span class="brackets">4</span><span class="fn-backref">(<a href="#id6">1</a>,<a href="#id7">2</a>)</span></dt>
+<dd><p>Shen, C. &amp; Vogelstein, J. T. (2018). The Exact Equivalence of
+Distance and Kernel Methods for Hypothesis Testing.
+<a class="reference external" href="https://arxiv.org/abs/1806.05514">arXiv:1806.05514</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">multiscale_graphcorr</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stat</span><span class="p">,</span> <span class="n">pvalue</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">multiscale_graphcorr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">workers</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;</span><span class="si">%.1f</span><span class="s1">, </span><span class="si">%.3f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">stat</span><span class="p">,</span> <span class="n">pvalue</span><span class="p">)</span>
+<span class="go">&#39;1.0, 0.001&#39;</span>
+</pre></div>
+</div>
+<p>Alternatively,</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mgc</span> <span class="o">=</span> <span class="n">multiscale_graphcorr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;</span><span class="si">%.1f</span><span class="s1">, </span><span class="si">%.3f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mgc</span><span class="o">.</span><span class="n">stat</span><span class="p">,</span> <span class="n">mgc</span><span class="o">.</span><span class="n">pvalue</span><span class="p">)</span>
+<span class="go">&#39;1.0, 0.001&#39;</span>
+</pre></div>
+</div>
+<p>To run an unpaired two-sample test,</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">79</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mgc</span> <span class="o">=</span> <span class="n">multiscale_graphcorr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;</span><span class="si">%.3f</span><span class="s1">, </span><span class="si">%.2f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mgc</span><span class="o">.</span><span class="n">stat</span><span class="p">,</span> <span class="n">mgc</span><span class="o">.</span><span class="n">pvalue</span><span class="p">)</span>  
+<span class="go">&#39;0.033, 0.02&#39;</span>
+</pre></div>
+</div>
+<p>or, if shape of the inputs are the same,</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mgc</span> <span class="o">=</span> <span class="n">multiscale_graphcorr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">is_twosamp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;</span><span class="si">%.3f</span><span class="s1">, </span><span class="si">%.1f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">mgc</span><span class="o">.</span><span class="n">stat</span><span class="p">,</span> <span class="n">mgc</span><span class="o">.</span><span class="n">pvalue</span><span class="p">)</span>  
+<span class="go">&#39;-0.008, 1.0&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+    <a class='left-prev' id="prev-link" href="scipy.stats.theilslopes.html" title="previous page">scipy.stats.theilslopes</a>
+    <a class='right-next' id="next-link" href="scipy.stats.ttest_1samp.html" title="next page">scipy.stats.ttest_1samp</a>
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2008-2021, The SciPy community.<br/>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.<br/>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

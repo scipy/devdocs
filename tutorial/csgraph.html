@@ -1,0 +1,577 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Compressed Sparse Graph Routines (scipy.sparse.csgraph) &#8212; SciPy v1.7.0.dev0+1036.4ec6f29 Manual</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet" />
+  <link href="../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/scipy.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Spatial data structures and algorithms (scipy.spatial)" href="spatial.html" />
+    <link rel="prev" title="Sparse eigenvalue problems with ARPACK" href="arpack.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+
+<a class="navbar-brand" href="../index.html">
+  <img src="../_static/scipyshiny_small.png" class="logo" alt="logo">
+</a>      
+
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../getting_started.html">
+  Getting started
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="index.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../reference/index.html">
+  API reference
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../dev/index.html">
+  Development
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../release.html">
+  Release notes
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/scipy/scipy" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="general.html">
+   Introduction
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="special.html">
+   Special functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.special
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="integrate.html">
+   Integration (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.integrate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="optimize.html">
+   Optimization (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.optimize
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="interpolate.html">
+   Interpolation (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.interpolate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="fft.html">
+   Fourier Transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fft
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="signal.html">
+   Signal Processing (
+   <code class="xref py py-obj docutils literal notranslate">
+    <span class="pre">
+     scipy.signal
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="linalg.html">
+   Linear Algebra (
+   <code class="xref py py-obj docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="arpack.html">
+   Sparse eigenvalue problems with ARPACK
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Compressed Sparse Graph Routines (
+   <code class="xref py py-obj docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.csgraph
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="spatial.html">
+   Spatial data structures and algorithms (
+   <code class="xref py py-obj docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="stats.html">
+   Statistics (
+   <code class="xref py py-obj docutils literal notranslate">
+    <span class="pre">
+     scipy.stats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="ndimage.html">
+   Multidimensional image processing (
+   <code class="xref py py-obj docutils literal notranslate">
+    <span class="pre">
+     scipy.ndimage
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="io.html">
+   File IO (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.io
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+</ul>
+
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#example-word-ladders">
+   Example: Word Ladders
+  </a>
+ </li>
+</ul>
+
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="compressed-sparse-graph-routines-scipy-sparse-csgraph">
+<h1>Compressed Sparse Graph Routines (<a class="reference internal" href="../reference/sparse.csgraph.html#module-scipy.sparse.csgraph" title="scipy.sparse.csgraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.csgraph</span></code></a>)<a class="headerlink" href="#compressed-sparse-graph-routines-scipy-sparse-csgraph" title="Permalink to this headline">¶</a></h1>
+<section id="example-word-ladders">
+<h2>Example: Word Ladders<a class="headerlink" href="#example-word-ladders" title="Permalink to this headline">¶</a></h2>
+<p>A <a class="reference external" href="https://en.wikipedia.org/wiki/Word_ladder">Word Ladder</a> is a word game
+invented by Lewis Carroll, in which players find paths between words by
+switching one letter at a time. For example, one can link “ape” and “man”
+in the following way:</p>
+<div class="math notranslate nohighlight">
+\[{\rm ape \to apt \to ait \to bit \to big \to bag \to mag \to man}\]</div>
+<p>Note that each step involves changing just one letter of the word. This is
+just one possible path from “ape” to “man”, but is it the shortest possible
+path? If we desire to find the shortest word-ladder path between two given
+words, the sparse graph submodule can help.</p>
+<p>First, we need a list of valid words. Many operating systems have such a list
+built in. For example, on linux, a word list can often be found at one of the
+following locations:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="nb">dict</span>
+<span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="nb">dict</span>
+</pre></div>
+</div>
+<p>Another easy source for words are the Scrabble word lists available at various
+sites around the internet (search with your favorite search engine). We’ll
+first create this list. The system word lists consist of a file with one
+word per line. The following should be modified to use the particular word
+list you have available:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">word_list</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/usr/share/dict/words&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">word_list</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span> <span class="n">word_list</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We want to look at words of length 3, so let’s select just those words of the
+correct length. We’ll also eliminate words which start with upper-case
+(proper nouns) or contain non-alphanumeric characters, like apostrophes and
+hyphens. Finally, we’ll make sure everything is lower-case for comparison
+later:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">word_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">word_list</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">word_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">word_list</span> <span class="k">if</span> <span class="n">word</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">islower</span><span class="p">()]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">word_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">word_list</span> <span class="k">if</span> <span class="n">word</span><span class="o">.</span><span class="n">isalpha</span><span class="p">()]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">word_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="n">word_list</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">word_list</span><span class="p">)</span>
+<span class="go">586    # may vary</span>
+</pre></div>
+</div>
+<p>Now we have a list of 586 valid three-letter words (the exact number may
+change depending on the particular list used). Each of these words will
+become a node in our graph, and we will create edges connecting the nodes
+associated with each pair of words which differs by only one letter.</p>
+<p>There are efficient ways to do this, and inefficient ways to do this. To
+do this as efficiently as possible, we’re going to use some sophisticated
+numpy array manipulation:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">word_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">word_list</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">word_list</span><span class="o">.</span><span class="n">dtype</span>   <span class="c1"># these are unicode characters in Python 3</span>
+<span class="go">dtype(&#39;&lt;U3&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">word_list</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>  <span class="c1"># sort for quick searching later</span>
+</pre></div>
+</div>
+<p>We have an array where each entry is three unicode characters long. We’d like
+to find all pairs where exactly one character is different. We’ll start by
+converting each word to a 3-D vector:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">word_bytes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">((</span><span class="n">word_list</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">word_list</span><span class="o">.</span><span class="n">itemsize</span><span class="p">),</span>
+<span class="gp">... </span>                        <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;uint8&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                        <span class="n">buffer</span><span class="o">=</span><span class="n">word_list</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># each unicode character is four bytes long. We only need first byte</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># we know that there are three characters in each word</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">word_bytes</span> <span class="o">=</span> <span class="n">word_bytes</span><span class="p">[:,</span> <span class="p">::</span><span class="n">word_list</span><span class="o">.</span><span class="n">itemsize</span><span class="o">//</span><span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">word_bytes</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(586, 3)    # may vary</span>
+</pre></div>
+</div>
+<p>Now, we’ll use the
+<a class="reference external" href="https://en.wikipedia.org/wiki/Hamming_distance">Hamming distance</a>
+between each point to determine which pairs of words are connected.
+The Hamming distance measures the fraction of entries between two vectors
+which differ: any two words with a Hamming distance equal to <span class="math notranslate nohighlight">\(1/N\)</span>,
+where <span class="math notranslate nohighlight">\(N\)</span> is the number of letters, are connected in the word ladder:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">pdist</span><span class="p">,</span> <span class="n">squareform</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hamming_dist</span> <span class="o">=</span> <span class="n">pdist</span><span class="p">(</span><span class="n">word_bytes</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;hamming&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># there are three characters in each word</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span> <span class="o">=</span> <span class="n">csr_matrix</span><span class="p">(</span><span class="n">squareform</span><span class="p">(</span><span class="n">hamming_dist</span> <span class="o">&lt;</span> <span class="mf">1.5</span> <span class="o">/</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>When comparing the distances, we don’t use an equality because this can be
+unstable for floating point values. The inequality produces the desired
+result, as long as no two entries of the word list are identical. Now, that our
+graph is set up, we’ll use a shortest path search to find the path between
+any two words in the graph:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">i1</span> <span class="o">=</span> <span class="n">word_list</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="s1">&#39;ape&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i2</span> <span class="o">=</span> <span class="n">word_list</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="s1">&#39;man&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">word_list</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span>
+<span class="go">&#39;ape&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">word_list</span><span class="p">[</span><span class="n">i2</span><span class="p">]</span>
+<span class="go">&#39;man&#39;</span>
+</pre></div>
+</div>
+<p>We need to check that these match, because if the words are not in the list,
+that will not be the case. Now, all we need is to find the shortest path
+between these two indices in the graph. We’ll use
+<a class="reference external" href="https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm">Dijkstra’s algorithm</a>,
+because it allows us to find the path for just one node:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.sparse.csgraph</span> <span class="kn">import</span> <span class="n">dijkstra</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distances</span><span class="p">,</span> <span class="n">predecessors</span> <span class="o">=</span> <span class="n">dijkstra</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">indices</span><span class="o">=</span><span class="n">i1</span><span class="p">,</span>
+<span class="gp">... </span>                                   <span class="n">return_predecessors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">distances</span><span class="p">[</span><span class="n">i2</span><span class="p">])</span>
+<span class="go">5.0    # may vary</span>
+</pre></div>
+</div>
+<p>So we see that the shortest path between “ape” and “man” contains only
+five steps. We can use the predecessors returned by the algorithm to
+reconstruct this path:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i</span> <span class="o">=</span> <span class="n">i2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">while</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">i1</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="gp">... </span>    <span class="n">i</span> <span class="o">=</span> <span class="n">predecessors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word_list</span><span class="p">[</span><span class="n">i1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">path</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="go">[&#39;ape&#39;, &#39;apt&#39;, &#39;opt&#39;, &#39;oat&#39;, &#39;mat&#39;, &#39;man&#39;]    # may vary</span>
+</pre></div>
+</div>
+<p>This is three fewer links than our initial example: the path from “ape” to “man”
+is only five steps.</p>
+<p>Using other tools in the module, we can answer other questions. For example,
+are there three-letter words which are not linked in a word ladder? This
+is a question of connected components in the graph:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.sparse.csgraph</span> <span class="kn">import</span> <span class="n">connected_components</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">N_components</span><span class="p">,</span> <span class="n">component_list</span> <span class="o">=</span> <span class="n">connected_components</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">N_components</span><span class="p">)</span>
+<span class="go">15    # may vary</span>
+</pre></div>
+</div>
+<p>In this particular sample of three-letter words, there are 15 connected
+components: that is, 15 distinct sets of words with no paths between the
+sets. How many words are there in each of these sets? We can learn this from
+the list of components:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">component_list</span> <span class="o">==</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_components</span><span class="p">)]</span>
+<span class="go">[571, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]    # may vary</span>
+</pre></div>
+</div>
+<p>There is one large connected set and 14 smaller ones. Let’s look at the
+words in the smaller ones:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">word_list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">component_list</span> <span class="o">==</span> <span class="n">i</span><span class="p">)])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N_components</span><span class="p">)]</span>
+<span class="go">[[&#39;aha&#39;],    # may vary</span>
+<span class="go"> [&#39;chi&#39;],</span>
+<span class="go"> [&#39;ebb&#39;],</span>
+<span class="go"> [&#39;ems&#39;, &#39;emu&#39;],</span>
+<span class="go"> [&#39;gnu&#39;],</span>
+<span class="go"> [&#39;ism&#39;],</span>
+<span class="go"> [&#39;khz&#39;],</span>
+<span class="go"> [&#39;nth&#39;],</span>
+<span class="go"> [&#39;ova&#39;],</span>
+<span class="go"> [&#39;qua&#39;],</span>
+<span class="go"> [&#39;ugh&#39;],</span>
+<span class="go"> [&#39;ups&#39;],</span>
+<span class="go"> [&#39;urn&#39;],</span>
+<span class="go"> [&#39;use&#39;]]</span>
+</pre></div>
+</div>
+<p>These are all the three-letter words which do not connect to others via a word
+ladder.</p>
+<p>We might also be curious about which words are maximally separated. Which
+two words take the most links to connect? We can determine this by computing
+the matrix of all shortest paths. Note that, by convention, the
+distance between two non-connected points is reported to be infinity, so
+we’ll need to remove these before finding the maximum:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">distances</span><span class="p">,</span> <span class="n">predecessors</span> <span class="o">=</span> <span class="n">dijkstra</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">return_predecessors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">max_distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">distances</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isinf</span><span class="p">(</span><span class="n">distances</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">max_distance</span><span class="p">)</span>
+<span class="go">13.0    # may vary</span>
+</pre></div>
+</div>
+<p>So, there is at least one pair of words which takes 13 steps to get from one
+to the other! Let’s determine which these are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">i1</span><span class="p">,</span> <span class="n">i2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">distances</span> <span class="o">==</span> <span class="n">max_distance</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">word_list</span><span class="p">[</span><span class="n">i1</span><span class="p">],</span> <span class="n">word_list</span><span class="p">[</span><span class="n">i2</span><span class="p">]))</span>
+<span class="go">[(&#39;imp&#39;, &#39;ohm&#39;),    # may vary</span>
+<span class="go"> (&#39;imp&#39;, &#39;ohs&#39;),</span>
+<span class="go"> (&#39;ohm&#39;, &#39;imp&#39;),</span>
+<span class="go"> (&#39;ohm&#39;, &#39;ump&#39;),</span>
+<span class="go"> (&#39;ohs&#39;, &#39;imp&#39;),</span>
+<span class="go"> (&#39;ohs&#39;, &#39;ump&#39;),</span>
+<span class="go"> (&#39;ump&#39;, &#39;ohm&#39;),</span>
+<span class="go"> (&#39;ump&#39;, &#39;ohs&#39;)]</span>
+</pre></div>
+</div>
+<p>We see that there are two pairs of words which are maximally separated from
+each other: ‘imp’ and ‘ump’ on the one hand, and ‘ohm’ and ‘ohs’ on the other.
+We can find the connecting list in the same way as above:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">path</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i</span> <span class="o">=</span> <span class="n">i2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">while</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">i1</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+<span class="gp">... </span>    <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="gp">... </span>    <span class="n">i</span> <span class="o">=</span> <span class="n">predecessors</span><span class="p">[</span><span class="n">i1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word_list</span><span class="p">[</span><span class="n">i1</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">path</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="go">[&#39;imp&#39;, &#39;amp&#39;, &#39;asp&#39;, &#39;ass&#39;, &#39;ads&#39;, &#39;add&#39;, &#39;aid&#39;, &#39;mid&#39;, &#39;mod&#39;, &#39;moo&#39;, &#39;too&#39;, &#39;tho&#39;, &#39;oho&#39;, &#39;ohm&#39;]    # may vary</span>
+</pre></div>
+</div>
+<p>This gives us the path we desired to see.</p>
+<p>Word ladders are just one potential application of scipy’s fast graph
+algorithms for sparse matrices. Graph theory makes appearances in many
+areas of mathematics, data analysis, and machine learning. The sparse graph
+tools are flexible enough to handle many of these situations.</p>
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+    <a class='left-prev' id="prev-link" href="arpack.html" title="previous page">Sparse eigenvalue problems with ARPACK</a>
+    <a class='right-next' id="next-link" href="spatial.html" title="next page">Spatial data structures and algorithms (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code>)</a>
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2008-2021, The SciPy community.<br/>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.<br/>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

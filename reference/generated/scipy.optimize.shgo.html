@@ -1,0 +1,997 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>scipy.optimize.shgo &#8212; SciPy v1.7.0.dev0+1036.4ec6f29 Manual</title>
+    
+  <link href="../../_static/css/theme.css" rel="stylesheet" />
+  <link href="../../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css" />
+    
+  <link rel="preload" as="script" href="../../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="scipy.optimize.dual_annealing" href="scipy.optimize.dual_annealing.html" />
+    <link rel="prev" title="scipy.optimize.differential_evolution" href="scipy.optimize.differential_evolution.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+
+<a class="navbar-brand" href="../../index.html">
+  <img src="../../_static/scipyshiny_small.png" class="logo" alt="logo">
+</a>      
+
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../getting_started.html">
+  Getting started
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../tutorial/index.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../index.html">
+  API reference
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../dev/index.html">
+  Development
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../release.html">
+  Release notes
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/scipy/scipy" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.html">
+   Clustering package (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.vq.html">
+   K-means clustering and vector quantization (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster.vq
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.hierarchy.html">
+   Hierarchical clustering (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster.hierarchy
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../constants.html">
+   Constants (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.constants
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../fft.html">
+   Discrete Fourier transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fft
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../fftpack.html">
+   Legacy discrete Fourier transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fftpack
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../integrate.html">
+   Integration and ODEs (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.integrate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../interpolate.html">
+   Interpolation (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.interpolate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../io.html">
+   Input and output (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.io
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.html">
+   Linear algebra (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.blas.html">
+   Low-level BLAS functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.blas
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.lapack.html">
+   Low-level LAPACK functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.lapack
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.cython_blas.html">
+   BLAS Functions for Cython
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.cython_lapack.html">
+   LAPACK functions for Cython
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.interpolative.html">
+   Interpolative matrix decomposition (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.interpolative
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../misc.html">
+   Miscellaneous routines (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.misc
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ndimage.html">
+   Multidimensional image processing (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.ndimage
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../odr.html">
+   Orthogonal distance regression (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.odr
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="reference internal" href="../optimize.html">
+   Optimization and root finding (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.optimize
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../optimize.nonlin.html">
+   Nonlinear solvers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../optimize.cython_optimize.html">
+   Cython optimize zeros API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../signal.html">
+   Signal processing (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.signal
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.html">
+   Sparse matrices (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.linalg.html">
+   Sparse linear algebra (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.csgraph.html">
+   Compressed sparse graph routines (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.csgraph
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial.html">
+   Spatial algorithms and data structures (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial.distance.html">
+   Distance computations (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial.distance
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../special.html">
+   Special functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.special
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.html">
+   Statistical functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats._result_classes.html">
+   Result classes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.mstats.html">
+   Statistical functions for masked arrays (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.mstats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.qmc.html">
+   Quasi-Monte Carlo submodule (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.qmc
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ccallback.html">
+   Low-level callback functions
+  </a>
+ </li>
+</ul>
+
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="scipy-optimize-shgo">
+<h1>scipy.optimize.shgo<a class="headerlink" href="#scipy-optimize-shgo" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.optimize.shgo">
+<span class="sig-prename descclassname"><span class="pre">scipy.optimize.</span></span><span class="sig-name descname"><span class="pre">shgo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimizer_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'simplicial'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/master/scipy/optimize/_shgo.py#L17-L443"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.optimize.shgo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the global minimum of a function using SHG optimization.</p>
+<p>SHGO stands for “simplicial homology global optimization”.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>func</strong><span class="classifier">callable</span></dt><dd><p>The objective function to be minimized.  Must be in the form
+<code class="docutils literal notranslate"><span class="pre">f(x,</span> <span class="pre">*args)</span></code>, where <code class="docutils literal notranslate"><span class="pre">x</span></code> is the argument in the form of a 1-D array
+and <code class="docutils literal notranslate"><span class="pre">args</span></code> is a tuple of any additional fixed parameters needed to
+completely specify the function.</p>
+</dd>
+<dt><strong>bounds</strong><span class="classifier">sequence</span></dt><dd><p>Bounds for variables.  <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code> pairs for each element in <code class="docutils literal notranslate"><span class="pre">x</span></code>,
+defining the lower and upper bounds for the optimizing argument of
+<em class="xref py py-obj">func</em>. It is required to have <code class="docutils literal notranslate"><span class="pre">len(bounds)</span> <span class="pre">==</span> <span class="pre">len(x)</span></code>.
+<code class="docutils literal notranslate"><span class="pre">len(bounds)</span></code> is used to determine the number of parameters in <code class="docutils literal notranslate"><span class="pre">x</span></code>.
+Use <code class="docutils literal notranslate"><span class="pre">None</span></code> for one of min or max when there is no bound in that
+direction. By default bounds are <code class="docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">None)</span></code>.</p>
+</dd>
+<dt><strong>args</strong><span class="classifier">tuple, optional</span></dt><dd><p>Any additional fixed parameters needed to completely specify the
+objective function.</p>
+</dd>
+<dt><strong>constraints</strong><span class="classifier">dict or sequence of dict, optional</span></dt><dd><p>Constraints definition.
+Function(s) <code class="docutils literal notranslate"><span class="pre">R**n</span></code> in the form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">g</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="n">applied</span> <span class="k">as</span> <span class="n">g</span> <span class="p">:</span> <span class="n">R</span><span class="o">^</span><span class="n">n</span> <span class="o">-&gt;</span> <span class="n">R</span><span class="o">^</span><span class="n">m</span>
+<span class="n">h</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="n">applied</span> <span class="k">as</span> <span class="n">h</span> <span class="p">:</span> <span class="n">R</span><span class="o">^</span><span class="n">n</span> <span class="o">-&gt;</span> <span class="n">R</span><span class="o">^</span><span class="n">p</span>
+</pre></div>
+</div>
+<p>Each constraint is defined in a dictionary with fields:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>type<span class="classifier">str</span></dt><dd><p>Constraint type: ‘eq’ for equality, ‘ineq’ for inequality.</p>
+</dd>
+<dt>fun<span class="classifier">callable</span></dt><dd><p>The function defining the constraint.</p>
+</dd>
+<dt>jac<span class="classifier">callable, optional</span></dt><dd><p>The Jacobian of <em class="xref py py-obj">fun</em> (only for SLSQP).</p>
+</dd>
+<dt>args<span class="classifier">sequence, optional</span></dt><dd><p>Extra arguments to be passed to the function and Jacobian.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Equality constraint means that the constraint function result is to
+be zero whereas inequality means that it is to be non-negative.
+Note that COBYLA only supports inequality constraints.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only the COBYLA and SLSQP local minimize methods currently
+support constraint arguments. If the <code class="docutils literal notranslate"><span class="pre">constraints</span></code> sequence
+used in the local optimization problem is not defined in
+<code class="docutils literal notranslate"><span class="pre">minimizer_kwargs</span></code> and a constrained method is used then the
+global <code class="docutils literal notranslate"><span class="pre">constraints</span></code> will be used.
+(Defining a <code class="docutils literal notranslate"><span class="pre">constraints</span></code> sequence in <code class="docutils literal notranslate"><span class="pre">minimizer_kwargs</span></code>
+means that <code class="docutils literal notranslate"><span class="pre">constraints</span></code> will not be added so if equality
+constraints and so forth need to be added then the inequality
+functions in <code class="docutils literal notranslate"><span class="pre">constraints</span></code> need to be added to
+<code class="docutils literal notranslate"><span class="pre">minimizer_kwargs</span></code> too).</p>
+</div>
+</dd>
+<dt><strong>n</strong><span class="classifier">int, optional</span></dt><dd><p>Number of sampling points used in the construction of the simplicial
+complex. Note that this argument is only used for <code class="docutils literal notranslate"><span class="pre">sobol</span></code> and other
+arbitrary <em class="xref py py-obj">sampling_methods</em>. In case of <code class="docutils literal notranslate"><span class="pre">sobol</span></code>, it must be a
+power of 2: <code class="docutils literal notranslate"><span class="pre">n=2**m</span></code>, and the argument will automatically be
+converted to the next higher power of 2. Default is 100 for
+<code class="docutils literal notranslate"><span class="pre">sampling_method='simplicial'</span></code> and 128 for
+<code class="docutils literal notranslate"><span class="pre">sampling_method='sobol'</span></code>.</p>
+</dd>
+<dt><strong>iters</strong><span class="classifier">int, optional</span></dt><dd><p>Number of iterations used in the construction of the simplicial
+complex. Default is 1.</p>
+</dd>
+<dt><strong>callback</strong><span class="classifier">callable, optional</span></dt><dd><p>Called after each iteration, as <code class="docutils literal notranslate"><span class="pre">callback(xk)</span></code>, where <code class="docutils literal notranslate"><span class="pre">xk</span></code> is the
+current parameter vector.</p>
+</dd>
+<dt><strong>minimizer_kwargs</strong><span class="classifier">dict, optional</span></dt><dd><p>Extra keyword arguments to be passed to the minimizer
+<code class="docutils literal notranslate"><span class="pre">scipy.optimize.minimize</span></code> Some important options could be:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>method<span class="classifier">str</span></dt><dd><p>The minimization method, the default is <code class="docutils literal notranslate"><span class="pre">SLSQP</span></code>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>args<span class="classifier">tuple</span></dt><dd><p>Extra arguments passed to the objective function (<code class="docutils literal notranslate"><span class="pre">func</span></code>) and
+its derivatives (Jacobian, Hessian).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>options<span class="classifier">dict, optional</span></dt><dd><p>Note that by default the tolerance is specified as
+<code class="docutils literal notranslate"><span class="pre">{ftol:</span> <span class="pre">1e-12}</span></code></p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</dd>
+<dt><strong>options</strong><span class="classifier">dict, optional</span></dt><dd><p>A dictionary of solver options. Many of the options specified for the
+global routine are also passed to the scipy.optimize.minimize routine.
+The options that are also passed to the local routine are marked with
+“(L)”.</p>
+<p>Stopping criteria, the algorithm will terminate if any of the specified
+criteria are met. However, the default algorithm does not require any to
+be specified:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>maxfev<span class="classifier">int (L)</span></dt><dd><p>Maximum number of function evaluations in the feasible domain.
+(Note only methods that support this option will terminate
+the routine at precisely exact specified value. Otherwise the
+criterion will only terminate during a global iteration)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>f_min</dt><dd><p>Specify the minimum objective function value, if it is known.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>f_tol<span class="classifier">float</span></dt><dd><p>Precision goal for the value of f in the stopping
+criterion. Note that the global routine will also
+terminate if a sampling point in the global routine is
+within this tolerance.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>maxiter<span class="classifier">int</span></dt><dd><p>Maximum number of iterations to perform.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>maxev<span class="classifier">int</span></dt><dd><p>Maximum number of sampling evaluations to perform (includes
+searching in infeasible points).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>maxtime<span class="classifier">float</span></dt><dd><p>Maximum processing runtime allowed</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>minhgrd<span class="classifier">int</span></dt><dd><p>Minimum homology group rank differential. The homology group of the
+objective function is calculated (approximately) during every
+iteration. The rank of this group has a one-to-one correspondence
+with the number of locally convex subdomains in the objective
+function (after adequate sampling points each of these subdomains
+contain a unique global minimum). If the difference in the hgr is 0
+between iterations for <code class="docutils literal notranslate"><span class="pre">maxhgrd</span></code> specified iterations the
+algorithm will terminate.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Objective function knowledge:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>symmetry<span class="classifier">bool</span></dt><dd><p>Specify True if the objective function contains symmetric variables.
+The search space (and therefore performance) is decreased by O(n!).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>jac<span class="classifier">bool or callable, optional</span></dt><dd><p>Jacobian (gradient) of objective function. Only for CG, BFGS,
+Newton-CG, L-BFGS-B, TNC, SLSQP, dogleg, trust-ncg. If <code class="docutils literal notranslate"><span class="pre">jac</span></code> is a
+boolean and is True, <code class="docutils literal notranslate"><span class="pre">fun</span></code> is assumed to return the gradient along
+with the objective function. If False, the gradient will be
+estimated numerically. <code class="docutils literal notranslate"><span class="pre">jac</span></code> can also be a callable returning the
+gradient of the objective. In this case, it must accept the same
+arguments as <code class="docutils literal notranslate"><span class="pre">fun</span></code>. (Passed to <em class="xref py py-obj">scipy.optimize.minmize</em> automatically)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>hess, hessp<span class="classifier">callable, optional</span></dt><dd><p>Hessian (matrix of second-order derivatives) of objective function
+or Hessian of objective function times an arbitrary vector p.
+Only for Newton-CG, dogleg, trust-ncg. Only one of <code class="docutils literal notranslate"><span class="pre">hessp</span></code> or
+<code class="docutils literal notranslate"><span class="pre">hess</span></code> needs to be given. If <code class="docutils literal notranslate"><span class="pre">hess</span></code> is provided, then
+<code class="docutils literal notranslate"><span class="pre">hessp</span></code> will be ignored. If neither <code class="docutils literal notranslate"><span class="pre">hess</span></code> nor <code class="docutils literal notranslate"><span class="pre">hessp</span></code> is
+provided, then the Hessian product will be approximated using
+finite differences on <code class="docutils literal notranslate"><span class="pre">jac</span></code>. <code class="docutils literal notranslate"><span class="pre">hessp</span></code> must compute the Hessian
+times an arbitrary vector. (Passed to <em class="xref py py-obj">scipy.optimize.minmize</em>
+automatically)</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Algorithm settings:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>minimize_every_iter<span class="classifier">bool</span></dt><dd><p>If True then promising global sampling points will be passed to a
+local minimization routine every iteration. If False then only the
+final minimizer pool will be run. Defaults to False.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>local_iter<span class="classifier">int</span></dt><dd><p>Only evaluate a few of the best minimizer pool candidates every
+iteration. If False all potential points are passed to the local
+minimization routine.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>infty_constraints: bool</dt><dd><p>If True then any sampling points generated which are outside will
+the feasible domain will be saved and given an objective function
+value of <code class="docutils literal notranslate"><span class="pre">inf</span></code>. If False then these points will be discarded.
+Using this functionality could lead to higher performance with
+respect to function evaluations before the global minimum is found,
+specifying False will use less memory at the cost of a slight
+decrease in performance. Defaults to True.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Feedback:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>disp<span class="classifier">bool (L)</span></dt><dd><p>Set to True to print convergence messages.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt><strong>sampling_method</strong><span class="classifier">str or function, optional</span></dt><dd><p>Current built in sampling method options are <code class="docutils literal notranslate"><span class="pre">halton</span></code>, <code class="docutils literal notranslate"><span class="pre">sobol</span></code> and
+<code class="docutils literal notranslate"><span class="pre">simplicial</span></code>. The default <code class="docutils literal notranslate"><span class="pre">simplicial</span></code> provides
+the theoretical guarantee of convergence to the global minimum in finite
+time. <code class="docutils literal notranslate"><span class="pre">halton</span></code> and <code class="docutils literal notranslate"><span class="pre">sobol</span></code> method are faster in terms of sampling
+point generation at the cost of the loss of
+guaranteed convergence. It is more appropriate for most “easier”
+problems where the convergence is relatively fast.
+User defined sampling functions must accept two arguments of <code class="docutils literal notranslate"><span class="pre">n</span></code>
+sampling points of dimension <code class="docutils literal notranslate"><span class="pre">dim</span></code> per call and output an array of
+sampling points with shape <em class="xref py py-obj">n x dim</em>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>res</strong><span class="classifier">OptimizeResult</span></dt><dd><p>The optimization result represented as a <a class="reference internal" href="scipy.optimize.OptimizeResult.html#scipy.optimize.OptimizeResult" title="scipy.optimize.OptimizeResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptimizeResult</span></code></a> object.
+Important attributes are:
+<code class="docutils literal notranslate"><span class="pre">x</span></code> the solution array corresponding to the global minimum,
+<code class="docutils literal notranslate"><span class="pre">fun</span></code> the function output at the global solution,
+<code class="docutils literal notranslate"><span class="pre">xl</span></code> an ordered list of local minima solutions,
+<code class="docutils literal notranslate"><span class="pre">funl</span></code> the function output at the corresponding local solutions,
+<code class="docutils literal notranslate"><span class="pre">success</span></code> a Boolean flag indicating if the optimizer exited
+successfully,
+<code class="docutils literal notranslate"><span class="pre">message</span></code> which describes the cause of the termination,
+<code class="docutils literal notranslate"><span class="pre">nfev</span></code> the total number of objective function evaluations including
+the sampling calls,
+<code class="docutils literal notranslate"><span class="pre">nlfev</span></code> the total number of objective function evaluations
+culminating from all local search optimizations,
+<code class="docutils literal notranslate"><span class="pre">nit</span></code> number of iterations performed by the global routine.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Global optimization using simplicial homology global optimization <a class="reference internal" href="#rb2e152d227b3-1" id="id1">[1]</a>.
+Appropriate for solving general purpose NLP and blackbox optimization
+problems to global optimality (low-dimensional problems).</p>
+<p>In general, the optimization problems are of the form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">minimize</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="n">subject</span> <span class="n">to</span>
+
+<span class="n">g_i</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span>  <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="o">...</span><span class="p">,</span><span class="n">m</span>
+<span class="n">h_j</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>  <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="o">...</span><span class="p">,</span><span class="n">p</span>
+</pre></div>
+</div>
+<p>where x is a vector of one or more variables. <code class="docutils literal notranslate"><span class="pre">f(x)</span></code> is the objective
+function <code class="docutils literal notranslate"><span class="pre">R^n</span> <span class="pre">-&gt;</span> <span class="pre">R</span></code>, <code class="docutils literal notranslate"><span class="pre">g_i(x)</span></code> are the inequality constraints, and
+<code class="docutils literal notranslate"><span class="pre">h_j(x)</span></code> are the equality constraints.</p>
+<p>Optionally, the lower and upper bounds for each element in x can also be
+specified using the <em class="xref py py-obj">bounds</em> argument.</p>
+<p>While most of the theoretical advantages of SHGO are only proven for when
+<code class="docutils literal notranslate"><span class="pre">f(x)</span></code> is a Lipschitz smooth function, the algorithm is also proven to
+converge to the global optimum for the more general case where <code class="docutils literal notranslate"><span class="pre">f(x)</span></code> is
+non-continuous, non-convex and non-smooth, if the default sampling method
+is used <a class="reference internal" href="#rb2e152d227b3-1" id="id2">[1]</a>.</p>
+<p>The local search method may be specified using the <code class="docutils literal notranslate"><span class="pre">minimizer_kwargs</span></code>
+parameter which is passed on to <code class="docutils literal notranslate"><span class="pre">scipy.optimize.minimize</span></code>. By default,
+the <code class="docutils literal notranslate"><span class="pre">SLSQP</span></code> method is used. In general, it is recommended to use the
+<code class="docutils literal notranslate"><span class="pre">SLSQP</span></code> or <code class="docutils literal notranslate"><span class="pre">COBYLA</span></code> local minimization if inequality constraints
+are defined for the problem since the other methods do not use constraints.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">halton</span></code> and <code class="docutils literal notranslate"><span class="pre">sobol</span></code> method points are generated using
+<a class="reference internal" href="../stats.qmc.html#module-scipy.stats.qmc" title="scipy.stats.qmc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.qmc</span></code></a>. Any other QMC method could be used.</p>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="rb2e152d227b3-1"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id2">2</a>)</span></dt>
+<dd><p>Endres, SC, Sandrock, C, Focke, WW (2018) “A simplicial homology
+algorithm for lipschitz optimisation”, Journal of Global Optimization.</p>
+</dd>
+<dt class="label" id="rb2e152d227b3-2"><span class="brackets">2</span></dt>
+<dd><p>Joe, SW and Kuo, FY (2008) “Constructing Sobol’ sequences with
+better  two-dimensional projections”, SIAM J. Sci. Comput. 30,
+2635-2654.</p>
+</dd>
+<dt class="label" id="rb2e152d227b3-3"><span class="brackets">3</span><span class="fn-backref">(<a href="#id8">1</a>,<a href="#id9">2</a>)</span></dt>
+<dd><p>Hoch, W and Schittkowski, K (1981) “Test examples for nonlinear
+programming codes”, Lecture Notes in Economics and Mathematical
+Systems, 187. Springer-Verlag, New York.
+<a class="reference external" href="http://www.ai7.uni-bayreuth.de/test_problem_coll.pdf">http://www.ai7.uni-bayreuth.de/test_problem_coll.pdf</a></p>
+</dd>
+<dt class="label" id="rb2e152d227b3-4"><span class="brackets"><a class="fn-backref" href="#id7">4</a></span></dt>
+<dd><p>Wales, DJ (2015) “Perspective: Insight into reaction coordinates and
+dynamics from the potential energy landscape”,
+Journal of Chemical Physics, 142(13), 2015.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>First consider the problem of minimizing the Rosenbrock function, <a class="reference internal" href="scipy.optimize.rosen.html#scipy.optimize.rosen" title="scipy.optimize.rosen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rosen</span></code></a>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">rosen</span><span class="p">,</span> <span class="n">shgo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">shgo</span><span class="p">(</span><span class="n">rosen</span><span class="p">,</span> <span class="n">bounds</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">fun</span>
+<span class="go">(array([1., 1., 1., 1., 1.]), 2.920392374190081e-18)</span>
+</pre></div>
+</div>
+<p>Note that bounds determine the dimensionality of the objective
+function and is therefore a required input, however you can specify
+empty bounds using <code class="docutils literal notranslate"><span class="pre">None</span></code> or objects like <code class="docutils literal notranslate"><span class="pre">np.inf</span></code> which will be
+converted to large float numbers.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">]</span><span class="o">*</span><span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">shgo</span><span class="p">(</span><span class="n">rosen</span><span class="p">,</span> <span class="n">bounds</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">x</span>
+<span class="go">array([0.99999851, 0.99999704, 0.99999411, 0.9999882 ])</span>
+</pre></div>
+</div>
+<p>Next, we consider the Eggholder function, a problem with several local
+minima and one global minimum. We will demonstrate the use of arguments and
+the capabilities of <a class="reference internal" href="#scipy.optimize.shgo" title="scipy.optimize.shgo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shgo</span></code></a>.
+(<a class="reference external" href="https://en.wikipedia.org/wiki/Test_functions_for_optimization">https://en.wikipedia.org/wiki/Test_functions_for_optimization</a>)</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">eggholder</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">47.0</span><span class="p">)</span>
+<span class="gp">... </span>            <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">2.0</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">47.0</span><span class="p">))))</span>
+<span class="gp">... </span>            <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">47.0</span><span class="p">))))</span>
+<span class="gp">... </span>            <span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">512</span><span class="p">,</span> <span class="mi">512</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="#scipy.optimize.shgo" title="scipy.optimize.shgo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shgo</span></code></a> has built-in low discrepancy sampling sequences. First, we will
+input 64 initial sampling points of the <em>Sobol’</em> sequence:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">shgo</span><span class="p">(</span><span class="n">eggholder</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">sampling_method</span><span class="o">=</span><span class="s1">&#39;sobol&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">fun</span>
+<span class="go">(array([512.        , 404.23180824]), -959.6406627208397)</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="#scipy.optimize.shgo" title="scipy.optimize.shgo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shgo</span></code></a> also has a return for any other local minima that was found, these
+can be called using:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">xl</span>
+<span class="go">array([[ 512.        ,  404.23180824],</span>
+<span class="go">       [ 283.0759062 , -487.12565635],</span>
+<span class="go">       [-294.66820039, -462.01964031],</span>
+<span class="go">       [-105.87688911,  423.15323845],</span>
+<span class="go">       [-242.97926   ,  274.38030925],</span>
+<span class="go">       [-506.25823477,    6.3131022 ],</span>
+<span class="go">       [-408.71980731, -156.10116949],</span>
+<span class="go">       [ 150.23207937,  301.31376595],</span>
+<span class="go">       [  91.00920901, -391.283763  ],</span>
+<span class="go">       [ 202.89662724, -269.38043241],</span>
+<span class="go">       [ 361.66623976, -106.96493868],</span>
+<span class="go">       [-219.40612786, -244.06020508]])</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">funl</span>
+<span class="go">array([-959.64066272, -718.16745962, -704.80659592, -565.99778097,</span>
+<span class="go">       -559.78685655, -557.36868733, -507.87385942, -493.9605115 ,</span>
+<span class="go">       -426.48799655, -421.15571437, -419.31194957, -410.98477763])</span>
+</pre></div>
+</div>
+<p>These results are useful in applications where there are many global minima
+and the values of other global minima are desired or where the local minima
+can provide insight into the system (for example morphologies
+in physical chemistry <a class="reference internal" href="#rb2e152d227b3-4" id="id7">[4]</a>).</p>
+<p>If we want to find a larger number of local minima, we can increase the
+number of sampling points or the number of iterations. We’ll increase the
+number of sampling points to 64 and the number of iterations from the
+default of 1 to 3. Using <code class="docutils literal notranslate"><span class="pre">simplicial</span></code> this would have given us
+64 x 3 = 192 initial sampling points.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result_2</span> <span class="o">=</span> <span class="n">shgo</span><span class="p">(</span><span class="n">eggholder</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sampling_method</span><span class="o">=</span><span class="s1">&#39;sobol&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">xl</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">result_2</span><span class="o">.</span><span class="n">xl</span><span class="p">)</span>
+<span class="go">(12, 20)</span>
+</pre></div>
+</div>
+<p>Note the difference between, e.g., <code class="docutils literal notranslate"><span class="pre">n=192,</span> <span class="pre">iters=1</span></code> and <code class="docutils literal notranslate"><span class="pre">n=64,</span>
+<span class="pre">iters=3</span></code>.
+In the first case the promising points contained in the minimiser pool
+are processed only once. In the latter case it is processed every 64
+sampling points for a total of 3 times.</p>
+<p>To demonstrate solving problems with non-linear constraints consider the
+following example from Hock and Schittkowski problem 73 (cattle-feed) <a class="reference internal" href="#rb2e152d227b3-3" id="id8">[3]</a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">minimize</span><span class="p">:</span> <span class="n">f</span> <span class="o">=</span> <span class="mf">24.55</span> <span class="o">*</span> <span class="n">x_1</span> <span class="o">+</span> <span class="mf">26.75</span> <span class="o">*</span> <span class="n">x_2</span> <span class="o">+</span> <span class="mi">39</span> <span class="o">*</span> <span class="n">x_3</span> <span class="o">+</span> <span class="mf">40.50</span> <span class="o">*</span> <span class="n">x_4</span>
+
+<span class="n">subject</span> <span class="n">to</span><span class="p">:</span> <span class="mf">2.3</span> <span class="o">*</span> <span class="n">x_1</span> <span class="o">+</span> <span class="mf">5.6</span> <span class="o">*</span> <span class="n">x_2</span> <span class="o">+</span> <span class="mf">11.1</span> <span class="o">*</span> <span class="n">x_3</span> <span class="o">+</span> <span class="mf">1.3</span> <span class="o">*</span> <span class="n">x_4</span> <span class="o">-</span> <span class="mi">5</span>     <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span>
+
+            <span class="mi">12</span> <span class="o">*</span> <span class="n">x_1</span> <span class="o">+</span> <span class="mf">11.9</span> <span class="o">*</span> <span class="n">x_2</span> <span class="o">+</span> <span class="mf">41.8</span> <span class="o">*</span> <span class="n">x_3</span> <span class="o">+</span> <span class="mf">52.1</span> <span class="o">*</span> <span class="n">x_4</span> <span class="o">-</span> <span class="mi">21</span>
+                <span class="o">-</span><span class="mf">1.645</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="mf">0.28</span> <span class="o">*</span> <span class="n">x_1</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">0.19</span> <span class="o">*</span> <span class="n">x_2</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span>
+                              <span class="mf">20.5</span> <span class="o">*</span> <span class="n">x_3</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">0.62</span> <span class="o">*</span> <span class="n">x_4</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>       <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span>
+
+            <span class="n">x_1</span> <span class="o">+</span> <span class="n">x_2</span> <span class="o">+</span> <span class="n">x_3</span> <span class="o">+</span> <span class="n">x_4</span> <span class="o">-</span> <span class="mi">1</span>                              <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
+
+            <span class="mi">1</span> <span class="o">&gt;=</span> <span class="n">x_i</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="nb">all</span> <span class="n">i</span>
+</pre></div>
+</div>
+<p>The approximate answer given in <a class="reference internal" href="#rb2e152d227b3-3" id="id9">[3]</a> is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">([</span><span class="mf">0.6355216</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.12e-11</span><span class="p">,</span> <span class="mf">0.3127019</span><span class="p">,</span> <span class="mf">0.05177655</span><span class="p">])</span> <span class="o">=</span> <span class="mf">29.894378</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>  <span class="c1"># (cattle-feed)</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="mf">24.55</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">26.75</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">39</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="mf">40.50</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">g1</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="mf">2.3</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">5.6</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">11.1</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.3</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="mi">5</span>  <span class="c1"># &gt;=0</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">g2</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">(</span><span class="mi">12</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">11.9</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span><span class="mf">41.8</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="mf">52.1</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="mi">21</span>
+<span class="gp">... </span>            <span class="o">-</span> <span class="mf">1.645</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.28</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">0.19</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+<span class="gp">... </span>                            <span class="o">+</span> <span class="mf">20.5</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">0.62</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">... </span>            <span class="p">)</span> <span class="c1"># &gt;=0</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">h1</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># == 0</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cons</span> <span class="o">=</span> <span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;ineq&#39;</span><span class="p">,</span> <span class="s1">&#39;fun&#39;</span><span class="p">:</span> <span class="n">g1</span><span class="p">},</span>
+<span class="gp">... </span>        <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;ineq&#39;</span><span class="p">,</span> <span class="s1">&#39;fun&#39;</span><span class="p">:</span> <span class="n">g2</span><span class="p">},</span>
+<span class="gp">... </span>        <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;eq&#39;</span><span class="p">,</span> <span class="s1">&#39;fun&#39;</span><span class="p">:</span> <span class="n">h1</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),]</span><span class="o">*</span><span class="mi">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">shgo</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="n">cons</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span>
+<span class="go">     fun: 29.894378159142136</span>
+<span class="go">    funl: array([29.89437816])</span>
+<span class="go"> message: &#39;Optimization terminated successfully.&#39;</span>
+<span class="go">    nfev: 114</span>
+<span class="go">     nit: 3</span>
+<span class="go">   nlfev: 35</span>
+<span class="go">   nlhev: 0</span>
+<span class="go">   nljev: 5</span>
+<span class="go"> success: True</span>
+<span class="go">       x: array([6.35521569e-01, 1.13700270e-13, 3.12701881e-01, 5.17765506e-02])</span>
+<span class="go">      xl: array([[6.35521569e-01, 1.13700270e-13, 3.12701881e-01, 5.17765506e-02]])</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g1</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">),</span> <span class="n">g2</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">),</span> <span class="n">h1</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+<span class="go">(-5.062616992290714e-14, -2.9594104944408173e-12, 0.0)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+    <a class='left-prev' id="prev-link" href="scipy.optimize.differential_evolution.html" title="previous page">scipy.optimize.differential_evolution</a>
+    <a class='right-next' id="next-link" href="scipy.optimize.dual_annealing.html" title="next page">scipy.optimize.dual_annealing</a>
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2008-2021, The SciPy community.<br/>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.<br/>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

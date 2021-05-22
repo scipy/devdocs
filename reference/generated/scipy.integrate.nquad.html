@@ -1,0 +1,679 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>scipy.integrate.nquad &#8212; SciPy v1.7.0.dev0+1036.4ec6f29 Manual</title>
+    
+  <link href="../../_static/css/theme.css" rel="stylesheet" />
+  <link href="../../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css" />
+    
+  <link rel="preload" as="script" href="../../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="scipy.integrate.fixed_quad" href="scipy.integrate.fixed_quad.html" />
+    <link rel="prev" title="scipy.integrate.tplquad" href="scipy.integrate.tplquad.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+
+<a class="navbar-brand" href="../../index.html">
+  <img src="../../_static/scipyshiny_small.png" class="logo" alt="logo">
+</a>      
+
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../getting_started.html">
+  Getting started
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../tutorial/index.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../index.html">
+  API reference
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../dev/index.html">
+  Development
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../release.html">
+  Release notes
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/scipy/scipy" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.html">
+   Clustering package (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.vq.html">
+   K-means clustering and vector quantization (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster.vq
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.hierarchy.html">
+   Hierarchical clustering (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster.hierarchy
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../constants.html">
+   Constants (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.constants
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../fft.html">
+   Discrete Fourier transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fft
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../fftpack.html">
+   Legacy discrete Fourier transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fftpack
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="reference internal" href="../integrate.html">
+   Integration and ODEs (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.integrate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../interpolate.html">
+   Interpolation (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.interpolate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../io.html">
+   Input and output (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.io
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.html">
+   Linear algebra (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.blas.html">
+   Low-level BLAS functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.blas
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.lapack.html">
+   Low-level LAPACK functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.lapack
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.cython_blas.html">
+   BLAS Functions for Cython
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.cython_lapack.html">
+   LAPACK functions for Cython
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.interpolative.html">
+   Interpolative matrix decomposition (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.interpolative
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../misc.html">
+   Miscellaneous routines (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.misc
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ndimage.html">
+   Multidimensional image processing (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.ndimage
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../odr.html">
+   Orthogonal distance regression (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.odr
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../optimize.html">
+   Optimization and root finding (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.optimize
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../optimize.nonlin.html">
+   Nonlinear solvers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../optimize.cython_optimize.html">
+   Cython optimize zeros API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../signal.html">
+   Signal processing (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.signal
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.html">
+   Sparse matrices (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.linalg.html">
+   Sparse linear algebra (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.csgraph.html">
+   Compressed sparse graph routines (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.csgraph
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial.html">
+   Spatial algorithms and data structures (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial.distance.html">
+   Distance computations (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial.distance
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../special.html">
+   Special functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.special
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.html">
+   Statistical functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats._result_classes.html">
+   Result classes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.mstats.html">
+   Statistical functions for masked arrays (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.mstats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.qmc.html">
+   Quasi-Monte Carlo submodule (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.qmc
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ccallback.html">
+   Low-level callback functions
+  </a>
+ </li>
+</ul>
+
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="scipy-integrate-nquad">
+<h1>scipy.integrate.nquad<a class="headerlink" href="#scipy-integrate-nquad" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.integrate.nquad">
+<span class="sig-prename descclassname"><span class="pre">scipy.integrate.</span></span><span class="sig-name descname"><span class="pre">nquad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/master/scipy/integrate/quadpack.py#L694-L825"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.integrate.nquad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integration over multiple variables.</p>
+<p>Wraps <a class="reference internal" href="scipy.integrate.quad.html#scipy.integrate.quad" title="scipy.integrate.quad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quad</span></code></a> to enable integration over multiple variables.
+Various options allow improved integration of discontinuous functions, as
+well as the use of weighted integration, and generally finer control of the
+integration process.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>func</strong><span class="classifier">{callable, scipy.LowLevelCallable}</span></dt><dd><p>The function to be integrated. Has arguments of <code class="docutils literal notranslate"><span class="pre">x0,</span> <span class="pre">...</span> <span class="pre">xn</span></code>,
+<code class="docutils literal notranslate"><span class="pre">t0,</span> <span class="pre">...</span> <span class="pre">tm</span></code>, where integration is carried out over <code class="docutils literal notranslate"><span class="pre">x0,</span> <span class="pre">...</span> <span class="pre">xn</span></code>,
+which must be floats.  Where <code class="docutils literal notranslate"><span class="pre">`t0,</span> <span class="pre">...</span> <span class="pre">tm`</span></code> are extra arguments
+passed in args.
+Function signature should be <code class="docutils literal notranslate"><span class="pre">func(x0,</span> <span class="pre">x1,</span> <span class="pre">...,</span> <span class="pre">xn,</span> <span class="pre">t0,</span> <span class="pre">t1,</span> <span class="pre">...,</span> <span class="pre">tm)</span></code>.
+Integration is carried out in order.  That is, integration over <code class="docutils literal notranslate"><span class="pre">x0</span></code>
+is the innermost integral, and <code class="docutils literal notranslate"><span class="pre">xn</span></code> is the outermost.</p>
+<p>If the user desires improved integration performance, then <em class="xref py py-obj">f</em> may
+be a <a class="reference internal" href="scipy.LowLevelCallable.html#scipy.LowLevelCallable" title="scipy.LowLevelCallable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.LowLevelCallable</span></code></a> with one of the signatures:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">func</span><span class="p">(</span><span class="nb">int</span> <span class="n">n</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="n">xx</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">func</span><span class="p">(</span><span class="nb">int</span> <span class="n">n</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="n">xx</span><span class="p">,</span> <span class="n">void</span> <span class="o">*</span><span class="n">user_data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the number of variables and args.  The <code class="docutils literal notranslate"><span class="pre">xx</span></code> array
+contains the coordinates and extra arguments. <code class="docutils literal notranslate"><span class="pre">user_data</span></code> is the data
+contained in the <a class="reference internal" href="scipy.LowLevelCallable.html#scipy.LowLevelCallable" title="scipy.LowLevelCallable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.LowLevelCallable</span></code></a>.</p>
+</dd>
+<dt><strong>ranges</strong><span class="classifier">iterable object</span></dt><dd><p>Each element of ranges may be either a sequence  of 2 numbers, or else
+a callable that returns such a sequence. <code class="docutils literal notranslate"><span class="pre">ranges[0]</span></code> corresponds to
+integration over x0, and so on. If an element of ranges is a callable,
+then it will be called with all of the integration arguments available,
+as well as any parametric arguments. e.g., if
+<code class="docutils literal notranslate"><span class="pre">func</span> <span class="pre">=</span> <span class="pre">f(x0,</span> <span class="pre">x1,</span> <span class="pre">x2,</span> <span class="pre">t0,</span> <span class="pre">t1)</span></code>, then <code class="docutils literal notranslate"><span class="pre">ranges[0]</span></code> may be defined as
+either <code class="docutils literal notranslate"><span class="pre">(a,</span> <span class="pre">b)</span></code> or else as <code class="docutils literal notranslate"><span class="pre">(a,</span> <span class="pre">b)</span> <span class="pre">=</span> <span class="pre">range0(x1,</span> <span class="pre">x2,</span> <span class="pre">t0,</span> <span class="pre">t1)</span></code>.</p>
+</dd>
+<dt><strong>args</strong><span class="classifier">iterable object, optional</span></dt><dd><p>Additional arguments <code class="docutils literal notranslate"><span class="pre">t0,</span> <span class="pre">...,</span> <span class="pre">tn</span></code>, required by <em class="xref py py-obj">func</em>, <em class="xref py py-obj">ranges</em>, and
+<code class="docutils literal notranslate"><span class="pre">opts</span></code>.</p>
+</dd>
+<dt><strong>opts</strong><span class="classifier">iterable object or dict, optional</span></dt><dd><p>Options to be passed to <a class="reference internal" href="scipy.integrate.quad.html#scipy.integrate.quad" title="scipy.integrate.quad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quad</span></code></a>. May be empty, a dict, or
+a sequence of dicts or functions that return a dict. If empty, the
+default options from scipy.integrate.quad are used. If a dict, the same
+options are used for all levels of integraion. If a sequence, then each
+element of the sequence corresponds to a particular integration. e.g.,
+opts[0] corresponds to integration over x0, and so on. If a callable,
+the signature must be the same as for <code class="docutils literal notranslate"><span class="pre">ranges</span></code>. The available
+options together with their default values are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>epsabs = 1.49e-08</p></li>
+<li><p>epsrel = 1.49e-08</p></li>
+<li><p>limit  = 50</p></li>
+<li><p>points = None</p></li>
+<li><p>weight = None</p></li>
+<li><p>wvar   = None</p></li>
+<li><p>wopts  = None</p></li>
+</ul>
+</div></blockquote>
+<p>For more information on these options, see <a class="reference internal" href="scipy.integrate.quad.html#scipy.integrate.quad" title="scipy.integrate.quad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quad</span></code></a> and <a class="reference internal" href="scipy.integrate.quad_explain.html#scipy.integrate.quad_explain" title="scipy.integrate.quad_explain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quad_explain</span></code></a>.</p>
+</dd>
+<dt><strong>full_output</strong><span class="classifier">bool, optional</span></dt><dd><p>Partial implementation of <code class="docutils literal notranslate"><span class="pre">full_output</span></code> from scipy.integrate.quad.
+The number of integrand function evaluations <code class="docutils literal notranslate"><span class="pre">neval</span></code> can be obtained
+by setting <code class="docutils literal notranslate"><span class="pre">full_output=True</span></code> when calling nquad.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>result</strong><span class="classifier">float</span></dt><dd><p>The result of the integration.</p>
+</dd>
+<dt><strong>abserr</strong><span class="classifier">float</span></dt><dd><p>The maximum of the estimates of the absolute error in the various
+integration results.</p>
+</dd>
+<dt><strong>out_dict</strong><span class="classifier">dict, optional</span></dt><dd><p>A dict containing additional information on the integration.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="scipy.integrate.quad.html#scipy.integrate.quad" title="scipy.integrate.quad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quad</span></code></a></dt><dd><p>1-D numerical integration</p>
+</dd>
+<dt><a class="reference internal" href="scipy.integrate.dblquad.html#scipy.integrate.dblquad" title="scipy.integrate.dblquad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dblquad</span></code></a>, <a class="reference internal" href="scipy.integrate.tplquad.html#scipy.integrate.tplquad" title="scipy.integrate.tplquad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tplquad</span></code></a></dt><dd><p>double and triple integrals</p>
+</dd>
+<dt><a class="reference internal" href="scipy.integrate.fixed_quad.html#scipy.integrate.fixed_quad" title="scipy.integrate.fixed_quad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fixed_quad</span></code></a></dt><dd><p>fixed-order Gaussian quadrature</p>
+</dd>
+<dt><a class="reference internal" href="scipy.integrate.quadrature.html#scipy.integrate.quadrature" title="scipy.integrate.quadrature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quadrature</span></code></a></dt><dd><p>adaptive Gaussian quadrature</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">integrate</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x0</span><span class="p">,</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">x3</span> <span class="p">:</span> <span class="n">x0</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">x1</span><span class="o">*</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x3</span><span class="o">**</span><span class="mi">3</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span>
+<span class="gp">... </span>                                <span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">x0</span><span class="o">-</span><span class="mf">.2</span><span class="o">*</span><span class="n">x3</span><span class="o">-</span><span class="mf">.5</span><span class="o">-</span><span class="mf">.25</span><span class="o">*</span><span class="n">x1</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">opts0</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;points&#39;</span><span class="p">:[</span><span class="mf">0.2</span><span class="o">*</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="mf">0.25</span><span class="o">*</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">integrate</span><span class="o">.</span><span class="n">nquad</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">.13</span><span class="p">,</span><span class="mf">.8</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">.15</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span>
+<span class="gp">... </span>                <span class="n">opts</span><span class="o">=</span><span class="p">[</span><span class="n">opts0</span><span class="p">,{},{},{}],</span> <span class="n">full_output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">(1.5267454070738633, 2.9437360001402324e-14, {&#39;neval&#39;: 388962})</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">scale</span> <span class="o">=</span> <span class="mf">.1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">func2</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x0</span><span class="o">*</span><span class="n">x1</span><span class="o">*</span><span class="n">x3</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">x0</span><span class="o">+</span><span class="n">t1</span><span class="o">*</span><span class="n">x1</span><span class="o">-</span><span class="n">t0</span><span class="o">&gt;</span><span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">lim0</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">[</span><span class="n">scale</span> <span class="o">*</span> <span class="p">(</span><span class="n">x1</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x3</span><span class="p">)</span><span class="o">*</span><span class="n">t0</span><span class="o">*</span><span class="n">t1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">scale</span> <span class="o">*</span> <span class="p">(</span><span class="n">x1</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x3</span><span class="p">)</span><span class="o">*</span><span class="n">t0</span><span class="o">*</span><span class="n">t1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">lim1</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">[</span><span class="n">scale</span> <span class="o">*</span> <span class="p">(</span><span class="n">t0</span><span class="o">*</span><span class="n">x2</span> <span class="o">+</span> <span class="n">t1</span><span class="o">*</span><span class="n">x3</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">scale</span> <span class="o">*</span> <span class="p">(</span><span class="n">t0</span><span class="o">*</span><span class="n">x2</span> <span class="o">+</span> <span class="n">t1</span><span class="o">*</span><span class="n">x3</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">lim2</span><span class="p">(</span><span class="n">x3</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">[</span><span class="n">scale</span> <span class="o">*</span> <span class="p">(</span><span class="n">x3</span> <span class="o">+</span> <span class="n">t0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">t1</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">scale</span> <span class="o">*</span> <span class="p">(</span><span class="n">x3</span> <span class="o">+</span> <span class="n">t0</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">t1</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">lim3</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">[</span><span class="n">scale</span> <span class="o">*</span> <span class="p">(</span><span class="n">t0</span><span class="o">+</span><span class="n">t1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">scale</span> <span class="o">*</span> <span class="p">(</span><span class="n">t0</span><span class="o">+</span><span class="n">t1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">opts0</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;points&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="n">t0</span> <span class="o">-</span> <span class="n">t1</span><span class="o">*</span><span class="n">x1</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">opts1</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">{}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">opts2</span><span class="p">(</span><span class="n">x3</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">{}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">opts3</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">{}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">integrate</span><span class="o">.</span><span class="n">nquad</span><span class="p">(</span><span class="n">func2</span><span class="p">,</span> <span class="p">[</span><span class="n">lim0</span><span class="p">,</span> <span class="n">lim1</span><span class="p">,</span> <span class="n">lim2</span><span class="p">,</span> <span class="n">lim3</span><span class="p">],</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+<span class="gp">... </span>                <span class="n">opts</span><span class="o">=</span><span class="p">[</span><span class="n">opts0</span><span class="p">,</span> <span class="n">opts1</span><span class="p">,</span> <span class="n">opts2</span><span class="p">,</span> <span class="n">opts3</span><span class="p">])</span>
+<span class="go">(25.066666666666666, 2.7829590483937256e-13)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+    <a class='left-prev' id="prev-link" href="scipy.integrate.tplquad.html" title="previous page">scipy.integrate.tplquad</a>
+    <a class='right-next' id="next-link" href="scipy.integrate.fixed_quad.html" title="next page">scipy.integrate.fixed_quad</a>
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2008-2021, The SciPy community.<br/>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.<br/>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

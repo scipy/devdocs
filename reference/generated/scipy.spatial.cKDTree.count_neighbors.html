@@ -1,0 +1,686 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>scipy.spatial.cKDTree.count_neighbors &#8212; SciPy v1.7.0.dev0+1036.4ec6f29 Manual</title>
+    
+  <link href="../../_static/css/theme.css" rel="stylesheet" />
+  <link href="../../_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css" />
+    
+  <link rel="preload" as="script" href="../../_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="scipy.spatial.cKDTree.query" href="scipy.spatial.cKDTree.query.html" />
+    <link rel="prev" title="scipy.spatial.cKDTree" href="scipy.spatial.cKDTree.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+
+<a class="navbar-brand" href="../../index.html">
+  <img src="../../_static/scipyshiny_small.png" class="logo" alt="logo">
+</a>      
+
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../getting_started.html">
+  Getting started
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../tutorial/index.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 current active nav-item">
+ <a class="reference internal nav-link" href="../index.html">
+  API reference
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../dev/index.html">
+  Development
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../release.html">
+  Release notes
+ </a>
+</li>
+
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/scipy/scipy" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.html">
+   Clustering package (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.vq.html">
+   K-means clustering and vector quantization (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster.vq
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../cluster.hierarchy.html">
+   Hierarchical clustering (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.cluster.hierarchy
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../constants.html">
+   Constants (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.constants
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../fft.html">
+   Discrete Fourier transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fft
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../fftpack.html">
+   Legacy discrete Fourier transforms (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.fftpack
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../integrate.html">
+   Integration and ODEs (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.integrate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../interpolate.html">
+   Interpolation (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.interpolate
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../io.html">
+   Input and output (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.io
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.html">
+   Linear algebra (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.blas.html">
+   Low-level BLAS functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.blas
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.lapack.html">
+   Low-level LAPACK functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.lapack
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.cython_blas.html">
+   BLAS Functions for Cython
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.cython_lapack.html">
+   LAPACK functions for Cython
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../linalg.interpolative.html">
+   Interpolative matrix decomposition (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.linalg.interpolative
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../misc.html">
+   Miscellaneous routines (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.misc
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ndimage.html">
+   Multidimensional image processing (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.ndimage
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../odr.html">
+   Orthogonal distance regression (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.odr
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../optimize.html">
+   Optimization and root finding (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.optimize
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../optimize.nonlin.html">
+   Nonlinear solvers
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../optimize.cython_optimize.html">
+   Cython optimize zeros API
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../signal.html">
+   Signal processing (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.signal
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.html">
+   Sparse matrices (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.linalg.html">
+   Sparse linear algebra (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.linalg
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../sparse.csgraph.html">
+   Compressed sparse graph routines (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.sparse.csgraph
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="reference internal" href="../spatial.html">
+   Spatial algorithms and data structures (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../spatial.distance.html">
+   Distance computations (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.spatial.distance
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../special.html">
+   Special functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.special
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.html">
+   Statistical functions (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats._result_classes.html">
+   Result classes
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.mstats.html">
+   Statistical functions for masked arrays (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.mstats
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../stats.qmc.html">
+   Quasi-Monte Carlo submodule (
+   <code class="xref py py-mod docutils literal notranslate">
+    <span class="pre">
+     scipy.stats.qmc
+    </span>
+   </code>
+   )
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../ccallback.html">
+   Low-level callback functions
+  </a>
+ </li>
+</ul>
+
+    
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="scipy-spatial-ckdtree-count-neighbors">
+<h1>scipy.spatial.cKDTree.count_neighbors<a class="headerlink" href="#scipy-spatial-ckdtree-count-neighbors" title="Permalink to this headline">¶</a></h1>
+<dl class="py method">
+<dt class="sig sig-object py" id="scipy.spatial.cKDTree.count_neighbors">
+<span class="sig-prename descclassname"><span class="pre">cKDTree.</span></span><span class="sig-name descname"><span class="pre">count_neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cumulative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy.spatial.cKDTree.count_neighbors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Count how many nearby pairs can be formed.</p>
+<p>Count the number of pairs <code class="docutils literal notranslate"><span class="pre">(x1,x2)</span></code> can be formed, with <code class="docutils literal notranslate"><span class="pre">x1</span></code> drawn
+from <code class="docutils literal notranslate"><span class="pre">self</span></code> and <code class="docutils literal notranslate"><span class="pre">x2</span></code> drawn from <code class="docutils literal notranslate"><span class="pre">other</span></code>, and where
+<code class="docutils literal notranslate"><span class="pre">distance(x1,</span> <span class="pre">x2,</span> <span class="pre">p)</span> <span class="pre">&lt;=</span> <span class="pre">r</span></code>.</p>
+<p>Data points on <code class="docutils literal notranslate"><span class="pre">self</span></code> and <code class="docutils literal notranslate"><span class="pre">other</span></code> are optionally weighted by the
+<code class="docutils literal notranslate"><span class="pre">weights</span></code> argument. (See below)</p>
+<p>This is adapted from the “two-point correlation” algorithm described by
+Gray and Moore <a class="reference internal" href="#rad0e36a8ad3c-1" id="id1">[1]</a>.  See notes for further discussion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>other</strong><span class="classifier">cKDTree instance</span></dt><dd><p>The other tree to draw points from, can be the same tree as self.</p>
+</dd>
+<dt><strong>r</strong><span class="classifier">float or one-dimensional array of floats</span></dt><dd><p>The radius to produce a count for. Multiple radii are searched with
+a single tree traversal.
+If the count is non-cumulative(<code class="docutils literal notranslate"><span class="pre">cumulative=False</span></code>), <code class="docutils literal notranslate"><span class="pre">r</span></code> defines
+the edges of the bins, and must be non-decreasing.</p>
+</dd>
+<dt><strong>p</strong><span class="classifier">float, optional</span></dt><dd><p>1&lt;=p&lt;=infinity.
+Which Minkowski p-norm to use.
+Default 2.0.
+A finite large p may cause a ValueError if overflow can occur.</p>
+</dd>
+<dt><strong>weights</strong><span class="classifier">tuple, array_like, or None, optional</span></dt><dd><p>If None, the pair-counting is unweighted.
+If given as a tuple, weights[0] is the weights of points in <code class="docutils literal notranslate"><span class="pre">self</span></code>, and
+weights[1] is the weights of points in <code class="docutils literal notranslate"><span class="pre">other</span></code>; either can be None to
+indicate the points are unweighted.
+If given as an array_like, weights is the weights of points in <code class="docutils literal notranslate"><span class="pre">self</span></code>
+and <code class="docutils literal notranslate"><span class="pre">other</span></code>. For this to make sense, <code class="docutils literal notranslate"><span class="pre">self</span></code> and <code class="docutils literal notranslate"><span class="pre">other</span></code> must be the
+same tree. If <code class="docutils literal notranslate"><span class="pre">self</span></code> and <code class="docutils literal notranslate"><span class="pre">other</span></code> are two different trees, a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>
+is raised.
+Default: None</p>
+</dd>
+<dt><strong>cumulative</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether the returned counts are cumulative. When cumulative is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>
+the algorithm is optimized to work with a large number of bins (&gt;10) specified
+by <code class="docutils literal notranslate"><span class="pre">r</span></code>. When <code class="docutils literal notranslate"><span class="pre">cumulative</span></code> is set to True, the algorithm is optimized to work
+with a small number of <code class="docutils literal notranslate"><span class="pre">r</span></code>. Default: True</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>result</strong><span class="classifier">scalar or 1-D array</span></dt><dd><p>The number of pairs. For unweighted counts, the result is integer.
+For weighted counts, the result is float.
+If cumulative is False, <code class="docutils literal notranslate"><span class="pre">result[i]</span></code> contains the counts with
+<code class="docutils literal notranslate"><span class="pre">(-inf</span> <span class="pre">if</span> <span class="pre">i</span> <span class="pre">==</span> <span class="pre">0</span> <span class="pre">else</span> <span class="pre">r[i-1])</span> <span class="pre">&lt;</span> <span class="pre">R</span> <span class="pre">&lt;=</span> <span class="pre">r[i]</span></code></p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Pair-counting is the basic operation used to calculate the two point
+correlation functions from a data set composed of position of objects.</p>
+<p>Two point correlation function measures the clustering of objects and
+is widely used in cosmology to quantify the large scale structure
+in our Universe, but it may be useful for data analysis in other fields
+where self-similar assembly of objects also occur.</p>
+<p>The Landy-Szalay estimator for the two point correlation function of
+<code class="docutils literal notranslate"><span class="pre">D</span></code> measures the clustering signal in <code class="docutils literal notranslate"><span class="pre">D</span></code>. <a class="reference internal" href="#rad0e36a8ad3c-2" id="id2">[2]</a></p>
+<p>For example, given the position of two sets of objects,</p>
+<ul class="simple">
+<li><p>objects <code class="docutils literal notranslate"><span class="pre">D</span></code> (data) contains the clustering signal, and</p></li>
+<li><p>objects <code class="docutils literal notranslate"><span class="pre">R</span></code> (random) that contains no signal,</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\xi(r) = \frac{&lt;D, D&gt; - 2 f &lt;D, R&gt; + f^2&lt;R, R&gt;}{f^2&lt;R, R&gt;},\]</div>
+<p>where the brackets represents counting pairs between two data sets
+in a finite bin around <code class="docutils literal notranslate"><span class="pre">r</span></code> (distance), corresponding to setting
+<em class="xref py py-obj">cumulative=False</em>, and <code class="docutils literal notranslate"><span class="pre">f</span> <span class="pre">=</span> <span class="pre">float(len(D))</span> <span class="pre">/</span> <span class="pre">float(len(R))</span></code> is the
+ratio between number of objects from data and random.</p>
+<p>The algorithm implemented here is loosely based on the dual-tree
+algorithm described in <a class="reference internal" href="#rad0e36a8ad3c-1" id="id3">[1]</a>. We switch between two different
+pair-cumulation scheme depending on the setting of <code class="docutils literal notranslate"><span class="pre">cumulative</span></code>.
+The computing time of the method we use when for
+<code class="docutils literal notranslate"><span class="pre">cumulative</span> <span class="pre">==</span> <span class="pre">False</span></code> does not scale with the total number of bins.
+The algorithm for <code class="docutils literal notranslate"><span class="pre">cumulative</span> <span class="pre">==</span> <span class="pre">True</span></code> scales linearly with the
+number of bins, though it is slightly faster when only
+1 or 2 bins are used. <a class="reference internal" href="#rad0e36a8ad3c-5" id="id4">[5]</a>.</p>
+<p>As an extension to the naive pair-counting,
+weighted pair-counting counts the product of weights instead
+of number of pairs.
+Weighted pair-counting is used to estimate marked correlation functions
+(<a class="reference internal" href="#rad0e36a8ad3c-3" id="id5">[3]</a>, section 2.2),
+or to properly calculate the average of data per distance bin
+(e.g. <a class="reference internal" href="#rad0e36a8ad3c-4" id="id6">[4]</a>, section 2.1 on redshift).</p>
+<dl class="citation">
+<dt class="label" id="rad0e36a8ad3c-1"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id3">2</a>)</span></dt>
+<dd><p>Gray and Moore,
+“N-body problems in statistical learning”,
+Mining the sky, 2000, <a class="reference external" href="https://arxiv.org/abs/astro-ph/0012333">arXiv:astro-ph/0012333</a></p>
+</dd>
+<dt class="label" id="rad0e36a8ad3c-2"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>Landy and Szalay,
+“Bias and variance of angular correlation functions”,
+The Astrophysical Journal, 1993, <a class="reference external" href="https://doi.org/10.1086/172900">DOI:10.1086/172900</a></p>
+</dd>
+<dt class="label" id="rad0e36a8ad3c-3"><span class="brackets"><a class="fn-backref" href="#id5">3</a></span></dt>
+<dd><p>Sheth, Connolly and Skibba,
+“Marked correlations in galaxy formation models”,
+2005, <a class="reference external" href="https://arxiv.org/abs/astro-ph/0511773">arXiv:astro-ph/0511773</a></p>
+</dd>
+<dt class="label" id="rad0e36a8ad3c-4"><span class="brackets"><a class="fn-backref" href="#id6">4</a></span></dt>
+<dd><p>Hawkins, et al.,
+“The 2dF Galaxy Redshift Survey: correlation functions,
+peculiar velocities and the matter density of the Universe”,
+Monthly Notices of the Royal Astronomical Society, 2002,
+<a class="reference external" href="https://doi.org/10.1046/j.1365-2966.2003.07063.x">DOI:10.1046/j.1365-2966.2003.07063.x</a></p>
+</dd>
+<dt class="label" id="rad0e36a8ad3c-5"><span class="brackets"><a class="fn-backref" href="#id4">5</a></span></dt>
+<dd><p><a class="reference external" href="https://github.com/scipy/scipy/pull/5647#issuecomment-168474926">https://github.com/scipy/scipy/pull/5647#issuecomment-168474926</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>You can count neighbors number between two kd-trees within a distance:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">cKDTree</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">points1</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">points2</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kd_tree1</span> <span class="o">=</span> <span class="n">cKDTree</span><span class="p">(</span><span class="n">points1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kd_tree2</span> <span class="o">=</span> <span class="n">cKDTree</span><span class="p">(</span><span class="n">points2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kd_tree1</span><span class="o">.</span><span class="n">count_neighbors</span><span class="p">(</span><span class="n">kd_tree2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+<p>This number is same as the total pair number calculated by
+<a class="reference internal" href="scipy.spatial.cKDTree.query_ball_tree.html#scipy.spatial.cKDTree.query_ball_tree" title="scipy.spatial.cKDTree.query_ball_tree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">query_ball_tree</span></code></a>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">indexes</span> <span class="o">=</span> <span class="n">kd_tree1</span><span class="o">.</span><span class="n">query_ball_tree</span><span class="p">(</span><span class="n">kd_tree2</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sum</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indexes</span><span class="p">])</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+    <a class='left-prev' id="prev-link" href="scipy.spatial.cKDTree.html" title="previous page">scipy.spatial.cKDTree</a>
+    <a class='right-next' id="next-link" href="scipy.spatial.cKDTree.query.html" title="next page">scipy.spatial.cKDTree.query</a>
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../../_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2008-2021, The SciPy community.<br/>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.<br/>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>
