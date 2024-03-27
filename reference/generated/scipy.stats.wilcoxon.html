@@ -1,0 +1,857 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>scipy.stats.wilcoxon &#8212; SciPy v1.14.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=e598dfdc" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="../../_static/documentation_options.js?v=41e5ba13"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.stats.wilcoxon';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.15.2';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="scipy.stats.linregress" href="scipy.stats.linregress.html" />
+    <link rel="prev" title="scipy.stats.ttest_rel" href="scipy.stats.ttest_rel.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+    <meta name="docbuild:last-update" content="Mar 27, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt="SciPy v1.14.0.dev Manual - Home"/>
+    <script>document.write(`<img src="../../_static/logo.svg" class="logo__image only-dark" alt="SciPy v1.14.0.dev Manual - Home"/>`);</script>
+  
+  
+</a></div>
+    
+      <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button id="pst-version-switcher-button-2"
+      type="button"
+      class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle"
+      data-bs-toggle="dropdown"
+      aria-haspopup="listbox"
+      aria-controls="pst-version-switcher-list-2"
+      aria-label="Version switcher list"
+    >
+      Choose version  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div id="pst-version-switcher-list-2"
+      class="version-switcher__menu dropdown-menu list-group-flush py-0"
+      role="listbox" aria-labelledby="pst-version-switcher-button-2">
+      <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://scipy.org/install/">
+                        Installing
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../tutorial/index.html">
+                        User Guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../index.html">
+                        API reference
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../building/index.html">
+                        Building from source
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../dev/index.html">
+                        Development
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../release.html">
+                        Release notes
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://scipy.org/install/">
+                        Installing
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../tutorial/index.html">
+                        User Guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../index.html">
+                        API reference
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../building/index.html">
+                        Building from source
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../dev/index.html">
+                        Development
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../release.html">
+                        Release notes
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../stats.html" class="nav-link">Statistical functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">scipy.stats.wilcoxon</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="scipy-stats-wilcoxon">
+<h1>scipy.stats.wilcoxon<a class="headerlink" href="#scipy-stats-wilcoxon" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.stats.wilcoxon">
+<span class="sig-prename descclassname"><span class="pre">scipy.stats.</span></span><span class="sig-name descname"><span class="pre">wilcoxon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'wilcox'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'two-sided'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nan_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'propagate'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keepdims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/stats/_morestats.py#L3891-L4110"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.stats.wilcoxon" title="Link to this definition">#</a></dt>
+<dd><p>Calculate the Wilcoxon signed-rank test.</p>
+<p>The Wilcoxon signed-rank test tests the null hypothesis that two
+related paired samples come from the same distribution. In particular,
+it tests whether the distribution of the differences <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">-</span> <span class="pre">y</span></code> is symmetric
+about zero. It is a non-parametric version of the paired T-test.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>x</strong><span class="classifier">array_like</span></dt><dd><p>Either the first set of measurements (in which case <code class="docutils literal notranslate"><span class="pre">y</span></code> is the second
+set of measurements), or the differences between two sets of
+measurements (in which case <code class="docutils literal notranslate"><span class="pre">y</span></code> is not to be specified.)  Must be
+one-dimensional.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array_like, optional</span></dt><dd><p>Either the second set of measurements (if <code class="docutils literal notranslate"><span class="pre">x</span></code> is the first set of
+measurements), or not specified (if <code class="docutils literal notranslate"><span class="pre">x</span></code> is the differences between
+two sets of measurements.)  Must be one-dimensional.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When <em class="xref py py-obj">y</em> is provided, <a class="reference internal" href="#scipy.stats.wilcoxon" title="scipy.stats.wilcoxon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wilcoxon</span></code></a> calculates the test statistic
+based on the ranks of the absolute values of <code class="docutils literal notranslate"><span class="pre">d</span> <span class="pre">=</span> <span class="pre">x</span> <span class="pre">-</span> <span class="pre">y</span></code>.
+Roundoff error in the subtraction can result in elements of <code class="docutils literal notranslate"><span class="pre">d</span></code>
+being assigned different ranks even when they would be tied with
+exact arithmetic. Rather than passing <em class="xref py py-obj">x</em> and <em class="xref py py-obj">y</em> separately,
+consider computing the difference <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">-</span> <span class="pre">y</span></code>, rounding as needed to
+ensure that only truly unique elements are numerically distinct,
+and passing the result as <em class="xref py py-obj">x</em>, leaving <em class="xref py py-obj">y</em> at the default (None).</p>
+</div>
+</dd>
+<dt><strong>zero_method</strong><span class="classifier">{“wilcox”, “pratt”, “zsplit”}, optional</span></dt><dd><p>There are different conventions for handling pairs of observations
+with equal values (“zero-differences”, or “zeros”).</p>
+<ul class="simple">
+<li><p>“wilcox”: Discards all zero-differences (default); see <a class="reference internal" href="#r996422d5c98f-4" id="id1">[4]</a>.</p></li>
+<li><p>“pratt”: Includes zero-differences in the ranking process,
+but drops the ranks of the zeros (more conservative); see <a class="reference internal" href="#r996422d5c98f-3" id="id2">[3]</a>.
+In this case, the normal approximation is adjusted as in <a class="reference internal" href="#r996422d5c98f-5" id="id3">[5]</a>.</p></li>
+<li><p>“zsplit”: Includes zero-differences in the ranking process and
+splits the zero rank between positive and negative ones.</p></li>
+</ul>
+</dd>
+<dt><strong>correction</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, apply continuity correction by adjusting the Wilcoxon rank
+statistic by 0.5 towards the mean value when computing the
+z-statistic if a normal approximation is used.  Default is False.</p>
+</dd>
+<dt><strong>alternative</strong><span class="classifier">{“two-sided”, “greater”, “less”}, optional</span></dt><dd><p>Defines the alternative hypothesis. Default is ‘two-sided’.
+In the following, let <code class="docutils literal notranslate"><span class="pre">d</span></code> represent the difference between the paired
+samples: <code class="docutils literal notranslate"><span class="pre">d</span> <span class="pre">=</span> <span class="pre">x</span> <span class="pre">-</span> <span class="pre">y</span></code> if both <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> are provided, or
+<code class="docutils literal notranslate"><span class="pre">d</span> <span class="pre">=</span> <span class="pre">x</span></code> otherwise.</p>
+<ul class="simple">
+<li><p>‘two-sided’: the distribution underlying <code class="docutils literal notranslate"><span class="pre">d</span></code> is not symmetric
+about zero.</p></li>
+<li><p>‘less’: the distribution underlying <code class="docutils literal notranslate"><span class="pre">d</span></code> is stochastically less
+than a distribution symmetric about zero.</p></li>
+<li><p>‘greater’: the distribution underlying <code class="docutils literal notranslate"><span class="pre">d</span></code> is stochastically
+greater than a distribution symmetric about zero.</p></li>
+</ul>
+</dd>
+<dt><strong>method</strong><span class="classifier">{“auto”, “exact”, “approx”} or <a class="reference internal" href="scipy.stats.PermutationMethod.html#scipy.stats.PermutationMethod" title="scipy.stats.PermutationMethod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PermutationMethod</span></code></a> instance, optional</span></dt><dd><p>Method to calculate the p-value, see Notes. Default is “auto”.</p>
+</dd>
+<dt><strong>axis</strong><span class="classifier">int or None, default: 0</span></dt><dd><p>If an int, the axis of the input along which to compute the statistic.
+The statistic of each axis-slice (e.g. row) of the input will appear in a
+corresponding element of the output.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the input will be raveled before computing the statistic.</p>
+</dd>
+<dt><strong>nan_policy</strong><span class="classifier">{‘propagate’, ‘omit’, ‘raise’}</span></dt><dd><p>Defines how to handle input NaNs.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">propagate</span></code>: if a NaN is present in the axis slice (e.g. row) along
+which the  statistic is computed, the corresponding entry of the output
+will be NaN.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">omit</span></code>: NaNs will be omitted when performing the calculation.
+If insufficient data remains in the axis slice along which the
+statistic is computed, the corresponding entry of the output will be
+NaN.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">raise</span></code>: if a NaN is present, a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> will be raised.</p></li>
+</ul>
+</dd>
+<dt><strong>keepdims</strong><span class="classifier">bool, default: False</span></dt><dd><p>If this is set to True, the axes which are reduced are left
+in the result as dimensions with size one. With this option,
+the result will broadcast correctly against the input array.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt>An object with the following attributes.</dt><dd></dd>
+<dt><strong>statistic</strong><span class="classifier">array_like</span></dt><dd><p>If <em class="xref py py-obj">alternative</em> is “two-sided”, the sum of the ranks of the
+differences above or below zero, whichever is smaller.
+Otherwise the sum of the ranks of the differences above zero.</p>
+</dd>
+<dt><strong>pvalue</strong><span class="classifier">array_like</span></dt><dd><p>The p-value for the test depending on <em class="xref py py-obj">alternative</em> and <em class="xref py py-obj">method</em>.</p>
+</dd>
+<dt><strong>zstatistic</strong><span class="classifier">array_like</span></dt><dd><p>When <code class="docutils literal notranslate"><span class="pre">method</span> <span class="pre">=</span> <span class="pre">'approx'</span></code>, this is the normalized z-statistic:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">T</span> <span class="o">-</span> <span class="n">mn</span> <span class="o">-</span> <span class="n">d</span><span class="p">)</span> <span class="o">/</span> <span class="n">se</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">T</span></code> is <em class="xref py py-obj">statistic</em> as defined above, <code class="docutils literal notranslate"><span class="pre">mn</span></code> is the mean of the
+distribution under the null hypothesis, <code class="docutils literal notranslate"><span class="pre">d</span></code> is a continuity
+correction, and <code class="docutils literal notranslate"><span class="pre">se</span></code> is the standard error.
+When <code class="docutils literal notranslate"><span class="pre">method</span> <span class="pre">!=</span> <span class="pre">'approx'</span></code>, this attribute is not available.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="scipy.stats.kruskal.html#scipy.stats.kruskal" title="scipy.stats.kruskal"><code class="xref py py-func docutils literal notranslate"><span class="pre">kruskal</span></code></a>, <a class="reference internal" href="scipy.stats.mannwhitneyu.html#scipy.stats.mannwhitneyu" title="scipy.stats.mannwhitneyu"><code class="xref py py-func docutils literal notranslate"><span class="pre">mannwhitneyu</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>In the following, let <code class="docutils literal notranslate"><span class="pre">d</span></code> represent the difference between the paired
+samples: <code class="docutils literal notranslate"><span class="pre">d</span> <span class="pre">=</span> <span class="pre">x</span> <span class="pre">-</span> <span class="pre">y</span></code> if both <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> are provided, or <code class="docutils literal notranslate"><span class="pre">d</span> <span class="pre">=</span> <span class="pre">x</span></code>
+otherwise. Assume that all elements of <code class="docutils literal notranslate"><span class="pre">d</span></code> are independent and
+identically distributed observations, and all are distinct and nonzero.</p>
+<ul class="simple">
+<li><p>When <code class="docutils literal notranslate"><span class="pre">len(d)</span></code> is sufficiently large, the null distribution of the
+normalized test statistic (<em class="xref py py-obj">zstatistic</em> above) is approximately normal,
+and <code class="docutils literal notranslate"><span class="pre">method</span> <span class="pre">=</span> <span class="pre">'approx'</span></code> can be used to compute the p-value.</p></li>
+<li><p>When <code class="docutils literal notranslate"><span class="pre">len(d)</span></code> is small, the normal approximation may not be accurate,
+and <code class="docutils literal notranslate"><span class="pre">method='exact'</span></code> is preferred (at the cost of additional
+execution time).</p></li>
+<li><p>The default, <code class="docutils literal notranslate"><span class="pre">method='auto'</span></code>, selects between the two: when
+<code class="docutils literal notranslate"><span class="pre">len(d)</span> <span class="pre">&lt;=</span> <span class="pre">50</span></code> and there are no zeros, the exact method is used;
+otherwise, the approximate method is used.</p></li>
+</ul>
+<p>The presence of “ties” (i.e. not all elements of <code class="docutils literal notranslate"><span class="pre">d</span></code> are unique) or
+“zeros” (i.e. elements of <code class="docutils literal notranslate"><span class="pre">d</span></code> are zero) changes the null distribution
+of the test statistic, and <code class="docutils literal notranslate"><span class="pre">method='exact'</span></code> no longer calculates
+the exact p-value. If <code class="docutils literal notranslate"><span class="pre">method='approx'</span></code>, the z-statistic is adjusted
+for more accurate comparison against the standard normal, but still,
+for finite sample sizes, the standard normal is only an approximation of
+the true null distribution of the z-statistic. For such situations, the
+<em class="xref py py-obj">method</em> parameter also accepts instances <a class="reference internal" href="scipy.stats.PermutationMethod.html#scipy.stats.PermutationMethod" title="scipy.stats.PermutationMethod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PermutationMethod</span></code></a>. In this
+case, the p-value is computed using <a class="reference internal" href="scipy.stats.permutation_test.html#scipy.stats.permutation_test" title="scipy.stats.permutation_test"><code class="xref py py-obj docutils literal notranslate"><span class="pre">permutation_test</span></code></a> with the provided
+configuration options and other appropriate settings.</p>
+<p>Beginning in SciPy 1.9, <code class="docutils literal notranslate"><span class="pre">np.matrix</span></code> inputs (not recommended for new
+code) are converted to <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> before the calculation is performed. In
+this case, the output will be a scalar or <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> of appropriate shape
+rather than a 2D <code class="docutils literal notranslate"><span class="pre">np.matrix</span></code>. Similarly, while masked elements of masked
+arrays are ignored, the output will be a scalar or <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> rather than a
+masked array with <code class="docutils literal notranslate"><span class="pre">mask=False</span></code>.</p>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r996422d5c98f-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test">https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test</a></p>
+</div>
+<div class="citation" id="r996422d5c98f-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<p>Conover, W.J., Practical Nonparametric Statistics, 1971.</p>
+</div>
+<div class="citation" id="r996422d5c98f-3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">3</a><span class="fn-bracket">]</span></span>
+<p>Pratt, J.W., Remarks on Zeros and Ties in the Wilcoxon Signed
+Rank Procedures, Journal of the American Statistical Association,
+Vol. 54, 1959, pp. 655-667. <a class="reference external" href="https://doi.org/10.1080/01621459.1959.10501526">DOI:10.1080/01621459.1959.10501526</a></p>
+</div>
+<div class="citation" id="r996422d5c98f-4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id9">2</a>)</span>
+<p>Wilcoxon, F., Individual Comparisons by Ranking Methods,
+Biometrics Bulletin, Vol. 1, 1945, pp. 80-83. <a class="reference external" href="https://doi.org/10.2307/3001968">DOI:10.2307/3001968</a></p>
+</div>
+<div class="citation" id="r996422d5c98f-5" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">5</a><span class="fn-bracket">]</span></span>
+<p>Cureton, E.E., The Normal Approximation to the Signed-Rank
+Sampling Distribution When Zero Differences are Present,
+Journal of the American Statistical Association, Vol. 62, 1967,
+pp. 1068-1069. <a class="reference external" href="https://doi.org/10.1080/01621459.1967.10500917">DOI:10.1080/01621459.1967.10500917</a></p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="e0276286-8100-40a1-b7e8-53154d11eef7">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('e0276286-8100-40a1-b7e8-53154d11eef7','5612b838-323f-49e3-8af8-ab230b83fa43','3cfac878-52bb-453c-8e33-67c808a8e194','../../lite/tree/../notebooks/?path=6a568732_f045_4919_bcc6_94e81f2f6c86.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>In <a class="reference internal" href="#r996422d5c98f-4" id="id9">[4]</a>, the differences in height between cross- and self-fertilized
+corn plants is given as follows:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">41</span><span class="p">,</span> <span class="o">-</span><span class="mi">48</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span> <span class="mi">56</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="o">-</span><span class="mi">67</span><span class="p">,</span> <span class="mi">75</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Cross-fertilized plants appear to be higher. To test the null
+hypothesis that there is no height difference, we can apply the
+two-sided test:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">wilcoxon</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">wilcoxon</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">statistic</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">pvalue</span>
+<span class="go">(24.0, 0.041259765625)</span>
+</pre></div>
+</div>
+<p>Hence, we would reject the null hypothesis at a confidence level of 5%,
+concluding that there is a difference in height between the groups.
+To confirm that the median of the differences can be assumed to be
+positive, we use:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">wilcoxon</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;greater&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">statistic</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">pvalue</span>
+<span class="go">(96.0, 0.0206298828125)</span>
+</pre></div>
+</div>
+<p>This shows that the null hypothesis that the median is negative can be
+rejected at a confidence level of 5% in favor of the alternative that
+the median is greater than zero. The p-values above are exact. Using the
+normal approximation gives very similar values:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">wilcoxon</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;approx&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">statistic</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">pvalue</span>
+<span class="go">(24.0, 0.04088813291185591)</span>
+</pre></div>
+</div>
+<p>Note that the statistic changed to 96 in the one-sided case (the sum
+of ranks of positive differences) whereas it is 24 in the two-sided
+case (the minimum of sum of ranks above and below zero).</p>
+<p>In the example above, the differences in height between paired plants are
+provided to <a class="reference internal" href="#scipy.stats.wilcoxon" title="scipy.stats.wilcoxon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wilcoxon</span></code></a> directly. Alternatively, <a class="reference internal" href="#scipy.stats.wilcoxon" title="scipy.stats.wilcoxon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wilcoxon</span></code></a> accepts two
+samples of equal length, calculates the differences between paired
+elements, then performs the test. Consider the samples <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.825</span><span class="p">,</span> <span class="mf">0.375</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.525</span><span class="p">,</span> <span class="mf">0.775</span><span class="p">,</span> <span class="mf">0.325</span><span class="p">,</span> <span class="mf">0.55</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">wilcoxon</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;greater&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span>
+<span class="go">WilcoxonResult(statistic=5.0, pvalue=0.5625)</span>
+</pre></div>
+</div>
+<p>Note that had we calculated the differences by hand, the test would have
+produced different results:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.025</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ref</span> <span class="o">=</span> <span class="n">wilcoxon</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;greater&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ref</span>
+<span class="go">WilcoxonResult(statistic=6.0, pvalue=0.4375)</span>
+</pre></div>
+</div>
+<p>The substantial difference is due to roundoff error in the results of
+<code class="docutils literal notranslate"><span class="pre">x-y</span></code>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">-</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">)</span>
+<span class="go">array([2.08166817e-17, 6.93889390e-17, 1.38777878e-17, 4.16333634e-17])</span>
+</pre></div>
+</div>
+<p>Even though we expected all the elements of <code class="docutils literal notranslate"><span class="pre">(x-y)[1:]</span></code> to have the same
+magnitude <code class="docutils literal notranslate"><span class="pre">0.05</span></code>, they have slightly different magnitudes in practice,
+and therefore are assigned different ranks in the test. Before performing
+the test, consider calculating <code class="docutils literal notranslate"><span class="pre">d</span></code> and adjusting it as necessary to
+ensure that theoretically identically values are not numerically distinct.
+For example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wilcoxon</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;greater&#39;</span><span class="p">)</span>
+<span class="go">WilcoxonResult(statistic=6.0, pvalue=0.4375)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div id="3cfac878-52bb-453c-8e33-67c808a8e194" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('e0276286-8100-40a1-b7e8-53154d11eef7','3cfac878-52bb-453c-8e33-67c808a8e194')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('e0276286-8100-40a1-b7e8-53154d11eef7','3cfac878-52bb-453c-8e33-67c808a8e194')">Open In Tab</button></div><div id="5612b838-323f-49e3-8af8-ab230b83fa43" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.stats.ttest_rel.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">scipy.stats.ttest_rel</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.stats.linregress.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">scipy.stats.linregress</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.stats.wilcoxon"><code class="docutils literal notranslate"><span class="pre">wilcoxon</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.2.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
