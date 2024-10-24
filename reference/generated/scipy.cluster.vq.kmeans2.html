@@ -1,0 +1,751 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>kmeans2 &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.cluster.vq.kmeans2';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Hierarchical clustering (scipy.cluster.hierarchy)" href="../cluster.hierarchy.html" />
+    <link rel="prev" title="kmeans" href="scipy.cluster.vq.kmeans.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../cluster.html" class="nav-link">Clustering package (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.cluster</span></code>)</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../cluster.vq.html" class="nav-link">K-means clustering and vector quantization (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.cluster.vq</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">kmeans2</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.cluster.vq.</div>
+<div class="empty"></div><section id="kmeans2">
+<h1>kmeans2<a class="headerlink" href="#kmeans2" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.cluster.vq.kmeans2">
+<span class="sig-prename descclassname"><span class="pre">scipy.cluster.vq.</span></span><span class="sig-name descname"><span class="pre">kmeans2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">missing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'warn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_finite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/cluster/vq.py#L648-L833"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.cluster.vq.kmeans2" title="Link to this definition">#</a></dt>
+<dd><p>Classify a set of observations into k clusters using the k-means algorithm.</p>
+<p>The algorithm attempts to minimize the Euclidean distance between
+observations and centroids. Several initialization methods are
+included.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>data</strong><span class="classifier">ndarray</span></dt><dd><p>A ‘M’ by ‘N’ array of ‘M’ observations in ‘N’ dimensions or a length
+‘M’ array of ‘M’ 1-D observations.</p>
+</dd>
+<dt><strong>k</strong><span class="classifier">int or ndarray</span></dt><dd><p>The number of clusters to form as well as the number of
+centroids to generate. If <em class="xref py py-obj">minit</em> initialization string is
+‘matrix’, or if a ndarray is given instead, it is
+interpreted as initial cluster to use instead.</p>
+</dd>
+<dt><strong>iter</strong><span class="classifier">int, optional</span></dt><dd><p>Number of iterations of the k-means algorithm to run. Note
+that this differs in meaning from the iters parameter to
+the kmeans function.</p>
+</dd>
+<dt><strong>thresh</strong><span class="classifier">float, optional</span></dt><dd><p>(not used yet)</p>
+</dd>
+<dt><strong>minit</strong><span class="classifier">str, optional</span></dt><dd><p>Method for initialization. Available methods are ‘random’,
+‘points’, ‘++’ and ‘matrix’:</p>
+<p>‘random’: generate k centroids from a Gaussian with mean and
+variance estimated from the data.</p>
+<p>‘points’: choose k observations (rows) at random from data for
+the initial centroids.</p>
+<p>‘++’: choose k observations accordingly to the kmeans++ method
+(careful seeding)</p>
+<p>‘matrix’: interpret the k parameter as a k by M (or length k
+array for 1-D data) array of initial centroids.</p>
+</dd>
+<dt><strong>missing</strong><span class="classifier">str, optional</span></dt><dd><p>Method to deal with empty clusters. Available methods are
+‘warn’ and ‘raise’:</p>
+<p>‘warn’: give a warning and continue.</p>
+<p>‘raise’: raise an ClusterError and terminate the algorithm.</p>
+</dd>
+<dt><strong>check_finite</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether to check that the input matrices contain only finite numbers.
+Disabling may give a performance gain, but may result in problems
+(crashes, non-termination) if the inputs do contain infinities or NaNs.
+Default: True</p>
+</dd>
+<dt><strong>seed</strong><span class="classifier">{None, int, <a class="reference external" href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a>}, optional</span></dt><dd><p>Seed for initializing the pseudo-random number generator.
+If <em class="xref py py-obj">seed</em> is None (or <a class="reference external" href="https://numpy.org/doc/stable/reference/random/index.html#module-numpy.random" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random</span></code></a>), the <a class="reference external" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a>
+singleton is used.
+If <em class="xref py py-obj">seed</em> is an int, a new <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance is used,
+seeded with <em class="xref py py-obj">seed</em>.
+If <em class="xref py py-obj">seed</em> is already a <code class="docutils literal notranslate"><span class="pre">Generator</span></code> or <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance then
+that instance is used.
+The default is None.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>centroid</strong><span class="classifier">ndarray</span></dt><dd><p>A ‘k’ by ‘N’ array of centroids found at the last iteration of
+k-means.</p>
+</dd>
+<dt><strong>label</strong><span class="classifier">ndarray</span></dt><dd><p>label[i] is the code or index of the centroid the
+ith observation is closest to.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="scipy.cluster.vq.kmeans.html#scipy.cluster.vq.kmeans" title="scipy.cluster.vq.kmeans"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kmeans</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="re7269cd12274-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>D. Arthur and S. Vassilvitskii, “k-means++: the advantages of
+careful seeding”, Proceedings of the Eighteenth Annual ACM-SIAM Symposium
+on Discrete Algorithms, 2007.</p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="19251252-dd84-4888-ae7c-e36fa40b6e36">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('19251252-dd84-4888-ae7c-e36fa40b6e36','2e88f995-b74a-4830-84af-bdf46990337c','3d5475f2-c0e6-44d0-ac20-4a6e3e407a7e','../../lite/tree/../notebooks/index.html?path=672d9331_f1e0_4a3b_ae23_78fd9e27bca2.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.cluster.vq</span> <span class="kn">import</span> <span class="n">kmeans2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+<p>Create z, an array with shape (100, 2) containing a mixture of samples
+from three multivariate normal distributions.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">]],</span> <span class="n">size</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]],</span> <span class="n">size</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">([</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">]],</span> <span class="n">size</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Compute three clusters.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">centroid</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">kmeans2</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">minit</span><span class="o">=</span><span class="s1">&#39;points&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">centroid</span>
+<span class="go">array([[ 2.22274463, -0.61666946],  # may vary</span>
+<span class="go">       [ 0.54069047,  5.86541444],</span>
+<span class="go">       [ 6.73846769,  4.01991898]])</span>
+</pre></div>
+</div>
+<p>How many points are in each cluster?</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">counts</span>
+<span class="go">array([29, 51, 20])  # may vary</span>
+</pre></div>
+</div>
+<p>Plot the clusters.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w0</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">label</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w1</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">label</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w2</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">label</span> <span class="o">==</span> <span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w0</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">w0</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;cluster 0&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w1</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">w1</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;cluster 1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">w2</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">w2</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;cluster 2&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">centroid</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">centroid</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;k*&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;centroids&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">shadow</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-cluster-vq-kmeans2-1.png" class="plot-directive" src="../../_images/scipy-cluster-vq-kmeans2-1.png" />
+</figure>
+</div>
+</div>
+<div id="3d5475f2-c0e6-44d0-ac20-4a6e3e407a7e" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('19251252-dd84-4888-ae7c-e36fa40b6e36','3d5475f2-c0e6-44d0-ac20-4a6e3e407a7e')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('19251252-dd84-4888-ae7c-e36fa40b6e36','3d5475f2-c0e6-44d0-ac20-4a6e3e407a7e')">Open In Tab</button></div><div id="2e88f995-b74a-4830-84af-bdf46990337c" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.cluster.vq.kmeans.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">kmeans</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../cluster.hierarchy.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Hierarchical clustering (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.cluster.hierarchy</span></code>)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.cluster.vq.kmeans2"><code class="docutils literal notranslate"><span class="pre">kmeans2</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

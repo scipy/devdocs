@@ -1,0 +1,891 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Statistical functions for masked arrays (scipy.stats.mstats) &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/stats.mstats';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="describe" href="generated/scipy.stats.mstats.describe.html" />
+    <link rel="prev" title="margins" href="generated/scipy.stats.contingency.margins.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="special.html">scipy.special</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="stats.html" class="nav-link">Statistical functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Statistical functions for masked arrays (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.stats.mstats</span></code>)</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="statistical-functions-for-masked-arrays-scipy-stats-mstats">
+<span id="module-scipy.stats.mstats"></span><h1>Statistical functions for masked arrays (<a class="reference internal" href="#module-scipy.stats.mstats" title="scipy.stats.mstats"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.stats.mstats</span></code></a>)<a class="headerlink" href="#statistical-functions-for-masked-arrays-scipy-stats-mstats" title="Link to this heading">#</a></h1>
+<p>This module contains a large number of statistical functions that can
+be used with masked arrays.</p>
+<p>Most of these functions are similar to those in <a class="reference internal" href="stats.html#module-scipy.stats" title="scipy.stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code></a> but might
+have small differences in the API or in the algorithm used. Since this
+is a relatively new package, some API changes are still possible.</p>
+<section id="summary-statistics">
+<h2>Summary statistics<a class="headerlink" href="#summary-statistics" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.describe.html#scipy.stats.mstats.describe" title="scipy.stats.mstats.describe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">describe</span></code></a>(a[, axis, ddof, bias])</p></td>
+<td><p>Computes several descriptive statistics of the passed array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.gmean.html#scipy.stats.mstats.gmean" title="scipy.stats.mstats.gmean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gmean</span></code></a>(a[, axis, dtype, weights, nan_policy, ...])</p></td>
+<td><p>Compute the weighted geometric mean along the specified axis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.hmean.html#scipy.stats.mstats.hmean" title="scipy.stats.mstats.hmean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hmean</span></code></a>(a[, axis, dtype, weights, nan_policy, ...])</p></td>
+<td><p>Calculate the weighted harmonic mean along the specified axis.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.kurtosis.html#scipy.stats.mstats.kurtosis" title="scipy.stats.mstats.kurtosis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kurtosis</span></code></a>(a[, axis, fisher, bias])</p></td>
+<td><p>Computes the kurtosis (Fisher or Pearson) of a dataset.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.mode.html#scipy.stats.mstats.mode" title="scipy.stats.mstats.mode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mode</span></code></a>(a[, axis])</p></td>
+<td><p>Returns an array of the modal (most common) value in the passed array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.mquantiles.html#scipy.stats.mstats.mquantiles" title="scipy.stats.mstats.mquantiles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mquantiles</span></code></a>(a[, prob, alphap, betap, axis, limit])</p></td>
+<td><p>Computes empirical quantiles for a data array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.hdmedian.html#scipy.stats.mstats.hdmedian" title="scipy.stats.mstats.hdmedian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hdmedian</span></code></a>(data[, axis, var])</p></td>
+<td><p>Returns the Harrell-Davis estimate of the median along the given axis.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.hdquantiles.html#scipy.stats.mstats.hdquantiles" title="scipy.stats.mstats.hdquantiles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hdquantiles</span></code></a>(data[, prob, axis, var])</p></td>
+<td><p>Computes quantile estimates with the Harrell-Davis method.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.hdquantiles_sd.html#scipy.stats.mstats.hdquantiles_sd" title="scipy.stats.mstats.hdquantiles_sd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hdquantiles_sd</span></code></a>(data[, prob, axis])</p></td>
+<td><p>The standard error of the Harrell-Davis quantile estimates by jackknife.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.idealfourths.html#scipy.stats.mstats.idealfourths" title="scipy.stats.mstats.idealfourths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">idealfourths</span></code></a>(data[, axis])</p></td>
+<td><p>Returns an estimate of the lower and upper quartiles.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.plotting_positions.html#scipy.stats.mstats.plotting_positions" title="scipy.stats.mstats.plotting_positions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotting_positions</span></code></a>(data[, alpha, beta])</p></td>
+<td><p>Returns plotting positions (or empirical percentile points) for the data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.meppf.html#scipy.stats.mstats.meppf" title="scipy.stats.mstats.meppf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">meppf</span></code></a>(data[, alpha, beta])</p></td>
+<td><p>Returns plotting positions (or empirical percentile points) for the data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.moment.html#scipy.stats.mstats.moment" title="scipy.stats.mstats.moment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">moment</span></code></a>(a[, moment, axis])</p></td>
+<td><p>Calculates the nth moment about the mean for a sample.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.skew.html#scipy.stats.mstats.skew" title="scipy.stats.mstats.skew"><code class="xref py py-obj docutils literal notranslate"><span class="pre">skew</span></code></a>(a[, axis, bias])</p></td>
+<td><p>Computes the skewness of a data set.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.tmean.html#scipy.stats.mstats.tmean" title="scipy.stats.mstats.tmean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tmean</span></code></a>(a[, limits, inclusive, axis])</p></td>
+<td><p>Compute the trimmed mean.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.tvar.html#scipy.stats.mstats.tvar" title="scipy.stats.mstats.tvar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tvar</span></code></a>(a[, limits, inclusive, axis, ddof])</p></td>
+<td><p>Compute the trimmed variance</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.tmin.html#scipy.stats.mstats.tmin" title="scipy.stats.mstats.tmin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tmin</span></code></a>(a[, lowerlimit, axis, inclusive])</p></td>
+<td><p>Compute the trimmed minimum</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.tmax.html#scipy.stats.mstats.tmax" title="scipy.stats.mstats.tmax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tmax</span></code></a>(a[, upperlimit, axis, inclusive])</p></td>
+<td><p>Compute the trimmed maximum</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.tsem.html#scipy.stats.mstats.tsem" title="scipy.stats.mstats.tsem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tsem</span></code></a>(a[, limits, inclusive, axis, ddof])</p></td>
+<td><p>Compute the trimmed standard error of the mean.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.variation.html#scipy.stats.mstats.variation" title="scipy.stats.mstats.variation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variation</span></code></a>(a[, axis, ddof])</p></td>
+<td><p>Compute the coefficient of variation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.find_repeats.html#scipy.stats.mstats.find_repeats" title="scipy.stats.mstats.find_repeats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_repeats</span></code></a>(arr)</p></td>
+<td><p>Find repeats in arr and return a tuple (repeats, repeat_count).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.sem.html#scipy.stats.mstats.sem" title="scipy.stats.mstats.sem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sem</span></code></a>(a[, axis, ddof])</p></td>
+<td><p>Calculates the standard error of the mean of the input array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.trimmed_mean.html#scipy.stats.mstats.trimmed_mean" title="scipy.stats.mstats.trimmed_mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trimmed_mean</span></code></a>(a[, limits, inclusive, ...])</p></td>
+<td><p>Returns the trimmed mean of the data along the given axis.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.trimmed_mean_ci.html#scipy.stats.mstats.trimmed_mean_ci" title="scipy.stats.mstats.trimmed_mean_ci"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trimmed_mean_ci</span></code></a>(data[, limits, inclusive, ...])</p></td>
+<td><p>Selected confidence interval of the trimmed mean along the given axis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.trimmed_std.html#scipy.stats.mstats.trimmed_std" title="scipy.stats.mstats.trimmed_std"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trimmed_std</span></code></a>(a[, limits, inclusive, ...])</p></td>
+<td><p>Returns the trimmed standard deviation of the data along the given axis.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.trimmed_var.html#scipy.stats.mstats.trimmed_var" title="scipy.stats.mstats.trimmed_var"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trimmed_var</span></code></a>(a[, limits, inclusive, ...])</p></td>
+<td><p>Returns the trimmed variance of the data along the given axis.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="frequency-statistics">
+<h2>Frequency statistics<a class="headerlink" href="#frequency-statistics" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.scoreatpercentile.html#scipy.stats.mstats.scoreatpercentile" title="scipy.stats.mstats.scoreatpercentile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scoreatpercentile</span></code></a>(data, per[, limit, ...])</p></td>
+<td><p>Calculate the score at the given 'per' percentile of the sequence a.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="correlation-functions">
+<h2>Correlation functions<a class="headerlink" href="#correlation-functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.f_oneway.html#scipy.stats.mstats.f_oneway" title="scipy.stats.mstats.f_oneway"><code class="xref py py-obj docutils literal notranslate"><span class="pre">f_oneway</span></code></a>(*args)</p></td>
+<td><p>Performs a 1-way ANOVA, returning an F-value and probability given any number of groups.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.pearsonr.html#scipy.stats.mstats.pearsonr" title="scipy.stats.mstats.pearsonr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pearsonr</span></code></a>(x, y)</p></td>
+<td><p>Pearson correlation coefficient and p-value for testing non-correlation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.spearmanr.html#scipy.stats.mstats.spearmanr" title="scipy.stats.mstats.spearmanr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spearmanr</span></code></a>(x[, y, use_ties, axis, ...])</p></td>
+<td><p>Calculates a Spearman rank-order correlation coefficient and the p-value to test for non-correlation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.pointbiserialr.html#scipy.stats.mstats.pointbiserialr" title="scipy.stats.mstats.pointbiserialr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pointbiserialr</span></code></a>(x, y)</p></td>
+<td><p>Calculates a point biserial correlation coefficient and its p-value.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.kendalltau.html#scipy.stats.mstats.kendalltau" title="scipy.stats.mstats.kendalltau"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kendalltau</span></code></a>(x, y[, use_ties, use_missing, ...])</p></td>
+<td><p>Computes Kendall's rank correlation tau on two variables <em>x</em> and <em>y</em>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.kendalltau_seasonal.html#scipy.stats.mstats.kendalltau_seasonal" title="scipy.stats.mstats.kendalltau_seasonal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kendalltau_seasonal</span></code></a>(x)</p></td>
+<td><p>Computes a multivariate Kendall's rank correlation tau, for seasonal data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.linregress.html#scipy.stats.mstats.linregress" title="scipy.stats.mstats.linregress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linregress</span></code></a>(x[, y])</p></td>
+<td><p>Calculate a linear least-squares regression for two sets of measurements.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.siegelslopes.html#scipy.stats.mstats.siegelslopes" title="scipy.stats.mstats.siegelslopes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">siegelslopes</span></code></a>(y[, x, method])</p></td>
+<td><p>Computes the Siegel estimator for a set of points (x, y).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.theilslopes.html#scipy.stats.mstats.theilslopes" title="scipy.stats.mstats.theilslopes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">theilslopes</span></code></a>(y[, x, alpha, method])</p></td>
+<td><p>Computes the Theil-Sen estimator for a set of points (x, y).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.sen_seasonal_slopes.html#scipy.stats.mstats.sen_seasonal_slopes" title="scipy.stats.mstats.sen_seasonal_slopes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sen_seasonal_slopes</span></code></a>(x)</p></td>
+<td><p>Computes seasonal Theil-Sen and Kendall slope estimators.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="statistical-tests">
+<h2>Statistical tests<a class="headerlink" href="#statistical-tests" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.ttest_1samp.html#scipy.stats.mstats.ttest_1samp" title="scipy.stats.mstats.ttest_1samp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ttest_1samp</span></code></a>(a, popmean[, axis, alternative])</p></td>
+<td><p>Calculates the T-test for the mean of ONE group of scores.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.ttest_onesamp.html#scipy.stats.mstats.ttest_onesamp" title="scipy.stats.mstats.ttest_onesamp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ttest_onesamp</span></code></a>(a, popmean[, axis, alternative])</p></td>
+<td><p>Calculates the T-test for the mean of ONE group of scores.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.ttest_ind.html#scipy.stats.mstats.ttest_ind" title="scipy.stats.mstats.ttest_ind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ttest_ind</span></code></a>(a, b[, axis, equal_var, alternative])</p></td>
+<td><p>Calculates the T-test for the means of TWO INDEPENDENT samples of scores.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.ttest_rel.html#scipy.stats.mstats.ttest_rel" title="scipy.stats.mstats.ttest_rel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ttest_rel</span></code></a>(a, b[, axis, alternative])</p></td>
+<td><p>Calculates the T-test on TWO RELATED samples of scores, a and b.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.chisquare.html#scipy.stats.mstats.chisquare" title="scipy.stats.mstats.chisquare"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chisquare</span></code></a>(f_obs[, f_exp, ddof, axis])</p></td>
+<td><p>Calculate a one-way chi-square test.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.kstest.html#scipy.stats.mstats.kstest" title="scipy.stats.mstats.kstest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kstest</span></code></a>(data1, data2[, args, alternative, method])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.ks_2samp.html#scipy.stats.mstats.ks_2samp" title="scipy.stats.mstats.ks_2samp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ks_2samp</span></code></a>(data1, data2[, alternative, method])</p></td>
+<td><p>Computes the Kolmogorov-Smirnov test on two samples.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.ks_1samp.html#scipy.stats.mstats.ks_1samp" title="scipy.stats.mstats.ks_1samp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ks_1samp</span></code></a>(x, cdf[, args, alternative, method])</p></td>
+<td><p>Computes the Kolmogorov-Smirnov test on one sample of masked values.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.ks_twosamp.html#scipy.stats.mstats.ks_twosamp" title="scipy.stats.mstats.ks_twosamp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ks_twosamp</span></code></a>(data1, data2[, alternative, method])</p></td>
+<td><p>Computes the Kolmogorov-Smirnov test on two samples.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.mannwhitneyu.html#scipy.stats.mstats.mannwhitneyu" title="scipy.stats.mstats.mannwhitneyu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mannwhitneyu</span></code></a>(x, y[, use_continuity])</p></td>
+<td><p>Computes the Mann-Whitney statistic</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.rankdata.html#scipy.stats.mstats.rankdata" title="scipy.stats.mstats.rankdata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rankdata</span></code></a>(data[, axis, use_missing])</p></td>
+<td><p>Returns the rank (also known as order statistics) of each data point along the given axis.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.kruskal.html#scipy.stats.mstats.kruskal" title="scipy.stats.mstats.kruskal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kruskal</span></code></a>(*args)</p></td>
+<td><p>Compute the Kruskal-Wallis H-test for independent samples</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.kruskalwallis.html#scipy.stats.mstats.kruskalwallis" title="scipy.stats.mstats.kruskalwallis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kruskalwallis</span></code></a>(*args)</p></td>
+<td><p>Compute the Kruskal-Wallis H-test for independent samples</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.friedmanchisquare.html#scipy.stats.mstats.friedmanchisquare" title="scipy.stats.mstats.friedmanchisquare"><code class="xref py py-obj docutils literal notranslate"><span class="pre">friedmanchisquare</span></code></a>(*args)</p></td>
+<td><p>Friedman Chi-Square is a non-parametric, one-way within-subjects ANOVA.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.brunnermunzel.html#scipy.stats.mstats.brunnermunzel" title="scipy.stats.mstats.brunnermunzel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">brunnermunzel</span></code></a>(x, y[, alternative, distribution])</p></td>
+<td><p>Compute the Brunner-Munzel test on samples x and y.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.skewtest.html#scipy.stats.mstats.skewtest" title="scipy.stats.mstats.skewtest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">skewtest</span></code></a>(a[, axis, alternative])</p></td>
+<td><p>Tests whether the skew is different from the normal distribution.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.kurtosistest.html#scipy.stats.mstats.kurtosistest" title="scipy.stats.mstats.kurtosistest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kurtosistest</span></code></a>(a[, axis, alternative])</p></td>
+<td><p>Tests whether a dataset has normal kurtosis</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.normaltest.html#scipy.stats.mstats.normaltest" title="scipy.stats.mstats.normaltest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normaltest</span></code></a>(a[, axis])</p></td>
+<td><p>Tests whether a sample differs from a normal distribution.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="transformations">
+<h2>Transformations<a class="headerlink" href="#transformations" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.obrientransform.html#scipy.stats.mstats.obrientransform" title="scipy.stats.mstats.obrientransform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">obrientransform</span></code></a>(*args)</p></td>
+<td><p>Computes a transform on input data (any number of columns).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.trim.html#scipy.stats.mstats.trim" title="scipy.stats.mstats.trim"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trim</span></code></a>(a[, limits, inclusive, relative, axis])</p></td>
+<td><p>Trims an array by masking the data outside some given limits.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.trima.html#scipy.stats.mstats.trima" title="scipy.stats.mstats.trima"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trima</span></code></a>(a[, limits, inclusive])</p></td>
+<td><p>Trims an array by masking the data outside some given limits.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.trimmed_stde.html#scipy.stats.mstats.trimmed_stde" title="scipy.stats.mstats.trimmed_stde"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trimmed_stde</span></code></a>(a[, limits, inclusive, axis])</p></td>
+<td><p>Returns the standard error of the trimmed mean along the given axis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.trimr.html#scipy.stats.mstats.trimr" title="scipy.stats.mstats.trimr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trimr</span></code></a>(a[, limits, inclusive, axis])</p></td>
+<td><p>Trims an array by masking some proportion of the data on each end.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.trimtail.html#scipy.stats.mstats.trimtail" title="scipy.stats.mstats.trimtail"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trimtail</span></code></a>(data[, proportiontocut, tail, ...])</p></td>
+<td><p>Trims the data by masking values from one tail.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.trimboth.html#scipy.stats.mstats.trimboth" title="scipy.stats.mstats.trimboth"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trimboth</span></code></a>(data[, proportiontocut, inclusive, ...])</p></td>
+<td><p>Trims the smallest and largest data values.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.winsorize.html#scipy.stats.mstats.winsorize" title="scipy.stats.mstats.winsorize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">winsorize</span></code></a>(a[, limits, inclusive, inplace, ...])</p></td>
+<td><p>Returns a Winsorized version of the input array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.zmap.html#scipy.stats.mstats.zmap" title="scipy.stats.mstats.zmap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zmap</span></code></a>(scores, compare[, axis, ddof, nan_policy])</p></td>
+<td><p>Calculate the relative z-scores.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.zscore.html#scipy.stats.mstats.zscore" title="scipy.stats.mstats.zscore"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zscore</span></code></a>(a[, axis, ddof, nan_policy])</p></td>
+<td><p>Compute the z score.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="other">
+<h2>Other<a class="headerlink" href="#other" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.argstoarray.html#scipy.stats.mstats.argstoarray" title="scipy.stats.mstats.argstoarray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">argstoarray</span></code></a>(*args)</p></td>
+<td><p>Constructs a 2D array from a group of sequences.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.count_tied_groups.html#scipy.stats.mstats.count_tied_groups" title="scipy.stats.mstats.count_tied_groups"><code class="xref py py-obj docutils literal notranslate"><span class="pre">count_tied_groups</span></code></a>(x[, use_missing])</p></td>
+<td><p>Counts the number of tied values.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.msign.html#scipy.stats.mstats.msign" title="scipy.stats.mstats.msign"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msign</span></code></a>(x)</p></td>
+<td><p>Returns the sign of x, or 0 if x is masked.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.compare_medians_ms.html#scipy.stats.mstats.compare_medians_ms" title="scipy.stats.mstats.compare_medians_ms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compare_medians_ms</span></code></a>(group_1, group_2[, axis])</p></td>
+<td><p>Compares the medians from two independent groups along the given axis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.median_cihs.html#scipy.stats.mstats.median_cihs" title="scipy.stats.mstats.median_cihs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">median_cihs</span></code></a>(data[, alpha, axis])</p></td>
+<td><p>Computes the alpha-level confidence interval for the median of the data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.mjci.html#scipy.stats.mstats.mjci" title="scipy.stats.mstats.mjci"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mjci</span></code></a>(data[, prob, axis])</p></td>
+<td><p>Returns the Maritz-Jarrett estimators of the standard error of selected experimental quantiles of the data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.mquantiles_cimj.html#scipy.stats.mstats.mquantiles_cimj" title="scipy.stats.mstats.mquantiles_cimj"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mquantiles_cimj</span></code></a>(data[, prob, alpha, axis])</p></td>
+<td><p>Computes the alpha confidence interval for the selected quantiles of the data, with Maritz-Jarrett estimators.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.mstats.rsh.html#scipy.stats.mstats.rsh" title="scipy.stats.mstats.rsh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rsh</span></code></a>(data[, points])</p></td>
+<td><p>Evaluates Rosenblatt's shifted histogram estimators for each data point.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="generated/scipy.stats.contingency.margins.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">margins</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="generated/scipy.stats.mstats.describe.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">describe</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-statistics">Summary statistics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#frequency-statistics">Frequency statistics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#correlation-functions">Correlation functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#statistical-tests">Statistical tests</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transformations">Transformations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other">Other</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

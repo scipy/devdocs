@@ -1,0 +1,998 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Linear algebra (scipy.linalg) &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/linalg';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Low-level BLAS functions (scipy.linalg.blas)" href="linalg.blas.html" />
+    <link rel="prev" title="scipy.io.arff.ParseArffError" href="generated/scipy.io.arff.ParseArffError.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">scipy.io</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">SciPy API</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Linear algebra (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.linalg</span></code>)</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="linear-algebra-scipy-linalg">
+<span id="module-scipy.linalg"></span><h1>Linear algebra (<a class="reference internal" href="#module-scipy.linalg" title="scipy.linalg"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.linalg</span></code></a>)<a class="headerlink" href="#linear-algebra-scipy-linalg" title="Link to this heading">#</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p>Linear algebra functions.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://www.numpy.org/devdocs/reference/routines.linalg.html">numpy.linalg</a>
+for more linear algebra functions. Note that
+although <a class="reference internal" href="#module-scipy.linalg" title="scipy.linalg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code></a> imports most of them, identically named
+functions from <a class="reference internal" href="#module-scipy.linalg" title="scipy.linalg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code></a> may offer more or slightly differing
+functionality.</p>
+</div>
+<section id="basics">
+<h2>Basics<a class="headerlink" href="#basics" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.inv.html#scipy.linalg.inv" title="scipy.linalg.inv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inv</span></code></a>(a[, overwrite_a, check_finite])</p></td>
+<td><p>Compute the inverse of a matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.solve.html#scipy.linalg.solve" title="scipy.linalg.solve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve</span></code></a>(a, b[, lower, overwrite_a, ...])</p></td>
+<td><p>Solves the linear equation set <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">&#64;</span> <span class="pre">x</span> <span class="pre">==</span> <span class="pre">b</span></code> for the unknown <code class="docutils literal notranslate"><span class="pre">x</span></code> for square <em class="xref py py-obj">a</em> matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.solve_banded.html#scipy.linalg.solve_banded" title="scipy.linalg.solve_banded"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve_banded</span></code></a>(l_and_u, ab, b[, overwrite_ab, ...])</p></td>
+<td><p>Solve the equation a x = b for x, assuming a is banded matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.solveh_banded.html#scipy.linalg.solveh_banded" title="scipy.linalg.solveh_banded"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solveh_banded</span></code></a>(ab, b[, overwrite_ab, ...])</p></td>
+<td><p>Solve equation a x = b.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.solve_circulant.html#scipy.linalg.solve_circulant" title="scipy.linalg.solve_circulant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve_circulant</span></code></a>(c, b[, singular, tol, ...])</p></td>
+<td><p>Solve C x = b for x, where C is a circulant matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.solve_triangular.html#scipy.linalg.solve_triangular" title="scipy.linalg.solve_triangular"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve_triangular</span></code></a>(a, b[, trans, lower, ...])</p></td>
+<td><p>Solve the equation <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">b</span></code> for <em class="xref py py-obj">x</em>, assuming a is a triangular matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.solve_toeplitz.html#scipy.linalg.solve_toeplitz" title="scipy.linalg.solve_toeplitz"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve_toeplitz</span></code></a>(c_or_cr, b[, check_finite])</p></td>
+<td><p>Solve a Toeplitz system using Levinson Recursion</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.matmul_toeplitz.html#scipy.linalg.matmul_toeplitz" title="scipy.linalg.matmul_toeplitz"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matmul_toeplitz</span></code></a>(c_or_cr, x[, check_finite, ...])</p></td>
+<td><p>Efficient Toeplitz Matrix-Matrix Multiplication using FFT</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.det.html#scipy.linalg.det" title="scipy.linalg.det"><code class="xref py py-obj docutils literal notranslate"><span class="pre">det</span></code></a>(a[, overwrite_a, check_finite])</p></td>
+<td><p>Compute the determinant of a matrix</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.norm.html#scipy.linalg.norm" title="scipy.linalg.norm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">norm</span></code></a>(a[, ord, axis, keepdims, check_finite])</p></td>
+<td><p>Matrix or vector norm.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.lstsq.html#scipy.linalg.lstsq" title="scipy.linalg.lstsq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lstsq</span></code></a>(a, b[, cond, overwrite_a, ...])</p></td>
+<td><p>Compute least-squares solution to equation Ax = b.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.pinv.html#scipy.linalg.pinv" title="scipy.linalg.pinv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pinv</span></code></a>(a, *[, atol, rtol, return_rank, ...])</p></td>
+<td><p>Compute the (Moore-Penrose) pseudo-inverse of a matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.pinvh.html#scipy.linalg.pinvh" title="scipy.linalg.pinvh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pinvh</span></code></a>(a[, atol, rtol, lower, return_rank, ...])</p></td>
+<td><p>Compute the (Moore-Penrose) pseudo-inverse of a Hermitian matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.kron.html#scipy.linalg.kron" title="scipy.linalg.kron"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kron</span></code></a>(a, b)</p></td>
+<td><p>Kronecker product.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.khatri_rao.html#scipy.linalg.khatri_rao" title="scipy.linalg.khatri_rao"><code class="xref py py-obj docutils literal notranslate"><span class="pre">khatri_rao</span></code></a>(a, b)</p></td>
+<td><p>Khatri-rao product</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.orthogonal_procrustes.html#scipy.linalg.orthogonal_procrustes" title="scipy.linalg.orthogonal_procrustes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orthogonal_procrustes</span></code></a>(A, B[, check_finite])</p></td>
+<td><p>Compute the matrix solution of the orthogonal (or unitary) Procrustes problem.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.matrix_balance.html#scipy.linalg.matrix_balance" title="scipy.linalg.matrix_balance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matrix_balance</span></code></a>(A[, permute, scale, ...])</p></td>
+<td><p>Compute a diagonal similarity transformation for row/column balancing.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.subspace_angles.html#scipy.linalg.subspace_angles" title="scipy.linalg.subspace_angles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subspace_angles</span></code></a>(A, B)</p></td>
+<td><p>Compute the subspace angles between two matrices.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.bandwidth.html#scipy.linalg.bandwidth" title="scipy.linalg.bandwidth"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bandwidth</span></code></a>(a)</p></td>
+<td><p>Return the lower and upper bandwidth of a 2D numeric array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.issymmetric.html#scipy.linalg.issymmetric" title="scipy.linalg.issymmetric"><code class="xref py py-obj docutils literal notranslate"><span class="pre">issymmetric</span></code></a>(a[, atol, rtol])</p></td>
+<td><p>Check if a square 2D array is symmetric.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.ishermitian.html#scipy.linalg.ishermitian" title="scipy.linalg.ishermitian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ishermitian</span></code></a>(a[, atol, rtol])</p></td>
+<td><p>Check if a square 2D array is Hermitian.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.LinAlgError.html#scipy.linalg.LinAlgError" title="scipy.linalg.LinAlgError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinAlgError</span></code></a></p></td>
+<td><p>Generic Python-exception-derived object raised by linalg functions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.LinAlgWarning.html#scipy.linalg.LinAlgWarning" title="scipy.linalg.LinAlgWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinAlgWarning</span></code></a></p></td>
+<td><p>The warning emitted when a linear algebra related operation is close to fail conditions of the algorithm or loss of accuracy is expected.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="eigenvalue-problems">
+<h2>Eigenvalue Problems<a class="headerlink" href="#eigenvalue-problems" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.eig.html#scipy.linalg.eig" title="scipy.linalg.eig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eig</span></code></a>(a[, b, left, right, overwrite_a, ...])</p></td>
+<td><p>Solve an ordinary or generalized eigenvalue problem of a square matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.eigvals.html#scipy.linalg.eigvals" title="scipy.linalg.eigvals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigvals</span></code></a>(a[, b, overwrite_a, check_finite, ...])</p></td>
+<td><p>Compute eigenvalues from an ordinary or generalized eigenvalue problem.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.eigh.html#scipy.linalg.eigh" title="scipy.linalg.eigh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigh</span></code></a>(a[, b, lower, eigvals_only, ...])</p></td>
+<td><p>Solve a standard or generalized eigenvalue problem for a complex Hermitian or real symmetric matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.eigvalsh.html#scipy.linalg.eigvalsh" title="scipy.linalg.eigvalsh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigvalsh</span></code></a>(a[, b, lower, overwrite_a, ...])</p></td>
+<td><p>Solves a standard or generalized eigenvalue problem for a complex Hermitian or real symmetric matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.eig_banded.html#scipy.linalg.eig_banded" title="scipy.linalg.eig_banded"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eig_banded</span></code></a>(a_band[, lower, eigvals_only, ...])</p></td>
+<td><p>Solve real symmetric or complex Hermitian band matrix eigenvalue problem.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.eigvals_banded.html#scipy.linalg.eigvals_banded" title="scipy.linalg.eigvals_banded"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigvals_banded</span></code></a>(a_band[, lower, ...])</p></td>
+<td><p>Solve real symmetric or complex Hermitian band matrix eigenvalue problem.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.eigh_tridiagonal.html#scipy.linalg.eigh_tridiagonal" title="scipy.linalg.eigh_tridiagonal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigh_tridiagonal</span></code></a>(d, e[, eigvals_only, ...])</p></td>
+<td><p>Solve eigenvalue problem for a real symmetric tridiagonal matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.eigvalsh_tridiagonal.html#scipy.linalg.eigvalsh_tridiagonal" title="scipy.linalg.eigvalsh_tridiagonal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eigvalsh_tridiagonal</span></code></a>(d, e[, select, ...])</p></td>
+<td><p>Solve eigenvalue problem for a real symmetric tridiagonal matrix.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="decompositions">
+<h2>Decompositions<a class="headerlink" href="#decompositions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.lu.html#scipy.linalg.lu" title="scipy.linalg.lu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lu</span></code></a>(a[, permute_l, overwrite_a, ...])</p></td>
+<td><p>Compute LU decomposition of a matrix with partial pivoting.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.lu_factor.html#scipy.linalg.lu_factor" title="scipy.linalg.lu_factor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lu_factor</span></code></a>(a[, overwrite_a, check_finite])</p></td>
+<td><p>Compute pivoted LU decomposition of a matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.lu_solve.html#scipy.linalg.lu_solve" title="scipy.linalg.lu_solve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lu_solve</span></code></a>(lu_and_piv, b[, trans, ...])</p></td>
+<td><p>Solve an equation system, a x = b, given the LU factorization of a</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.svd.html#scipy.linalg.svd" title="scipy.linalg.svd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">svd</span></code></a>(a[, full_matrices, compute_uv, ...])</p></td>
+<td><p>Singular Value Decomposition.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.svdvals.html#scipy.linalg.svdvals" title="scipy.linalg.svdvals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">svdvals</span></code></a>(a[, overwrite_a, check_finite])</p></td>
+<td><p>Compute singular values of a matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.diagsvd.html#scipy.linalg.diagsvd" title="scipy.linalg.diagsvd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">diagsvd</span></code></a>(s, M, N)</p></td>
+<td><p>Construct the sigma matrix in SVD from singular values and size M, N.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.orth.html#scipy.linalg.orth" title="scipy.linalg.orth"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orth</span></code></a>(A[, rcond])</p></td>
+<td><p>Construct an orthonormal basis for the range of A using SVD</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.null_space.html#scipy.linalg.null_space" title="scipy.linalg.null_space"><code class="xref py py-obj docutils literal notranslate"><span class="pre">null_space</span></code></a>(A[, rcond, overwrite_a, ...])</p></td>
+<td><p>Construct an orthonormal basis for the null space of A using SVD</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.ldl.html#scipy.linalg.ldl" title="scipy.linalg.ldl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ldl</span></code></a>(A[, lower, hermitian, overwrite_a, ...])</p></td>
+<td><p>Computes the LDLt or Bunch-Kaufman factorization of a symmetric/ hermitian matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.cholesky.html#scipy.linalg.cholesky" title="scipy.linalg.cholesky"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cholesky</span></code></a>(a[, lower, overwrite_a, check_finite])</p></td>
+<td><p>Compute the Cholesky decomposition of a matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.cholesky_banded.html#scipy.linalg.cholesky_banded" title="scipy.linalg.cholesky_banded"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cholesky_banded</span></code></a>(ab[, overwrite_ab, lower, ...])</p></td>
+<td><p>Cholesky decompose a banded Hermitian positive-definite matrix</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.cho_factor.html#scipy.linalg.cho_factor" title="scipy.linalg.cho_factor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cho_factor</span></code></a>(a[, lower, overwrite_a, check_finite])</p></td>
+<td><p>Compute the Cholesky decomposition of a matrix, to use in cho_solve</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.cho_solve.html#scipy.linalg.cho_solve" title="scipy.linalg.cho_solve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cho_solve</span></code></a>(c_and_lower, b[, overwrite_b, ...])</p></td>
+<td><p>Solve the linear equations A x = b, given the Cholesky factorization of A.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.cho_solve_banded.html#scipy.linalg.cho_solve_banded" title="scipy.linalg.cho_solve_banded"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cho_solve_banded</span></code></a>(cb_and_lower, b[, ...])</p></td>
+<td><p>Solve the linear equations <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">b</span></code>, given the Cholesky factorization of the banded Hermitian <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.polar.html#scipy.linalg.polar" title="scipy.linalg.polar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">polar</span></code></a>(a[, side])</p></td>
+<td><p>Compute the polar decomposition.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.qr.html#scipy.linalg.qr" title="scipy.linalg.qr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">qr</span></code></a>(a[, overwrite_a, lwork, mode, pivoting, ...])</p></td>
+<td><p>Compute QR decomposition of a matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.qr_multiply.html#scipy.linalg.qr_multiply" title="scipy.linalg.qr_multiply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">qr_multiply</span></code></a>(a, c[, mode, pivoting, ...])</p></td>
+<td><p>Calculate the QR decomposition and multiply Q with a matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.qr_update.html#scipy.linalg.qr_update" title="scipy.linalg.qr_update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">qr_update</span></code></a>(Q, R, u, v[, overwrite_qruv, ...])</p></td>
+<td><p>Rank-k QR update</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.qr_delete.html#scipy.linalg.qr_delete" title="scipy.linalg.qr_delete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">qr_delete</span></code></a>(Q, R, k, int p=1[, which, ...])</p></td>
+<td><p>QR downdate on row or column deletions</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.qr_insert.html#scipy.linalg.qr_insert" title="scipy.linalg.qr_insert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">qr_insert</span></code></a>(Q, R, u, k[, which, rcond, ...])</p></td>
+<td><p>QR update on row or column insertions</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.rq.html#scipy.linalg.rq" title="scipy.linalg.rq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rq</span></code></a>(a[, overwrite_a, lwork, mode, check_finite])</p></td>
+<td><p>Compute RQ decomposition of a matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.qz.html#scipy.linalg.qz" title="scipy.linalg.qz"><code class="xref py py-obj docutils literal notranslate"><span class="pre">qz</span></code></a>(A, B[, output, lwork, sort, overwrite_a, ...])</p></td>
+<td><p>QZ decomposition for generalized eigenvalues of a pair of matrices.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.ordqz.html#scipy.linalg.ordqz" title="scipy.linalg.ordqz"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ordqz</span></code></a>(A, B[, sort, output, overwrite_a, ...])</p></td>
+<td><p>QZ decomposition for a pair of matrices with reordering.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.schur.html#scipy.linalg.schur" title="scipy.linalg.schur"><code class="xref py py-obj docutils literal notranslate"><span class="pre">schur</span></code></a>(a[, output, lwork, overwrite_a, sort, ...])</p></td>
+<td><p>Compute Schur decomposition of a matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.rsf2csf.html#scipy.linalg.rsf2csf" title="scipy.linalg.rsf2csf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rsf2csf</span></code></a>(T, Z[, check_finite])</p></td>
+<td><p>Convert real Schur form to complex Schur form.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.hessenberg.html#scipy.linalg.hessenberg" title="scipy.linalg.hessenberg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessenberg</span></code></a>(a[, calc_q, overwrite_a, ...])</p></td>
+<td><p>Compute Hessenberg form of a matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.cdf2rdf.html#scipy.linalg.cdf2rdf" title="scipy.linalg.cdf2rdf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cdf2rdf</span></code></a>(w, v)</p></td>
+<td><p>Converts complex eigenvalues <code class="docutils literal notranslate"><span class="pre">w</span></code> and eigenvectors <code class="docutils literal notranslate"><span class="pre">v</span></code> to real eigenvalues in a block diagonal form <code class="docutils literal notranslate"><span class="pre">wr</span></code> and the associated real eigenvectors <code class="docutils literal notranslate"><span class="pre">vr</span></code>, such that.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.cossin.html#scipy.linalg.cossin" title="scipy.linalg.cossin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cossin</span></code></a>(X[, p, q, separate, swap_sign, ...])</p></td>
+<td><p>Compute the cosine-sine (CS) decomposition of an orthogonal/unitary matrix.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="linalg.interpolative.html#module-scipy.linalg.interpolative" title="scipy.linalg.interpolative"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg.interpolative</span></code></a> – Interpolative matrix decompositions</p>
+</div>
+</section>
+<section id="matrix-functions">
+<h2>Matrix Functions<a class="headerlink" href="#matrix-functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.expm.html#scipy.linalg.expm" title="scipy.linalg.expm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expm</span></code></a>(A)</p></td>
+<td><p>Compute the matrix exponential of an array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.logm.html#scipy.linalg.logm" title="scipy.linalg.logm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">logm</span></code></a>(A[, disp])</p></td>
+<td><p>Compute matrix logarithm.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.cosm.html#scipy.linalg.cosm" title="scipy.linalg.cosm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cosm</span></code></a>(A)</p></td>
+<td><p>Compute the matrix cosine.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.sinm.html#scipy.linalg.sinm" title="scipy.linalg.sinm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sinm</span></code></a>(A)</p></td>
+<td><p>Compute the matrix sine.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.tanm.html#scipy.linalg.tanm" title="scipy.linalg.tanm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tanm</span></code></a>(A)</p></td>
+<td><p>Compute the matrix tangent.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.coshm.html#scipy.linalg.coshm" title="scipy.linalg.coshm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">coshm</span></code></a>(A)</p></td>
+<td><p>Compute the hyperbolic matrix cosine.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.sinhm.html#scipy.linalg.sinhm" title="scipy.linalg.sinhm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sinhm</span></code></a>(A)</p></td>
+<td><p>Compute the hyperbolic matrix sine.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.tanhm.html#scipy.linalg.tanhm" title="scipy.linalg.tanhm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tanhm</span></code></a>(A)</p></td>
+<td><p>Compute the hyperbolic matrix tangent.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.signm.html#scipy.linalg.signm" title="scipy.linalg.signm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">signm</span></code></a>(A[, disp])</p></td>
+<td><p>Matrix sign function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.sqrtm.html#scipy.linalg.sqrtm" title="scipy.linalg.sqrtm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sqrtm</span></code></a>(A[, disp, blocksize])</p></td>
+<td><p>Matrix square root.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.funm.html#scipy.linalg.funm" title="scipy.linalg.funm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">funm</span></code></a>(A, func[, disp])</p></td>
+<td><p>Evaluate a matrix function specified by a callable.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.expm_frechet.html#scipy.linalg.expm_frechet" title="scipy.linalg.expm_frechet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expm_frechet</span></code></a>(A, E[, method, compute_expm, ...])</p></td>
+<td><p>Frechet derivative of the matrix exponential of A in the direction E.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.expm_cond.html#scipy.linalg.expm_cond" title="scipy.linalg.expm_cond"><code class="xref py py-obj docutils literal notranslate"><span class="pre">expm_cond</span></code></a>(A[, check_finite])</p></td>
+<td><p>Relative condition number of the matrix exponential in the Frobenius norm.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.fractional_matrix_power.html#scipy.linalg.fractional_matrix_power" title="scipy.linalg.fractional_matrix_power"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fractional_matrix_power</span></code></a>(A, t)</p></td>
+<td><p>Compute the fractional power of a matrix.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="matrix-equation-solvers">
+<h2>Matrix Equation Solvers<a class="headerlink" href="#matrix-equation-solvers" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.solve_sylvester.html#scipy.linalg.solve_sylvester" title="scipy.linalg.solve_sylvester"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve_sylvester</span></code></a>(a, b, q)</p></td>
+<td><p>Computes a solution (X) to the Sylvester equation <span class="math notranslate nohighlight">\(AX + XB = Q\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.solve_continuous_are.html#scipy.linalg.solve_continuous_are" title="scipy.linalg.solve_continuous_are"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve_continuous_are</span></code></a>(a, b, q, r[, e, s, ...])</p></td>
+<td><p>Solves the continuous-time algebraic Riccati equation (CARE).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.solve_discrete_are.html#scipy.linalg.solve_discrete_are" title="scipy.linalg.solve_discrete_are"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve_discrete_are</span></code></a>(a, b, q, r[, e, s, balanced])</p></td>
+<td><p>Solves the discrete-time algebraic Riccati equation (DARE).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.solve_continuous_lyapunov.html#scipy.linalg.solve_continuous_lyapunov" title="scipy.linalg.solve_continuous_lyapunov"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve_continuous_lyapunov</span></code></a>(a, q)</p></td>
+<td><p>Solves the continuous Lyapunov equation <span class="math notranslate nohighlight">\(AX + XA^H = Q\)</span>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.solve_discrete_lyapunov.html#scipy.linalg.solve_discrete_lyapunov" title="scipy.linalg.solve_discrete_lyapunov"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve_discrete_lyapunov</span></code></a>(a, q[, method])</p></td>
+<td><p>Solves the discrete Lyapunov equation <span class="math notranslate nohighlight">\(AXA^H - X + Q = 0\)</span>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="sketches-and-random-projections">
+<h2>Sketches and Random Projections<a class="headerlink" href="#sketches-and-random-projections" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.clarkson_woodruff_transform.html#scipy.linalg.clarkson_woodruff_transform" title="scipy.linalg.clarkson_woodruff_transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clarkson_woodruff_transform</span></code></a>(input_matrix, ...)</p></td>
+<td><p>Applies a Clarkson-Woodruff Transform/sketch to the input matrix.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="special-matrices">
+<h2>Special Matrices<a class="headerlink" href="#special-matrices" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.block_diag.html#scipy.linalg.block_diag" title="scipy.linalg.block_diag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">block_diag</span></code></a>(*arrs)</p></td>
+<td><p>Create a block diagonal matrix from provided arrays.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.circulant.html#scipy.linalg.circulant" title="scipy.linalg.circulant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">circulant</span></code></a>(c)</p></td>
+<td><p>Construct a circulant matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.companion.html#scipy.linalg.companion" title="scipy.linalg.companion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">companion</span></code></a>(a)</p></td>
+<td><p>Create a companion matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.convolution_matrix.html#scipy.linalg.convolution_matrix" title="scipy.linalg.convolution_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convolution_matrix</span></code></a>(a, n[, mode])</p></td>
+<td><p>Construct a convolution matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.dft.html#scipy.linalg.dft" title="scipy.linalg.dft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dft</span></code></a>(n[, scale])</p></td>
+<td><p>Discrete Fourier transform matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.fiedler.html#scipy.linalg.fiedler" title="scipy.linalg.fiedler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fiedler</span></code></a>(a)</p></td>
+<td><p>Returns a symmetric Fiedler matrix</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.fiedler_companion.html#scipy.linalg.fiedler_companion" title="scipy.linalg.fiedler_companion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fiedler_companion</span></code></a>(a)</p></td>
+<td><p>Returns a Fiedler companion matrix</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.hadamard.html#scipy.linalg.hadamard" title="scipy.linalg.hadamard"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hadamard</span></code></a>(n[, dtype])</p></td>
+<td><p>Construct an Hadamard matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.hankel.html#scipy.linalg.hankel" title="scipy.linalg.hankel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hankel</span></code></a>(c[, r])</p></td>
+<td><p>Construct a Hankel matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.helmert.html#scipy.linalg.helmert" title="scipy.linalg.helmert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">helmert</span></code></a>(n[, full])</p></td>
+<td><p>Create an Helmert matrix of order <em class="xref py py-obj">n</em>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.hilbert.html#scipy.linalg.hilbert" title="scipy.linalg.hilbert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hilbert</span></code></a>(n)</p></td>
+<td><p>Create a Hilbert matrix of order <em class="xref py py-obj">n</em>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.invhilbert.html#scipy.linalg.invhilbert" title="scipy.linalg.invhilbert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">invhilbert</span></code></a>(n[, exact])</p></td>
+<td><p>Compute the inverse of the Hilbert matrix of order <em class="xref py py-obj">n</em>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.leslie.html#scipy.linalg.leslie" title="scipy.linalg.leslie"><code class="xref py py-obj docutils literal notranslate"><span class="pre">leslie</span></code></a>(f, s)</p></td>
+<td><p>Create a Leslie matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.pascal.html#scipy.linalg.pascal" title="scipy.linalg.pascal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pascal</span></code></a>(n[, kind, exact])</p></td>
+<td><p>Returns the n x n Pascal matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.invpascal.html#scipy.linalg.invpascal" title="scipy.linalg.invpascal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">invpascal</span></code></a>(n[, kind, exact])</p></td>
+<td><p>Returns the inverse of the n x n Pascal matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.toeplitz.html#scipy.linalg.toeplitz" title="scipy.linalg.toeplitz"><code class="xref py py-obj docutils literal notranslate"><span class="pre">toeplitz</span></code></a>(c[, r])</p></td>
+<td><p>Construct a Toeplitz matrix.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="low-level-routines">
+<h2>Low-level routines<a class="headerlink" href="#low-level-routines" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.get_blas_funcs.html#scipy.linalg.get_blas_funcs" title="scipy.linalg.get_blas_funcs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_blas_funcs</span></code></a>(names[, arrays, dtype, ilp64])</p></td>
+<td><p>Return available BLAS function objects from names.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.get_lapack_funcs.html#scipy.linalg.get_lapack_funcs" title="scipy.linalg.get_lapack_funcs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_lapack_funcs</span></code></a>(names[, arrays, dtype, ilp64])</p></td>
+<td><p>Return available LAPACK function objects from names.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.find_best_blas_type.html#scipy.linalg.find_best_blas_type" title="scipy.linalg.find_best_blas_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_best_blas_type</span></code></a>([arrays, dtype])</p></td>
+<td><p>Find best-matching BLAS/LAPACK type.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="linalg.blas.html#module-scipy.linalg.blas" title="scipy.linalg.blas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg.blas</span></code></a> – Low-level BLAS functions</p>
+<p><a class="reference internal" href="linalg.lapack.html#module-scipy.linalg.lapack" title="scipy.linalg.lapack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg.lapack</span></code></a> – Low-level LAPACK functions</p>
+<p><a class="reference internal" href="linalg.cython_blas.html#module-scipy.linalg.cython_blas" title="scipy.linalg.cython_blas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg.cython_blas</span></code></a> – Low-level BLAS functions for Cython</p>
+<p><a class="reference internal" href="linalg.cython_lapack.html#module-scipy.linalg.cython_lapack" title="scipy.linalg.cython_lapack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg.cython_lapack</span></code></a> – Low-level LAPACK functions for Cython</p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="generated/scipy.io.arff.ParseArffError.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">scipy.io.arff.ParseArffError</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="linalg.blas.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Low-level BLAS functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.linalg.blas</span></code>)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basics">Basics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eigenvalue-problems">Eigenvalue Problems</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#decompositions">Decompositions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matrix-functions">Matrix Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matrix-equation-solvers">Matrix Equation Solvers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sketches-and-random-projections">Sketches and Random Projections</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#special-matrices">Special Matrices</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#low-level-routines">Low-level routines</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

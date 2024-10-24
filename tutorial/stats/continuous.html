@@ -1,0 +1,958 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Continuous Statistical Distributions &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorial/stats/continuous';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Alpha Distribution" href="continuous_alpha.html" />
+    <link rel="prev" title="Probability distributions" href="probability_distributions.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../special.html">Special functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.special</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">Integration (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.integrate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">Optimization (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">Fourier Transforms (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.fft</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">Signal Processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">Linear Algebra (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">Sparse Arrays (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arpack.html">Sparse eigenvalue problems with ARPACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csgraph.html">Compressed Sparse Graph Routines (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.csgraph</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">Spatial data structures and algorithms (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code>)</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../stats.html">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="reference internal" href="probability_distributions.html">Probability distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sampling.html">Universal Non-Uniform Random Number Sampling in SciPy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel_density_estimation.html">Kernel density estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiscale_graphcorr.html">Multiscale Graph Correlation (MGC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quasi_monte_carlo.html">Quasi-Monte Carlo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analysing_one_sample.html">Analysing one sample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparing_two_samples.html">Comparing two samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resampling.html">Resampling and Monte Carlo Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hypothesis_tests.html">Hypothesis tests</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">Multidimensional image processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">File IO (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.io</span></code>)</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy User Guide</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../stats.html" class="nav-link">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="probability_distributions.html" class="nav-link">Probability distributions</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Continuous Statistical Distributions</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="continuous-statistical-distributions">
+<span id="continuous-random-variables"></span><h1>Continuous Statistical Distributions<a class="headerlink" href="#continuous-statistical-distributions" title="Link to this heading">#</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>All distributions will have location (L) and Scale (S) parameters
+along with any shape parameters needed, the names for the shape
+parameters will vary. Standard form for the distributions will be
+given where <span class="math notranslate nohighlight">\(L=0.0\)</span> and <span class="math notranslate nohighlight">\(S=1.0.\)</span> The nonstandard forms can be obtained for the various functions using
+(note <span class="math notranslate nohighlight">\(U\)</span> is a standard uniform random variate).</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function Name</p></th>
+<th class="head"><p>Standard Function</p></th>
+<th class="head"><p>Transformation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Cumulative Distribution Function (CDF)</p></td>
+<td><p><span class="math notranslate nohighlight">\(F\left(x\right)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(F\left(x;L,S\right)=F\left(\frac{\left(x-L\right)}{S}\right)\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Probability Density Function (PDF)</p></td>
+<td><p><span class="math notranslate nohighlight">\(f\left(x\right)=F^{\prime}\left(x\right)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(f\left(x;L,S\right)=\frac{1}{S}f\left(\frac{\left(x-L\right)}{S}\right)\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Percent Point Function (PPF)</p></td>
+<td><p><span class="math notranslate nohighlight">\(G\left(q\right)=F^{-1}\left(q\right)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(G\left(q;L,S\right)=L+SG\left(q\right)\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Probability Sparsity Function (PSF)</p></td>
+<td><p><span class="math notranslate nohighlight">\(g\left(q\right)=G^{\prime}\left(q\right)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(g\left(q;L,S\right)=Sg\left(q\right)\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Hazard Function (HF)</p></td>
+<td><p><span class="math notranslate nohighlight">\(h_{a}\left(x\right)=\frac{f\left(x\right)}{1-F\left(x\right)}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(h_{a}\left(x;L,S\right)=\frac{1}{S}h_{a}\left(\frac{\left(x-L\right)}{S}\right)\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Cumulative Hazard Function (CHF)</p></td>
+<td><p><span class="math notranslate nohighlight">\(H_{a}\left(x\right)=\)</span> <span class="math notranslate nohighlight">\(\log\frac{1}{1-F\left(x\right)}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(H_{a}\left(x;L,S\right)=H_{a}\left(\frac{\left(x-L\right)}{S}\right)\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Survival Function (SF)</p></td>
+<td><p><span class="math notranslate nohighlight">\(S\left(x\right)=1-F\left(x\right)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(S\left(x;L,S\right)=S\left(\frac{\left(x-L\right)}{S}\right)\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Inverse Survival Function (ISF)</p></td>
+<td><p><span class="math notranslate nohighlight">\(Z\left(\alpha\right)=S^{-1}\left(\alpha\right)=G\left(1-\alpha\right)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(Z\left(\alpha;L,S\right)=L+SZ\left(\alpha\right)\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Moment Generating Function (MGF)</p></td>
+<td><p><span class="math notranslate nohighlight">\(M_{Y}\left(t\right)=E\left[e^{Yt}\right]\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(M_{X}\left(t\right)=e^{Lt}M_{Y}\left(St\right)\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Random Variates</p></td>
+<td><p><span class="math notranslate nohighlight">\(Y=G\left(U\right)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(X=L+SY\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>(Differential) Entropy</p></td>
+<td><p><span class="math notranslate nohighlight">\(h\left[Y\right]=-\int f\left(y\right)\log f\left(y\right)dy\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(h\left[X\right]=h\left[Y\right]+\log S\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>(Non-central) Moments</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mu_{n}^{\prime}=E\left[Y^{n}\right]\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(E\left[X^{n}\right]=L^{n}\sum_{k=0}^{N}\left(\begin{array}{c} n\\ k\end{array}\right)\left(\frac{S}{L}\right)^{k}\mu_{k}^{\prime}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Central Moments</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mu_{n}=E\left[\left(Y-\mu\right)^{n}\right]\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(E\left[\left(X-\mu_{X}\right)^{n}\right]=S^{n}\mu_{n}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>mean (mode, median), var</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mu,\,\mu_{2}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(L+S\mu,\, S^{2}\mu_{2}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>skewness</p></td>
+<td><p><span class="math notranslate nohighlight">\(\gamma_{1}=\frac{\mu_{3}}{\left(\mu_{2}\right)^{3/2}}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\gamma_{1}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>kurtosis</p></td>
+<td><p><span class="math notranslate nohighlight">\(\gamma_{2}=\frac{\mu_{4}}{\left(\mu_{2}\right)^{2}}-3\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(\gamma_{2}\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="moments">
+<h3>Moments<a class="headerlink" href="#moments" title="Link to this heading">#</a></h3>
+<p>Non-central moments are defined using the PDF</p>
+<div class="math notranslate nohighlight">
+\[\mu_{n}^{\prime}=\int_{-\infty}^{\infty}x^{n}f\left(x\right)dx.\]</div>
+<p>Note, that these can always be computed using the PPF. Substitute <span class="math notranslate nohighlight">\(x=G\left(q\right)\)</span> in the above equation and get</p>
+<div class="math notranslate nohighlight">
+\[\mu_{n}^{\prime}=\int_{0}^{1}G^{n}\left(q\right)dq\]</div>
+<p>which may be easier to compute numerically. Note that <span class="math notranslate nohighlight">\(q=F\left(x\right)\)</span> so that <span class="math notranslate nohighlight">\(dq=f\left(x\right)dx.\)</span> Central moments are computed similarly <span class="math notranslate nohighlight">\(\mu=\mu_{1}^{\prime}\)</span></p>
+<div class="math notranslate nohighlight">
+ \begin{eqnarray*} \mu_{n} &amp; = &amp; \int_{-\infty}^{\infty}\left(x-\mu\right)^{n}f\left(x\right)dx\\  &amp; = &amp; \int_{0}^{1}\left(G\left(q\right)-\mu\right)^{n}dq\\  &amp; = &amp; \sum_{k=0}^{n}\left(\begin{array}{c} n\\ k\end{array}\right)\left(-\mu\right)^{k}\mu_{n-k}^{\prime}\end{eqnarray*}</div><p>In particular</p>
+<div class="math notranslate nohighlight">
+ \begin{eqnarray*} \mu_{3} &amp; = &amp; \mu_{3}^{\prime}-3\mu\mu_{2}^{\prime}+2\mu^{3}\\  &amp; = &amp; \mu_{3}^{\prime}-3\mu\mu_{2}-\mu^{3}\\ \mu_{4} &amp; = &amp; \mu_{4}^{\prime}-4\mu\mu_{3}^{\prime}+6\mu^{2}\mu_{2}^{\prime}-3\mu^{4}\\  &amp; = &amp; \mu_{4}^{\prime}-4\mu\mu_{3}-6\mu^{2}\mu_{2}-\mu^{4}\end{eqnarray*}</div><p>Skewness is defined as</p>
+<div class="math notranslate nohighlight">
+\[\gamma_{1}=\sqrt{\beta_{1}}=\frac{\mu_{3}}{\mu_{2}^{3/2}}\]</div>
+<p>while (Fisher) kurtosis is</p>
+<div class="math notranslate nohighlight">
+\[\gamma_{2}=\frac{\mu_{4}}{\mu_{2}^{2}}-3,\]</div>
+<p>so that a normal distribution has a kurtosis of zero.</p>
+</section>
+<section id="median-and-mode">
+<h3>Median and mode<a class="headerlink" href="#median-and-mode" title="Link to this heading">#</a></h3>
+<p>The median, <span class="math notranslate nohighlight">\(m_{n}\)</span> is defined as the point at which half of the density is on one side
+and half on the other. In other words, <span class="math notranslate nohighlight">\(F\left(m_{n}\right)=\frac{1}{2}\)</span> so that</p>
+<div class="math notranslate nohighlight">
+\[m_{n}=G\left(\frac{1}{2}\right).\]</div>
+<p>In addition, the mode, <span class="math notranslate nohighlight">\(m_{d}\)</span> , is defined as the value for which the probability density function
+reaches it’s peak</p>
+<div class="math notranslate nohighlight">
+\[m_{d}=\arg\max_{x}f\left(x\right).\]</div>
+</section>
+<section id="fitting-data">
+<h3>Fitting data<a class="headerlink" href="#fitting-data" title="Link to this heading">#</a></h3>
+<p>To fit data to a distribution, maximizing the likelihood function is
+common. Alternatively, some distributions have well-known minimum
+variance unbiased estimators. These will be chosen by default, but the
+likelihood function will always be available for minimizing.</p>
+<p>If <span class="math notranslate nohighlight">\(f\left(x;\boldsymbol{\theta}\right)\)</span> is the PDF of a random-variable where <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> is a vector of parameters ( <em>e.g.</em> <span class="math notranslate nohighlight">\(L\)</span> and <span class="math notranslate nohighlight">\(S\)</span> ), then for a collection of <span class="math notranslate nohighlight">\(N\)</span> independent samples from this distribution, the joint distribution the
+random vector <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[f\left(\mathbf{x};\boldsymbol{\theta}\right)=\prod_{i=1}^{N}f\left(x_{i};\boldsymbol{\theta}\right).\]</div>
+<p>The maximum likelihood estimate of the parameters <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> are the parameters which maximize this function with <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> fixed and given by the data:</p>
+<div class="math notranslate nohighlight">
+ \begin{eqnarray*} \boldsymbol{\theta}_{es} &amp; = &amp; \arg\max_{\boldsymbol{\theta}}f\left(\mathbf{x};\boldsymbol{\theta}\right)\\  &amp; = &amp; \arg\min_{\boldsymbol{\theta}}l_{\mathbf{x}}\left(\boldsymbol{\theta}\right).\end{eqnarray*}</div><p>Where</p>
+<div class="math notranslate nohighlight">
+ \begin{eqnarray*} l_{\mathbf{x}}\left(\boldsymbol{\theta}\right) &amp; = &amp; -\sum_{i=1}^{N}\log f\left(x_{i};\boldsymbol{\theta}\right)\\  &amp; = &amp; -N\overline{\log f\left(x_{i};\boldsymbol{\theta}\right)}\end{eqnarray*}</div><p>Note that if <span class="math notranslate nohighlight">\(\boldsymbol{\theta}\)</span> includes only shape parameters, the location and scale-parameters can
+be fit by replacing <span class="math notranslate nohighlight">\(x_{i}\)</span> with <span class="math notranslate nohighlight">\(\left(x_{i}-L\right)/S\)</span> in the log-likelihood function adding <span class="math notranslate nohighlight">\(N\log S\)</span> and minimizing, thus</p>
+<div class="math notranslate nohighlight">
+ \begin{eqnarray*} l_{\mathbf{x}}\left(L,S;\boldsymbol{\theta}\right) &amp; = &amp; N\log S-\sum_{i=1}^{N}\log f\left(\frac{x_{i}-L}{S};\boldsymbol{\theta}\right)\\  &amp; = &amp; N\log S+l_{\frac{\mathbf{x}-S}{L}}\left(\boldsymbol{\theta}\right)\end{eqnarray*}</div><p>If desired, sample estimates for <span class="math notranslate nohighlight">\(L\)</span> and <span class="math notranslate nohighlight">\(S\)</span> (not necessarily maximum likelihood estimates) can be obtained from
+samples estimates of the mean and variance using</p>
+<div class="math notranslate nohighlight">
+ \begin{eqnarray*} \hat{S} &amp; = &amp; \sqrt{\frac{\hat{\mu}_{2}}{\mu_{2}}}\\ \hat{L} &amp; = &amp; \hat{\mu}-\hat{S}\mu\end{eqnarray*}</div><p>where <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\mu_{2}\)</span> are assumed known as the mean and variance of the <strong>untransformed</strong> distribution (when <span class="math notranslate nohighlight">\(L=0\)</span> and <span class="math notranslate nohighlight">\(S=1\)</span> ) and</p>
+<div class="math notranslate nohighlight">
+ \begin{eqnarray*} \hat{\mu} &amp; = &amp; \frac{1}{N}\sum_{i=1}^{N}x_{i}=\bar{\mathbf{x}}\\ \hat{\mu}_{2} &amp; = &amp; \frac{1}{N-1}\sum_{i=1}^{N}\left(x_{i}-\hat{\mu}\right)^{2}=\frac{N}{N-1}\overline{\left(\mathbf{x}-\bar{\mathbf{x}}\right)^{2}}\end{eqnarray*}</div></section>
+<section id="standard-notation-for-mean">
+<h3>Standard notation for mean<a class="headerlink" href="#standard-notation-for-mean" title="Link to this heading">#</a></h3>
+<p>We will use</p>
+<div class="math notranslate nohighlight">
+\[\overline{y\left(\mathbf{x}\right)}=\frac{1}{N}\sum_{i=1}^{N}y\left(x_{i}\right)\]</div>
+<p>where <span class="math notranslate nohighlight">\(N\)</span> should be clear from context as the number of samples <span class="math notranslate nohighlight">\(x_{i}\)</span></p>
+</section>
+<section id="references">
+<h3>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Documentation for ranlib, rv2, cdflib</p></li>
+<li><p>Eric Weisstein’s world of mathematics <a class="reference external" href="http://mathworld.wolfram.com/">http://mathworld.wolfram.com/</a>,
+<a class="reference external" href="http://mathworld.wolfram.com/topics/StatisticalDistributions.html">http://mathworld.wolfram.com/topics/StatisticalDistributions.html</a></p></li>
+<li><p>Documentation to Regress+ by Michael McLaughlin item Engineering and
+Statistics Handbook (NIST),
+<a class="reference external" href="https://www.itl.nist.gov/div898/handbook/">https://www.itl.nist.gov/div898/handbook/</a></p></li>
+<li><p>Documentation for DATAPLOT from NIST,
+<a class="reference external" href="https://www.itl.nist.gov/div898/software/dataplot/distribu.htm">https://www.itl.nist.gov/div898/software/dataplot/distribu.htm</a></p></li>
+<li><p>Norman Johnson, Samuel Kotz, and N. Balakrishnan Continuous
+Univariate Distributions, second edition, Volumes I and II, Wiley &amp;
+Sons, 1994.</p></li>
+</ul>
+<p>In the tutorials several special functions appear repeatedly and are listed here.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Symbol</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Definition</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\gamma\left(s, x\right)\)</span></p></td>
+<td><p>lower incomplete Gamma function</p></td>
+<td><p><span class="math notranslate nohighlight">\(\int_0^x t^{s-1} e^{-t} dt\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\Gamma\left(s, x\right)\)</span></p></td>
+<td><p>upper incomplete Gamma function</p></td>
+<td><p><span class="math notranslate nohighlight">\(\int_x^\infty t^{s-1} e^{-t} dt\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(B\left(x;a,b\right)\)</span></p></td>
+<td><p>incomplete Beta function</p></td>
+<td><p><span class="math notranslate nohighlight">\(\int_{0}^{x} t^{a-1}\left(1-t\right)^{b-1} dt\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(I\left(x;a,b\right)\)</span></p></td>
+<td><p>regularized incomplete Beta function</p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{\Gamma\left(a+b\right)}{\Gamma\left(a\right)\Gamma\left(b\right)} \int_{0}^{x} t^{a-1}\left(1-t\right)^{b-1} dt\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\phi\left(x\right)\)</span></p></td>
+<td><p>PDF for normal distribution</p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{1}{\sqrt{2\pi}}e^{-x^{2}/2}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\Phi\left(x\right)\)</span></p></td>
+<td><p>CDF for normal distribution</p></td>
+<td><p><span class="math notranslate nohighlight">\(\int_{-\infty}^{x}\phi\left(t\right) dt = \frac{1}{2}+\frac{1}{2}\mathrm{erf}\left(\frac{x}{\sqrt{2}}\right)\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\psi\left(z\right)\)</span></p></td>
+<td><p>digamma function</p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{d}{dz} \log\left(\Gamma\left(z\right)\right)\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\psi_{n}\left(z\right)\)</span></p></td>
+<td><p>polygamma function</p></td>
+<td><p><span class="math notranslate nohighlight">\(\frac{d^{n+1}}{dz^{n+1}}\log\left(\Gamma\left(z\right)\right)\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(I_{\nu}\left(y\right)\)</span></p></td>
+<td><p>modified Bessel function of the first kind</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\mathrm{Ei}(\mathrm{z})\)</span></p></td>
+<td><p>exponential integral</p></td>
+<td><p><span class="math notranslate nohighlight">\(-\int_{-x}^\infty \frac{e^{-t}}{t} dt\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\zeta\left(n\right)\)</span></p></td>
+<td><p>Riemann zeta function</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sum_{k=1}^{\infty} \frac{1}{k^{n}}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\zeta\left(n,z\right)\)</span></p></td>
+<td><p>Hurwitz zeta function</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sum_{k=0}^{\infty} \frac{1}{\left(k+z\right)^{n}}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\,{}_{p}F_{q}(a_{1},\ldots,a_{p};b_{1},\ldots,b_{q};z)\)</span></p></td>
+<td><p>Hypergeometric function</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sum_{n=0}^{\infty} {\frac{(a_{1})_{n}\cdots(a_{p})_{n}}{(b_{1})_{n}\cdots(b_{q})_{n}}} \,{\frac{z^{n}}{n!}}\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="continuous-distributions-in-scipy-stats">
+<h2>Continuous Distributions in <a class="reference internal" href="../../reference/stats.html#module-scipy.stats" title="scipy.stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code></a><a class="headerlink" href="#continuous-distributions-in-scipy-stats" title="Link to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="continuous_alpha.html">Alpha Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_anglit.html">Anglit Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_arcsine.html">Arcsine Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_beta.html">Beta Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_betaprime.html">Beta Prime Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_bradford.html">Bradford Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_burr.html">Burr Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_burr12.html">Burr12 Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_cauchy.html">Cauchy Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_skewcauchy.html">Skewed Cauchy Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_chi.html">Chi Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_chi2.html">Chi-squared Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_cosine.html">Cosine Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_dgamma.html">Double Gamma Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_dweibull.html">Double Weibull Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_erlang.html">Erlang Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_expon.html">Exponential Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_exponweib.html">Exponentiated Weibull Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_exponpow.html">Exponential Power Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_fatiguelife.html">Fatigue Life (Birnbaum-Saunders) Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_fisk.html">Fisk (Log Logistic) Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_foldcauchy.html">Folded Cauchy Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_foldnorm.html">Folded Normal Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_f.html">Fratio (or F) Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_gamma.html">Gamma Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_genlogistic.html">Generalized Logistic Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_genpareto.html">Generalized Pareto Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_genexpon.html">Generalized Exponential Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_genextreme.html">Generalized Extreme Value Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_gengamma.html">Generalized Gamma Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_genhalflogistic.html">Generalized Half-Logistic Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_genhyperbolic.html">Generalized Hyperbolic Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_geninvgauss.html">Generalized Inverse Gaussian Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_gennorm.html">Generalized Normal Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_gibrat.html">Gibrat Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_gompertz.html">Gompertz (Truncated Gumbel) Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_gumbel_r.html">Gumbel (LogWeibull, Fisher-Tippetts, Type I Extreme Value) Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_gumbel_l.html">Gumbel Left-skewed (for minimum order statistic) Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_halfcauchy.html">HalfCauchy Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_halfnorm.html">HalfNormal Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_halflogistic.html">Half-Logistic Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_hypsecant.html">Hyperbolic Secant Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_gausshyper.html">Gauss Hypergeometric Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_invgamma.html">Inverted Gamma Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_invgauss.html">Inverse Normal (Inverse Gaussian) Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_invweibull.html">Inverted Weibull Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_jf_skew_t.html">Jones and Faddy Skew-T Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_johnsonsb.html">Johnson SB Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_johnsonsu.html">Johnson SU Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_ksone.html">KSone Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_kstwo.html">KStwo Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_kstwobign.html">KStwobign Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_landau.html">Landau distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_laplace.html">Laplace (Double Exponential, Bilateral Exponential) Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_laplace_asymmetric.html">Asymmetric Laplace Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_levy_l.html">Left-skewed Lévy Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_levy.html">Lévy Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_logistic.html">Logistic (Sech-squared) Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_loglaplace.html">Log Double Exponential (Log-Laplace) Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_loggamma.html">Log Gamma Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_lognorm.html">Log Normal (Cobb-Douglass) Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_loguniform.html">Log-Uniform Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_maxwell.html">Maxwell Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_mielke.html">Mielke’s Beta-Kappa Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_nakagami.html">Nakagami Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_ncx2.html">Noncentral chi-squared Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_ncf.html">Noncentral F Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_nct.html">Noncentral t Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_norm.html">Normal Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_norminvgauss.html">Normal Inverse Gaussian Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_pareto.html">Pareto Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_lomax.html">Pareto Second Kind (Lomax) Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_powerlognorm.html">Power Log Normal Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_powernorm.html">Power Normal Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_powerlaw.html">Power-function Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_rdist.html">R-distribution Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_rayleigh.html">Rayleigh Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_rice.html">Rice Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_recipinvgauss.html">Reciprocal Inverse Gaussian Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_rel_breitwigner.html">Relativistic Breit-Wigner Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_semicircular.html">Semicircular Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_studentized_range.html">Studentized Range Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_t.html">Student t Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_trapezoid.html">Trapezoidal Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_triang.html">Triangular Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_truncexpon.html">Truncated Exponential Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_truncnorm.html">Truncated Normal Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_truncpareto.html">Truncated Pareto Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_truncweibull_min.html">Truncated Weibull Minimum Extreme Value Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_tukeylambda.html">Tukey-Lambda Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_uniform.html">Uniform Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_vonmises.html">Von Mises Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_wald.html">Wald Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_weibull_max.html">Weibull Maximum Extreme Value Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_weibull_min.html">Weibull Minimum Extreme Value Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="continuous_wrapcauchy.html">Wrapped Cauchy Distribution</a></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="probability_distributions.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Probability distributions</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="continuous_alpha.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Alpha Distribution</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#moments">Moments</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#median-and-mode">Median and mode</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-data">Fitting data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#standard-notation-for-mean">Standard notation for mean</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-distributions-in-scipy-stats">Continuous Distributions in <code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

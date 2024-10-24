@@ -1,0 +1,741 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>probplot &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.stats.probplot';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="boxcox_normplot" href="scipy.stats.boxcox_normplot.html" />
+    <link rel="prev" title="ppcc_plot" href="scipy.stats.ppcc_plot.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../stats.html" class="nav-link">Statistical functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">probplot</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.stats.</div>
+<div class="empty"></div><section id="probplot">
+<h1>probplot<a class="headerlink" href="#probplot" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.stats.probplot">
+<span class="sig-prename descclassname"><span class="pre">scipy.stats.</span></span><span class="sig-name descname"><span class="pre">probplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sparams</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'norm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/stats/_morestats.py#L503-L663"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.stats.probplot" title="Link to this definition">#</a></dt>
+<dd><p>Calculate quantiles for a probability plot, and optionally show the plot.</p>
+<p>Generates a probability plot of sample data against the quantiles of a
+specified theoretical distribution (the normal distribution by default).
+<a class="reference internal" href="#scipy.stats.probplot" title="scipy.stats.probplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">probplot</span></code></a> optionally calculates a best-fit line for the data and plots the
+results using Matplotlib or a given plot function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>x</strong><span class="classifier">array_like</span></dt><dd><p>Sample/response data from which <a class="reference internal" href="#scipy.stats.probplot" title="scipy.stats.probplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">probplot</span></code></a> creates the plot.</p>
+</dd>
+<dt><strong>sparams</strong><span class="classifier">tuple, optional</span></dt><dd><p>Distribution-specific shape parameters (shape parameters plus location
+and scale).</p>
+</dd>
+<dt><strong>dist</strong><span class="classifier">str or stats.distributions instance, optional</span></dt><dd><p>Distribution or distribution function name. The default is ‘norm’ for a
+normal probability plot.  Objects that look enough like a
+stats.distributions instance (i.e. they have a <code class="docutils literal notranslate"><span class="pre">ppf</span></code> method) are also
+accepted.</p>
+</dd>
+<dt><strong>fit</strong><span class="classifier">bool, optional</span></dt><dd><p>Fit a least-squares regression (best-fit) line to the sample data if
+True (default).</p>
+</dd>
+<dt><strong>plot</strong><span class="classifier">object, optional</span></dt><dd><p>If given, plots the quantiles.
+If given and <a class="reference internal" href="scipy.stats.fit.html#scipy.stats.fit" title="scipy.stats.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a> is True, also plots the least squares fit.
+<em class="xref py py-obj">plot</em> is an object that has to have methods “plot” and “text”.
+The <a class="reference external" href="https://matplotlib.org/stable/api/pyplot_summary.html#module-matplotlib.pyplot" title="(in Matplotlib v3.9.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code></a> module or a Matplotlib Axes object can be used,
+or a custom object with the same methods.
+Default is None, which means that no plot is created.</p>
+</dd>
+<dt><strong>rvalue</strong><span class="classifier">bool, optional</span></dt><dd><p>If <em class="xref py py-obj">plot</em> is provided and <a class="reference internal" href="scipy.stats.fit.html#scipy.stats.fit" title="scipy.stats.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a> is True, setting <em class="xref py py-obj">rvalue</em> to True
+includes the coefficient of determination on the plot.
+Default is False.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>(osm, osr)</strong><span class="classifier">tuple of ndarrays</span></dt><dd><p>Tuple of theoretical quantiles (osm, or order statistic medians) and
+ordered responses (osr).  <em class="xref py py-obj">osr</em> is simply sorted input <em class="xref py py-obj">x</em>.
+For details on how <em class="xref py py-obj">osm</em> is calculated see the Notes section.</p>
+</dd>
+<dt><strong>(slope, intercept, r)</strong><span class="classifier">tuple of floats, optional</span></dt><dd><p>Tuple  containing the result of the least-squares fit, if that is
+performed by <a class="reference internal" href="#scipy.stats.probplot" title="scipy.stats.probplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">probplot</span></code></a>. <em class="xref py py-obj">r</em> is the square root of the coefficient of
+determination.  If <code class="docutils literal notranslate"><span class="pre">fit=False</span></code> and <code class="docutils literal notranslate"><span class="pre">plot=None</span></code>, this tuple is not
+returned.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Even if <em class="xref py py-obj">plot</em> is given, the figure is not shown or saved by <a class="reference internal" href="#scipy.stats.probplot" title="scipy.stats.probplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">probplot</span></code></a>;
+<code class="docutils literal notranslate"><span class="pre">plt.show()</span></code> or <code class="docutils literal notranslate"><span class="pre">plt.savefig('figname.png')</span></code> should be used after
+calling <a class="reference internal" href="#scipy.stats.probplot" title="scipy.stats.probplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">probplot</span></code></a>.</p>
+<p><a class="reference internal" href="#scipy.stats.probplot" title="scipy.stats.probplot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">probplot</span></code></a> generates a probability plot, which should not be confused with
+a Q-Q or a P-P plot.  Statsmodels has more extensive functionality of this
+type, see <code class="docutils literal notranslate"><span class="pre">statsmodels.api.ProbPlot</span></code>.</p>
+<p>The formula used for the theoretical quantiles (horizontal axis of the
+probability plot) is Filliben’s estimate:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">quantiles</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="k">for</span>
+
+        <span class="mf">0.5</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">n</span><span class="p">),</span>                  <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="n">n</span>
+  <span class="n">val</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mf">0.3175</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mf">0.365</span><span class="p">),</span>  <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span>
+        <span class="mi">1</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">n</span><span class="p">),</span>              <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">i</span></code> indicates the i-th ordered value and <code class="docutils literal notranslate"><span class="pre">n</span></code> is the total number
+of values.</p>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="28ee669f-a207-412e-b8d4-61cff72efa8a">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('28ee669f-a207-412e-b8d4-61cff72efa8a','60abbff9-e02b-4602-9e4e-18198b14ed92','00cdd922-1fe5-45da-b5d2-69f2ac94813b','../../lite/tree/../notebooks/index.html?path=7ac55945_332f_4f35_85f7_8e235bd28744.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nsample</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>A t distribution with small degrees of freedom:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">221</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">nsample</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plt</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A t distribution with larger degrees of freedom:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ax2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">222</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">nsample</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plt</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A mixture of two normal distributions with broadcasting:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ax3</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">223</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="n">scale</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.5</span><span class="p">],</span>
+<span class="gp">... </span>                   <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">nsample</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plt</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A standard normal distribution:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ax4</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">224</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">nsample</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">plt</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Produce a new figure with a loggamma distribution, using the <code class="docutils literal notranslate"><span class="pre">dist</span></code> and
+<code class="docutils literal notranslate"><span class="pre">sparams</span></code> keywords:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">loggamma</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">probplot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="n">stats</span><span class="o">.</span><span class="n">loggamma</span><span class="p">,</span> <span class="n">sparams</span><span class="o">=</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,),</span> <span class="n">plot</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Probplot for loggamma dist with shape parameter 2.5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Show the results with Matplotlib:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-stats-probplot-1_00.png" class="plot-directive" src="../../_images/scipy-stats-probplot-1_00.png" />
+</figure>
+<figure class="align-default">
+<img alt="../../_images/scipy-stats-probplot-1_01.png" class="plot-directive" src="../../_images/scipy-stats-probplot-1_01.png" />
+</figure>
+</div>
+</div>
+<div id="00cdd922-1fe5-45da-b5d2-69f2ac94813b" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('28ee669f-a207-412e-b8d4-61cff72efa8a','00cdd922-1fe5-45da-b5d2-69f2ac94813b')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('28ee669f-a207-412e-b8d4-61cff72efa8a','00cdd922-1fe5-45da-b5d2-69f2ac94813b')">Open In Tab</button></div><div id="60abbff9-e02b-4602-9e4e-18198b14ed92" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.stats.ppcc_plot.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">ppcc_plot</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.stats.boxcox_normplot.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">boxcox_normplot</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.stats.probplot"><code class="docutils literal notranslate"><span class="pre">probplot</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

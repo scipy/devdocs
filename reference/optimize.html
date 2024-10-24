@@ -1,0 +1,1280 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Optimization and root finding (scipy.optimize) &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/optimize';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Cython optimize root finding API" href="optimize.cython_optimize.html" />
+    <link rel="prev" title="scipy.odr.quadratic" href="generated/scipy.odr.quadratic.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="odr.html">scipy.odr</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">SciPy API</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Optimization and root finding (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="optimization-and-root-finding-scipy-optimize">
+<span id="module-scipy.optimize"></span><h1>Optimization and root finding (<a class="reference internal" href="#module-scipy.optimize" title="scipy.optimize"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code></a>)<a class="headerlink" href="#optimization-and-root-finding-scipy-optimize" title="Link to this heading">#</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p>SciPy <code class="docutils literal notranslate"><span class="pre">optimize</span></code> provides functions for minimizing (or maximizing)
+objective functions, possibly subject to constraints. It includes
+solvers for nonlinear problems (with support for both local and global
+optimization algorithms), linear programming, constrained
+and nonlinear least-squares, root finding, and curve fitting.</p>
+<p>Common functions and objects, shared across different solvers, are:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.show_options.html#scipy.optimize.show_options" title="scipy.optimize.show_options"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show_options</span></code></a>([solver, method, disp])</p></td>
+<td><p>Show documentation for additional options of optimization solvers.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.OptimizeResult.html#scipy.optimize.OptimizeResult" title="scipy.optimize.OptimizeResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptimizeResult</span></code></a></p></td>
+<td><p>Represents the optimization result.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.OptimizeWarning.html#scipy.optimize.OptimizeWarning" title="scipy.optimize.OptimizeWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptimizeWarning</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="optimization">
+<h2>Optimization<a class="headerlink" href="#optimization" title="Link to this heading">#</a></h2>
+<section id="scalar-functions-optimization">
+<h3>Scalar functions optimization<a class="headerlink" href="#scalar-functions-optimization" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.minimize_scalar.html#scipy.optimize.minimize_scalar" title="scipy.optimize.minimize_scalar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minimize_scalar</span></code></a>(fun[, bracket, bounds, ...])</p></td>
+<td><p>Local minimization of scalar function of one variable.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The <a class="reference internal" href="generated/scipy.optimize.minimize_scalar.html#scipy.optimize.minimize_scalar" title="scipy.optimize.minimize_scalar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minimize_scalar</span></code></a> function supports the following methods:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="optimize.minimize_scalar-brent.html">minimize_scalar(method=’brent’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.minimize_scalar-bounded.html">minimize_scalar(method=’bounded’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.minimize_scalar-golden.html">minimize_scalar(method=’golden’)</a></li>
+</ul>
+</div>
+</section>
+<section id="local-multivariate-optimization">
+<h3>Local (multivariate) optimization<a class="headerlink" href="#local-multivariate-optimization" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.minimize.html#scipy.optimize.minimize" title="scipy.optimize.minimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minimize</span></code></a>(fun, x0[, args, method, jac, hess, ...])</p></td>
+<td><p>Minimization of scalar function of one or more variables.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The <a class="reference internal" href="generated/scipy.optimize.minimize.html#scipy.optimize.minimize" title="scipy.optimize.minimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minimize</span></code></a> function supports the following methods:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="optimize.minimize-neldermead.html">minimize(method=’Nelder-Mead’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.minimize-powell.html">minimize(method=’Powell’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.minimize-cg.html">minimize(method=’CG’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.minimize-bfgs.html">minimize(method=’BFGS’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.minimize-newtoncg.html">minimize(method=’Newton-CG’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.minimize-lbfgsb.html">minimize(method=’L-BFGS-B’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.minimize-tnc.html">minimize(method=’TNC’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.minimize-cobyla.html">minimize(method=’COBYLA’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.minimize-cobyqa.html">minimize(method=’COBYQA’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.minimize-slsqp.html">minimize(method=’SLSQP’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.minimize-trustconstr.html">minimize(method=’trust-constr’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.minimize-dogleg.html">minimize(method=’dogleg’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.minimize-trustncg.html">minimize(method=’trust-ncg’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.minimize-trustkrylov.html">minimize(method=’trust-krylov’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.minimize-trustexact.html">minimize(method=’trust-exact’)</a></li>
+</ul>
+</div>
+<p>Constraints are passed to <a class="reference internal" href="generated/scipy.optimize.minimize.html#scipy.optimize.minimize" title="scipy.optimize.minimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minimize</span></code></a> function as a single object or
+as a list of objects from the following classes:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.NonlinearConstraint.html#scipy.optimize.NonlinearConstraint" title="scipy.optimize.NonlinearConstraint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NonlinearConstraint</span></code></a>(fun, lb, ub[, jac, ...])</p></td>
+<td><p>Nonlinear constraint on the variables.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.LinearConstraint.html#scipy.optimize.LinearConstraint" title="scipy.optimize.LinearConstraint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearConstraint</span></code></a>(A[, lb, ub, keep_feasible])</p></td>
+<td><p>Linear constraint on the variables.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Simple bound constraints are handled separately and there is a special class
+for them:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.Bounds.html#scipy.optimize.Bounds" title="scipy.optimize.Bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bounds</span></code></a>([lb, ub, keep_feasible])</p></td>
+<td><p>Bounds constraint on the variables.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Quasi-Newton strategies implementing <a class="reference internal" href="generated/scipy.optimize.HessianUpdateStrategy.html#scipy.optimize.HessianUpdateStrategy" title="scipy.optimize.HessianUpdateStrategy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HessianUpdateStrategy</span></code></a>
+interface can be used to approximate the Hessian in <a class="reference internal" href="generated/scipy.optimize.minimize.html#scipy.optimize.minimize" title="scipy.optimize.minimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minimize</span></code></a>
+function (available only for the ‘trust-constr’ method). Available
+quasi-Newton methods implementing this interface are:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.BFGS.html#scipy.optimize.BFGS" title="scipy.optimize.BFGS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BFGS</span></code></a>([exception_strategy, min_curvature, ...])</p></td>
+<td><p>Broyden-Fletcher-Goldfarb-Shanno (BFGS) Hessian update strategy.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.SR1.html#scipy.optimize.SR1" title="scipy.optimize.SR1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SR1</span></code></a>([min_denominator, init_scale])</p></td>
+<td><p>Symmetric-rank-1 Hessian update strategy.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="global-optimization">
+<span id="id1"></span><h3>Global optimization<a class="headerlink" href="#global-optimization" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.basinhopping.html#scipy.optimize.basinhopping" title="scipy.optimize.basinhopping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basinhopping</span></code></a>(func, x0[, niter, T, stepsize, ...])</p></td>
+<td><p>Find the global minimum of a function using the basin-hopping algorithm.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.brute.html#scipy.optimize.brute" title="scipy.optimize.brute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">brute</span></code></a>(func, ranges[, args, Ns, full_output, ...])</p></td>
+<td><p>Minimize a function over a given range by brute force.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.differential_evolution.html#scipy.optimize.differential_evolution" title="scipy.optimize.differential_evolution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">differential_evolution</span></code></a>(func, bounds[, args, ...])</p></td>
+<td><p>Finds the global minimum of a multivariate function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.shgo.html#scipy.optimize.shgo" title="scipy.optimize.shgo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shgo</span></code></a>(func, bounds[, args, constraints, n, ...])</p></td>
+<td><p>Finds the global minimum of a function using SHG optimization.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.dual_annealing.html#scipy.optimize.dual_annealing" title="scipy.optimize.dual_annealing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dual_annealing</span></code></a>(func, bounds[, args, ...])</p></td>
+<td><p>Find the global minimum of a function using Dual Annealing.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.direct.html#scipy.optimize.direct" title="scipy.optimize.direct"><code class="xref py py-obj docutils literal notranslate"><span class="pre">direct</span></code></a>(func, bounds, *[, args, eps, maxfun, ...])</p></td>
+<td><p>Finds the global minimum of a function using the DIRECT algorithm.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="least-squares-and-curve-fitting">
+<h2>Least-squares and curve fitting<a class="headerlink" href="#least-squares-and-curve-fitting" title="Link to this heading">#</a></h2>
+<section id="nonlinear-least-squares">
+<h3>Nonlinear least-squares<a class="headerlink" href="#nonlinear-least-squares" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.least_squares.html#scipy.optimize.least_squares" title="scipy.optimize.least_squares"><code class="xref py py-obj docutils literal notranslate"><span class="pre">least_squares</span></code></a>(fun, x0[, jac, bounds, ...])</p></td>
+<td><p>Solve a nonlinear least-squares problem with bounds on the variables.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="linear-least-squares">
+<h3>Linear least-squares<a class="headerlink" href="#linear-least-squares" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.nnls.html#scipy.optimize.nnls" title="scipy.optimize.nnls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nnls</span></code></a>(A, b[, maxiter, atol])</p></td>
+<td><p>Solve <code class="docutils literal notranslate"><span class="pre">argmin_x</span> <span class="pre">||</span> <span class="pre">Ax</span> <span class="pre">-</span> <span class="pre">b</span> <span class="pre">||_2</span></code> for <code class="docutils literal notranslate"><span class="pre">x&gt;=0</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.lsq_linear.html#scipy.optimize.lsq_linear" title="scipy.optimize.lsq_linear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lsq_linear</span></code></a>(A, b[, bounds, method, tol, ...])</p></td>
+<td><p>Solve a linear least-squares problem with bounds on the variables.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.isotonic_regression.html#scipy.optimize.isotonic_regression" title="scipy.optimize.isotonic_regression"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isotonic_regression</span></code></a>(y, *[, weights, increasing])</p></td>
+<td><p>Nonparametric isotonic regression.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="curve-fitting">
+<h3>Curve fitting<a class="headerlink" href="#curve-fitting" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.curve_fit.html#scipy.optimize.curve_fit" title="scipy.optimize.curve_fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">curve_fit</span></code></a>(f, xdata, ydata[, p0, sigma, ...])</p></td>
+<td><p>Use non-linear least squares to fit a function, f, to data.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="root-finding">
+<h2>Root finding<a class="headerlink" href="#root-finding" title="Link to this heading">#</a></h2>
+<section id="scalar-functions">
+<h3>Scalar functions<a class="headerlink" href="#scalar-functions" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.root_scalar.html#scipy.optimize.root_scalar" title="scipy.optimize.root_scalar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">root_scalar</span></code></a>(f[, args, method, bracket, ...])</p></td>
+<td><p>Find a root of a scalar function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.brentq.html#scipy.optimize.brentq" title="scipy.optimize.brentq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">brentq</span></code></a>(f, a, b[, args, xtol, rtol, maxiter, ...])</p></td>
+<td><p>Find a root of a function in a bracketing interval using Brent's method.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.brenth.html#scipy.optimize.brenth" title="scipy.optimize.brenth"><code class="xref py py-obj docutils literal notranslate"><span class="pre">brenth</span></code></a>(f, a, b[, args, xtol, rtol, maxiter, ...])</p></td>
+<td><p>Find a root of a function in a bracketing interval using Brent's method with hyperbolic extrapolation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.ridder.html#scipy.optimize.ridder" title="scipy.optimize.ridder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ridder</span></code></a>(f, a, b[, args, xtol, rtol, maxiter, ...])</p></td>
+<td><p>Find a root of a function in an interval using Ridder's method.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.bisect.html#scipy.optimize.bisect" title="scipy.optimize.bisect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bisect</span></code></a>(f, a, b[, args, xtol, rtol, maxiter, ...])</p></td>
+<td><p>Find root of a function within an interval using bisection.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.newton.html#scipy.optimize.newton" title="scipy.optimize.newton"><code class="xref py py-obj docutils literal notranslate"><span class="pre">newton</span></code></a>(func, x0[, fprime, args, tol, ...])</p></td>
+<td><p>Find a root of a real or complex function using the Newton-Raphson (or secant or Halley's) method.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.toms748.html#scipy.optimize.toms748" title="scipy.optimize.toms748"><code class="xref py py-obj docutils literal notranslate"><span class="pre">toms748</span></code></a>(f, a, b[, args, k, xtol, rtol, ...])</p></td>
+<td><p>Find a root using TOMS Algorithm 748 method.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.RootResults.html#scipy.optimize.RootResults" title="scipy.optimize.RootResults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RootResults</span></code></a>(root, iterations, ...)</p></td>
+<td><p>Represents the root finding result.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The <a class="reference internal" href="generated/scipy.optimize.root_scalar.html#scipy.optimize.root_scalar" title="scipy.optimize.root_scalar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">root_scalar</span></code></a> function supports the following methods:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="optimize.root_scalar-brentq.html">root_scalar(method=’brentq’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.root_scalar-brenth.html">root_scalar(method=’brenth’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.root_scalar-bisect.html">root_scalar(method=’bisect’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.root_scalar-ridder.html">root_scalar(method=’ridder’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.root_scalar-newton.html">root_scalar(method=’newton’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.root_scalar-toms748.html">root_scalar(method=’toms748’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.root_scalar-secant.html">root_scalar(method=’secant’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.root_scalar-halley.html">root_scalar(method=’halley’)</a></li>
+</ul>
+</div>
+<p>The table below lists situations and appropriate methods, along with
+<em>asymptotic</em> convergence rates per iteration (and per function evaluation)
+for successful convergence to a simple root(*).
+Bisection is the slowest of them all, adding one bit of accuracy for each
+function evaluation, but is guaranteed to converge.
+The other bracketing methods all (eventually) increase the number of accurate
+bits by about 50% for every function evaluation.
+The derivative-based methods, all built on <a class="reference internal" href="generated/scipy.optimize.newton.html#scipy.optimize.newton" title="scipy.optimize.newton"><code class="xref py py-obj docutils literal notranslate"><span class="pre">newton</span></code></a>, can converge quite quickly
+if the initial value is close to the root.  They can also be applied to
+functions defined on (a subset of) the complex plane.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head" rowspan="2"><p>Domain of f</p></th>
+<th class="head" rowspan="2"><p>Bracket?</p></th>
+<th class="head" colspan="2"><p>Derivatives?</p></th>
+<th class="head" rowspan="2"><p>Solvers</p></th>
+<th class="head" colspan="2"><p>Convergence</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p><em class="xref py py-obj">fprime</em></p></th>
+<th class="head"><p><em class="xref py py-obj">fprime2</em></p></th>
+<th class="head"><p>Guaranteed?</p></th>
+<th class="head"><p>Rate(s)(*)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p><em class="xref py py-obj">R</em></p></td>
+<td><p>Yes</p></td>
+<td><p>N/A</p></td>
+<td><p>N/A</p></td>
+<td><ul class="simple">
+<li><p>bisection</p></li>
+<li><p>brentq</p></li>
+<li><p>brenth</p></li>
+<li><p>ridder</p></li>
+<li><p>toms748</p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>Yes</p></li>
+<li><p>Yes</p></li>
+<li><p>Yes</p></li>
+<li><p>Yes</p></li>
+<li><p>Yes</p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p>1 “Linear”</p></li>
+<li><p>&gt;=1, &lt;= 1.62</p></li>
+<li><p>&gt;=1, &lt;= 1.62</p></li>
+<li><p>2.0 (1.41)</p></li>
+<li><p>2.7 (1.65)</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p><em class="xref py py-obj">R</em> or <em class="xref py py-obj">C</em></p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+<td><p>No</p></td>
+<td><p>secant</p></td>
+<td><p>No</p></td>
+<td><p>1.62 (1.62)</p></td>
+</tr>
+<tr class="row-odd"><td><p><em class="xref py py-obj">R</em> or <em class="xref py py-obj">C</em></p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+<td><p>newton</p></td>
+<td><p>No</p></td>
+<td><p>2.00 (1.41)</p></td>
+</tr>
+<tr class="row-even"><td><p><em class="xref py py-obj">R</em> or <em class="xref py py-obj">C</em></p></td>
+<td><p>No</p></td>
+<td><p>Yes</p></td>
+<td><p>Yes</p></td>
+<td><p>halley</p></td>
+<td><p>No</p></td>
+<td><p>3.00 (1.44)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="optimize.cython_optimize.html#module-scipy.optimize.cython_optimize" title="scipy.optimize.cython_optimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.cython_optimize</span></code></a> – Typed Cython versions of root finding functions</p>
+</div>
+<p>Fixed point finding:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.fixed_point.html#scipy.optimize.fixed_point" title="scipy.optimize.fixed_point"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fixed_point</span></code></a>(func, x0[, args, xtol, maxiter, ...])</p></td>
+<td><p>Find a fixed point of the function.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="multidimensional">
+<h3>Multidimensional<a class="headerlink" href="#multidimensional" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.root.html#scipy.optimize.root" title="scipy.optimize.root"><code class="xref py py-obj docutils literal notranslate"><span class="pre">root</span></code></a>(fun, x0[, args, method, jac, tol, ...])</p></td>
+<td><p>Find a root of a vector function.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The <a class="reference internal" href="generated/scipy.optimize.root.html#scipy.optimize.root" title="scipy.optimize.root"><code class="xref py py-obj docutils literal notranslate"><span class="pre">root</span></code></a> function supports the following methods:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="optimize.root-hybr.html">root(method=’hybr’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.root-lm.html">root(method=’lm’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.root-broyden1.html">root(method=’broyden1’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.root-broyden2.html">root(method=’broyden2’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.root-anderson.html">root(method=’anderson’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.root-linearmixing.html">root(method=’linearmixing’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.root-diagbroyden.html">root(method=’diagbroyden’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.root-excitingmixing.html">root(method=’excitingmixing’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.root-krylov.html">root(method=’krylov’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.root-dfsane.html">root(method=’df-sane’)</a></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="elementwise-minimization-and-root-finding">
+<h2>Elementwise Minimization and Root Finding<a class="headerlink" href="#elementwise-minimization-and-root-finding" title="Link to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="optimize.elementwise.html">Elementwise Scalar Optimization (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize.elementwise</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="optimize.elementwise.html#root-finding">Root finding</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/scipy.optimize.elementwise.find_root.html">find_root</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/scipy.optimize.elementwise.bracket_root.html">bracket_root</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="optimize.elementwise.html#minimization">Minimization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/scipy.optimize.elementwise.find_minimum.html">find_minimum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/scipy.optimize.elementwise.bracket_minimum.html">bracket_minimum</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="linear-programming-milp">
+<h2>Linear programming / MILP<a class="headerlink" href="#linear-programming-milp" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.milp.html#scipy.optimize.milp" title="scipy.optimize.milp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">milp</span></code></a>(c, *[, integrality, bounds, ...])</p></td>
+<td><p>Mixed-integer linear programming</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.linprog.html#scipy.optimize.linprog" title="scipy.optimize.linprog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linprog</span></code></a>(c[, A_ub, b_ub, A_eq, b_eq, bounds, ...])</p></td>
+<td><p>Linear programming: minimize a linear objective function subject to linear equality and inequality constraints.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The <a class="reference internal" href="generated/scipy.optimize.linprog.html#scipy.optimize.linprog" title="scipy.optimize.linprog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linprog</span></code></a> function supports the following methods:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="optimize.linprog-simplex.html">linprog(method=’simplex’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.linprog-interior-point.html">linprog(method=’interior-point’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.linprog-revised_simplex.html">linprog(method=’revised simplex’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.linprog-highs-ipm.html">linprog(method=’highs-ipm’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.linprog-highs-ds.html">linprog(method=’highs-ds’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.linprog-highs.html">linprog(method=’highs’)</a></li>
+</ul>
+</div>
+<p>The simplex, interior-point, and revised simplex methods support callback
+functions, such as:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.linprog_verbose_callback.html#scipy.optimize.linprog_verbose_callback" title="scipy.optimize.linprog_verbose_callback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linprog_verbose_callback</span></code></a>(res)</p></td>
+<td><p>A sample callback function demonstrating the linprog callback interface.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="assignment-problems">
+<h2>Assignment problems<a class="headerlink" href="#assignment-problems" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.linear_sum_assignment.html#scipy.optimize.linear_sum_assignment" title="scipy.optimize.linear_sum_assignment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linear_sum_assignment</span></code></a></p></td>
+<td><p>Solve the linear sum assignment problem.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.quadratic_assignment.html#scipy.optimize.quadratic_assignment" title="scipy.optimize.quadratic_assignment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quadratic_assignment</span></code></a>(A, B[, method, options])</p></td>
+<td><p>Approximates solution to the quadratic assignment problem and the graph matching problem.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The <a class="reference internal" href="generated/scipy.optimize.quadratic_assignment.html#scipy.optimize.quadratic_assignment" title="scipy.optimize.quadratic_assignment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quadratic_assignment</span></code></a> function supports the following methods:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="optimize.qap-faq.html">quadratic_assignment(method=’faq’)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.qap-2opt.html">quadratic_assignment(method=’2opt’)</a></li>
+</ul>
+</div>
+</section>
+<section id="utilities">
+<h2>Utilities<a class="headerlink" href="#utilities" title="Link to this heading">#</a></h2>
+<section id="finite-difference-approximation">
+<h3>Finite-difference approximation<a class="headerlink" href="#finite-difference-approximation" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.approx_fprime.html#scipy.optimize.approx_fprime" title="scipy.optimize.approx_fprime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">approx_fprime</span></code></a>(xk, f[, epsilon])</p></td>
+<td><p>Finite difference approximation of the derivatives of a scalar or vector-valued function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.check_grad.html#scipy.optimize.check_grad" title="scipy.optimize.check_grad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_grad</span></code></a>(func, grad, x0, *args[, epsilon, ...])</p></td>
+<td><p>Check the correctness of a gradient function by comparing it against a (forward) finite-difference approximation of the gradient.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="line-search">
+<h3>Line search<a class="headerlink" href="#line-search" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.bracket.html#scipy.optimize.bracket" title="scipy.optimize.bracket"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bracket</span></code></a>(func[, xa, xb, args, grow_limit, ...])</p></td>
+<td><p>Bracket the minimum of a function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.line_search.html#scipy.optimize.line_search" title="scipy.optimize.line_search"><code class="xref py py-obj docutils literal notranslate"><span class="pre">line_search</span></code></a>(f, myfprime, xk, pk[, gfk, ...])</p></td>
+<td><p>Find alpha that satisfies strong Wolfe conditions.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="hessian-approximation">
+<h3>Hessian approximation<a class="headerlink" href="#hessian-approximation" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.LbfgsInvHessProduct.html#scipy.optimize.LbfgsInvHessProduct" title="scipy.optimize.LbfgsInvHessProduct"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LbfgsInvHessProduct</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Linear operator for the L-BFGS approximate inverse Hessian.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.HessianUpdateStrategy.html#scipy.optimize.HessianUpdateStrategy" title="scipy.optimize.HessianUpdateStrategy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HessianUpdateStrategy</span></code></a>()</p></td>
+<td><p>Interface for implementing Hessian update strategies.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="benchmark-problems">
+<h3>Benchmark problems<a class="headerlink" href="#benchmark-problems" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.rosen.html#scipy.optimize.rosen" title="scipy.optimize.rosen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rosen</span></code></a>(x)</p></td>
+<td><p>The Rosenbrock function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.rosen_der.html#scipy.optimize.rosen_der" title="scipy.optimize.rosen_der"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rosen_der</span></code></a>(x)</p></td>
+<td><p>The derivative (i.e. gradient) of the Rosenbrock function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.rosen_hess.html#scipy.optimize.rosen_hess" title="scipy.optimize.rosen_hess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rosen_hess</span></code></a>(x)</p></td>
+<td><p>The Hessian matrix of the Rosenbrock function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.rosen_hess_prod.html#scipy.optimize.rosen_hess_prod" title="scipy.optimize.rosen_hess_prod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rosen_hess_prod</span></code></a>(x, p)</p></td>
+<td><p>Product of the Hessian matrix of the Rosenbrock function with a vector.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="legacy-functions">
+<h2>Legacy functions<a class="headerlink" href="#legacy-functions" title="Link to this heading">#</a></h2>
+<p>The functions below are not recommended for use in new scripts;
+all of these methods are accessible via a newer, more consistent
+interfaces, provided by the interfaces above.</p>
+<section id="id2">
+<h3>Optimization<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<p>General-purpose multivariate methods:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.fmin.html#scipy.optimize.fmin" title="scipy.optimize.fmin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fmin</span></code></a>(func, x0[, args, xtol, ftol, maxiter, ...])</p></td>
+<td><p>Minimize a function using the downhill simplex algorithm.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.fmin_powell.html#scipy.optimize.fmin_powell" title="scipy.optimize.fmin_powell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fmin_powell</span></code></a>(func, x0[, args, xtol, ftol, ...])</p></td>
+<td><p>Minimize a function using modified Powell's method.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.fmin_cg.html#scipy.optimize.fmin_cg" title="scipy.optimize.fmin_cg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fmin_cg</span></code></a>(f, x0[, fprime, args, gtol, norm, ...])</p></td>
+<td><p>Minimize a function using a nonlinear conjugate gradient algorithm.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.fmin_bfgs.html#scipy.optimize.fmin_bfgs" title="scipy.optimize.fmin_bfgs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fmin_bfgs</span></code></a>(f, x0[, fprime, args, gtol, norm, ...])</p></td>
+<td><p>Minimize a function using the BFGS algorithm.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.fmin_ncg.html#scipy.optimize.fmin_ncg" title="scipy.optimize.fmin_ncg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fmin_ncg</span></code></a>(f, x0, fprime[, fhess_p, fhess, ...])</p></td>
+<td><p>Unconstrained minimization of a function using the Newton-CG method.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Constrained multivariate methods:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.fmin_l_bfgs_b.html#scipy.optimize.fmin_l_bfgs_b" title="scipy.optimize.fmin_l_bfgs_b"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fmin_l_bfgs_b</span></code></a>(func, x0[, fprime, args, ...])</p></td>
+<td><p>Minimize a function func using the L-BFGS-B algorithm.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.fmin_tnc.html#scipy.optimize.fmin_tnc" title="scipy.optimize.fmin_tnc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fmin_tnc</span></code></a>(func, x0[, fprime, args, ...])</p></td>
+<td><p>Minimize a function with variables subject to bounds, using gradient information in a truncated Newton algorithm.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.fmin_cobyla.html#scipy.optimize.fmin_cobyla" title="scipy.optimize.fmin_cobyla"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fmin_cobyla</span></code></a>(func, x0, cons[, args, ...])</p></td>
+<td><p>Minimize a function using the Constrained Optimization By Linear Approximation (COBYLA) method.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.fmin_slsqp.html#scipy.optimize.fmin_slsqp" title="scipy.optimize.fmin_slsqp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fmin_slsqp</span></code></a>(func, x0[, eqcons, f_eqcons, ...])</p></td>
+<td><p>Minimize a function using Sequential Least Squares Programming</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Univariate (scalar) minimization methods:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.fminbound.html#scipy.optimize.fminbound" title="scipy.optimize.fminbound"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fminbound</span></code></a>(func, x1, x2[, args, xtol, ...])</p></td>
+<td><p>Bounded minimization for scalar functions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.brent.html#scipy.optimize.brent" title="scipy.optimize.brent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">brent</span></code></a>(func[, args, brack, tol, full_output, ...])</p></td>
+<td><p>Given a function of one variable and a possible bracket, return a local minimizer of the function isolated to a fractional precision of tol.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.golden.html#scipy.optimize.golden" title="scipy.optimize.golden"><code class="xref py py-obj docutils literal notranslate"><span class="pre">golden</span></code></a>(func[, args, brack, tol, ...])</p></td>
+<td><p>Return the minimizer of a function of one variable using the golden section method.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="least-squares">
+<h3>Least-squares<a class="headerlink" href="#least-squares" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.leastsq.html#scipy.optimize.leastsq" title="scipy.optimize.leastsq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">leastsq</span></code></a>(func, x0[, args, Dfun, full_output, ...])</p></td>
+<td><p>Minimize the sum of squares of a set of equations.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="id3">
+<h3>Root finding<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<p>General nonlinear solvers:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.fsolve.html#scipy.optimize.fsolve" title="scipy.optimize.fsolve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fsolve</span></code></a>(func, x0[, args, fprime, ...])</p></td>
+<td><p>Find the roots of a function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.broyden1.html#scipy.optimize.broyden1" title="scipy.optimize.broyden1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">broyden1</span></code></a>(F, xin[, iter, alpha, ...])</p></td>
+<td><p>Find a root of a function, using Broyden's first Jacobian approximation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.broyden2.html#scipy.optimize.broyden2" title="scipy.optimize.broyden2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">broyden2</span></code></a>(F, xin[, iter, alpha, ...])</p></td>
+<td><p>Find a root of a function, using Broyden's second Jacobian approximation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.NoConvergence.html#scipy.optimize.NoConvergence" title="scipy.optimize.NoConvergence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NoConvergence</span></code></a></p></td>
+<td><p>Exception raised when nonlinear solver fails to converge within the specified <em class="xref py py-obj">maxiter</em>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Large-scale nonlinear solvers:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.newton_krylov.html#scipy.optimize.newton_krylov" title="scipy.optimize.newton_krylov"><code class="xref py py-obj docutils literal notranslate"><span class="pre">newton_krylov</span></code></a>(F, xin[, iter, rdiff, method, ...])</p></td>
+<td><p>Find a root of a function, using Krylov approximation for inverse Jacobian.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.anderson.html#scipy.optimize.anderson" title="scipy.optimize.anderson"><code class="xref py py-obj docutils literal notranslate"><span class="pre">anderson</span></code></a>(F, xin[, iter, alpha, w0, M, ...])</p></td>
+<td><p>Find a root of a function, using (extended) Anderson mixing.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.BroydenFirst.html#scipy.optimize.BroydenFirst" title="scipy.optimize.BroydenFirst"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BroydenFirst</span></code></a>([alpha, reduction_method, max_rank])</p></td>
+<td><p>Find a root of a function, using Broyden's first Jacobian approximation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.InverseJacobian.html#scipy.optimize.InverseJacobian" title="scipy.optimize.InverseJacobian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InverseJacobian</span></code></a>(jacobian)</p></td>
+<td><p>A simple wrapper that inverts the Jacobian using the <em class="xref py py-obj">solve</em> method.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.KrylovJacobian.html#scipy.optimize.KrylovJacobian" title="scipy.optimize.KrylovJacobian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KrylovJacobian</span></code></a>([rdiff, method, ...])</p></td>
+<td><p>Find a root of a function, using Krylov approximation for inverse Jacobian.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Simple iteration solvers:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.excitingmixing.html#scipy.optimize.excitingmixing" title="scipy.optimize.excitingmixing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">excitingmixing</span></code></a>(F, xin[, iter, alpha, ...])</p></td>
+<td><p>Find a root of a function, using a tuned diagonal Jacobian approximation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.optimize.linearmixing.html#scipy.optimize.linearmixing" title="scipy.optimize.linearmixing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linearmixing</span></code></a>(F, xin[, iter, alpha, verbose, ...])</p></td>
+<td><p>Find a root of a function, using a scalar Jacobian approximation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.optimize.diagbroyden.html#scipy.optimize.diagbroyden" title="scipy.optimize.diagbroyden"><code class="xref py py-obj docutils literal notranslate"><span class="pre">diagbroyden</span></code></a>(F, xin[, iter, alpha, verbose, ...])</p></td>
+<td><p>Find a root of a function, using diagonal Broyden Jacobian approximation.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="generated/scipy.odr.quadratic.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">scipy.odr.quadratic</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="optimize.cython_optimize.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Cython optimize root finding API</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization">Optimization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scalar-functions-optimization">Scalar functions optimization</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#local-multivariate-optimization">Local (multivariate) optimization</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#global-optimization">Global optimization</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#least-squares-and-curve-fitting">Least-squares and curve fitting</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nonlinear-least-squares">Nonlinear least-squares</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-least-squares">Linear least-squares</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#curve-fitting">Curve fitting</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#root-finding">Root finding</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scalar-functions">Scalar functions</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#multidimensional">Multidimensional</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elementwise-minimization-and-root-finding">Elementwise Minimization and Root Finding</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-programming-milp">Linear programming / MILP</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#assignment-problems">Assignment problems</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#utilities">Utilities</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#finite-difference-approximation">Finite-difference approximation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#line-search">Line search</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hessian-approximation">Hessian approximation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#benchmark-problems">Benchmark problems</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#legacy-functions">Legacy functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Optimization</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#least-squares">Least-squares</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Root finding</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

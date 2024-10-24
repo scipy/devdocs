@@ -1,0 +1,1064 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Extrapolation tips and tricks &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorial/interpolate/extrapolation_examples';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Interpolate transition guide" href="interp_transition_guide.html" />
+    <link rel="prev" title="Scattered data interpolation (griddata)" href="ND_unstructured.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../special.html">Special functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.special</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">Integration (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.integrate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">Optimization (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../interpolate.html">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="1D.html">1-D interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="splines_and_polynomials.html">Piecewise polynomials and splines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="smoothing_splines.html">Smoothing splines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ND_regular_grid.html">Multivariate data interpolation on a regular grid  (<code class="xref py py-class docutils literal notranslate"><span class="pre">RegularGridInterpolator</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ND_unstructured.html">Scattered data interpolation (<code class="xref py py-func docutils literal notranslate"><span class="pre">griddata</span></code>)</a></li>
+
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Extrapolation tips and tricks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interp_transition_guide.html">Interpolate transition guide</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">Fourier Transforms (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.fft</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">Signal Processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">Linear Algebra (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">Sparse Arrays (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arpack.html">Sparse eigenvalue problems with ARPACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csgraph.html">Compressed Sparse Graph Routines (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.csgraph</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">Spatial data structures and algorithms (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">Multidimensional image processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">File IO (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.io</span></code>)</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy User Guide</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../interpolate.html" class="nav-link">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Extrapolation tips and tricks</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="extrapolation-tips-and-tricks">
+<span id="tutorial-extrapolation"></span><h1>Extrapolation tips and tricks<a class="headerlink" href="#extrapolation-tips-and-tricks" title="Link to this heading">#</a></h1>
+<p>Handling of extrapolation—evaluation of the interpolators on query
+points outside of the domain of interpolated data—is not fully
+consistent among different routines in <a class="reference internal" href="../../reference/interpolate.html#module-scipy.interpolate" title="scipy.interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.interpolate</span></code></a>. Different
+interpolators use different sets of keyword arguments to control the behavior
+outside of the data domain: some use <code class="docutils literal notranslate"><span class="pre">extrapolate=True/False/None</span></code>, some
+allow the <code class="docutils literal notranslate"><span class="pre">fill_value</span></code> keyword. Refer to the API documentation for details
+for each specific interpolation routine.</p>
+<p>Depending on a particular problem, the available keywords may or may not be
+sufficient. Special attention needs to be paid to extrapolation of non-linear
+interpolants. Very often the extrapolated results make less
+sense with increasing distance from the data domain. This is of course
+to be expected: an interpolant only knows the data within the data
+domain.</p>
+<p>When the default extrapolated results are not adequate, users need to
+implement the desired extrapolation mode themselves.</p>
+<p>In this tutorial, we consider several worked examples where we demonstrate both
+the use of available keywords and manual implementation of desired extrapolation
+modes. These examples may or may not be applicable to your
+particular problem; they are not necessarily best practices; and they
+are deliberately pared down to bare essentials needed to demonstrate the
+main ideas, in a hope that they serve as an inspiration for your
+handling of your particular problem.</p>
+<section id="interp1d-replicate-numpy-interp-left-and-right-fill-values">
+<span id="tutorial-extrapolation-left-right"></span><h2><a class="reference internal" href="../../reference/generated/scipy.interpolate.interp1d.html#scipy.interpolate.interp1d" title="scipy.interpolate.interp1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interp1d</span></code></a> : replicate <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.interp.html#numpy.interp" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.interp</span></code></a> left and right fill values<a class="headerlink" href="#interp1d-replicate-numpy-interp-left-and-right-fill-values" title="Link to this heading">#</a></h2>
+<p>TL;DR: Use <code class="docutils literal notranslate"><span class="pre">fill_value=(left,</span> <span class="pre">right)</span></code></p>
+<p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.interp.html#numpy.interp" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.interp</span></code></a> uses constant extrapolation, and defaults to extending
+the first and last values of the <code class="docutils literal notranslate"><span class="pre">y</span></code> array in the interpolation
+interval: the output of <code class="docutils literal notranslate"><span class="pre">np.interp(xnew,</span> <span class="pre">x,</span> <span class="pre">y)</span></code> is <code class="docutils literal notranslate"><span class="pre">y[0]</span></code> for
+<code class="docutils literal notranslate"><span class="pre">xnew</span> <span class="pre">&lt;</span> <span class="pre">x[0]</span></code> and <code class="docutils literal notranslate"><span class="pre">y[-1]</span></code> for <code class="docutils literal notranslate"><span class="pre">xnew</span> <span class="pre">&gt;</span> <span class="pre">x[-1]</span></code>.</p>
+<p>By default, <a class="reference internal" href="../../reference/generated/scipy.interpolate.interp1d.html#scipy.interpolate.interp1d" title="scipy.interpolate.interp1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interp1d</span></code></a> refuses to extrapolate, and raises a
+<code class="docutils literal notranslate"><span class="pre">ValueError</span></code> when evaluated on a data point outside of the
+interpolation range. This can be switched off by the
+<code class="docutils literal notranslate"><span class="pre">bounds_error=False</span></code> argument: then <code class="docutils literal notranslate"><span class="pre">interp1d</span></code> sets the out-of-range
+values with the <code class="docutils literal notranslate"><span class="pre">fill_value</span></code>, which is <code class="docutils literal notranslate"><span class="pre">nan</span></code> by default.</p>
+<p>To mimic the behavior of <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.interp.html#numpy.interp" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.interp</span></code></a> with <a class="reference internal" href="../../reference/generated/scipy.interpolate.interp1d.html#scipy.interpolate.interp1d" title="scipy.interpolate.interp1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interp1d</span></code></a>, you can use
+the fact that it supports a 2-tuple as the <code class="docutils literal notranslate"><span class="pre">fill_value</span></code>. The tuple
+elements are then used to fill for <code class="docutils literal notranslate"><span class="pre">xnew</span> <span class="pre">&lt;</span> <span class="pre">min(x)</span></code> and <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">&gt;</span> <span class="pre">max(x)</span></code>,
+respectively. For multidimensional <code class="docutils literal notranslate"><span class="pre">y</span></code>, these elements must have the
+same shape as <code class="docutils literal notranslate"><span class="pre">y</span></code> or be broadcastable to it.</p>
+<p>To illustrate:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>   <span class="c1"># y.shape is (11, 2)</span>
+
+<span class="n">func</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+                <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># interpolate along columns</span>
+                <span class="n">bounds_error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span>
+                <span class="n">fill_value</span><span class="o">=</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+<span class="n">xnew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">2.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">51</span><span class="p">)</span>
+<span class="n">ynew</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">xnew</span><span class="p">)</span>
+
+<span class="n">fix</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">ynew</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">ynew</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/extrapolation_examples-1.png" class="plot-directive" src="../../_images/extrapolation_examples-1.png" />
+</figure>
+</section>
+<section id="cubicspline-extend-the-boundary-conditions">
+<span id="tutorial-extrapolation-cubicspline-extend"></span><h2>CubicSpline extend the boundary conditions<a class="headerlink" href="#cubicspline-extend-the-boundary-conditions" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../../reference/generated/scipy.interpolate.CubicSpline.html#scipy.interpolate.CubicSpline" title="scipy.interpolate.CubicSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CubicSpline</span></code></a> needs two extra boundary conditions, which are
+controlled by the <code class="docutils literal notranslate"><span class="pre">bc_type</span></code> parameter. This parameter can either list
+explicit values of derivatives at the edges, or use helpful aliases. For
+instance, <code class="docutils literal notranslate"><span class="pre">bc_type=&quot;clamped&quot;</span></code> sets the first derivatives to zero,
+<code class="docutils literal notranslate"><span class="pre">bc_type=&quot;natural&quot;</span></code> sets the second derivatives to zero (two other
+recognized string values are “periodic” and “not-a-knot”)</p>
+<p>While the extrapolation is controlled by the boundary condition, the
+relation is not very intuitive. For instance, one can expect that for
+<code class="docutils literal notranslate"><span class="pre">bc_type=&quot;natural&quot;</span></code>, the extrapolation is linear. This expectation is
+too strong: each boundary condition sets the derivatives at a single
+point, <em>at the boundary</em> only. Extrapolation is done from the first and
+last polynomial pieces, which — for a natural spline — is a cubic with a
+zero second derivative at a given point.</p>
+<p>One other way of seeing why this expectation is too strong is to
+consider a dataset with only three data points, where the spline has two
+polynomial pieces. To extrapolate linearly, this expectation implies that both
+of these pieces are linear. But then, two linear pieces cannot match at a
+middle point with a continuous 2nd derivative! (Unless of course, if all three
+data points actually lie on a single straight line).</p>
+<p>To illustrate the behavior we consider a synthetic dataset and compare
+several boundary conditions:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">CubicSpline</span>
+
+<span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+<span class="n">ys</span> <span class="o">=</span> <span class="p">[</span><span class="mf">4.5</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.3</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.7</span><span class="p">]</span>
+
+<span class="n">notaknot</span> <span class="o">=</span> <span class="n">CubicSpline</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">bc_type</span><span class="o">=</span><span class="s1">&#39;not-a-knot&#39;</span><span class="p">)</span>
+<span class="n">natural</span> <span class="o">=</span> <span class="n">CubicSpline</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">bc_type</span><span class="o">=</span><span class="s1">&#39;natural&#39;</span><span class="p">)</span>
+<span class="n">clamped</span> <span class="o">=</span> <span class="n">CubicSpline</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">bc_type</span><span class="o">=</span><span class="s1">&#39;clamped&#39;</span><span class="p">)</span>
+<span class="n">xnew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">4</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span> <span class="o">+</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">101</span><span class="p">)</span>
+
+<span class="n">splines</span> <span class="o">=</span> <span class="p">[</span><span class="n">notaknot</span><span class="p">,</span> <span class="n">natural</span><span class="p">,</span> <span class="n">clamped</span><span class="p">]</span>
+<span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;not-a-knot&#39;</span><span class="p">,</span> <span class="s1">&#39;natural&#39;</span><span class="p">,</span> <span class="s1">&#39;clamped&#39;</span><span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">spline</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">splines</span><span class="p">,</span> <span class="n">titles</span><span class="p">):</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">spline</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">spline</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">, deriv=</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/extrapolation_examples-2.png" class="plot-directive" src="../../_images/extrapolation_examples-2.png" />
+</figure>
+<p>It is clearly seen that the natural spline does have the zero second
+derivative at the boundaries, but extrapolation is non-linear.
+<code class="docutils literal notranslate"><span class="pre">bc_type=&quot;clamped&quot;</span></code> shows a similar behavior: first derivatives are only
+equal to zero exactly at the boundary. In all cases, extrapolation is done by
+extending the first and last polynomial pieces of the spline, whatever they
+happen to be.</p>
+<p>One possible way to force the extrapolation is to extend the interpolation
+domain to add first and last polynomial pieces which have desired properties.</p>
+<p>Here we use <code class="docutils literal notranslate"><span class="pre">extend</span></code> method of the <a class="reference internal" href="../../reference/generated/scipy.interpolate.CubicSpline.html#scipy.interpolate.CubicSpline" title="scipy.interpolate.CubicSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CubicSpline</span></code></a> superclass,
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.PPoly.html#scipy.interpolate.PPoly" title="scipy.interpolate.PPoly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PPoly</span></code></a>, to add two extra breakpoints and to make sure that the additional
+polynomial pieces maintain the values of the derivatives. Then the
+extrapolation proceeds using these two additional intervals.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">CubicSpline</span>
+
+<span class="k">def</span> <span class="nf">add_boundary_knots</span><span class="p">(</span><span class="n">spline</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add knots infinitesimally to the left and right.</span>
+
+<span class="sd">    Additional intervals are added to have zero 2nd and 3rd derivatives,</span>
+<span class="sd">    and to maintain the first derivative from whatever boundary condition</span>
+<span class="sd">    was selected. The spline is modified in place.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># determine the slope at the left edge</span>
+    <span class="n">leftx</span> <span class="o">=</span> <span class="n">spline</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">lefty</span> <span class="o">=</span> <span class="n">spline</span><span class="p">(</span><span class="n">leftx</span><span class="p">)</span>
+    <span class="n">leftslope</span> <span class="o">=</span> <span class="n">spline</span><span class="p">(</span><span class="n">leftx</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># add a new breakpoint just to the left and use the</span>
+    <span class="c1"># known slope to construct the PPoly coefficients.</span>
+    <span class="n">leftxnext</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nextafter</span><span class="p">(</span><span class="n">leftx</span><span class="p">,</span> <span class="n">leftx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">leftynext</span> <span class="o">=</span> <span class="n">lefty</span> <span class="o">+</span> <span class="n">leftslope</span><span class="o">*</span><span class="p">(</span><span class="n">leftxnext</span> <span class="o">-</span> <span class="n">leftx</span><span class="p">)</span>
+    <span class="n">leftcoeffs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">leftslope</span><span class="p">,</span> <span class="n">leftynext</span><span class="p">])</span>
+    <span class="n">spline</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">leftcoeffs</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">leftxnext</span><span class="p">])</span>
+
+    <span class="c1"># repeat with additional knots to the right</span>
+    <span class="n">rightx</span> <span class="o">=</span> <span class="n">spline</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">righty</span> <span class="o">=</span> <span class="n">spline</span><span class="p">(</span><span class="n">rightx</span><span class="p">)</span>
+    <span class="n">rightslope</span> <span class="o">=</span> <span class="n">spline</span><span class="p">(</span><span class="n">rightx</span><span class="p">,</span><span class="n">nu</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">rightxnext</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nextafter</span><span class="p">(</span><span class="n">rightx</span><span class="p">,</span> <span class="n">rightx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">rightynext</span> <span class="o">=</span> <span class="n">righty</span> <span class="o">+</span> <span class="n">rightslope</span> <span class="o">*</span> <span class="p">(</span><span class="n">rightxnext</span> <span class="o">-</span> <span class="n">rightx</span><span class="p">)</span>
+    <span class="n">rightcoeffs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rightslope</span><span class="p">,</span> <span class="n">rightynext</span><span class="p">])</span>
+    <span class="n">spline</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">rightcoeffs</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">rightxnext</span><span class="p">])</span>
+
+<span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+<span class="n">ys</span> <span class="o">=</span> <span class="p">[</span><span class="mf">4.5</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.3</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.7</span><span class="p">]</span>
+
+<span class="n">notaknot</span> <span class="o">=</span> <span class="n">CubicSpline</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span><span class="n">ys</span><span class="p">,</span> <span class="n">bc_type</span><span class="o">=</span><span class="s1">&#39;not-a-knot&#39;</span><span class="p">)</span>
+<span class="c1"># not-a-knot does not require additional intervals</span>
+
+<span class="n">natural</span> <span class="o">=</span> <span class="n">CubicSpline</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span><span class="n">ys</span><span class="p">,</span> <span class="n">bc_type</span><span class="o">=</span><span class="s1">&#39;natural&#39;</span><span class="p">)</span>
+<span class="c1"># extend the natural natural spline with linear extrapolating knots</span>
+<span class="n">add_boundary_knots</span><span class="p">(</span><span class="n">natural</span><span class="p">)</span>
+
+<span class="n">clamped</span> <span class="o">=</span> <span class="n">CubicSpline</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span><span class="n">ys</span><span class="p">,</span> <span class="n">bc_type</span><span class="o">=</span><span class="s1">&#39;clamped&#39;</span><span class="p">)</span>
+<span class="c1"># extend the clamped spline with constant extrapolating knots</span>
+<span class="n">add_boundary_knots</span><span class="p">(</span><span class="n">clamped</span><span class="p">)</span>
+
+<span class="n">xnew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">5</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span> <span class="o">+</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">201</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
+
+<span class="n">splines</span> <span class="o">=</span> <span class="p">[</span><span class="n">notaknot</span><span class="p">,</span> <span class="n">natural</span><span class="p">,</span> <span class="n">clamped</span><span class="p">]</span>
+<span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;not-a-knot&#39;</span><span class="p">,</span> <span class="s1">&#39;natural&#39;</span><span class="p">,</span> <span class="s1">&#39;clamped&#39;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">spline</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">splines</span><span class="p">,</span> <span class="n">titles</span><span class="p">):</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">spline</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">spline</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">, deriv=</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/extrapolation_examples-3.png" class="plot-directive" src="../../_images/extrapolation_examples-3.png" />
+</figure>
+</section>
+<section id="manually-implement-the-asymptotics">
+<span id="tutorial-extrapolation-asymptotics"></span><h2>Manually implement the asymptotics<a class="headerlink" href="#manually-implement-the-asymptotics" title="Link to this heading">#</a></h2>
+<p>The previous trick of extending the interpolation domain relies on the
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.CubicSpline.extend.html#scipy.interpolate.CubicSpline.extend" title="scipy.interpolate.CubicSpline.extend"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CubicSpline.extend</span></code></a> method. A somewhat more general alternative is to
+implement a wrapper which handles the out-of-bounds behavior explicitly.
+Let us consider a worked example.</p>
+<section id="the-setup">
+<h3>The setup<a class="headerlink" href="#the-setup" title="Link to this heading">#</a></h3>
+<p>Suppose we want to solve at a given value of <span class="math notranslate nohighlight">\(a\)</span> the equation</p>
+<div class="math notranslate nohighlight">
+\[a x = 1/\tan{x}\;.\]</div>
+<p>(One application where these kinds of equations appear is solving for
+energy levels of a quantum particle). For simplicity, let’s only
+consider <span class="math notranslate nohighlight">\(x\in (0, \pi/2)\)</span>.</p>
+<p>Solving this equation <em>once</em> is straightforward:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">brentq</span>
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">*</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="n">brentq</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mf">1e-16</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">a</span><span class="p">,))</span>   <span class="c1"># here we shift the left edge</span>
+                                            <span class="c1"># by a machine epsilon to avoid</span>
+                                            <span class="c1"># a division by zero at x=0</span>
+<span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">101</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">a</span><span class="o">*</span><span class="n">xx</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">xx</span><span class="p">),</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">a</span><span class="o">*</span><span class="n">x0</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="sa">fr</span><span class="s1">&#39;$x_0 = </span><span class="si">{</span><span class="n">x0</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">$&#39;</span><span class="p">,</span>
+               <span class="n">transform</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/extrapolation_examples-4.png" class="plot-directive" src="../../_images/extrapolation_examples-4.png" />
+</figure>
+<p>However, if we need to solve it multiple times (e.g. to find <em>a series</em>
+of roots due to periodicity of the <code class="docutils literal notranslate"><span class="pre">tan</span></code> function), repeated calls to
+<a class="reference internal" href="../../reference/generated/scipy.optimize.brentq.html#scipy.optimize.brentq" title="scipy.optimize.brentq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.brentq</span></code></a> become prohibitively expensive.</p>
+<p>To circumvent this difficulty, we tabulate <span class="math notranslate nohighlight">\(y = ax - 1/\tan{x}\)</span>
+and interpolate it on the tabulated grid. In fact, we will use the <em>inverse</em>
+interpolation: we interpolate the values of <span class="math notranslate nohighlight">\(x\)</span> versus <span class="math notranslate nohighlight">\(у\)</span>.
+This way, solving the original equation becomes simply an evaluation of
+the interpolated function at zero <span class="math notranslate nohighlight">\(y\)</span> argument.</p>
+<p>To improve the interpolation accuracy we will use the knowledge of the
+derivatives of the tabulated function. We will use
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.BPoly.from_derivatives.html#scipy.interpolate.BPoly.from_derivatives" title="scipy.interpolate.BPoly.from_derivatives"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BPoly.from_derivatives</span></code></a> to construct a cubic interpolant
+(equivalently, we could have used <a class="reference internal" href="../../reference/generated/scipy.interpolate.CubicHermiteSpline.html#scipy.interpolate.CubicHermiteSpline" title="scipy.interpolate.CubicHermiteSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CubicHermiteSpline</span></code></a>)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">BPoly</span>
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span><span class="o">*</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">xleft</span><span class="p">,</span> <span class="n">xright</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xleft</span><span class="p">,</span> <span class="n">xright</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">93</span><span class="p">]):</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+    <span class="n">dydx</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mf">1.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>    <span class="c1"># d(ax - 1/tan(x)) / dx</span>
+    <span class="n">dxdy</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">dydx</span>               <span class="c1"># dx/dy = 1 / (dy/dx)</span>
+
+    <span class="n">xdx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">dxdy</span><span class="p">]</span>
+    <span class="n">spl</span> <span class="o">=</span> <span class="n">BPoly</span><span class="o">.</span><span class="n">from_derivatives</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">xdx</span><span class="p">)</span>   <span class="c1"># inverse interpolation</span>
+
+    <span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">xleft</span><span class="p">,</span> <span class="n">a</span><span class="p">),</span> <span class="n">f</span><span class="p">(</span><span class="n">xright</span><span class="p">,</span> <span class="n">a</span><span class="p">),</span> <span class="mi">51</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">yy</span><span class="p">,</span> <span class="n">spl</span><span class="p">(</span><span class="n">yy</span><span class="p">),</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$y$&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$x$&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">rf</span><span class="s1">&#39;$a = </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s1">$&#39;</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">spl</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">,</span> <span class="sa">fr</span><span class="s1">&#39;$x_0 = </span><span class="si">{</span><span class="n">spl</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1">$&#39;</span><span class="p">,</span>
+               <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/extrapolation_examples-5.png" class="plot-directive" src="../../_images/extrapolation_examples-5.png" />
+</figure>
+<p>Note that for <span class="math notranslate nohighlight">\(a=3\)</span>, <code class="docutils literal notranslate"><span class="pre">spl(0)</span></code> agrees with the <code class="docutils literal notranslate"><span class="pre">brentq</span></code> call
+above, while for <span class="math notranslate nohighlight">\(a = 93\)</span>, the difference is substantial. The
+reason the procedure starts failing for large <span class="math notranslate nohighlight">\(a\)</span> is that the
+straight line <span class="math notranslate nohighlight">\(y = ax\)</span> tends towards the vertical axis, and the
+root of the original equation tends towards <span class="math notranslate nohighlight">\(x=0\)</span>. Since we
+tabulated the original function at a finite grid, <code class="docutils literal notranslate"><span class="pre">spl(0)</span></code> involves
+extrapolation for too-large values of <span class="math notranslate nohighlight">\(a\)</span>. Relying on
+extrapolation is prone to losing accuracy and is best avoided.</p>
+</section>
+<section id="use-the-known-asymptotics">
+<h3>Use the known asymptotics<a class="headerlink" href="#use-the-known-asymptotics" title="Link to this heading">#</a></h3>
+<p>Looking at the original equation, we note that for <span class="math notranslate nohighlight">\(x\to 0\)</span>,
+<span class="math notranslate nohighlight">\(\tan(x) = x + O(x^3)\)</span>, and the original equation becomes</p>
+<div class="math notranslate nohighlight">
+\[ax = 1/x  \;,\]</div>
+<p>so that <span class="math notranslate nohighlight">\(x_0 \approx 1/\sqrt{a}\)</span> for <span class="math notranslate nohighlight">\(a \gg 1\)</span>.</p>
+<p>We will use this to cook up a class which switches from interpolation to
+using this known asymptotic behavior for out-of-range data. A bare-bones
+implementation may look like this</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">RootWithAsymptotics</span><span class="p">:</span>
+   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+
+       <span class="c1"># construct the interpolant</span>
+       <span class="n">xleft</span><span class="p">,</span> <span class="n">xright</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span>
+       <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xleft</span><span class="p">,</span> <span class="n">xright</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+
+       <span class="n">y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+       <span class="n">dydx</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mf">1.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>    <span class="c1"># d(ax - 1/tan(x)) / dx</span>
+       <span class="n">dxdy</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">dydx</span>               <span class="c1"># dx/dy = 1 / (dy/dx)</span>
+
+       <span class="c1"># inverse interpolation</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">spl</span> <span class="o">=</span> <span class="n">BPoly</span><span class="o">.</span><span class="n">from_derivatives</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">dxdy</span><span class="p">])</span>
+       <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span>
+
+   <span class="k">def</span> <span class="nf">root</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spl</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+       <span class="n">asympt</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
+       <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">spl</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">asympt</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">asympt</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And then</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">RootWithAsymptotics</span><span class="p">(</span><span class="mi">93</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">root</span><span class="p">()</span>
+<span class="go">array(0.10369517)</span>
+</pre></div>
+</div>
+<p>which differs from the extrapolated result and agrees with the <code class="docutils literal notranslate"><span class="pre">brentq</span></code> call.</p>
+<p>Note that this implementation is intentionally pared down. From the API
+perspective, you may want to instead implement the <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method
+so that the full dependence of <code class="docutils literal notranslate"><span class="pre">x</span></code> on <code class="docutils literal notranslate"><span class="pre">y</span></code> is available. From the
+numerical perspective, more work is needed to make sure that the switch
+between interpolation and asymptotics occurs deep enough into the
+asymptotic regime, so that the resulting function is smooth enough at
+the switch-over point.</p>
+<p>Also in this example we artificially limited the problem to only
+consider a single periodicity interval of the <code class="docutils literal notranslate"><span class="pre">tan</span></code> function, and only
+dealt with <span class="math notranslate nohighlight">\(a &gt; 0\)</span>. For negative values of <span class="math notranslate nohighlight">\(a\)</span>, we would need
+to implement the other asymptotics, for <span class="math notranslate nohighlight">\(x\to \pi\)</span>.</p>
+<p>However the basic idea is the same.</p>
+</section>
+</section>
+<section id="extrapolation-in-d-1">
+<span id="tutorial-extrapolation-ct-nn"></span><h2>Extrapolation in <code class="docutils literal notranslate"><span class="pre">D</span> <span class="pre">&gt;</span> <span class="pre">1</span></code><a class="headerlink" href="#extrapolation-in-d-1" title="Link to this heading">#</a></h2>
+<p>The basic idea of implementing extrapolation manually in a wrapper class
+or function can be easily generalized to higher dimensions. As an
+example, we consider a C1-smooth interpolation problem of 2D data using
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.CloughTocher2DInterpolator.html#scipy.interpolate.CloughTocher2DInterpolator" title="scipy.interpolate.CloughTocher2DInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CloughTocher2DInterpolator</span></code></a>. By default, it fills the out of bounds values
+with <code class="docutils literal notranslate"><span class="pre">nan</span></code>s, and we want to instead use for each query
+point the value of its nearest neighbor.</p>
+<p>Since <a class="reference internal" href="../../reference/generated/scipy.interpolate.CloughTocher2DInterpolator.html#scipy.interpolate.CloughTocher2DInterpolator" title="scipy.interpolate.CloughTocher2DInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CloughTocher2DInterpolator</span></code></a> accepts either 2D data or a Delaunay
+triangulation of the data points, the efficient way of finding nearest
+neighbors of query points would be to construct the triangulation (using
+<a class="reference internal" href="../../reference/spatial.html#module-scipy.spatial" title="scipy.spatial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code></a> tools) and use it to find nearest neighbors on the convex hull
+of the data.</p>
+<p>We will instead use a simpler, naive method and rely on looping over the
+whole dataset using NumPy broadcasting.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">CloughTocher2DInterpolator</span> <span class="k">as</span> <span class="n">CT</span>
+
+<span class="k">def</span> <span class="nf">my_CT</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;CT interpolator + nearest-neighbor extrapolation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    xy : ndarray, shape (npoints, ndim)</span>
+<span class="sd">        Coordinates of data points</span>
+<span class="sd">    z : ndarray, shape (npoints)</span>
+<span class="sd">        Values at data points</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    func : callable</span>
+<span class="sd">        A callable object which mirrors the CT behavior,</span>
+<span class="sd">        with an additional neareast-neighbor extrapolation</span>
+<span class="sd">        outside of the data range.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">CT</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+
+    <span class="c1"># this inner function will be returned to a user</span>
+    <span class="k">def</span> <span class="nf">new_f</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">):</span>
+        <span class="c1"># evaluate the CT interpolator. Out-of-bounds values are nan.</span>
+        <span class="n">zz</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">)</span>
+        <span class="n">nans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">zz</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">nans</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="c1"># for each nan point, find its nearest neighbor</span>
+            <span class="n">inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">xx</span><span class="p">[</span><span class="n">nans</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span>
+                <span class="p">(</span><span class="n">y</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">yy</span><span class="p">[</span><span class="n">nans</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span>
+                <span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="c1"># ... and use its value</span>
+            <span class="n">zz</span><span class="p">[</span><span class="n">nans</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">inds</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">zz</span>
+
+    <span class="k">return</span> <span class="n">new_f</span>
+
+<span class="c1"># Now illustrate the difference between the original ``CT`` interpolant</span>
+<span class="c1"># and ``my_CT`` on a small example:</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+
+<span class="n">xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span>
+<span class="n">lut</span> <span class="o">=</span> <span class="n">CT</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+<span class="n">lut2</span> <span class="o">=</span> <span class="n">my_CT</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">71</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">71</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot_wireframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">lut</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;CT&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot_wireframe</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">lut2</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">,</span>
+                  <span class="n">cstride</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">rstride</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;CT + n.n.&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span>  <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">48</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/extrapolation_examples-6.png" class="plot-directive" src="../../_images/extrapolation_examples-6.png" />
+</figure>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="ND_unstructured.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Scattered data interpolation (<code class="xref py py-func docutils literal notranslate"><span class="pre">griddata</span></code>)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="interp_transition_guide.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Interpolate transition guide</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interp1d-replicate-numpy-interp-left-and-right-fill-values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interp1d</span></code> : replicate <code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.interp</span></code> left and right fill values</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cubicspline-extend-the-boundary-conditions">CubicSpline extend the boundary conditions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manually-implement-the-asymptotics">Manually implement the asymptotics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-setup">The setup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-the-known-asymptotics">Use the known asymptotics</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#extrapolation-in-d-1">Extrapolation in <code class="docutils literal notranslate"><span class="pre">D</span> <span class="pre">&gt;</span> <span class="pre">1</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

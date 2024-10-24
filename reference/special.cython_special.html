@@ -1,0 +1,1890 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Cython API for special functions &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/special.cython_special';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Cython API for special functions</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="cython-api-for-special-functions">
+<h1>Cython API for special functions<a class="headerlink" href="#cython-api-for-special-functions" title="Link to this heading">#</a></h1>
+<p>Scalar, typed versions of many of the functions in <code class="docutils literal notranslate"><span class="pre">scipy.special</span></code>
+can be accessed directly from Cython; the complete list is given
+below. Functions are overloaded using Cython fused types so their
+names match their Python counterpart. The module follows the following
+conventions:</p>
+<ul class="simple">
+<li><p>If a function’s Python counterpart returns multiple values, then the
+function returns its outputs via pointers in the final arguments.</p></li>
+<li><p>If a function’s Python counterpart returns a single value, then the
+function’s output is returned directly.</p></li>
+</ul>
+<p>The module is usable from Cython via:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="k">cimport</span> <span class="nn">scipy.special.cython_special</span>
+</pre></div>
+</div>
+<section id="error-handling">
+<h2>Error handling<a class="headerlink" href="#error-handling" title="Link to this heading">#</a></h2>
+<p>Functions can indicate an error by returning <code class="docutils literal notranslate"><span class="pre">nan</span></code>; however they
+cannot emit warnings like their counterparts in <code class="docutils literal notranslate"><span class="pre">scipy.special</span></code>.</p>
+</section>
+<section id="available-functions">
+<h2>Available functions<a class="headerlink" href="#available-functions" title="Link to this heading">#</a></h2>
+<ul>
+<li><p><a class="reference internal" href="generated/scipy.special.voigt_profile.html#scipy.special.voigt_profile" title="scipy.special.voigt_profile"><code class="xref py py-func docutils literal notranslate"><span class="pre">voigt_profile</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">voigt_profile</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.agm.html#scipy.special.agm" title="scipy.special.agm"><code class="xref py py-func docutils literal notranslate"><span class="pre">agm</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">agm</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.airy.html#scipy.special.airy" title="scipy.special.airy"><code class="xref py py-func docutils literal notranslate"><span class="pre">airy</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">airy</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+<span class="n">void</span> <span class="n">airy</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.airye.html#scipy.special.airye" title="scipy.special.airye"><code class="xref py py-func docutils literal notranslate"><span class="pre">airye</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">airye</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">)</span>
+<span class="n">void</span> <span class="n">airye</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.bdtr.html#scipy.special.bdtr" title="scipy.special.bdtr"><code class="xref py py-func docutils literal notranslate"><span class="pre">bdtr</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">bdtr</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">bdtr</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="nb">long</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.bdtrc.html#scipy.special.bdtrc" title="scipy.special.bdtrc"><code class="xref py py-func docutils literal notranslate"><span class="pre">bdtrc</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">bdtrc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">bdtrc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="nb">long</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.bdtri.html#scipy.special.bdtri" title="scipy.special.bdtri"><code class="xref py py-func docutils literal notranslate"><span class="pre">bdtri</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">bdtri</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">bdtri</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="nb">long</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.bdtrik.html#scipy.special.bdtrik" title="scipy.special.bdtrik"><code class="xref py py-func docutils literal notranslate"><span class="pre">bdtrik</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">bdtrik</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.bdtrin.html#scipy.special.bdtrin" title="scipy.special.bdtrin"><code class="xref py py-func docutils literal notranslate"><span class="pre">bdtrin</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">bdtrin</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.bei.html#scipy.special.bei" title="scipy.special.bei"><code class="xref py py-func docutils literal notranslate"><span class="pre">bei</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">bei</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.beip.html#scipy.special.beip" title="scipy.special.beip"><code class="xref py py-func docutils literal notranslate"><span class="pre">beip</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">beip</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.ber.html#scipy.special.ber" title="scipy.special.ber"><code class="xref py py-func docutils literal notranslate"><span class="pre">ber</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">ber</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.berp.html#scipy.special.berp" title="scipy.special.berp"><code class="xref py py-func docutils literal notranslate"><span class="pre">berp</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">berp</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.besselpoly.html#scipy.special.besselpoly" title="scipy.special.besselpoly"><code class="xref py py-func docutils literal notranslate"><span class="pre">besselpoly</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">besselpoly</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.beta.html#scipy.special.beta" title="scipy.special.beta"><code class="xref py py-func docutils literal notranslate"><span class="pre">beta</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">beta</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.betainc.html#scipy.special.betainc" title="scipy.special.betainc"><code class="xref py py-func docutils literal notranslate"><span class="pre">betainc</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="nb">float</span> <span class="n">betainc</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">betainc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.betaincc.html#scipy.special.betaincc" title="scipy.special.betaincc"><code class="xref py py-func docutils literal notranslate"><span class="pre">betaincc</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="nb">float</span> <span class="n">betaincc</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">betaincc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.betaincinv.html#scipy.special.betaincinv" title="scipy.special.betaincinv"><code class="xref py py-func docutils literal notranslate"><span class="pre">betaincinv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="nb">float</span> <span class="n">betaincinv</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">betaincinv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.betainccinv.html#scipy.special.betainccinv" title="scipy.special.betainccinv"><code class="xref py py-func docutils literal notranslate"><span class="pre">betainccinv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="nb">float</span> <span class="n">betainccinv</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">betainccinv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.betaln.html#scipy.special.betaln" title="scipy.special.betaln"><code class="xref py py-func docutils literal notranslate"><span class="pre">betaln</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">betaln</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.binom.html#scipy.special.binom" title="scipy.special.binom"><code class="xref py py-func docutils literal notranslate"><span class="pre">binom</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">binom</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.boxcox.html#scipy.special.boxcox" title="scipy.special.boxcox"><code class="xref py py-func docutils literal notranslate"><span class="pre">boxcox</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">boxcox</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.boxcox1p.html#scipy.special.boxcox1p" title="scipy.special.boxcox1p"><code class="xref py py-func docutils literal notranslate"><span class="pre">boxcox1p</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">boxcox1p</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.btdtr.html#scipy.special.btdtr" title="scipy.special.btdtr"><code class="xref py py-func docutils literal notranslate"><span class="pre">btdtr</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">btdtr</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.btdtri.html#scipy.special.btdtri" title="scipy.special.btdtri"><code class="xref py py-func docutils literal notranslate"><span class="pre">btdtri</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">btdtri</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.btdtria.html#scipy.special.btdtria" title="scipy.special.btdtria"><code class="xref py py-func docutils literal notranslate"><span class="pre">btdtria</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">btdtria</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.btdtrib.html#scipy.special.btdtrib" title="scipy.special.btdtrib"><code class="xref py py-func docutils literal notranslate"><span class="pre">btdtrib</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">btdtrib</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.cbrt.html#scipy.special.cbrt" title="scipy.special.cbrt"><code class="xref py py-func docutils literal notranslate"><span class="pre">cbrt</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">cbrt</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.chdtr.html#scipy.special.chdtr" title="scipy.special.chdtr"><code class="xref py py-func docutils literal notranslate"><span class="pre">chdtr</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">chdtr</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.chdtrc.html#scipy.special.chdtrc" title="scipy.special.chdtrc"><code class="xref py py-func docutils literal notranslate"><span class="pre">chdtrc</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">chdtrc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.chdtri.html#scipy.special.chdtri" title="scipy.special.chdtri"><code class="xref py py-func docutils literal notranslate"><span class="pre">chdtri</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">chdtri</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.chdtriv.html#scipy.special.chdtriv" title="scipy.special.chdtriv"><code class="xref py py-func docutils literal notranslate"><span class="pre">chdtriv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">chdtriv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.chndtr.html#scipy.special.chndtr" title="scipy.special.chndtr"><code class="xref py py-func docutils literal notranslate"><span class="pre">chndtr</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">chndtr</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.chndtridf.html#scipy.special.chndtridf" title="scipy.special.chndtridf"><code class="xref py py-func docutils literal notranslate"><span class="pre">chndtridf</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">chndtridf</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.chndtrinc.html#scipy.special.chndtrinc" title="scipy.special.chndtrinc"><code class="xref py py-func docutils literal notranslate"><span class="pre">chndtrinc</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">chndtrinc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.chndtrix.html#scipy.special.chndtrix" title="scipy.special.chndtrix"><code class="xref py py-func docutils literal notranslate"><span class="pre">chndtrix</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">chndtrix</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.cosdg.html#scipy.special.cosdg" title="scipy.special.cosdg"><code class="xref py py-func docutils literal notranslate"><span class="pre">cosdg</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">cosdg</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.cosm1.html#scipy.special.cosm1" title="scipy.special.cosm1"><code class="xref py py-func docutils literal notranslate"><span class="pre">cosm1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">cosm1</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.cotdg.html#scipy.special.cotdg" title="scipy.special.cotdg"><code class="xref py py-func docutils literal notranslate"><span class="pre">cotdg</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">cotdg</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.dawsn.html#scipy.special.dawsn" title="scipy.special.dawsn"><code class="xref py py-func docutils literal notranslate"><span class="pre">dawsn</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">dawsn</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">dawsn</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.ellipe.html#scipy.special.ellipe" title="scipy.special.ellipe"><code class="xref py py-func docutils literal notranslate"><span class="pre">ellipe</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">ellipe</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.ellipeinc.html#scipy.special.ellipeinc" title="scipy.special.ellipeinc"><code class="xref py py-func docutils literal notranslate"><span class="pre">ellipeinc</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">ellipeinc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.ellipj.html#scipy.special.ellipj" title="scipy.special.ellipj"><code class="xref py py-func docutils literal notranslate"><span class="pre">ellipj</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">ellipj</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.ellipkinc.html#scipy.special.ellipkinc" title="scipy.special.ellipkinc"><code class="xref py py-func docutils literal notranslate"><span class="pre">ellipkinc</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">ellipkinc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.ellipkm1.html#scipy.special.ellipkm1" title="scipy.special.ellipkm1"><code class="xref py py-func docutils literal notranslate"><span class="pre">ellipkm1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">ellipkm1</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.ellipk.html#scipy.special.ellipk" title="scipy.special.ellipk"><code class="xref py py-func docutils literal notranslate"><span class="pre">ellipk</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">ellipk</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.elliprc.html#scipy.special.elliprc" title="scipy.special.elliprc"><code class="xref py py-func docutils literal notranslate"><span class="pre">elliprc</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">elliprc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">elliprc</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.elliprd.html#scipy.special.elliprd" title="scipy.special.elliprd"><code class="xref py py-func docutils literal notranslate"><span class="pre">elliprd</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">elliprd</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">elliprd</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.elliprf.html#scipy.special.elliprf" title="scipy.special.elliprf"><code class="xref py py-func docutils literal notranslate"><span class="pre">elliprf</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">elliprf</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">elliprf</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.elliprg.html#scipy.special.elliprg" title="scipy.special.elliprg"><code class="xref py py-func docutils literal notranslate"><span class="pre">elliprg</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">elliprg</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">elliprg</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.elliprj.html#scipy.special.elliprj" title="scipy.special.elliprj"><code class="xref py py-func docutils literal notranslate"><span class="pre">elliprj</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">elliprj</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">elliprj</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.entr.html#scipy.special.entr" title="scipy.special.entr"><code class="xref py py-func docutils literal notranslate"><span class="pre">entr</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">entr</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.erf.html#scipy.special.erf" title="scipy.special.erf"><code class="xref py py-func docutils literal notranslate"><span class="pre">erf</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">erf</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">erf</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.erfc.html#scipy.special.erfc" title="scipy.special.erfc"><code class="xref py py-func docutils literal notranslate"><span class="pre">erfc</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">erfc</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">erfc</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.erfcx.html#scipy.special.erfcx" title="scipy.special.erfcx"><code class="xref py py-func docutils literal notranslate"><span class="pre">erfcx</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">erfcx</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">erfcx</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.erfi.html#scipy.special.erfi" title="scipy.special.erfi"><code class="xref py py-func docutils literal notranslate"><span class="pre">erfi</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">erfi</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">erfi</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.erfinv.html#scipy.special.erfinv" title="scipy.special.erfinv"><code class="xref py py-func docutils literal notranslate"><span class="pre">erfinv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="nb">float</span> <span class="n">erfinv</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">erfinv</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.erfcinv.html#scipy.special.erfcinv" title="scipy.special.erfcinv"><code class="xref py py-func docutils literal notranslate"><span class="pre">erfcinv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">erfcinv</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.eval_chebyc.html#scipy.special.eval_chebyc" title="scipy.special.eval_chebyc"><code class="xref py py-func docutils literal notranslate"><span class="pre">eval_chebyc</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">eval_chebyc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_chebyc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_chebyc</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.eval_chebys.html#scipy.special.eval_chebys" title="scipy.special.eval_chebys"><code class="xref py py-func docutils literal notranslate"><span class="pre">eval_chebys</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">eval_chebys</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_chebys</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_chebys</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.eval_chebyt.html#scipy.special.eval_chebyt" title="scipy.special.eval_chebyt"><code class="xref py py-func docutils literal notranslate"><span class="pre">eval_chebyt</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">eval_chebyt</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_chebyt</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_chebyt</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.eval_chebyu.html#scipy.special.eval_chebyu" title="scipy.special.eval_chebyu"><code class="xref py py-func docutils literal notranslate"><span class="pre">eval_chebyu</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">eval_chebyu</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_chebyu</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_chebyu</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.eval_gegenbauer.html#scipy.special.eval_gegenbauer" title="scipy.special.eval_gegenbauer"><code class="xref py py-func docutils literal notranslate"><span class="pre">eval_gegenbauer</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">eval_gegenbauer</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_gegenbauer</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_gegenbauer</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.eval_genlaguerre.html#scipy.special.eval_genlaguerre" title="scipy.special.eval_genlaguerre"><code class="xref py py-func docutils literal notranslate"><span class="pre">eval_genlaguerre</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">eval_genlaguerre</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_genlaguerre</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_genlaguerre</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.eval_hermite.html#scipy.special.eval_hermite" title="scipy.special.eval_hermite"><code class="xref py py-func docutils literal notranslate"><span class="pre">eval_hermite</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">eval_hermite</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.eval_hermitenorm.html#scipy.special.eval_hermitenorm" title="scipy.special.eval_hermitenorm"><code class="xref py py-func docutils literal notranslate"><span class="pre">eval_hermitenorm</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">eval_hermitenorm</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.eval_jacobi.html#scipy.special.eval_jacobi" title="scipy.special.eval_jacobi"><code class="xref py py-func docutils literal notranslate"><span class="pre">eval_jacobi</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">eval_jacobi</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_jacobi</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_jacobi</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.eval_laguerre.html#scipy.special.eval_laguerre" title="scipy.special.eval_laguerre"><code class="xref py py-func docutils literal notranslate"><span class="pre">eval_laguerre</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">eval_laguerre</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_laguerre</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_laguerre</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.eval_legendre.html#scipy.special.eval_legendre" title="scipy.special.eval_legendre"><code class="xref py py-func docutils literal notranslate"><span class="pre">eval_legendre</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">eval_legendre</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_legendre</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_legendre</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.eval_sh_chebyt.html#scipy.special.eval_sh_chebyt" title="scipy.special.eval_sh_chebyt"><code class="xref py py-func docutils literal notranslate"><span class="pre">eval_sh_chebyt</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">eval_sh_chebyt</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_sh_chebyt</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_sh_chebyt</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.eval_sh_chebyu.html#scipy.special.eval_sh_chebyu" title="scipy.special.eval_sh_chebyu"><code class="xref py py-func docutils literal notranslate"><span class="pre">eval_sh_chebyu</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">eval_sh_chebyu</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_sh_chebyu</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_sh_chebyu</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.eval_sh_jacobi.html#scipy.special.eval_sh_jacobi" title="scipy.special.eval_sh_jacobi"><code class="xref py py-func docutils literal notranslate"><span class="pre">eval_sh_jacobi</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">eval_sh_jacobi</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_sh_jacobi</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_sh_jacobi</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.eval_sh_legendre.html#scipy.special.eval_sh_legendre" title="scipy.special.eval_sh_legendre"><code class="xref py py-func docutils literal notranslate"><span class="pre">eval_sh_legendre</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">eval_sh_legendre</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_sh_legendre</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">eval_sh_legendre</span><span class="p">(</span><span class="n">Py_size_t</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.exp1.html#scipy.special.exp1" title="scipy.special.exp1"><code class="xref py py-func docutils literal notranslate"><span class="pre">exp1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">exp1</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">exp1</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.exp10.html#scipy.special.exp10" title="scipy.special.exp10"><code class="xref py py-func docutils literal notranslate"><span class="pre">exp10</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">exp10</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.exp2.html#scipy.special.exp2" title="scipy.special.exp2"><code class="xref py py-func docutils literal notranslate"><span class="pre">exp2</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">exp2</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.expi.html#scipy.special.expi" title="scipy.special.expi"><code class="xref py py-func docutils literal notranslate"><span class="pre">expi</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">expi</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">expi</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.expit.html#scipy.special.expit" title="scipy.special.expit"><code class="xref py py-func docutils literal notranslate"><span class="pre">expit</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">expit</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+<span class="nb">float</span> <span class="n">expit</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="nb">long</span> <span class="n">double</span> <span class="n">expit</span><span class="p">(</span><span class="nb">long</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.expm1.html#scipy.special.expm1" title="scipy.special.expm1"><code class="xref py py-func docutils literal notranslate"><span class="pre">expm1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">expm1</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">expm1</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.expn.html#scipy.special.expn" title="scipy.special.expn"><code class="xref py py-func docutils literal notranslate"><span class="pre">expn</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">expn</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">expn</span><span class="p">(</span><span class="nb">long</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.exprel.html#scipy.special.exprel" title="scipy.special.exprel"><code class="xref py py-func docutils literal notranslate"><span class="pre">exprel</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">exprel</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.fdtr.html#scipy.special.fdtr" title="scipy.special.fdtr"><code class="xref py py-func docutils literal notranslate"><span class="pre">fdtr</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">fdtr</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.fdtrc.html#scipy.special.fdtrc" title="scipy.special.fdtrc"><code class="xref py py-func docutils literal notranslate"><span class="pre">fdtrc</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">fdtrc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.fdtri.html#scipy.special.fdtri" title="scipy.special.fdtri"><code class="xref py py-func docutils literal notranslate"><span class="pre">fdtri</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">fdtri</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.fdtridfd.html#scipy.special.fdtridfd" title="scipy.special.fdtridfd"><code class="xref py py-func docutils literal notranslate"><span class="pre">fdtridfd</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">fdtridfd</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.fresnel.html#scipy.special.fresnel" title="scipy.special.fresnel"><code class="xref py py-func docutils literal notranslate"><span class="pre">fresnel</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">fresnel</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+<span class="n">void</span> <span class="n">fresnel</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.gamma.html#scipy.special.gamma" title="scipy.special.gamma"><code class="xref py py-func docutils literal notranslate"><span class="pre">gamma</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">gamma</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">gamma</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.gammainc.html#scipy.special.gammainc" title="scipy.special.gammainc"><code class="xref py py-func docutils literal notranslate"><span class="pre">gammainc</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">gammainc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.gammaincc.html#scipy.special.gammaincc" title="scipy.special.gammaincc"><code class="xref py py-func docutils literal notranslate"><span class="pre">gammaincc</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">gammaincc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.gammainccinv.html#scipy.special.gammainccinv" title="scipy.special.gammainccinv"><code class="xref py py-func docutils literal notranslate"><span class="pre">gammainccinv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">gammainccinv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.gammaincinv.html#scipy.special.gammaincinv" title="scipy.special.gammaincinv"><code class="xref py py-func docutils literal notranslate"><span class="pre">gammaincinv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">gammaincinv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.gammaln.html#scipy.special.gammaln" title="scipy.special.gammaln"><code class="xref py py-func docutils literal notranslate"><span class="pre">gammaln</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">gammaln</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.gammasgn.html#scipy.special.gammasgn" title="scipy.special.gammasgn"><code class="xref py py-func docutils literal notranslate"><span class="pre">gammasgn</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">gammasgn</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.gdtr.html#scipy.special.gdtr" title="scipy.special.gdtr"><code class="xref py py-func docutils literal notranslate"><span class="pre">gdtr</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">gdtr</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.gdtrc.html#scipy.special.gdtrc" title="scipy.special.gdtrc"><code class="xref py py-func docutils literal notranslate"><span class="pre">gdtrc</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">gdtrc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.gdtria.html#scipy.special.gdtria" title="scipy.special.gdtria"><code class="xref py py-func docutils literal notranslate"><span class="pre">gdtria</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">gdtria</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.gdtrib.html#scipy.special.gdtrib" title="scipy.special.gdtrib"><code class="xref py py-func docutils literal notranslate"><span class="pre">gdtrib</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">gdtrib</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.gdtrix.html#scipy.special.gdtrix" title="scipy.special.gdtrix"><code class="xref py py-func docutils literal notranslate"><span class="pre">gdtrix</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">gdtrix</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.hankel1.html#scipy.special.hankel1" title="scipy.special.hankel1"><code class="xref py py-func docutils literal notranslate"><span class="pre">hankel1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">hankel1</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.hankel1e.html#scipy.special.hankel1e" title="scipy.special.hankel1e"><code class="xref py py-func docutils literal notranslate"><span class="pre">hankel1e</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">hankel1e</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.hankel2.html#scipy.special.hankel2" title="scipy.special.hankel2"><code class="xref py py-func docutils literal notranslate"><span class="pre">hankel2</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">hankel2</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.hankel2e.html#scipy.special.hankel2e" title="scipy.special.hankel2e"><code class="xref py py-func docutils literal notranslate"><span class="pre">hankel2e</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">hankel2e</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.huber.html#scipy.special.huber" title="scipy.special.huber"><code class="xref py py-func docutils literal notranslate"><span class="pre">huber</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">huber</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.hyp0f1.html#scipy.special.hyp0f1" title="scipy.special.hyp0f1"><code class="xref py py-func docutils literal notranslate"><span class="pre">hyp0f1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">hyp0f1</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">hyp0f1</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.hyp1f1.html#scipy.special.hyp1f1" title="scipy.special.hyp1f1"><code class="xref py py-func docutils literal notranslate"><span class="pre">hyp1f1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">hyp1f1</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">hyp1f1</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.hyp2f1.html#scipy.special.hyp2f1" title="scipy.special.hyp2f1"><code class="xref py py-func docutils literal notranslate"><span class="pre">hyp2f1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">hyp2f1</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">hyp2f1</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.hyperu.html#scipy.special.hyperu" title="scipy.special.hyperu"><code class="xref py py-func docutils literal notranslate"><span class="pre">hyperu</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">hyperu</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.i0.html#scipy.special.i0" title="scipy.special.i0"><code class="xref py py-func docutils literal notranslate"><span class="pre">i0</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">i0</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.i0e.html#scipy.special.i0e" title="scipy.special.i0e"><code class="xref py py-func docutils literal notranslate"><span class="pre">i0e</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">i0e</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.i1.html#scipy.special.i1" title="scipy.special.i1"><code class="xref py py-func docutils literal notranslate"><span class="pre">i1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">i1</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.i1e.html#scipy.special.i1e" title="scipy.special.i1e"><code class="xref py py-func docutils literal notranslate"><span class="pre">i1e</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">i1e</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.inv_boxcox.html#scipy.special.inv_boxcox" title="scipy.special.inv_boxcox"><code class="xref py py-func docutils literal notranslate"><span class="pre">inv_boxcox</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">inv_boxcox</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.inv_boxcox1p.html#scipy.special.inv_boxcox1p" title="scipy.special.inv_boxcox1p"><code class="xref py py-func docutils literal notranslate"><span class="pre">inv_boxcox1p</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">inv_boxcox1p</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.it2i0k0.html#scipy.special.it2i0k0" title="scipy.special.it2i0k0"><code class="xref py py-func docutils literal notranslate"><span class="pre">it2i0k0</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">it2i0k0</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.it2j0y0.html#scipy.special.it2j0y0" title="scipy.special.it2j0y0"><code class="xref py py-func docutils literal notranslate"><span class="pre">it2j0y0</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">it2j0y0</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.it2struve0.html#scipy.special.it2struve0" title="scipy.special.it2struve0"><code class="xref py py-func docutils literal notranslate"><span class="pre">it2struve0</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">it2struve0</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.itairy.html#scipy.special.itairy" title="scipy.special.itairy"><code class="xref py py-func docutils literal notranslate"><span class="pre">itairy</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">itairy</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.iti0k0.html#scipy.special.iti0k0" title="scipy.special.iti0k0"><code class="xref py py-func docutils literal notranslate"><span class="pre">iti0k0</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">iti0k0</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.itj0y0.html#scipy.special.itj0y0" title="scipy.special.itj0y0"><code class="xref py py-func docutils literal notranslate"><span class="pre">itj0y0</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">itj0y0</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.itmodstruve0.html#scipy.special.itmodstruve0" title="scipy.special.itmodstruve0"><code class="xref py py-func docutils literal notranslate"><span class="pre">itmodstruve0</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">itmodstruve0</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.itstruve0.html#scipy.special.itstruve0" title="scipy.special.itstruve0"><code class="xref py py-func docutils literal notranslate"><span class="pre">itstruve0</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">itstruve0</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.iv.html#scipy.special.iv" title="scipy.special.iv"><code class="xref py py-func docutils literal notranslate"><span class="pre">iv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">iv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">iv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.ive.html#scipy.special.ive" title="scipy.special.ive"><code class="xref py py-func docutils literal notranslate"><span class="pre">ive</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">ive</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">ive</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.j0.html#scipy.special.j0" title="scipy.special.j0"><code class="xref py py-func docutils literal notranslate"><span class="pre">j0</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">j0</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.j1.html#scipy.special.j1" title="scipy.special.j1"><code class="xref py py-func docutils literal notranslate"><span class="pre">j1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">j1</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.jv.html#scipy.special.jv" title="scipy.special.jv"><code class="xref py py-func docutils literal notranslate"><span class="pre">jv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">jv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">jv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.jve.html#scipy.special.jve" title="scipy.special.jve"><code class="xref py py-func docutils literal notranslate"><span class="pre">jve</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">jve</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">jve</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.k0.html#scipy.special.k0" title="scipy.special.k0"><code class="xref py py-func docutils literal notranslate"><span class="pre">k0</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">k0</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.k0e.html#scipy.special.k0e" title="scipy.special.k0e"><code class="xref py py-func docutils literal notranslate"><span class="pre">k0e</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">k0e</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.k1.html#scipy.special.k1" title="scipy.special.k1"><code class="xref py py-func docutils literal notranslate"><span class="pre">k1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">k1</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.k1e.html#scipy.special.k1e" title="scipy.special.k1e"><code class="xref py py-func docutils literal notranslate"><span class="pre">k1e</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">k1e</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.kei.html#scipy.special.kei" title="scipy.special.kei"><code class="xref py py-func docutils literal notranslate"><span class="pre">kei</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">kei</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.keip.html#scipy.special.keip" title="scipy.special.keip"><code class="xref py py-func docutils literal notranslate"><span class="pre">keip</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">keip</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.kelvin.html#scipy.special.kelvin" title="scipy.special.kelvin"><code class="xref py py-func docutils literal notranslate"><span class="pre">kelvin</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">kelvin</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.ker.html#scipy.special.ker" title="scipy.special.ker"><code class="xref py py-func docutils literal notranslate"><span class="pre">ker</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">ker</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.kerp.html#scipy.special.kerp" title="scipy.special.kerp"><code class="xref py py-func docutils literal notranslate"><span class="pre">kerp</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">kerp</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.kl_div.html#scipy.special.kl_div" title="scipy.special.kl_div"><code class="xref py py-func docutils literal notranslate"><span class="pre">kl_div</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">kl_div</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.kn.html#scipy.special.kn" title="scipy.special.kn"><code class="xref py py-func docutils literal notranslate"><span class="pre">kn</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">kn</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">kn</span><span class="p">(</span><span class="nb">long</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.kolmogi.html#scipy.special.kolmogi" title="scipy.special.kolmogi"><code class="xref py py-func docutils literal notranslate"><span class="pre">kolmogi</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">kolmogi</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.kolmogorov.html#scipy.special.kolmogorov" title="scipy.special.kolmogorov"><code class="xref py py-func docutils literal notranslate"><span class="pre">kolmogorov</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">kolmogorov</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.kv.html#scipy.special.kv" title="scipy.special.kv"><code class="xref py py-func docutils literal notranslate"><span class="pre">kv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">kv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">kv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.kve.html#scipy.special.kve" title="scipy.special.kve"><code class="xref py py-func docutils literal notranslate"><span class="pre">kve</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">kve</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">kve</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.log1p.html#scipy.special.log1p" title="scipy.special.log1p"><code class="xref py py-func docutils literal notranslate"><span class="pre">log1p</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">log1p</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">log1p</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.log_expit.html#scipy.special.log_expit" title="scipy.special.log_expit"><code class="xref py py-func docutils literal notranslate"><span class="pre">log_expit</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">log_expit</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+<span class="nb">float</span> <span class="n">log_expit</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="nb">long</span> <span class="n">double</span> <span class="n">log_expit</span><span class="p">(</span><span class="nb">long</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.log_ndtr.html#scipy.special.log_ndtr" title="scipy.special.log_ndtr"><code class="xref py py-func docutils literal notranslate"><span class="pre">log_ndtr</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">log_ndtr</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">log_ndtr</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.loggamma.html#scipy.special.loggamma" title="scipy.special.loggamma"><code class="xref py py-func docutils literal notranslate"><span class="pre">loggamma</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">loggamma</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">loggamma</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.logit.html#scipy.special.logit" title="scipy.special.logit"><code class="xref py py-func docutils literal notranslate"><span class="pre">logit</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">logit</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+<span class="nb">float</span> <span class="n">logit</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="nb">long</span> <span class="n">double</span> <span class="n">logit</span><span class="p">(</span><span class="nb">long</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.lpmv.html#scipy.special.lpmv" title="scipy.special.lpmv"><code class="xref py py-func docutils literal notranslate"><span class="pre">lpmv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">lpmv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.mathieu_a.html#scipy.special.mathieu_a" title="scipy.special.mathieu_a"><code class="xref py py-func docutils literal notranslate"><span class="pre">mathieu_a</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">mathieu_a</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.mathieu_b.html#scipy.special.mathieu_b" title="scipy.special.mathieu_b"><code class="xref py py-func docutils literal notranslate"><span class="pre">mathieu_b</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">mathieu_b</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.mathieu_cem.html#scipy.special.mathieu_cem" title="scipy.special.mathieu_cem"><code class="xref py py-func docutils literal notranslate"><span class="pre">mathieu_cem</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">mathieu_cem</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.mathieu_modcem1.html#scipy.special.mathieu_modcem1" title="scipy.special.mathieu_modcem1"><code class="xref py py-func docutils literal notranslate"><span class="pre">mathieu_modcem1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">mathieu_modcem1</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.mathieu_modcem2.html#scipy.special.mathieu_modcem2" title="scipy.special.mathieu_modcem2"><code class="xref py py-func docutils literal notranslate"><span class="pre">mathieu_modcem2</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">mathieu_modcem2</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.mathieu_modsem1.html#scipy.special.mathieu_modsem1" title="scipy.special.mathieu_modsem1"><code class="xref py py-func docutils literal notranslate"><span class="pre">mathieu_modsem1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">mathieu_modsem1</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.mathieu_modsem2.html#scipy.special.mathieu_modsem2" title="scipy.special.mathieu_modsem2"><code class="xref py py-func docutils literal notranslate"><span class="pre">mathieu_modsem2</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">mathieu_modsem2</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.mathieu_sem.html#scipy.special.mathieu_sem" title="scipy.special.mathieu_sem"><code class="xref py py-func docutils literal notranslate"><span class="pre">mathieu_sem</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">mathieu_sem</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.modfresnelm.html#scipy.special.modfresnelm" title="scipy.special.modfresnelm"><code class="xref py py-func docutils literal notranslate"><span class="pre">modfresnelm</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">modfresnelm</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.modfresnelp.html#scipy.special.modfresnelp" title="scipy.special.modfresnelp"><code class="xref py py-func docutils literal notranslate"><span class="pre">modfresnelp</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">modfresnelp</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.modstruve.html#scipy.special.modstruve" title="scipy.special.modstruve"><code class="xref py py-func docutils literal notranslate"><span class="pre">modstruve</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">modstruve</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.nbdtr.html#scipy.special.nbdtr" title="scipy.special.nbdtr"><code class="xref py py-func docutils literal notranslate"><span class="pre">nbdtr</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">nbdtr</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">nbdtr</span><span class="p">(</span><span class="nb">long</span><span class="p">,</span> <span class="nb">long</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.nbdtrc.html#scipy.special.nbdtrc" title="scipy.special.nbdtrc"><code class="xref py py-func docutils literal notranslate"><span class="pre">nbdtrc</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">nbdtrc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">nbdtrc</span><span class="p">(</span><span class="nb">long</span><span class="p">,</span> <span class="nb">long</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.nbdtri.html#scipy.special.nbdtri" title="scipy.special.nbdtri"><code class="xref py py-func docutils literal notranslate"><span class="pre">nbdtri</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">nbdtri</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">nbdtri</span><span class="p">(</span><span class="nb">long</span><span class="p">,</span> <span class="nb">long</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.nbdtrik.html#scipy.special.nbdtrik" title="scipy.special.nbdtrik"><code class="xref py py-func docutils literal notranslate"><span class="pre">nbdtrik</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">nbdtrik</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.nbdtrin.html#scipy.special.nbdtrin" title="scipy.special.nbdtrin"><code class="xref py py-func docutils literal notranslate"><span class="pre">nbdtrin</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">nbdtrin</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.ncfdtr.html#scipy.special.ncfdtr" title="scipy.special.ncfdtr"><code class="xref py py-func docutils literal notranslate"><span class="pre">ncfdtr</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">ncfdtr</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.ncfdtri.html#scipy.special.ncfdtri" title="scipy.special.ncfdtri"><code class="xref py py-func docutils literal notranslate"><span class="pre">ncfdtri</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">ncfdtri</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.ncfdtridfd.html#scipy.special.ncfdtridfd" title="scipy.special.ncfdtridfd"><code class="xref py py-func docutils literal notranslate"><span class="pre">ncfdtridfd</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">ncfdtridfd</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.ncfdtridfn.html#scipy.special.ncfdtridfn" title="scipy.special.ncfdtridfn"><code class="xref py py-func docutils literal notranslate"><span class="pre">ncfdtridfn</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">ncfdtridfn</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.ncfdtrinc.html#scipy.special.ncfdtrinc" title="scipy.special.ncfdtrinc"><code class="xref py py-func docutils literal notranslate"><span class="pre">ncfdtrinc</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">ncfdtrinc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.nctdtr.html#scipy.special.nctdtr" title="scipy.special.nctdtr"><code class="xref py py-func docutils literal notranslate"><span class="pre">nctdtr</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">nctdtr</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.nctdtridf.html#scipy.special.nctdtridf" title="scipy.special.nctdtridf"><code class="xref py py-func docutils literal notranslate"><span class="pre">nctdtridf</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">nctdtridf</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.nctdtrinc.html#scipy.special.nctdtrinc" title="scipy.special.nctdtrinc"><code class="xref py py-func docutils literal notranslate"><span class="pre">nctdtrinc</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">nctdtrinc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.nctdtrit.html#scipy.special.nctdtrit" title="scipy.special.nctdtrit"><code class="xref py py-func docutils literal notranslate"><span class="pre">nctdtrit</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">nctdtrit</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.ndtr.html#scipy.special.ndtr" title="scipy.special.ndtr"><code class="xref py py-func docutils literal notranslate"><span class="pre">ndtr</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">ndtr</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">ndtr</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.ndtri.html#scipy.special.ndtri" title="scipy.special.ndtri"><code class="xref py py-func docutils literal notranslate"><span class="pre">ndtri</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">ndtri</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.nrdtrimn.html#scipy.special.nrdtrimn" title="scipy.special.nrdtrimn"><code class="xref py py-func docutils literal notranslate"><span class="pre">nrdtrimn</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">nrdtrimn</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.nrdtrisd.html#scipy.special.nrdtrisd" title="scipy.special.nrdtrisd"><code class="xref py py-func docutils literal notranslate"><span class="pre">nrdtrisd</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">nrdtrisd</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.obl_ang1.html#scipy.special.obl_ang1" title="scipy.special.obl_ang1"><code class="xref py py-func docutils literal notranslate"><span class="pre">obl_ang1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">obl_ang1</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.obl_ang1_cv.html#scipy.special.obl_ang1_cv" title="scipy.special.obl_ang1_cv"><code class="xref py py-func docutils literal notranslate"><span class="pre">obl_ang1_cv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">obl_ang1_cv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.obl_cv.html#scipy.special.obl_cv" title="scipy.special.obl_cv"><code class="xref py py-func docutils literal notranslate"><span class="pre">obl_cv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">obl_cv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.obl_rad1.html#scipy.special.obl_rad1" title="scipy.special.obl_rad1"><code class="xref py py-func docutils literal notranslate"><span class="pre">obl_rad1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">obl_rad1</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.obl_rad1_cv.html#scipy.special.obl_rad1_cv" title="scipy.special.obl_rad1_cv"><code class="xref py py-func docutils literal notranslate"><span class="pre">obl_rad1_cv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">obl_rad1_cv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.obl_rad2.html#scipy.special.obl_rad2" title="scipy.special.obl_rad2"><code class="xref py py-func docutils literal notranslate"><span class="pre">obl_rad2</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">obl_rad2</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.obl_rad2_cv.html#scipy.special.obl_rad2_cv" title="scipy.special.obl_rad2_cv"><code class="xref py py-func docutils literal notranslate"><span class="pre">obl_rad2_cv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">obl_rad2_cv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.owens_t.html#scipy.special.owens_t" title="scipy.special.owens_t"><code class="xref py py-func docutils literal notranslate"><span class="pre">owens_t</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">owens_t</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.pbdv.html#scipy.special.pbdv" title="scipy.special.pbdv"><code class="xref py py-func docutils literal notranslate"><span class="pre">pbdv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">pbdv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.pbvv.html#scipy.special.pbvv" title="scipy.special.pbvv"><code class="xref py py-func docutils literal notranslate"><span class="pre">pbvv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">pbvv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.pbwa.html#scipy.special.pbwa" title="scipy.special.pbwa"><code class="xref py py-func docutils literal notranslate"><span class="pre">pbwa</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">pbwa</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.pdtr.html#scipy.special.pdtr" title="scipy.special.pdtr"><code class="xref py py-func docutils literal notranslate"><span class="pre">pdtr</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">pdtr</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.pdtrc.html#scipy.special.pdtrc" title="scipy.special.pdtrc"><code class="xref py py-func docutils literal notranslate"><span class="pre">pdtrc</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">pdtrc</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.pdtri.html#scipy.special.pdtri" title="scipy.special.pdtri"><code class="xref py py-func docutils literal notranslate"><span class="pre">pdtri</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">pdtri</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">pdtri</span><span class="p">(</span><span class="nb">long</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.pdtrik.html#scipy.special.pdtrik" title="scipy.special.pdtrik"><code class="xref py py-func docutils literal notranslate"><span class="pre">pdtrik</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">pdtrik</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.poch.html#scipy.special.poch" title="scipy.special.poch"><code class="xref py py-func docutils literal notranslate"><span class="pre">poch</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">poch</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.powm1.html#scipy.special.powm1" title="scipy.special.powm1"><code class="xref py py-func docutils literal notranslate"><span class="pre">powm1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="nb">float</span> <span class="n">powm1</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">powm1</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.pro_ang1.html#scipy.special.pro_ang1" title="scipy.special.pro_ang1"><code class="xref py py-func docutils literal notranslate"><span class="pre">pro_ang1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">pro_ang1</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.pro_ang1_cv.html#scipy.special.pro_ang1_cv" title="scipy.special.pro_ang1_cv"><code class="xref py py-func docutils literal notranslate"><span class="pre">pro_ang1_cv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">pro_ang1_cv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.pro_cv.html#scipy.special.pro_cv" title="scipy.special.pro_cv"><code class="xref py py-func docutils literal notranslate"><span class="pre">pro_cv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">pro_cv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.pro_rad1.html#scipy.special.pro_rad1" title="scipy.special.pro_rad1"><code class="xref py py-func docutils literal notranslate"><span class="pre">pro_rad1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">pro_rad1</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.pro_rad1_cv.html#scipy.special.pro_rad1_cv" title="scipy.special.pro_rad1_cv"><code class="xref py py-func docutils literal notranslate"><span class="pre">pro_rad1_cv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">pro_rad1_cv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.pro_rad2.html#scipy.special.pro_rad2" title="scipy.special.pro_rad2"><code class="xref py py-func docutils literal notranslate"><span class="pre">pro_rad2</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">pro_rad2</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.pro_rad2_cv.html#scipy.special.pro_rad2_cv" title="scipy.special.pro_rad2_cv"><code class="xref py py-func docutils literal notranslate"><span class="pre">pro_rad2_cv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">pro_rad2_cv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.pseudo_huber.html#scipy.special.pseudo_huber" title="scipy.special.pseudo_huber"><code class="xref py py-func docutils literal notranslate"><span class="pre">pseudo_huber</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">pseudo_huber</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.psi.html#scipy.special.psi" title="scipy.special.psi"><code class="xref py py-func docutils literal notranslate"><span class="pre">psi</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">psi</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">psi</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.radian.html#scipy.special.radian" title="scipy.special.radian"><code class="xref py py-func docutils literal notranslate"><span class="pre">radian</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">radian</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.rel_entr.html#scipy.special.rel_entr" title="scipy.special.rel_entr"><code class="xref py py-func docutils literal notranslate"><span class="pre">rel_entr</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">rel_entr</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.rgamma.html#scipy.special.rgamma" title="scipy.special.rgamma"><code class="xref py py-func docutils literal notranslate"><span class="pre">rgamma</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">rgamma</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">rgamma</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.round.html#scipy.special.round" title="scipy.special.round"><code class="xref py py-func docutils literal notranslate"><span class="pre">round</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">round</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.shichi.html#scipy.special.shichi" title="scipy.special.shichi"><code class="xref py py-func docutils literal notranslate"><span class="pre">shichi</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">shichi</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">)</span>
+<span class="n">void</span> <span class="n">shichi</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.sici.html#scipy.special.sici" title="scipy.special.sici"><code class="xref py py-func docutils literal notranslate"><span class="pre">sici</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">void</span> <span class="n">sici</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span> <span class="o">*</span><span class="p">)</span>
+<span class="n">void</span> <span class="n">sici</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">,</span> <span class="n">double</span> <span class="o">*</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.sindg.html#scipy.special.sindg" title="scipy.special.sindg"><code class="xref py py-func docutils literal notranslate"><span class="pre">sindg</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">sindg</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.smirnov.html#scipy.special.smirnov" title="scipy.special.smirnov"><code class="xref py py-func docutils literal notranslate"><span class="pre">smirnov</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">smirnov</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">smirnov</span><span class="p">(</span><span class="nb">long</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.smirnovi.html#scipy.special.smirnovi" title="scipy.special.smirnovi"><code class="xref py py-func docutils literal notranslate"><span class="pre">smirnovi</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">smirnovi</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">smirnovi</span><span class="p">(</span><span class="nb">long</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.spence.html#scipy.special.spence" title="scipy.special.spence"><code class="xref py py-func docutils literal notranslate"><span class="pre">spence</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">spence</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">spence</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.sph_harm.html#scipy.special.sph_harm" title="scipy.special.sph_harm"><code class="xref py py-func docutils literal notranslate"><span class="pre">sph_harm</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">sph_harm</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">sph_harm</span><span class="p">(</span><span class="nb">long</span><span class="p">,</span> <span class="nb">long</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.stdtr.html#scipy.special.stdtr" title="scipy.special.stdtr"><code class="xref py py-func docutils literal notranslate"><span class="pre">stdtr</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">stdtr</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.stdtridf.html#scipy.special.stdtridf" title="scipy.special.stdtridf"><code class="xref py py-func docutils literal notranslate"><span class="pre">stdtridf</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">stdtridf</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.stdtrit.html#scipy.special.stdtrit" title="scipy.special.stdtrit"><code class="xref py py-func docutils literal notranslate"><span class="pre">stdtrit</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">stdtrit</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.struve.html#scipy.special.struve" title="scipy.special.struve"><code class="xref py py-func docutils literal notranslate"><span class="pre">struve</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">struve</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.tandg.html#scipy.special.tandg" title="scipy.special.tandg"><code class="xref py py-func docutils literal notranslate"><span class="pre">tandg</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">tandg</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.tklmbda.html#scipy.special.tklmbda" title="scipy.special.tklmbda"><code class="xref py py-func docutils literal notranslate"><span class="pre">tklmbda</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">tklmbda</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.wofz.html#scipy.special.wofz" title="scipy.special.wofz"><code class="xref py py-func docutils literal notranslate"><span class="pre">wofz</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">wofz</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.wrightomega.html#scipy.special.wrightomega" title="scipy.special.wrightomega"><code class="xref py py-func docutils literal notranslate"><span class="pre">wrightomega</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">wrightomega</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">wrightomega</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.xlog1py.html#scipy.special.xlog1py" title="scipy.special.xlog1py"><code class="xref py py-func docutils literal notranslate"><span class="pre">xlog1py</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">xlog1py</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">xlog1py</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.xlogy.html#scipy.special.xlogy" title="scipy.special.xlogy"><code class="xref py py-func docutils literal notranslate"><span class="pre">xlogy</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">xlogy</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">xlogy</span><span class="p">(</span><span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.y0.html#scipy.special.y0" title="scipy.special.y0"><code class="xref py py-func docutils literal notranslate"><span class="pre">y0</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">y0</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.y1.html#scipy.special.y1" title="scipy.special.y1"><code class="xref py py-func docutils literal notranslate"><span class="pre">y1</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">y1</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.yn.html#scipy.special.yn" title="scipy.special.yn"><code class="xref py py-func docutils literal notranslate"><span class="pre">yn</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">yn</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">yn</span><span class="p">(</span><span class="nb">long</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.yv.html#scipy.special.yv" title="scipy.special.yv"><code class="xref py py-func docutils literal notranslate"><span class="pre">yv</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">yv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">yv</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.yve.html#scipy.special.yve" title="scipy.special.yve"><code class="xref py py-func docutils literal notranslate"><span class="pre">yve</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">yve</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">yve</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.zetac.html#scipy.special.zetac" title="scipy.special.zetac"><code class="xref py py-func docutils literal notranslate"><span class="pre">zetac</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">zetac</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.wright_bessel.html#scipy.special.wright_bessel" title="scipy.special.wright_bessel"><code class="xref py py-func docutils literal notranslate"><span class="pre">wright_bessel</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">wright_bessel</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.log_wright_bessel.html#scipy.special.log_wright_bessel" title="scipy.special.log_wright_bessel"><code class="xref py py-func docutils literal notranslate"><span class="pre">log_wright_bessel</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">log_wright_bessel</span><span class="p">(</span><span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.ndtri_exp.html#scipy.special.ndtri_exp" title="scipy.special.ndtri_exp"><code class="xref py py-func docutils literal notranslate"><span class="pre">ndtri_exp</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="n">ndtri_exp</span><span class="p">(</span><span class="n">double</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="custom-functions">
+<h2>Custom functions<a class="headerlink" href="#custom-functions" title="Link to this heading">#</a></h2>
+<p>Some functions in <code class="docutils literal notranslate"><span class="pre">scipy.special</span></code> which are not ufuncs have custom
+Cython wrappers.</p>
+<section id="spherical-bessel-functions">
+<h3>Spherical Bessel functions<a class="headerlink" href="#spherical-bessel-functions" title="Link to this heading">#</a></h3>
+<p>The optional <code class="docutils literal notranslate"><span class="pre">derivative</span></code> boolean argument is replaced with an
+optional Cython <code class="docutils literal notranslate"><span class="pre">bint</span></code>, leading to the following signatures.</p>
+<ul>
+<li><p><a class="reference internal" href="generated/scipy.special.spherical_jn.html#scipy.special.spherical_jn" title="scipy.special.spherical_jn"><code class="xref py py-func docutils literal notranslate"><span class="pre">spherical_jn</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">spherical_jn</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">spherical_jn</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="nb">bint</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">spherical_jn</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">spherical_jn</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="nb">bint</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.spherical_yn.html#scipy.special.spherical_yn" title="scipy.special.spherical_yn"><code class="xref py py-func docutils literal notranslate"><span class="pre">spherical_yn</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">spherical_yn</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">spherical_yn</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="nb">bint</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">spherical_yn</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">spherical_yn</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="nb">bint</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.spherical_in.html#scipy.special.spherical_in" title="scipy.special.spherical_in"><code class="xref py py-func docutils literal notranslate"><span class="pre">spherical_in</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">spherical_in</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">spherical_in</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="nb">bint</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">spherical_in</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">spherical_in</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="nb">bint</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="generated/scipy.special.spherical_kn.html#scipy.special.spherical_kn" title="scipy.special.spherical_kn"><code class="xref py py-func docutils literal notranslate"><span class="pre">spherical_kn</span></code></a>:</p>
+<div class="highlight-cython notranslate"><div class="highlight"><pre><span></span><span class="n">double</span> <span class="nb">complex</span> <span class="n">spherical_kn</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">)</span>
+<span class="n">double</span> <span class="nb">complex</span> <span class="n">spherical_kn</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span> <span class="nb">complex</span><span class="p">,</span> <span class="nb">bint</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">spherical_kn</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">)</span>
+<span class="n">double</span> <span class="n">spherical_kn</span><span class="p">(</span><span class="nb">Py_ssize_t</span><span class="p">,</span> <span class="n">double</span><span class="p">,</span> <span class="nb">bint</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#error-handling">Error handling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#available-functions">Available functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#custom-functions">Custom functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spherical-bessel-functions">Spherical Bessel functions</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

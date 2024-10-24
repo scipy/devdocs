@@ -1,0 +1,726 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Running SciPy Tests Locally &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'dev/contributor/devpy_test';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Debugging linear algebra related issues" href="debugging_linalg_issues.html" />
+    <link rel="prev" title="Code and Documentation Style Guide - The Missing Bits" href="../missing-bits.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributing Information</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../conduct/code_of_conduct.html">SciPy Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hacking.html">Ways to Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev_quickstart.html">Contributor quickstart guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development_workflow.html">Development workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributor_toc.html">SciPy contributor guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Roadmap</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">SciPy Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap-detailed.html">Detailed SciPy Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../toolchain.html">Toolchain Roadmap</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">SciPy Organization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../core-dev/index.html">SciPy Core Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api-dev/api-dev-toc.html">SciPy API Development Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../governance.html">SciPy Project Governance</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Developer Documentation</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="contributor_toc.html" class="nav-link">SciPy contributor guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Running SciPy Tests Locally</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="running-scipy-tests-locally">
+<span id="devpy-test"></span><h1>Running SciPy Tests Locally<a class="headerlink" href="#running-scipy-tests-locally" title="Link to this heading">#</a></h1>
+<p>Basic test writing and execution from within the Python interpreter is
+documented in the
+<a class="reference external" href="https://numpy.org/doc/stable/reference/testing.html" title="(in NumPy v2.1)"><span class="xref std std-doc">NumPy/SciPy testing guidelines</span></a>. This page
+includes information about running tests from the command line using SciPy’s
+<code class="docutils literal notranslate"><span class="pre">dev.py</span></code> command line tool. <em>Note: Before beginning, ensure that</em> <a class="reference external" href="https://docs.pytest.org/en/latest/"><code class="docutils literal notranslate"><span class="pre">pytest</span></code></a>
+<em>is installed.</em></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">dev.py</span></code> interface is self-documenting, in the sense that everything on
+this page and more (including usage examples for each command) can be
+accessed with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">dev.py</span> <span class="pre">--help</span></code> and for individual commands like
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">dev.py</span> <span class="pre">&lt;command-name&gt;</span> <span class="pre">--help</span></code>. In this case, you can check
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">dev.py</span> <span class="pre">test</span> <span class="pre">--help</span></code>.</p>
+</div>
+<p>To run all tests, navigate to the root SciPy directory at the command
+line and execute</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">dev</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span>
+</pre></div>
+</div>
+<p>This builds SciPy (or updates an existing build) and runs the tests.</p>
+<p>To run tests on a particular submodule, such as <code class="docutils literal notranslate"><span class="pre">optimize</span></code>, use the
+<code class="docutils literal notranslate"><span class="pre">--submodule</span></code> option:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">dev</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span> <span class="o">-</span><span class="n">s</span> <span class="n">optimize</span>
+</pre></div>
+</div>
+<p>To run a particular test module, use the Pytest syntax of <code class="docutils literal notranslate"><span class="pre">--test</span></code> (or
+<code class="docutils literal notranslate"><span class="pre">-t</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">dev</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span> <span class="o">-</span><span class="n">t</span> <span class="n">scipy</span><span class="o">.&lt;</span><span class="n">module</span><span class="o">&gt;.</span><span class="n">tests</span><span class="o">.&lt;</span><span class="n">test_file</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Example for <a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/optimize/tests/test_linprog.py"><code class="docutils literal notranslate"><span class="pre">scipy/optimize/tests/test_linprog.py</span></code></a> file tests, run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">dev</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span> <span class="o">-</span><span class="n">t</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">test_linprog</span>
+</pre></div>
+</div>
+<p>To run a test class:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">dev</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span> <span class="o">-</span><span class="n">t</span> <span class="n">scipy</span><span class="o">.&lt;</span><span class="n">module</span><span class="o">&gt;.</span><span class="n">tests</span><span class="o">.&lt;</span><span class="n">test_file</span><span class="o">&gt;</span><span class="p">::</span><span class="o">&lt;</span><span class="n">TestClass</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Example for <code class="docutils literal notranslate"><span class="pre">TestLinprogRSCommon</span></code> class from <code class="docutils literal notranslate"><span class="pre">test_linprog.py</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">dev</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span> <span class="o">-</span><span class="n">t</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">test_linprog</span><span class="p">::</span><span class="n">TestLinprogRSCommon</span>
+</pre></div>
+</div>
+<p>To run a particular test:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">dev</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span> <span class="o">-</span><span class="n">t</span> <span class="n">scipy</span><span class="o">.&lt;</span><span class="n">module</span><span class="o">&gt;.</span><span class="n">tests</span><span class="o">.&lt;</span><span class="n">test_file</span><span class="o">&gt;</span><span class="p">::</span><span class="o">&lt;</span><span class="n">test_name</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Example for <code class="docutils literal notranslate"><span class="pre">test_unknown_solvers_and_options</span></code> from <code class="docutils literal notranslate"><span class="pre">test_linprog.py</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">dev</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span> <span class="o">-</span><span class="n">t</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">test_linprog</span><span class="p">::</span><span class="n">test_unknown_solvers_and_options</span>
+</pre></div>
+</div>
+<p>For tests within a class, you need to specify the class name and the test name:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">dev</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span> <span class="o">-</span><span class="n">t</span> <span class="n">scipy</span><span class="o">.&lt;</span><span class="n">module</span><span class="o">&gt;.</span><span class="n">tests</span><span class="o">.&lt;</span><span class="n">test_file</span><span class="o">&gt;</span><span class="p">::</span><span class="o">&lt;</span><span class="n">TestClass</span><span class="o">&gt;</span><span class="p">::</span><span class="o">&lt;</span><span class="n">test_name</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">dev</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span> <span class="o">-</span><span class="n">t</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">tests</span><span class="o">.</span><span class="n">test_linprog</span><span class="p">::</span><span class="n">TestLinprogRSCommon</span><span class="p">::</span><span class="n">test_nontrivial_problem_with_guess</span>
+</pre></div>
+</div>
+<p>Other useful options include:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-v</span></code> or <code class="docutils literal notranslate"><span class="pre">--verbose</span></code>, which activates the verbose option for more
+detailed output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-b</span></code> or <code class="docutils literal notranslate"><span class="pre">--array-api-backend</span></code> <em>backend</em> to include alternative
+array backends in array-api-compatible tests. See <a class="reference internal" href="../api-dev/array_api.html#dev-arrayapi"><span class="std std-ref">Support for the array API standard</span></a>
+for details.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--coverage</span></code> to generate a test coverage report in
+<code class="docutils literal notranslate"><span class="pre">scipy/build/coverage/index.html</span></code>. <em>Note:</em> <a class="reference external" href="https://pypi.org/project/pytest-cov/"><code class="docutils literal notranslate"><span class="pre">pytest-cov</span></code></a> <em>must be
+installed.</em></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-n</span></code> or <code class="docutils literal notranslate"><span class="pre">--no-build</span></code> to prevent SciPy from updating the build
+before testing</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-j</span></code> or <code class="docutils literal notranslate"><span class="pre">--parallel</span></code> <em>n</em> to engage <em>n</em> cores when building SciPy;
+e.g. <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">dev.py</span> <span class="pre">test</span> <span class="pre">-j</span> <span class="pre">4</span></code> engages four cores. As of <a class="reference external" href="https://github.com/scipy/scipy/pull/10172">#10172</a>
+this also runs the tests on four cores if <a class="reference external" href="https://pypi.org/project/pytest-xdist/"><code class="docutils literal notranslate"><span class="pre">pytest-xdist</span></code></a> is installed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">full</span></code> or <code class="docutils literal notranslate"><span class="pre">--mode</span> <span class="pre">full</span></code> to run the “full” test suite, including
+tests marked <code class="docutils literal notranslate"><span class="pre">slow</span></code> (e.g. with <code class="docutils literal notranslate"><span class="pre">&#64;pytest.mark.slow</span></code>). Note that this
+does not <em>run</em> tests marked <code class="docutils literal notranslate"><span class="pre">xslow</span></code>; see Tips below.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--</span></code> to send remaining command line arguments to <code class="docutils literal notranslate"><span class="pre">pytest</span></code> instead of
+<code class="docutils literal notranslate"><span class="pre">dev.py</span> <span class="pre">test</span></code>. For instance, while <code class="docutils literal notranslate"><span class="pre">-n</span></code> sent to <code class="docutils literal notranslate"><span class="pre">pytest.py</span></code> activates
+the <code class="docutils literal notranslate"><span class="pre">--no-build</span></code> option, <code class="docutils literal notranslate"><span class="pre">-n</span></code> sent to <code class="docutils literal notranslate"><span class="pre">pytest</span></code> runs the tests on
+multiple cores; e.g. <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">dev.py</span> <span class="pre">test</span> <span class="pre">--</span> <span class="pre">-n</span> <span class="pre">4</span></code> runs tests using
+four cores. <em>Note:</em> <a class="reference external" href="https://pypi.org/project/pytest-xdist/"><code class="docutils literal notranslate"><span class="pre">pytest-xdist</span></code></a> <em>must be installed for testing on
+multiple cores.</em> Common command line arguments for <code class="docutils literal notranslate"><span class="pre">pytest</span></code> include:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">--durations=m</span></code> to display durations of the slowest <code class="docutils literal notranslate"><span class="pre">m</span></code> tests. Use
+<code class="docutils literal notranslate"><span class="pre">--durations=0</span></code> together with <code class="docutils literal notranslate"><span class="pre">--durations-min=x</span></code> to display
+durations of all tests with durations that exceed <code class="docutils literal notranslate"><span class="pre">x</span></code> seconds.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--fail-slow=x</span></code> to cause test to fail if they exceed <code class="docutils literal notranslate"><span class="pre">x</span></code> seconds.
+(<em>Note</em>: <a class="reference external" href="https://github.com/jwodder/pytest-fail-slow"><code class="docutils literal notranslate"><span class="pre">pytest-fail-slow</span></code></a> must be installed.)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--timeout=x</span></code> to halt all test execution if any test time exceeds
+<code class="docutils literal notranslate"><span class="pre">x</span></code> seconds. (<em>Note</em>: <a class="reference external" href="https://github.com/pytest-dev/pytest-timeout"><code class="docutils literal notranslate"><span class="pre">pytest-timeout</span></code></a> must be installed.)</p></li>
+</ul>
+</li>
+</ul>
+<p>For much more information about <code class="docutils literal notranslate"><span class="pre">pytest</span></code>, see the <code class="docutils literal notranslate"><span class="pre">pytest</span></code>
+<a class="reference external" href="https://docs.pytest.org/en/latest/usage.html">documentation</a>.</p>
+<section id="tips">
+<h2>Tips:<a class="headerlink" href="#tips" title="Link to this heading">#</a></h2>
+<p>If you built SciPy from source but are having trouble running tests
+after a change to the codebase, try deleting the <code class="docutils literal notranslate"><span class="pre">scipy/build</span></code>
+directory. This forces <code class="docutils literal notranslate"><span class="pre">dev.py</span></code> to completely rebuild SciPy before
+performing tests.</p>
+<p>There is an additional level of very slow tests (several minutes),
+which are disabled even when calling <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">dev.py</span> <span class="pre">test</span> <span class="pre">-m</span> <span class="pre">full</span></code>.
+They can be enabled by setting the environment variable <code class="docutils literal notranslate"><span class="pre">SCIPY_XSLOW=1</span></code>
+before running the test suite.</p>
+<p>By default, tests that use <code class="docutils literal notranslate"><span class="pre">Hypothesis</span></code> run with the <code class="docutils literal notranslate"><span class="pre">deterministic</span></code>
+profile defined in <code class="docutils literal notranslate"><span class="pre">scipy/scipy/conftest.py</span></code>. This profile includes the
+Hypothesis setting <code class="docutils literal notranslate"><span class="pre">derandomize=True</span></code> so the same examples are used until
+Hypothesis, Python, or the test function are updated. To better use
+Hypothesis’ abilities to find counterexamples, select the <code class="docutils literal notranslate"><span class="pre">nondeterministic</span></code>
+profile by setting the environment variable
+<code class="docutils literal notranslate"><span class="pre">SCIPY_HYPOTHESIS_PROFILE=nondeterministic</span></code> before running the test suite.
+The number of examples that are run can be configured by editing the selected
+configuration, e.g. adding <code class="docutils literal notranslate"><span class="pre">max_examples=100_000</span></code>.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../missing-bits.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Code and Documentation Style Guide - The Missing Bits</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="debugging_linalg_issues.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Debugging linear algebra related issues</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tips">Tips:</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

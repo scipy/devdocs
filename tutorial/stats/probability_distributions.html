@@ -1,0 +1,1205 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Probability distributions &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorial/stats/probability_distributions';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Continuous Statistical Distributions" href="continuous.html" />
+    <link rel="prev" title="Statistics (scipy.stats)" href="../stats.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../special.html">Special functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.special</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">Integration (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.integrate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">Optimization (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">Fourier Transforms (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.fft</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">Signal Processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">Linear Algebra (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">Sparse Arrays (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arpack.html">Sparse eigenvalue problems with ARPACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csgraph.html">Compressed Sparse Graph Routines (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.csgraph</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">Spatial data structures and algorithms (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code>)</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../stats.html">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Probability distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sampling.html">Universal Non-Uniform Random Number Sampling in SciPy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel_density_estimation.html">Kernel density estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiscale_graphcorr.html">Multiscale Graph Correlation (MGC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quasi_monte_carlo.html">Quasi-Monte Carlo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analysing_one_sample.html">Analysing one sample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparing_two_samples.html">Comparing two samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resampling.html">Resampling and Monte Carlo Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hypothesis_tests.html">Hypothesis tests</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">Multidimensional image processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">File IO (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.io</span></code>)</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy User Guide</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../stats.html" class="nav-link">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Probability distributions</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="probability-distributions">
+<h1>Probability distributions<a class="headerlink" href="#probability-distributions" title="Link to this heading">#</a></h1>
+<p>There are two general distribution classes that have been implemented
+for encapsulating <a class="reference internal" href="continuous.html#continuous-random-variables"><span class="std std-ref">continuous random variables</span></a> and <a class="reference internal" href="discrete.html#discrete-random-variables"><span class="std std-ref">discrete random variables</span></a>. Over 100 continuous random variables
+(RVs) and 20 discrete random variables have been implemented using
+these classes. For mathematical reference information about individual
+distributions, please see <a class="reference internal" href="continuous.html"><span class="doc">Continuous Statistical Distributions</span></a> and <a class="reference internal" href="discrete.html"><span class="doc">Discrete Statistical Distributions</span></a>.</p>
+<p>All of the statistics functions are located in the sub-package
+<a class="reference internal" href="../../reference/stats.html#module-scipy.stats" title="scipy.stats"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.stats</span></code></a> and a fairly complete listing of these functions and random
+variables available can also be obtained from the docstring for the
+stats sub-package.</p>
+<p>In the discussion below, we mostly focus on continuous RVs. Nearly everything
+also applies to discrete variables, but we point out some differences
+here: <a class="reference internal" href="#discrete-points-label"><span class="std std-ref">Specific points for discrete distributions</span></a>.</p>
+<p>In the code samples below, we assume that the <a class="reference internal" href="../../reference/stats.html#module-scipy.stats" title="scipy.stats"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.stats</span></code></a> package
+is imported as</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+</pre></div>
+</div>
+<p>and in some cases we assume that individual objects are imported as</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">All distributions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="continuous.html">Continuous Statistical Distributions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="continuous.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="continuous.html#continuous-distributions-in-scipy-stats">Continuous Distributions in <code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="discrete.html">Discrete Statistical Distributions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="discrete.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="discrete.html#discrete-distributions-in-scipy-stats">Discrete Distributions in <code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="getting-help">
+<h2>Getting help<a class="headerlink" href="#getting-help" title="Link to this heading">#</a></h2>
+<p>First of all, all distributions are accompanied with help
+functions. To obtain just some basic information, we print the relevant
+docstring: <code class="docutils literal notranslate"><span class="pre">print(stats.norm.__doc__)</span></code>.</p>
+<p>To find the support, i.e., upper and lower bounds of the distribution,
+call:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bounds of distribution lower: </span><span class="si">%s</span><span class="s1">, upper: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">norm</span><span class="o">.</span><span class="n">support</span><span class="p">())</span>
+<span class="go">bounds of distribution lower: -inf, upper: inf</span>
+</pre></div>
+</div>
+<p>We can list all methods and properties of the distribution with
+<code class="docutils literal notranslate"><span class="pre">dir(norm)</span></code>. As it turns out, some of the methods are private,
+although they are not named as such (their names do not start
+with a leading underscore), for example <code class="docutils literal notranslate"><span class="pre">veccdf</span></code>, are only available
+for internal calculation (those methods will give warnings when one tries to
+use them, and will be removed at some point).</p>
+<p>To obtain the <em>real</em> main methods, we list the methods of the frozen
+distribution. (We explain the meaning of a <em class="xref py py-obj">frozen</em> distribution
+below).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rv</span> <span class="o">=</span> <span class="n">norm</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">dir</span><span class="p">(</span><span class="n">rv</span><span class="p">)</span>  <span class="c1"># reformatted</span>
+<span class="go">[&#39;__class__&#39;, &#39;__delattr__&#39;, &#39;__dict__&#39;, &#39;__dir__&#39;, &#39;__doc__&#39;, &#39;__eq__&#39;,</span>
+<span class="go"> &#39;__format__&#39;, &#39;__ge__&#39;, &#39;__getattribute__&#39;, &#39;__gt__&#39;, &#39;__hash__&#39;,</span>
+<span class="go"> &#39;__init__&#39;, &#39;__le__&#39;, &#39;__lt__&#39;, &#39;__module__&#39;, &#39;__ne__&#39;, &#39;__new__&#39;,</span>
+<span class="go"> &#39;__reduce__&#39;, &#39;__reduce_ex__&#39;, &#39;__repr__&#39;, &#39;__setattr__&#39;, &#39;__sizeof__&#39;,</span>
+<span class="go"> &#39;__str__&#39;, &#39;__subclasshook__&#39;, &#39;__weakref__&#39;, &#39;a&#39;, &#39;args&#39;, &#39;b&#39;, &#39;cdf&#39;,</span>
+<span class="go"> &#39;dist&#39;, &#39;entropy&#39;, &#39;expect&#39;, &#39;interval&#39;, &#39;isf&#39;, &#39;kwds&#39;, &#39;logcdf&#39;,</span>
+<span class="go"> &#39;logpdf&#39;, &#39;logpmf&#39;, &#39;logsf&#39;, &#39;mean&#39;, &#39;median&#39;, &#39;moment&#39;, &#39;pdf&#39;, &#39;pmf&#39;,</span>
+<span class="go"> &#39;ppf&#39;, &#39;random_state&#39;, &#39;rvs&#39;, &#39;sf&#39;, &#39;stats&#39;, &#39;std&#39;, &#39;var&#39;]</span>
+</pre></div>
+</div>
+<p>Finally, we can obtain the list of available distribution through
+introspection:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dist_continu</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span> <span class="k">if</span>
+<span class="gp">... </span>                <span class="nb">isinstance</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">d</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">rv_continuous</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dist_discrete</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span> <span class="k">if</span>
+<span class="gp">... </span>                 <span class="nb">isinstance</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">d</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">rv_discrete</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;number of continuous distributions: </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">dist_continu</span><span class="p">))</span>
+<span class="go">number of continuous distributions: 108</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;number of discrete distributions:   </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">dist_discrete</span><span class="p">))</span>
+<span class="go">number of discrete distributions:   21</span>
+</pre></div>
+</div>
+</section>
+<section id="common-methods">
+<h2>Common methods<a class="headerlink" href="#common-methods" title="Link to this heading">#</a></h2>
+<p>The main public methods for continuous  RVs are:</p>
+<ul class="simple">
+<li><p>rvs:   Random Variates</p></li>
+<li><p>pdf:   Probability Density Function</p></li>
+<li><p>cdf:   Cumulative Distribution Function</p></li>
+<li><p>sf:    Survival Function (1-CDF)</p></li>
+<li><p>ppf:   Percent Point Function (Inverse of CDF)</p></li>
+<li><p>isf:   Inverse Survival Function (Inverse of SF)</p></li>
+<li><p>stats: Return mean, variance, (Fisher’s) skew, or (Fisher’s) kurtosis</p></li>
+<li><p>moment: non-central moments of the distribution</p></li>
+</ul>
+<p>Let’s take a normal RV as an example.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">0.5</span>
+</pre></div>
+</div>
+<p>To compute the <code class="docutils literal notranslate"><span class="pre">cdf</span></code> at a number of points, we can pass a list or a numpy array.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">([</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="go">array([ 0.15865525,  0.5,  0.84134475])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+<span class="go">array([ 0.15865525,  0.5,  0.84134475])</span>
+</pre></div>
+</div>
+<p>Thus, the basic methods, such as <em class="xref py py-obj">pdf</em>, <em class="xref py py-obj">cdf</em>, and so on, are vectorized.</p>
+<p>Other generally useful methods are supported too:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">norm</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">norm</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="n">norm</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
+<span class="go">(0.0, 1.0, 1.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">norm</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">moments</span><span class="o">=</span><span class="s2">&quot;mv&quot;</span><span class="p">)</span>
+<span class="go">(array(0.0), array(1.0))</span>
+</pre></div>
+</div>
+<p>To find the median of a distribution, we can use the percent point
+function <code class="docutils literal notranslate"><span class="pre">ppf</span></code>, which is the inverse of the <code class="docutils literal notranslate"><span class="pre">cdf</span></code>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="go">0.0</span>
+</pre></div>
+</div>
+<p>To generate a sequence of random variates, use the <code class="docutils literal notranslate"><span class="pre">size</span></code> keyword
+argument:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">array([-0.35687759,  1.34347647, -0.11710531])   # random</span>
+</pre></div>
+</div>
+<p>Don’t think that <code class="docutils literal notranslate"><span class="pre">norm.rvs(5)</span></code> generates 5 variates:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">5.471435163732493  # random</span>
+</pre></div>
+</div>
+<p>Here, <code class="docutils literal notranslate"><span class="pre">5</span></code> with no keyword is being interpreted as the first possible
+keyword argument, <code class="docutils literal notranslate"><span class="pre">loc</span></code>, which is the first of a pair of keyword arguments
+taken by all continuous distributions.
+This brings us to the topic of the next subsection.</p>
+</section>
+<section id="random-number-generation">
+<h2>Random number generation<a class="headerlink" href="#random-number-generation" title="Link to this heading">#</a></h2>
+<p>Drawing random numbers relies on generators from <a class="reference external" href="https://numpy.org/doc/stable/reference/random/index.html#module-numpy.random" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random</span></code></a> package.
+In the examples above, the specific stream of
+random numbers is not reproducible across runs. To achieve reproducibility,
+you can explicitly <em>seed</em> a random number generator. In NumPy, a generator
+is an instance of <a class="reference external" href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code></a>. Here is the canonical way to create
+a generator:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">default_rng</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">default_rng</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>And fixing the seed can be done like this:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># do NOT copy this value</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">default_rng</span><span class="p">(</span><span class="mi">301439351238479871608357552876690613766</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Do not use this number or common values such as 0. Using just a
+small set of seeds to instantiate larger state spaces means that
+there are some initial states that are impossible to reach. This
+creates some biases if everyone uses such values. A good way to
+get a seed is to use a <a class="reference external" href="https://numpy.org/doc/stable/reference/random/bit_generators/generated/numpy.random.SeedSequence.html#numpy.random.SeedSequence" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.SeedSequence</span></code></a>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">SeedSequence</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">SeedSequence</span><span class="p">()</span><span class="o">.</span><span class="n">entropy</span><span class="p">)</span>
+<span class="go">301439351238479871608357552876690613766  # random</span>
+</pre></div>
+</div>
+</div>
+<p>The <em class="xref py py-obj">random_state</em> parameter in distributions accepts an instance of
+<a class="reference external" href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code></a> class, or an integer, which is then used to
+seed an internal <code class="docutils literal notranslate"><span class="pre">Generator</span></code> object:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="go">array([ 0.47143516, -1.19097569,  1.43270697, -0.3126519 , -0.72058873])  # random</span>
+</pre></div>
+</div>
+<p>For further info, see <a class="reference external" href="https://numpy.org/doc/stable/reference/random/index.html">NumPy’s documentation</a>.</p>
+<p>To learn more about the random number samplers implemented in SciPy, see
+<a class="reference internal" href="sampling.html#non-uniform-random-number-sampling"><span class="std std-ref">non-uniform random number sampling tutorial</span></a> and <a class="reference internal" href="quasi_monte_carlo.html#quasi-monte-carlo"><span class="std std-ref">quasi monte carlo tutorial</span></a></p>
+</section>
+<section id="shifting-and-scaling">
+<h2>Shifting and scaling<a class="headerlink" href="#shifting-and-scaling" title="Link to this heading">#</a></h2>
+<p>All continuous distributions take <code class="docutils literal notranslate"><span class="pre">loc</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span></code> as keyword
+parameters to adjust the location and scale of the distribution,
+e.g., for the standard normal distribution, the location is the mean and
+the scale is the standard deviation.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">norm</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">moments</span><span class="o">=</span><span class="s2">&quot;mv&quot;</span><span class="p">)</span>
+<span class="go">(array(3.0), array(16.0))</span>
+</pre></div>
+</div>
+<p>In many cases, the standardized distribution for a random variable <code class="docutils literal notranslate"><span class="pre">X</span></code>
+is obtained through the transformation <code class="docutils literal notranslate"><span class="pre">(X</span> <span class="pre">-</span> <span class="pre">loc)</span> <span class="pre">/</span> <span class="pre">scale</span></code>. The
+default values are <code class="docutils literal notranslate"><span class="pre">loc</span> <span class="pre">=</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span> <span class="pre">=</span> <span class="pre">1</span></code>.</p>
+<p>Smart use of <code class="docutils literal notranslate"><span class="pre">loc</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span></code> can help modify the standard
+distributions in many ways. To illustrate the scaling further, the
+<code class="docutils literal notranslate"><span class="pre">cdf</span></code> of an exponentially distributed RV with mean <span class="math notranslate nohighlight">\(1/\lambda\)</span>
+is given by</p>
+<div class="math notranslate nohighlight">
+\[F(x) = 1 - \exp(-\lambda x)\]</div>
+<p>By applying the scaling rule above, it can be seen that by
+taking <code class="docutils literal notranslate"><span class="pre">scale</span>&#160; <span class="pre">=</span> <span class="pre">1./lambda</span></code> we get the proper scale.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">expon</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">expon</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">3.</span><span class="p">)</span>
+<span class="go">3.0</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Distributions that take shape parameters may
+require more than simple application of <code class="docutils literal notranslate"><span class="pre">loc</span></code> and/or
+<code class="docutils literal notranslate"><span class="pre">scale</span></code> to achieve the desired form. For example, the
+distribution of 2-D vector lengths given a constant vector
+of length <span class="math notranslate nohighlight">\(R\)</span> perturbed by independent N(0, <span class="math notranslate nohighlight">\(\sigma^2\)</span>)
+deviations in each component is
+rice(<span class="math notranslate nohighlight">\(R/\sigma\)</span>, scale= <span class="math notranslate nohighlight">\(\sigma\)</span>). The first argument
+is a shape parameter that needs to be scaled along with <span class="math notranslate nohighlight">\(x\)</span>.</p>
+</div>
+<p>The uniform distribution is also interesting:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">uniform</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uniform</span><span class="o">.</span><span class="n">cdf</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">array([ 0.  ,  0.  ,  0.25,  0.5 ,  0.75,  1.  ])</span>
+</pre></div>
+</div>
+<p>Finally, recall from the previous paragraph that we are left with the
+problem of the meaning of <code class="docutils literal notranslate"><span class="pre">norm.rvs(5)</span></code>. As it turns out, calling a
+distribution like this, the first argument, i.e., the 5, gets passed
+to set the <code class="docutils literal notranslate"><span class="pre">loc</span></code> parameter. Let’s see:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">500</span><span class="p">))</span>
+<span class="go">5.0098355106969992  # random</span>
+</pre></div>
+</div>
+<p>Thus, to explain the output of the example of the last section:
+<code class="docutils literal notranslate"><span class="pre">norm.rvs(5)</span></code> generates a single normally distributed random variate with
+mean <code class="docutils literal notranslate"><span class="pre">loc=5</span></code>, because of the default <code class="docutils literal notranslate"><span class="pre">size=1</span></code>.</p>
+<p>We recommend that you set <code class="docutils literal notranslate"><span class="pre">loc</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span></code> parameters explicitly, by
+passing the values as keywords rather than as arguments. Repetition
+can be minimized when calling more than one method of a given RV by
+using the technique of <a class="reference internal" href="#freezing-a-distribution">Freezing a Distribution</a>, as explained below.</p>
+</section>
+<section id="shape-parameters">
+<h2>Shape parameters<a class="headerlink" href="#shape-parameters" title="Link to this heading">#</a></h2>
+<p>While a general continuous random variable can be shifted and scaled
+with the <code class="docutils literal notranslate"><span class="pre">loc</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span></code> parameters, some distributions require
+additional shape parameters. For instance, the gamma distribution with density</p>
+<div class="math notranslate nohighlight">
+\[\gamma(x, a) = \frac{\lambda (\lambda x)^{a-1}}{\Gamma(a)} e^{-\lambda x}\;,\]</div>
+<p>requires the shape parameter <span class="math notranslate nohighlight">\(a\)</span>. Observe that setting
+<span class="math notranslate nohighlight">\(\lambda\)</span> can be obtained by setting the <code class="docutils literal notranslate"><span class="pre">scale</span></code> keyword to
+<span class="math notranslate nohighlight">\(1/\lambda\)</span>.</p>
+<p>Let’s check the number and name of the shape parameters of the gamma
+distribution. (We know from the above that this should be 1.)</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">gamma</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gamma</span><span class="o">.</span><span class="n">numargs</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gamma</span><span class="o">.</span><span class="n">shapes</span>
+<span class="go">&#39;a&#39;</span>
+</pre></div>
+</div>
+<p>Now, we set the value of the shape variable to 1 to obtain the
+exponential distribution, so that we compare easily whether we get the
+results we expect.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gamma</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">2.</span><span class="p">)</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">moments</span><span class="o">=</span><span class="s2">&quot;mv&quot;</span><span class="p">)</span>
+<span class="go">(array(2.0), array(4.0))</span>
+</pre></div>
+</div>
+<p>Notice that we can also specify shape parameters as keywords:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">gamma</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">2.</span><span class="p">)</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">moments</span><span class="o">=</span><span class="s2">&quot;mv&quot;</span><span class="p">)</span>
+<span class="go">(array(2.0), array(4.0))</span>
+</pre></div>
+</div>
+</section>
+<section id="freezing-a-distribution">
+<h2>Freezing a distribution<a class="headerlink" href="#freezing-a-distribution" title="Link to this heading">#</a></h2>
+<p>Passing the <code class="docutils literal notranslate"><span class="pre">loc</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span></code> keywords time and again can become
+quite bothersome. The concept of <em class="xref py py-obj">freezing</em> a RV is used to
+solve such problems.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rv</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">2.</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>By using <code class="docutils literal notranslate"><span class="pre">rv</span></code> we no longer have to include the scale or the shape
+parameters anymore. Thus, distributions can be used in one of two
+ways, either by passing all distribution parameters to each method
+call (such as we did earlier) or by freezing the parameters for the
+instance of the distribution. Let us check this:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rv</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">rv</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+<span class="go">(2.0, 2.0)</span>
+</pre></div>
+</div>
+<p>This is, indeed, what we should get.</p>
+</section>
+<section id="broadcasting">
+<h2>Broadcasting<a class="headerlink" href="#broadcasting" title="Link to this heading">#</a></h2>
+<p>The basic methods <code class="docutils literal notranslate"><span class="pre">pdf</span></code>, and so on, satisfy the usual numpy broadcasting rules. For
+example, we can calculate the critical values for the upper tail of
+the t distribution for different probabilities and degrees of freedom.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">isf</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span> <span class="p">[[</span><span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">11</span><span class="p">]])</span>
+<span class="go">array([[ 1.37218364,  1.81246112,  2.76376946],</span>
+<span class="go">       [ 1.36343032,  1.79588482,  2.71807918]])</span>
+</pre></div>
+</div>
+<p>Here, the first row contains the critical values for 10 degrees of freedom
+and the second row for 11 degrees of freedom (d.o.f.). Thus, the
+broadcasting rules give the same result of calling <code class="docutils literal notranslate"><span class="pre">isf</span></code> twice:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">isf</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span>
+<span class="go">array([ 1.37218364,  1.81246112,  2.76376946])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">isf</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span> <span class="mi">11</span><span class="p">)</span>
+<span class="go">array([ 1.36343032,  1.79588482,  2.71807918])</span>
+</pre></div>
+</div>
+<p>If the array with probabilities, i.e., <code class="docutils literal notranslate"><span class="pre">[0.1,</span> <span class="pre">0.05,</span> <span class="pre">0.01]</span></code> and the
+array of degrees of freedom i.e., <code class="docutils literal notranslate"><span class="pre">[10,</span> <span class="pre">11,</span> <span class="pre">12]</span></code>, have the same
+array shape, then element-wise matching is used. As an example, we can
+obtain the 10% tail for 10 d.o.f., the 5% tail for 11 d.o.f. and the
+1% tail for 12 d.o.f. by calling</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">isf</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span>
+<span class="go">array([ 1.37218364,  1.79588482,  2.68099799])</span>
+</pre></div>
+</div>
+</section>
+<section id="specific-points-for-discrete-distributions">
+<span id="discrete-points-label"></span><h2>Specific points for discrete distributions<a class="headerlink" href="#specific-points-for-discrete-distributions" title="Link to this heading">#</a></h2>
+<p>Discrete distributions have mostly the same basic methods as the
+continuous distributions. However <code class="docutils literal notranslate"><span class="pre">pdf</span></code> is replaced by the probability
+mass function <code class="docutils literal notranslate"><span class="pre">pmf</span></code>, no estimation methods, such as fit, are
+available, and <code class="docutils literal notranslate"><span class="pre">scale</span></code> is not a valid keyword parameter. The
+location parameter, keyword <code class="docutils literal notranslate"><span class="pre">loc</span></code>, can still be used to shift the
+distribution.</p>
+<p>The computation of the cdf requires some extra attention. In the case
+of continuous distribution, the cumulative distribution function is, in
+most standard cases, strictly monotonic increasing in the bounds (a,b)
+and has, therefore, a unique inverse. The cdf of a discrete
+distribution, however, is a step function, hence the inverse cdf,
+i.e., the percent point function, requires a different definition:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ppf</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="o">=</span> <span class="nb">min</span><span class="p">{</span><span class="n">x</span> <span class="p">:</span> <span class="n">cdf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">q</span><span class="p">,</span> <span class="n">x</span> <span class="n">integer</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>For further info, see the docs <a class="reference internal" href="discrete.html#discrete-ppf"><span class="std std-ref">here</span></a>.</p>
+<p>We can look at the hypergeometric distribution as an example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">hypergeom</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">M</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">N</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>If we use the cdf at some integer points and then evaluate the ppf at those
+cdf values, we get the initial integers back, for example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>
+<span class="go">array([0, 2, 4, 6])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prb</span> <span class="o">=</span> <span class="n">hypergeom</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prb</span>
+<span class="go">array([  1.03199174e-04,   5.21155831e-02,   6.08359133e-01,</span>
+<span class="go">         9.89783282e-01])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hypergeom</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">prb</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+<span class="go">array([ 0.,  2.,  4.,  6.])</span>
+</pre></div>
+</div>
+<p>If we use values that are not at the kinks of the cdf step function, we get
+the next higher integer back:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hypergeom</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">prb</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+<span class="go">array([ 1.,  3.,  5.,  7.])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hypergeom</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">prb</span> <span class="o">-</span> <span class="mf">1e-8</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+<span class="go">array([ 0.,  2.,  4.,  6.])</span>
+</pre></div>
+</div>
+</section>
+<section id="fitting-distributions">
+<h2>Fitting distributions<a class="headerlink" href="#fitting-distributions" title="Link to this heading">#</a></h2>
+<p>The main additional methods of the not frozen distribution are related
+to the estimation of distribution parameters:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>fit:   maximum likelihood estimation of distribution parameters, including location</dt><dd><p>and scale</p>
+</dd>
+</dl>
+</li>
+<li><p>fit_loc_scale: estimation of location and scale when shape parameters are given</p></li>
+<li><p>nnlf:  negative log likelihood function</p></li>
+<li><p>expect: calculate the expectation of a function against the pdf or pmf</p></li>
+</ul>
+</section>
+<section id="performance-issues-and-cautionary-remarks">
+<span id="performance-issues-label"></span><h2>Performance issues and cautionary remarks<a class="headerlink" href="#performance-issues-and-cautionary-remarks" title="Link to this heading">#</a></h2>
+<p>The performance of the individual methods, in terms of speed, varies
+widely by distribution and method. The results of a method are
+obtained in one of two ways: either by explicit calculation, or by a
+generic algorithm that is independent of the specific distribution.</p>
+<p>Explicit calculation, on the one hand, requires that the method is
+directly specified for the given distribution, either through analytic
+formulas or through special functions in <code class="docutils literal notranslate"><span class="pre">scipy.special</span></code> or
+<code class="docutils literal notranslate"><span class="pre">numpy.random</span></code> for <code class="docutils literal notranslate"><span class="pre">rvs</span></code>. These are usually relatively fast
+calculations.</p>
+<p>The generic methods, on the other hand, are used if the distribution
+does not specify any explicit calculation. To define a distribution,
+only one of pdf or cdf is necessary; all other methods can be derived
+using numeric integration and root finding. However, these indirect
+methods can be <em class="xref py py-obj">very</em> slow. As an example, <code class="docutils literal notranslate"><span class="pre">rgh</span> <span class="pre">=</span>
+<span class="pre">stats.gausshyper.rvs(0.5,</span> <span class="pre">2,</span> <span class="pre">2,</span> <span class="pre">2,</span> <span class="pre">size=100)</span></code> creates random
+variables in a very indirect way and takes about 19 seconds for 100
+random variables on my computer, while one million random variables
+from the standard normal or from the t distribution take just above
+one second.</p>
+</section>
+<section id="remaining-issues">
+<h2>Remaining issues<a class="headerlink" href="#remaining-issues" title="Link to this heading">#</a></h2>
+<p>The distributions in <code class="docutils literal notranslate"><span class="pre">scipy.stats</span></code> have recently been corrected and improved
+and gained a considerable test suite; however, a few issues remain:</p>
+<ul class="simple">
+<li><p>The distributions have been tested over some range of parameters;
+however, in some corner ranges, a few incorrect results may remain.</p></li>
+<li><p>The maximum likelihood estimation in <em class="xref py py-obj">fit</em> does not work with
+default starting parameters for all distributions and the user
+needs to supply good starting parameters. Also, for some
+distribution using a maximum likelihood estimator might
+inherently not be the best choice.</p></li>
+</ul>
+</section>
+<section id="building-specific-distributions">
+<span id="building-distributions"></span><h2>Building specific distributions<a class="headerlink" href="#building-specific-distributions" title="Link to this heading">#</a></h2>
+<p>The next examples shows how to build your own distributions. Further
+examples show the usage of the distributions and some statistical
+tests.</p>
+<section id="making-a-continuous-distribution-i-e-subclassing-rv-continuous">
+<h3>Making a continuous distribution, i.e., subclassing <code class="docutils literal notranslate"><span class="pre">rv_continuous</span></code><a class="headerlink" href="#making-a-continuous-distribution-i-e-subclassing-rv-continuous" title="Link to this heading">#</a></h3>
+<p>Making continuous distributions is fairly simple.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">deterministic_gen</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">rv_continuous</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">_cdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">deterministic</span> <span class="o">=</span> <span class="n">deterministic_gen</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;deterministic&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">deterministic</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="go">array([ 0.,  0.,  0.,  0.,  0.,  0.,  1.,  1.,  1.,  1.,  1.,  1.])</span>
+</pre></div>
+</div>
+<p>Interestingly,  the <code class="docutils literal notranslate"><span class="pre">pdf</span></code> is now computed automatically:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">deterministic</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="go">array([  0.00000000e+00,   0.00000000e+00,   0.00000000e+00,</span>
+<span class="go">         0.00000000e+00,   0.00000000e+00,   0.00000000e+00,</span>
+<span class="go">         5.83333333e+04,   4.16333634e-12,   4.16333634e-12,</span>
+<span class="go">         4.16333634e-12,   4.16333634e-12,   4.16333634e-12])</span>
+</pre></div>
+</div>
+<p>Be aware of the performance issues mentioned in
+<a class="reference internal" href="#performance-issues-label"><span class="std std-ref">Performance issues and cautionary remarks</span></a>. The computation of unspecified
+common methods can become very slow, since only general methods are
+called, which, by their very nature, cannot use any specific
+information about the distribution. Thus, as a cautionary example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">quad</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">quad</span><span class="p">(</span><span class="n">deterministic</span><span class="o">.</span><span class="n">pdf</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e-1</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">)</span>
+<span class="go">(4.163336342344337e-13, 0.0)</span>
+</pre></div>
+</div>
+<p>But this is not correct: the integral over this pdf should be 1. Let’s make the
+integration interval smaller:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">quad</span><span class="p">(</span><span class="n">deterministic</span><span class="o">.</span><span class="n">pdf</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">)</span>  <span class="c1"># warning removed</span>
+<span class="go">(1.000076872229173, 0.0010625571718182458)</span>
+</pre></div>
+</div>
+<p>This looks better. However, the problem originated from the fact that
+the pdf is not specified in the class definition of the deterministic
+distribution.</p>
+</section>
+<section id="subclassing-rv-discrete">
+<h3>Subclassing <code class="docutils literal notranslate"><span class="pre">rv_discrete</span></code><a class="headerlink" href="#subclassing-rv-discrete" title="Link to this heading">#</a></h3>
+<p>In the following, we use <em class="xref py py-obj">stats.rv_discrete</em> to generate a discrete
+distribution that has the probabilities of the truncated normal for the
+intervals centered around the integers.</p>
+<p><strong>General info</strong></p>
+<p>From the docstring of rv_discrete, <code class="docutils literal notranslate"><span class="pre">help(stats.rv_discrete)</span></code>,</p>
+<blockquote>
+<div><p>“You can construct an arbitrary discrete rv where P{X=xk} = pk by
+passing to the rv_discrete initialization method (through the values=
+keyword) a tuple of sequences (xk, pk) which describes only those
+values of X (xk) that occur with nonzero probability (pk).”</p>
+</div></blockquote>
+<p>Next to this, there are some further requirements for this approach to
+work:</p>
+<ul class="simple">
+<li><p>The keyword <em class="xref py py-obj">name</em> is required.</p></li>
+<li><p>The support points of the distribution xk have to be integers.</p></li>
+<li><p>The number of significant digits (decimals) needs to be specified.</p></li>
+</ul>
+<p>In fact, if the last two requirements are not satisfied, an exception
+may be raised or the resulting numbers may be incorrect.</p>
+<p><strong>An example</strong></p>
+<p>Let’s do the work. First:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">npoints</span> <span class="o">=</span> <span class="mi">20</span>   <span class="c1"># number of integer support points of the distribution minus 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">npointsh</span> <span class="o">=</span> <span class="n">npoints</span> <span class="o">//</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">npointsf</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">npoints</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nbound</span> <span class="o">=</span> <span class="mi">4</span>   <span class="c1"># bounds for the truncated normal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">normbound</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="o">/</span><span class="n">npointsf</span><span class="p">)</span> <span class="o">*</span> <span class="n">nbound</span>   <span class="c1"># actual bounds of truncated normal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">npointsh</span><span class="p">,</span> <span class="n">npointsh</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>   <span class="c1"># integer grid</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gridlimitsnorm</span> <span class="o">=</span> <span class="p">(</span><span class="n">grid</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="n">npointsh</span> <span class="o">*</span> <span class="n">nbound</span>   <span class="c1"># bin limits for the truncnorm</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gridlimits</span> <span class="o">=</span> <span class="n">grid</span> <span class="o">-</span> <span class="mf">0.5</span>   <span class="c1"># used later in the analysis</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grid</span> <span class="o">=</span> <span class="n">grid</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">truncnorm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">gridlimitsnorm</span><span class="p">,</span> <span class="o">-</span><span class="n">normbound</span><span class="p">,</span> <span class="n">normbound</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gridint</span> <span class="o">=</span> <span class="n">grid</span>
+</pre></div>
+</div>
+<p>And, finally, we can subclass <code class="docutils literal notranslate"><span class="pre">rv_discrete</span></code>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">normdiscrete</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">rv_discrete</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="p">(</span><span class="n">gridint</span><span class="p">,</span>
+<span class="gp">... </span>             <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">7</span><span class="p">)),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;normdiscrete&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now that we have defined the distribution, we have access to all
+common methods of discrete distributions.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;mean = </span><span class="si">%6.4f</span><span class="s1">, variance = </span><span class="si">%6.4f</span><span class="s1">, skew = </span><span class="si">%6.4f</span><span class="s1">, kurtosis = </span><span class="si">%6.4f</span><span class="s1">&#39;</span> <span class="o">%</span>
+<span class="gp">... </span>      <span class="n">normdiscrete</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">moments</span><span class="o">=</span><span class="s1">&#39;mvsk&#39;</span><span class="p">))</span>
+<span class="go">mean = -0.0000, variance = 6.3302, skew = 0.0000, kurtosis = -0.0076</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nd_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">normdiscrete</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">moments</span><span class="o">=</span><span class="s1">&#39;v&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><strong>Testing the implementation</strong></p>
+<p>Let’s generate a random sample and compare observed frequencies with
+the probabilities.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n_sample</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rvs</span> <span class="o">=</span> <span class="n">normdiscrete</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n_sample</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">rvs</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">gridlimits</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sfreq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">gridint</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">probs</span><span class="o">*</span><span class="n">n_sample</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sfreq</span><span class="p">)</span>
+<span class="go">[[-1.00000000e+01  0.00000000e+00  2.95019349e-02]  # random</span>
+<span class="go"> [-9.00000000e+00  0.00000000e+00  1.32294142e-01]</span>
+<span class="go"> [-8.00000000e+00  0.00000000e+00  5.06497902e-01]</span>
+<span class="go"> [-7.00000000e+00  2.00000000e+00  1.65568919e+00]</span>
+<span class="go"> [-6.00000000e+00  1.00000000e+00  4.62125309e+00]</span>
+<span class="go"> [-5.00000000e+00  9.00000000e+00  1.10137298e+01]</span>
+<span class="go"> [-4.00000000e+00  2.60000000e+01  2.24137683e+01]</span>
+<span class="go"> [-3.00000000e+00  3.70000000e+01  3.89503370e+01]</span>
+<span class="go"> [-2.00000000e+00  5.10000000e+01  5.78004747e+01]</span>
+<span class="go"> [-1.00000000e+00  7.10000000e+01  7.32455414e+01]</span>
+<span class="go"> [ 0.00000000e+00  7.40000000e+01  7.92618251e+01]</span>
+<span class="go"> [ 1.00000000e+00  8.90000000e+01  7.32455414e+01]</span>
+<span class="go"> [ 2.00000000e+00  5.50000000e+01  5.78004747e+01]</span>
+<span class="go"> [ 3.00000000e+00  5.00000000e+01  3.89503370e+01]</span>
+<span class="go"> [ 4.00000000e+00  1.70000000e+01  2.24137683e+01]</span>
+<span class="go"> [ 5.00000000e+00  1.10000000e+01  1.10137298e+01]</span>
+<span class="go"> [ 6.00000000e+00  4.00000000e+00  4.62125309e+00]</span>
+<span class="go"> [ 7.00000000e+00  3.00000000e+00  1.65568919e+00]</span>
+<span class="go"> [ 8.00000000e+00  0.00000000e+00  5.06497902e-01]</span>
+<span class="go"> [ 9.00000000e+00  0.00000000e+00  1.32294142e-01]</span>
+<span class="go"> [ 1.00000000e+01  0.00000000e+00  2.95019349e-02]]</span>
+</pre></div>
+</div>
+<figure class="align-center">
+<img alt="&quot;An X-Y histogram plot showing the distribution of random variates. A blue trace shows a normal bell curve. A blue bar chart perfectly approximates the curve showing the true distribution. A red bar chart representing the sample is well described by the blue trace but not exact.&quot;" class="plot-directive" src="../../_images/normdiscr_plot1.png" />
+</figure>
+<figure class="align-center">
+<img alt="&quot;An X-Y histogram plot showing the cumulative distribution of random variates. A blue trace shows a CDF for a typical normal distribution. A blue bar chart perfectly approximates the curve showing the true distribution. A red bar chart representing the sample is well described by the blue trace but not exact.&quot;" class="plot-directive" src="../../_images/normdiscr_plot2.png" />
+</figure>
+<p>Next, we can test whether our sample was generated by our norm-discrete
+distribution. This also verifies whether the random numbers were generated
+correctly.</p>
+<p>The chisquare test requires that there are a minimum number of observations
+in each bin. We combine the tail bins into larger bins so that they contain
+enough observations.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">f</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="n">f</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">5</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">:]</span><span class="o">.</span><span class="n">sum</span><span class="p">()])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">probs</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="n">probs</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">5</span><span class="p">],</span> <span class="n">probs</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">:]</span><span class="o">.</span><span class="n">sum</span><span class="p">()])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ch2</span><span class="p">,</span> <span class="n">pval</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">chisquare</span><span class="p">(</span><span class="n">f2</span><span class="p">,</span> <span class="n">p2</span><span class="o">*</span><span class="n">n_sample</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;chisquare for normdiscrete: chi2 = </span><span class="si">%6.3f</span><span class="s1"> pvalue = </span><span class="si">%6.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ch2</span><span class="p">,</span> <span class="n">pval</span><span class="p">))</span>
+<span class="go">chisquare for normdiscrete: chi2 = 12.466 pvalue = 0.4090  # random</span>
+</pre></div>
+</div>
+<p>The pvalue in this case is high, so we can be quite confident that
+our random sample was actually generated by the distribution.</p>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../stats.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="continuous.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Continuous Statistical Distributions</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-help">Getting help</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-methods">Common methods</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-number-generation">Random number generation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#shifting-and-scaling">Shifting and scaling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#shape-parameters">Shape parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#freezing-a-distribution">Freezing a distribution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#broadcasting">Broadcasting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#specific-points-for-discrete-distributions">Specific points for discrete distributions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting-distributions">Fitting distributions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-issues-and-cautionary-remarks">Performance issues and cautionary remarks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#remaining-issues">Remaining issues</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-specific-distributions">Building specific distributions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#making-a-continuous-distribution-i-e-subclassing-rv-continuous">Making a continuous distribution, i.e., subclassing <code class="docutils literal notranslate"><span class="pre">rv_continuous</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#subclassing-rv-discrete">Subclassing <code class="docutils literal notranslate"><span class="pre">rv_discrete</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

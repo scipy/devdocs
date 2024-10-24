@@ -1,0 +1,837 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>lsq_linear &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.optimize.lsq_linear';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="isotonic_regression" href="scipy.optimize.isotonic_regression.html" />
+    <link rel="prev" title="nnls" href="scipy.optimize.nnls.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../optimize.html" class="nav-link">Optimization and root finding (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">lsq_linear</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.optimize.</div>
+<div class="empty"></div><section id="lsq-linear">
+<h1>lsq_linear<a class="headerlink" href="#lsq-linear" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.optimize.lsq_linear">
+<span class="sig-prename descclassname"><span class="pre">scipy.optimize.</span></span><span class="sig-name descname"><span class="pre">lsq_linear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(-inf,</span> <span class="pre">inf)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'trf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lsq_solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lsmr_tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lsmr_maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/optimize/_lsq/lsq_linear.py#L37-L361"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.optimize.lsq_linear" title="Link to this definition">#</a></dt>
+<dd><p>Solve a linear least-squares problem with bounds on the variables.</p>
+<p>Given a m-by-n design matrix A and a target vector b with m elements,
+<a class="reference internal" href="#scipy.optimize.lsq_linear" title="scipy.optimize.lsq_linear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lsq_linear</span></code></a> solves the following optimization problem:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">minimize</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="o">||</span><span class="n">A</span> <span class="n">x</span> <span class="o">-</span> <span class="n">b</span><span class="o">||**</span><span class="mi">2</span>
+<span class="n">subject</span> <span class="n">to</span> <span class="n">lb</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">ub</span>
+</pre></div>
+</div>
+<p>This optimization problem is convex, hence a found minimum (if iterations
+have converged) is guaranteed to be global.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>A</strong><span class="classifier">array_like, sparse matrix of LinearOperator, shape (m, n)</span></dt><dd><p>Design matrix. Can be <a class="reference internal" href="scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="scipy.sparse.linalg.LinearOperator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.linalg.LinearOperator</span></code></a>.</p>
+</dd>
+<dt><strong>b</strong><span class="classifier">array_like, shape (m,)</span></dt><dd><p>Target vector.</p>
+</dd>
+<dt><strong>bounds</strong><span class="classifier">2-tuple of array_like or <a class="reference internal" href="scipy.optimize.Bounds.html#scipy.optimize.Bounds" title="scipy.optimize.Bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bounds</span></code></a>, optional</span></dt><dd><p>Lower and upper bounds on parameters. Defaults to no bounds.
+There are two ways to specify the bounds:</p>
+<ul class="simple">
+<li><p>Instance of <a class="reference internal" href="scipy.optimize.Bounds.html#scipy.optimize.Bounds" title="scipy.optimize.Bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bounds</span></code></a> class.</p></li>
+<li><p>2-tuple of array_like: Each element of the tuple must be either
+an array with the length equal to the number of parameters, or a
+scalar (in which case the bound is taken to be the same for all
+parameters). Use <code class="docutils literal notranslate"><span class="pre">np.inf</span></code> with an appropriate sign to disable
+bounds on all or some parameters.</p></li>
+</ul>
+</dd>
+<dt><strong>method</strong><span class="classifier">‘trf’ or ‘bvls’, optional</span></dt><dd><p>Method to perform minimization.</p>
+<ul class="simple">
+<li><p>‘trf’ : Trust Region Reflective algorithm adapted for a linear
+least-squares problem. This is an interior-point-like method
+and the required number of iterations is weakly correlated with
+the number of variables.</p></li>
+<li><p>‘bvls’ : Bounded-variable least-squares algorithm. This is
+an active set method, which requires the number of iterations
+comparable to the number of variables. Can’t be used when <em class="xref py py-obj">A</em> is
+sparse or LinearOperator.</p></li>
+</ul>
+<p>Default is ‘trf’.</p>
+</dd>
+<dt><strong>tol</strong><span class="classifier">float, optional</span></dt><dd><p>Tolerance parameter. The algorithm terminates if a relative change
+of the cost function is less than <em class="xref py py-obj">tol</em> on the last iteration.
+Additionally, the first-order optimality measure is considered:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">method='trf'</span></code> terminates if the uniform norm of the gradient,
+scaled to account for the presence of the bounds, is less than
+<em class="xref py py-obj">tol</em>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">method='bvls'</span></code> terminates if Karush-Kuhn-Tucker conditions
+are satisfied within <em class="xref py py-obj">tol</em> tolerance.</p></li>
+</ul>
+</dd>
+<dt><strong>lsq_solver</strong><span class="classifier">{None, ‘exact’, ‘lsmr’}, optional</span></dt><dd><p>Method of solving unbounded least-squares problems throughout
+iterations:</p>
+<ul class="simple">
+<li><p>‘exact’ : Use dense QR or SVD decomposition approach. Can’t be
+used when <em class="xref py py-obj">A</em> is sparse or LinearOperator.</p></li>
+<li><p>‘lsmr’ : Use <a class="reference internal" href="scipy.sparse.linalg.lsmr.html#scipy.sparse.linalg.lsmr" title="scipy.sparse.linalg.lsmr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.linalg.lsmr</span></code></a> iterative procedure
+which requires only matrix-vector product evaluations. Can’t
+be used with <code class="docutils literal notranslate"><span class="pre">method='bvls'</span></code>.</p></li>
+</ul>
+<p>If None (default), the solver is chosen based on type of <em class="xref py py-obj">A</em>.</p>
+</dd>
+<dt><strong>lsmr_tol</strong><span class="classifier">None, float or ‘auto’, optional</span></dt><dd><p>Tolerance parameters ‘atol’ and ‘btol’ for <a class="reference internal" href="scipy.sparse.linalg.lsmr.html#scipy.sparse.linalg.lsmr" title="scipy.sparse.linalg.lsmr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.linalg.lsmr</span></code></a>
+If None (default), it is set to <code class="docutils literal notranslate"><span class="pre">1e-2</span> <span class="pre">*</span> <span class="pre">tol</span></code>. If ‘auto’, the
+tolerance will be adjusted based on the optimality of the current
+iterate, which can speed up the optimization process, but is not always
+reliable.</p>
+</dd>
+<dt><strong>max_iter</strong><span class="classifier">None or int, optional</span></dt><dd><p>Maximum number of iterations before termination. If None (default), it
+is set to 100 for <code class="docutils literal notranslate"><span class="pre">method='trf'</span></code> or to the number of variables for
+<code class="docutils literal notranslate"><span class="pre">method='bvls'</span></code> (not counting iterations for ‘bvls’ initialization).</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">{0, 1, 2}, optional</span></dt><dd><p>Level of algorithm’s verbosity:</p>
+<ul class="simple">
+<li><p>0 : work silently (default).</p></li>
+<li><p>1 : display a termination report.</p></li>
+<li><p>2 : display progress during iterations.</p></li>
+</ul>
+</dd>
+<dt><strong>lsmr_maxiter</strong><span class="classifier">None or int, optional</span></dt><dd><p>Maximum number of iterations for the lsmr least squares solver,
+if it is used (by setting <code class="docutils literal notranslate"><span class="pre">lsq_solver='lsmr'</span></code>). If None (default), it
+uses lsmr’s default of <code class="docutils literal notranslate"><span class="pre">min(m,</span> <span class="pre">n)</span></code> where <code class="docutils literal notranslate"><span class="pre">m</span></code> and <code class="docutils literal notranslate"><span class="pre">n</span></code> are the
+number of rows and columns of <em class="xref py py-obj">A</em>, respectively. Has no effect if
+<code class="docutils literal notranslate"><span class="pre">lsq_solver='exact'</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt>OptimizeResult with the following fields defined:</dt><dd></dd>
+<dt><strong>x</strong><span class="classifier">ndarray, shape (n,)</span></dt><dd><p>Solution found.</p>
+</dd>
+<dt><strong>cost</strong><span class="classifier">float</span></dt><dd><p>Value of the cost function at the solution.</p>
+</dd>
+<dt><strong>fun</strong><span class="classifier">ndarray, shape (m,)</span></dt><dd><p>Vector of residuals at the solution.</p>
+</dd>
+<dt><strong>optimality</strong><span class="classifier">float</span></dt><dd><p>First-order optimality measure. The exact meaning depends on <em class="xref py py-obj">method</em>,
+refer to the description of <em class="xref py py-obj">tol</em> parameter.</p>
+</dd>
+<dt><strong>active_mask</strong><span class="classifier">ndarray of int, shape (n,)</span></dt><dd><p>Each component shows whether a corresponding constraint is active
+(that is, whether a variable is at the bound):</p>
+<ul class="simple">
+<li><p>0 : a constraint is not active.</p></li>
+<li><p>-1 : a lower bound is active.</p></li>
+<li><p>1 : an upper bound is active.</p></li>
+</ul>
+<p>Might be somewhat arbitrary for the <em class="xref py py-obj">trf</em> method as it generates a
+sequence of strictly feasible iterates and active_mask is determined
+within a tolerance threshold.</p>
+</dd>
+<dt><strong>unbounded_sol</strong><span class="classifier">tuple</span></dt><dd><p>Unbounded least squares solution tuple returned by the least squares
+solver (set with <em class="xref py py-obj">lsq_solver</em> option). If <em class="xref py py-obj">lsq_solver</em> is not set or is
+set to <code class="docutils literal notranslate"><span class="pre">'exact'</span></code>, the tuple contains an ndarray of shape (n,) with
+the unbounded solution, an ndarray with the sum of squared residuals,
+an int with the rank of <em class="xref py py-obj">A</em>, and an ndarray with the singular values
+of <em class="xref py py-obj">A</em> (see NumPy’s <code class="docutils literal notranslate"><span class="pre">linalg.lstsq</span></code> for more information). If
+<em class="xref py py-obj">lsq_solver</em> is set to <code class="docutils literal notranslate"><span class="pre">'lsmr'</span></code>, the tuple contains an ndarray of
+shape (n,) with the unbounded solution, an int with the exit code,
+an int with the number of iterations, and five floats with
+various norms and the condition number of <em class="xref py py-obj">A</em> (see SciPy’s
+<code class="docutils literal notranslate"><span class="pre">sparse.linalg.lsmr</span></code> for more information). This output can be
+useful for determining the convergence of the least squares solver,
+particularly the iterative <code class="docutils literal notranslate"><span class="pre">'lsmr'</span></code> solver. The unbounded least
+squares problem is to minimize <code class="docutils literal notranslate"><span class="pre">0.5</span> <span class="pre">*</span> <span class="pre">||A</span> <span class="pre">x</span> <span class="pre">-</span> <span class="pre">b||**2</span></code>.</p>
+</dd>
+<dt><strong>nit</strong><span class="classifier">int</span></dt><dd><p>Number of iterations. Zero if the unconstrained solution is optimal.</p>
+</dd>
+<dt><strong>status</strong><span class="classifier">int</span></dt><dd><p>Reason for algorithm termination:</p>
+<ul class="simple">
+<li><p>-1 : the algorithm was not able to make progress on the last
+iteration.</p></li>
+<li><p>0 : the maximum number of iterations is exceeded.</p></li>
+<li><p>1 : the first-order optimality measure is less than <em class="xref py py-obj">tol</em>.</p></li>
+<li><p>2 : the relative change of the cost function is less than <em class="xref py py-obj">tol</em>.</p></li>
+<li><p>3 : the unconstrained solution is optimal.</p></li>
+</ul>
+</dd>
+<dt><strong>message</strong><span class="classifier">str</span></dt><dd><p>Verbal description of the termination reason.</p>
+</dd>
+<dt><strong>success</strong><span class="classifier">bool</span></dt><dd><p>True if one of the convergence criteria is satisfied (<em class="xref py py-obj">status</em> &gt; 0).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="scipy.optimize.nnls.html#scipy.optimize.nnls" title="scipy.optimize.nnls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nnls</span></code></a></dt><dd><p>Linear least squares with non-negativity constraint.</p>
+</dd>
+<dt><a class="reference internal" href="scipy.optimize.least_squares.html#scipy.optimize.least_squares" title="scipy.optimize.least_squares"><code class="xref py py-obj docutils literal notranslate"><span class="pre">least_squares</span></code></a></dt><dd><p>Nonlinear least squares with bounds on the variables.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>The algorithm first computes the unconstrained least-squares solution by
+<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.linalg.lstsq.html#numpy.linalg.lstsq" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.linalg.lstsq</span></code></a> or <a class="reference internal" href="scipy.sparse.linalg.lsmr.html#scipy.sparse.linalg.lsmr" title="scipy.sparse.linalg.lsmr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.linalg.lsmr</span></code></a> depending on
+<em class="xref py py-obj">lsq_solver</em>. This solution is returned as optimal if it lies within the
+bounds.</p>
+<p>Method ‘trf’ runs the adaptation of the algorithm described in <a class="reference internal" href="#r74f8b7a68993-stir" id="id1">[STIR]</a> for
+a linear least-squares problem. The iterations are essentially the same as
+in the nonlinear least-squares algorithm, but as the quadratic function
+model is always accurate, we don’t need to track or modify the radius of
+a trust region. The line search (backtracking) is used as a safety net
+when a selected step does not decrease the cost function. Read more
+detailed description of the algorithm in <a class="reference internal" href="scipy.optimize.least_squares.html#scipy.optimize.least_squares" title="scipy.optimize.least_squares"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.least_squares</span></code></a>.</p>
+<p>Method ‘bvls’ runs a Python implementation of the algorithm described in
+<a class="reference internal" href="#r74f8b7a68993-bvls" id="id2">[BVLS]</a>. The algorithm maintains active and free sets of variables, on
+each iteration chooses a new variable to move from the active set to the
+free set and then solves the unconstrained least-squares problem on free
+variables. This algorithm is guaranteed to give an accurate solution
+eventually, but may require up to n iterations for a problem with n
+variables. Additionally, an ad-hoc initialization procedure is
+implemented, that determines which variables to set free or active
+initially. It takes some number of iterations before actual BVLS starts,
+but can significantly reduce the number of further iterations.</p>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r74f8b7a68993-stir" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">STIR</a><span class="fn-bracket">]</span></span>
+<p>M. A. Branch, T. F. Coleman, and Y. Li, “A Subspace, Interior,
+and Conjugate Gradient Method for Large-Scale Bound-Constrained
+Minimization Problems,” SIAM Journal on Scientific Computing,
+Vol. 21, Number 1, pp 1-23, 1999.</p>
+</div>
+<div class="citation" id="r74f8b7a68993-bvls" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">BVLS</a><span class="fn-bracket">]</span></span>
+<p>P. B. Start and R. L. Parker, “Bounded-Variable Least-Squares:
+an Algorithm and Applications”, Computational Statistics, 10,
+129-141, 1995.</p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="036c5297-f0af-46d9-81a2-8e25ce57c073">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('036c5297-f0af-46d9-81a2-8e25ce57c073','fb741602-3bea-41bb-b2da-2df8f8f23997','7a9a0e90-c7c9-4907-97df-a9c18d31ba58','../../lite/tree/../notebooks/index.html?path=eb527051_ded2_488a_872c_dcb2cb32a5fb.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>In this example, a problem with a large sparse matrix and bounds on the
+variables is solved.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">rand</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">lsq_linear</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="mi">2000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">rand</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lb</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ub</span> <span class="o">=</span> <span class="n">lb</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">lsq_linear</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">),</span> <span class="n">lsmr_tol</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">The relative change of the cost function is less than `tol`.</span>
+<span class="go">Number of iterations 10, initial cost 1.0070e+03, final cost 9.6602e+02,</span>
+<span class="go">first-order optimality 2.21e-09.        # may vary</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div id="7a9a0e90-c7c9-4907-97df-a9c18d31ba58" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('036c5297-f0af-46d9-81a2-8e25ce57c073','7a9a0e90-c7c9-4907-97df-a9c18d31ba58')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('036c5297-f0af-46d9-81a2-8e25ce57c073','7a9a0e90-c7c9-4907-97df-a9c18d31ba58')">Open In Tab</button></div><div id="fb741602-3bea-41bb-b2da-2df8f8f23997" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.optimize.nnls.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">nnls</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.optimize.isotonic_regression.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">isotonic_regression</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.optimize.lsq_linear"><code class="docutils literal notranslate"><span class="pre">lsq_linear</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

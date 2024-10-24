@@ -1,0 +1,905 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Interpolation (scipy.interpolate) &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/interpolate';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="interp1d" href="generated/scipy.interpolate.interp1d.html" />
+    <link rel="prev" title="solve_bvp" href="generated/scipy.integrate.solve_bvp.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">SciPy API</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="interpolation-scipy-interpolate">
+<span id="module-scipy.interpolate"></span><h1>Interpolation (<a class="reference internal" href="#module-scipy.interpolate" title="scipy.interpolate"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code></a>)<a class="headerlink" href="#interpolation-scipy-interpolate" title="Link to this heading">#</a></h1>
+<p>Sub-package for objects used in interpolation.</p>
+<p>As listed below, this sub-package contains spline functions and classes,
+1-D and multidimensional (univariate and multivariate)
+interpolation classes, Lagrange and Taylor polynomial interpolators, and
+wrappers for <a class="reference external" href="http://www.netlib.org/dierckx/">FITPACK</a>
+and DFITPACK functions.</p>
+<section id="univariate-interpolation">
+<h2>Univariate interpolation<a class="headerlink" href="#univariate-interpolation" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.interp1d.html#scipy.interpolate.interp1d" title="scipy.interpolate.interp1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interp1d</span></code></a>(x, y[, kind, axis, copy, ...])</p></td>
+<td><p>Interpolate a 1-D function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.BarycentricInterpolator.html#scipy.interpolate.BarycentricInterpolator" title="scipy.interpolate.BarycentricInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BarycentricInterpolator</span></code></a>(xi[, yi, axis, wi, ...])</p></td>
+<td><p>Interpolating polynomial for a set of points.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.KroghInterpolator.html#scipy.interpolate.KroghInterpolator" title="scipy.interpolate.KroghInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KroghInterpolator</span></code></a>(xi, yi[, axis])</p></td>
+<td><p>Interpolating polynomial for a set of points.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.barycentric_interpolate.html#scipy.interpolate.barycentric_interpolate" title="scipy.interpolate.barycentric_interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">barycentric_interpolate</span></code></a>(xi, yi, x[, axis, der])</p></td>
+<td><p>Convenience function for polynomial interpolation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.krogh_interpolate.html#scipy.interpolate.krogh_interpolate" title="scipy.interpolate.krogh_interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">krogh_interpolate</span></code></a>(xi, yi, x[, der, axis])</p></td>
+<td><p>Convenience function for polynomial interpolation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.pchip_interpolate.html#scipy.interpolate.pchip_interpolate" title="scipy.interpolate.pchip_interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pchip_interpolate</span></code></a>(xi, yi, x[, der, axis])</p></td>
+<td><p>Convenience function for pchip interpolation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.CubicHermiteSpline.html#scipy.interpolate.CubicHermiteSpline" title="scipy.interpolate.CubicHermiteSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CubicHermiteSpline</span></code></a>(x, y, dydx[, axis, ...])</p></td>
+<td><p>Piecewise-cubic interpolator matching values and first derivatives.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.PchipInterpolator.html#scipy.interpolate.PchipInterpolator" title="scipy.interpolate.PchipInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PchipInterpolator</span></code></a>(x, y[, axis, extrapolate])</p></td>
+<td><p>PCHIP 1-D monotonic cubic interpolation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.Akima1DInterpolator.html#scipy.interpolate.Akima1DInterpolator" title="scipy.interpolate.Akima1DInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Akima1DInterpolator</span></code></a>(x, y[, axis, method, ...])</p></td>
+<td><p>Akima interpolator</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.CubicSpline.html#scipy.interpolate.CubicSpline" title="scipy.interpolate.CubicSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CubicSpline</span></code></a>(x, y[, axis, bc_type, extrapolate])</p></td>
+<td><p>Cubic spline data interpolator.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.PPoly.html#scipy.interpolate.PPoly" title="scipy.interpolate.PPoly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PPoly</span></code></a>(c, x[, extrapolate, axis])</p></td>
+<td><p>Piecewise polynomial in terms of coefficients and breakpoints</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.BPoly.html#scipy.interpolate.BPoly" title="scipy.interpolate.BPoly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BPoly</span></code></a>(c, x[, extrapolate, axis])</p></td>
+<td><p>Piecewise polynomial in terms of coefficients and breakpoints.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.FloaterHormannInterpolator.html#scipy.interpolate.FloaterHormannInterpolator" title="scipy.interpolate.FloaterHormannInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FloaterHormannInterpolator</span></code></a>(points, values, *)</p></td>
+<td><p>Floater-Hormann barycentric rational interpolation.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="multivariate-interpolation">
+<h2>Multivariate interpolation<a class="headerlink" href="#multivariate-interpolation" title="Link to this heading">#</a></h2>
+<p>Unstructured data:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.griddata.html#scipy.interpolate.griddata" title="scipy.interpolate.griddata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">griddata</span></code></a>(points, values, xi[, method, ...])</p></td>
+<td><p>Interpolate unstructured D-D data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.LinearNDInterpolator.html#scipy.interpolate.LinearNDInterpolator" title="scipy.interpolate.LinearNDInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearNDInterpolator</span></code></a>(points, values[, ...])</p></td>
+<td><p>Piecewise linear interpolator in N &gt; 1 dimensions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.NearestNDInterpolator.html#scipy.interpolate.NearestNDInterpolator" title="scipy.interpolate.NearestNDInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NearestNDInterpolator</span></code></a>(x, y[, rescale, ...])</p></td>
+<td><p>NearestNDInterpolator(x, y).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.CloughTocher2DInterpolator.html#scipy.interpolate.CloughTocher2DInterpolator" title="scipy.interpolate.CloughTocher2DInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CloughTocher2DInterpolator</span></code></a>(points, values[, ...])</p></td>
+<td><p>CloughTocher2DInterpolator(points, values, tol=1e-6).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.RBFInterpolator.html#scipy.interpolate.RBFInterpolator" title="scipy.interpolate.RBFInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RBFInterpolator</span></code></a>(y, d[, neighbors, ...])</p></td>
+<td><p>Radial basis function (RBF) interpolation in N dimensions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.Rbf.html#scipy.interpolate.Rbf" title="scipy.interpolate.Rbf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rbf</span></code></a>(*args, **kwargs)</p></td>
+<td><p>A class for radial basis function interpolation of functions from N-D scattered data to an M-D domain.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.interp2d.html#scipy.interpolate.interp2d" title="scipy.interpolate.interp2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interp2d</span></code></a>(x, y, z[, kind, copy, ...])</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For data on a grid:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.interpn.html#scipy.interpolate.interpn" title="scipy.interpolate.interpn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interpn</span></code></a>(points, values, xi[, method, ...])</p></td>
+<td><p>Multidimensional interpolation on regular or rectilinear grids.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.RegularGridInterpolator.html#scipy.interpolate.RegularGridInterpolator" title="scipy.interpolate.RegularGridInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RegularGridInterpolator</span></code></a>(points, values[, ...])</p></td>
+<td><p>Interpolator on a regular or rectilinear grid in arbitrary dimensions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.RectBivariateSpline.html#scipy.interpolate.RectBivariateSpline" title="scipy.interpolate.RectBivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RectBivariateSpline</span></code></a>(x, y, z[, bbox, kx, ky, s])</p></td>
+<td><p>Bivariate spline approximation over a rectangular mesh.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="generated/scipy.ndimage.map_coordinates.html#scipy.ndimage.map_coordinates" title="scipy.ndimage.map_coordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage.map_coordinates</span></code></a></p>
+</div>
+<p>Tensor product polynomials:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.NdPPoly.html#scipy.interpolate.NdPPoly" title="scipy.interpolate.NdPPoly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NdPPoly</span></code></a>(c, x[, extrapolate])</p></td>
+<td><p>Piecewise tensor product polynomial</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.NdBSpline.html#scipy.interpolate.NdBSpline" title="scipy.interpolate.NdBSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NdBSpline</span></code></a>(t, c, k, *[, extrapolate])</p></td>
+<td><p>Tensor product spline object.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="d-splines">
+<h2>1-D Splines<a class="headerlink" href="#d-splines" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.BSpline.html#scipy.interpolate.BSpline" title="scipy.interpolate.BSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BSpline</span></code></a>(t, c, k[, extrapolate, axis])</p></td>
+<td><p>Univariate spline in the B-spline basis.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.make_interp_spline.html#scipy.interpolate.make_interp_spline" title="scipy.interpolate.make_interp_spline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_interp_spline</span></code></a>(x, y[, k, t, bc_type, ...])</p></td>
+<td><p>Compute the (coefficients of) interpolating B-spline.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.make_lsq_spline.html#scipy.interpolate.make_lsq_spline" title="scipy.interpolate.make_lsq_spline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_lsq_spline</span></code></a>(x, y, t[, k, w, axis, ...])</p></td>
+<td><p>Compute the (coefficients of) an LSQ (Least SQuared) based fitting B-spline.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.make_smoothing_spline.html#scipy.interpolate.make_smoothing_spline" title="scipy.interpolate.make_smoothing_spline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_smoothing_spline</span></code></a>(x, y[, w, lam])</p></td>
+<td><p>Compute the (coefficients of) smoothing cubic spline function using <code class="docutils literal notranslate"><span class="pre">lam</span></code> to control the tradeoff between the amount of smoothness of the curve and its proximity to the data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.generate_knots.html#scipy.interpolate.generate_knots" title="scipy.interpolate.generate_knots"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_knots</span></code></a>(x, y, *[, w, xb, xe, k, s, nest])</p></td>
+<td><p>Replicate FITPACK's constructing the knot vector.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.make_splrep.html#scipy.interpolate.make_splrep" title="scipy.interpolate.make_splrep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_splrep</span></code></a>(x, y, *[, w, xb, xe, k, s, t, nest])</p></td>
+<td><p>Find the B-spline representation of a 1D function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.make_splprep.html#scipy.interpolate.make_splprep" title="scipy.interpolate.make_splprep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_splprep</span></code></a>(x, *[, w, u, ub, ue, k, s, t, nest])</p></td>
+<td><p>Find a smoothed B-spline representation of a parametric N-D curve.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Functional interface to FITPACK routines:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.splrep.html#scipy.interpolate.splrep" title="scipy.interpolate.splrep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">splrep</span></code></a>(x, y[, w, xb, xe, k, task, s, t, ...])</p></td>
+<td><p>Find the B-spline representation of a 1-D curve.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.splprep.html#scipy.interpolate.splprep" title="scipy.interpolate.splprep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">splprep</span></code></a>(x[, w, u, ub, ue, k, task, s, t, ...])</p></td>
+<td><p>Find the B-spline representation of an N-D curve.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.splev.html#scipy.interpolate.splev" title="scipy.interpolate.splev"><code class="xref py py-obj docutils literal notranslate"><span class="pre">splev</span></code></a>(x, tck[, der, ext])</p></td>
+<td><p>Evaluate a B-spline or its derivatives.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.splint.html#scipy.interpolate.splint" title="scipy.interpolate.splint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">splint</span></code></a>(a, b, tck[, full_output])</p></td>
+<td><p>Evaluate the definite integral of a B-spline between two given points.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.sproot.html#scipy.interpolate.sproot" title="scipy.interpolate.sproot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sproot</span></code></a>(tck[, mest])</p></td>
+<td><p>Find the roots of a cubic B-spline.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.spalde.html#scipy.interpolate.spalde" title="scipy.interpolate.spalde"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spalde</span></code></a>(x, tck)</p></td>
+<td><p>Evaluate a B-spline and all its derivatives at one point (or set of points) up to order k (the degree of the spline), being 0 the spline itself.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.splder.html#scipy.interpolate.splder" title="scipy.interpolate.splder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">splder</span></code></a>(tck[, n])</p></td>
+<td><p>Compute the spline representation of the derivative of a given spline</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.splantider.html#scipy.interpolate.splantider" title="scipy.interpolate.splantider"><code class="xref py py-obj docutils literal notranslate"><span class="pre">splantider</span></code></a>(tck[, n])</p></td>
+<td><p>Compute the spline for the antiderivative (integral) of a given spline.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.insert.html#scipy.interpolate.insert" title="scipy.interpolate.insert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">insert</span></code></a>(x, tck[, m, per])</p></td>
+<td><p>Insert knots into a B-spline.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Object-oriented FITPACK interface:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.UnivariateSpline.html#scipy.interpolate.UnivariateSpline" title="scipy.interpolate.UnivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnivariateSpline</span></code></a>(x, y[, w, bbox, k, s, ext, ...])</p></td>
+<td><p>1-D smoothing spline fit to a given set of data points.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.InterpolatedUnivariateSpline.html#scipy.interpolate.InterpolatedUnivariateSpline" title="scipy.interpolate.InterpolatedUnivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InterpolatedUnivariateSpline</span></code></a>(x, y[, w, ...])</p></td>
+<td><p>1-D interpolating spline for a given set of data points.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.LSQUnivariateSpline.html#scipy.interpolate.LSQUnivariateSpline" title="scipy.interpolate.LSQUnivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LSQUnivariateSpline</span></code></a>(x, y, t[, w, bbox, k, ...])</p></td>
+<td><p>1-D spline with explicit internal knots.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="id1">
+<h2>2-D Splines<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>For data on a grid:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.RectBivariateSpline.html#scipy.interpolate.RectBivariateSpline" title="scipy.interpolate.RectBivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RectBivariateSpline</span></code></a>(x, y, z[, bbox, kx, ky, s])</p></td>
+<td><p>Bivariate spline approximation over a rectangular mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.RectSphereBivariateSpline.html#scipy.interpolate.RectSphereBivariateSpline" title="scipy.interpolate.RectSphereBivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RectSphereBivariateSpline</span></code></a>(u, v, r[, s, ...])</p></td>
+<td><p>Bivariate spline approximation over a rectangular mesh on a sphere.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For unstructured data:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.BivariateSpline.html#scipy.interpolate.BivariateSpline" title="scipy.interpolate.BivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BivariateSpline</span></code></a>()</p></td>
+<td><p>Base class for bivariate splines.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.SmoothBivariateSpline.html#scipy.interpolate.SmoothBivariateSpline" title="scipy.interpolate.SmoothBivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SmoothBivariateSpline</span></code></a>(x, y, z[, w, bbox, ...])</p></td>
+<td><p>Smooth bivariate spline approximation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.SmoothSphereBivariateSpline.html#scipy.interpolate.SmoothSphereBivariateSpline" title="scipy.interpolate.SmoothSphereBivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SmoothSphereBivariateSpline</span></code></a>(theta, phi, r[, ...])</p></td>
+<td><p>Smooth bivariate spline approximation in spherical coordinates.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.LSQBivariateSpline.html#scipy.interpolate.LSQBivariateSpline" title="scipy.interpolate.LSQBivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LSQBivariateSpline</span></code></a>(x, y, z, tx, ty[, w, ...])</p></td>
+<td><p>Weighted least-squares bivariate spline approximation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.LSQSphereBivariateSpline.html#scipy.interpolate.LSQSphereBivariateSpline" title="scipy.interpolate.LSQSphereBivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LSQSphereBivariateSpline</span></code></a>(theta, phi, r, tt, tp)</p></td>
+<td><p>Weighted least-squares bivariate spline approximation in spherical coordinates.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Low-level interface to FITPACK functions:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.bisplrep.html#scipy.interpolate.bisplrep" title="scipy.interpolate.bisplrep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bisplrep</span></code></a>(x, y, z[, w, xb, xe, yb, ye, kx, ...])</p></td>
+<td><p>Find a bivariate B-spline representation of a surface.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.bisplev.html#scipy.interpolate.bisplev" title="scipy.interpolate.bisplev"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bisplev</span></code></a>(x, y, tck[, dx, dy])</p></td>
+<td><p>Evaluate a bivariate B-spline and its derivatives.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="rational-approximation">
+<h2>Rational Approximation<a class="headerlink" href="#rational-approximation" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.pade.html#scipy.interpolate.pade" title="scipy.interpolate.pade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pade</span></code></a>(an, m[, n])</p></td>
+<td><p>Return Pade approximation to a polynomial as the ratio of two polynomials.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.AAA.html#scipy.interpolate.AAA" title="scipy.interpolate.AAA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AAA</span></code></a>(x, y, *[, rtol, max_terms, clean_up, ...])</p></td>
+<td><p>AAA real or complex rational approximation.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="additional-tools">
+<h2>Additional tools<a class="headerlink" href="#additional-tools" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.interpolate.lagrange.html#scipy.interpolate.lagrange" title="scipy.interpolate.lagrange"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lagrange</span></code></a>(x, w)</p></td>
+<td><p>Return a Lagrange interpolating polynomial.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.interpolate.approximate_taylor_polynomial.html#scipy.interpolate.approximate_taylor_polynomial" title="scipy.interpolate.approximate_taylor_polynomial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">approximate_taylor_polynomial</span></code></a>(f, x, degree, ...)</p></td>
+<td><p>Estimate the Taylor polynomial of f at x by polynomial fitting.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="generated/scipy.ndimage.map_coordinates.html#scipy.ndimage.map_coordinates" title="scipy.ndimage.map_coordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage.map_coordinates</span></code></a>,
+<a class="reference internal" href="generated/scipy.ndimage.spline_filter.html#scipy.ndimage.spline_filter" title="scipy.ndimage.spline_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage.spline_filter</span></code></a>,
+<a class="reference internal" href="generated/scipy.signal.resample.html#scipy.signal.resample" title="scipy.signal.resample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal.resample</span></code></a>,
+<em class="xref py py-obj">scipy.signal.bspline</em>,
+<a class="reference internal" href="generated/scipy.signal.gauss_spline.html#scipy.signal.gauss_spline" title="scipy.signal.gauss_spline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal.gauss_spline</span></code></a>,
+<a class="reference internal" href="generated/scipy.signal.qspline1d.html#scipy.signal.qspline1d" title="scipy.signal.qspline1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal.qspline1d</span></code></a>,
+<a class="reference internal" href="generated/scipy.signal.cspline1d.html#scipy.signal.cspline1d" title="scipy.signal.cspline1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal.cspline1d</span></code></a>,
+<a class="reference internal" href="generated/scipy.signal.qspline1d_eval.html#scipy.signal.qspline1d_eval" title="scipy.signal.qspline1d_eval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal.qspline1d_eval</span></code></a>,
+<a class="reference internal" href="generated/scipy.signal.cspline1d_eval.html#scipy.signal.cspline1d_eval" title="scipy.signal.cspline1d_eval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal.cspline1d_eval</span></code></a>,
+<a class="reference internal" href="generated/scipy.signal.qspline2d.html#scipy.signal.qspline2d" title="scipy.signal.qspline2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal.qspline2d</span></code></a>,
+<a class="reference internal" href="generated/scipy.signal.cspline2d.html#scipy.signal.cspline2d" title="scipy.signal.cspline2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal.cspline2d</span></code></a>.</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pchip</span></code> is an alias of <a class="reference internal" href="generated/scipy.interpolate.PchipInterpolator.html#scipy.interpolate.PchipInterpolator" title="scipy.interpolate.PchipInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PchipInterpolator</span></code></a> for backward compatibility
+(should not be used in new code).</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="generated/scipy.integrate.solve_bvp.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">solve_bvp</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="generated/scipy.interpolate.interp1d.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">interp1d</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#univariate-interpolation">Univariate interpolation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multivariate-interpolation">Multivariate interpolation</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#d-splines">1-D Splines</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">2-D Splines</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rational-approximation">Rational Approximation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-tools">Additional tools</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

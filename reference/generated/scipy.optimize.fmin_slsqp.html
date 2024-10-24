@@ -1,0 +1,730 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>fmin_slsqp &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.optimize.fmin_slsqp';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="fminbound" href="scipy.optimize.fminbound.html" />
+    <link rel="prev" title="fmin_cobyla" href="scipy.optimize.fmin_cobyla.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../optimize.html" class="nav-link">Optimization and root finding (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">fmin_slsqp</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.optimize.</div>
+<div class="empty"></div><section id="fmin-slsqp">
+<h1>fmin_slsqp<a class="headerlink" href="#fmin-slsqp" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.optimize.fmin_slsqp">
+<span class="sig-prename descclassname"><span class="pre">scipy.optimize.</span></span><span class="sig-name descname"><span class="pre">fmin_slsqp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eqcons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_eqcons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ieqcons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_ieqcons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fprime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fprime_eqcons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fprime_ieqcons</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iprint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.float64(1.4901161193847656e-08)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/optimize/_slsqp_py.py#L69-L212"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.optimize.fmin_slsqp" title="Link to this definition">#</a></dt>
+<dd><p>Minimize a function using Sequential Least Squares Programming</p>
+<p>Python interface function for the SLSQP Optimization subroutine
+originally implemented by Dieter Kraft.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>func</strong><span class="classifier">callable f(x,*args)</span></dt><dd><p>Objective function.  Must return a scalar.</p>
+</dd>
+<dt><strong>x0</strong><span class="classifier">1-D ndarray of float</span></dt><dd><p>Initial guess for the independent variable(s).</p>
+</dd>
+<dt><strong>eqcons</strong><span class="classifier">list, optional</span></dt><dd><p>A list of functions of length n such that
+eqcons[j](x,*args) == 0.0 in a successfully optimized
+problem.</p>
+</dd>
+<dt><strong>f_eqcons</strong><span class="classifier">callable f(x,*args), optional</span></dt><dd><p>Returns a 1-D array in which each element must equal 0.0 in a
+successfully optimized problem. If f_eqcons is specified,
+eqcons is ignored.</p>
+</dd>
+<dt><strong>ieqcons</strong><span class="classifier">list, optional</span></dt><dd><p>A list of functions of length n such that
+ieqcons[j](x,*args) &gt;= 0.0 in a successfully optimized
+problem.</p>
+</dd>
+<dt><strong>f_ieqcons</strong><span class="classifier">callable f(x,*args), optional</span></dt><dd><p>Returns a 1-D ndarray in which each element must be greater or
+equal to 0.0 in a successfully optimized problem. If
+f_ieqcons is specified, ieqcons is ignored.</p>
+</dd>
+<dt><strong>bounds</strong><span class="classifier">list, optional</span></dt><dd><p>A list of tuples specifying the lower and upper bound
+for each independent variable [(xl0, xu0),(xl1, xu1),…]
+Infinite values will be interpreted as large floating values.</p>
+</dd>
+<dt><strong>fprime</strong><span class="classifier">callable <code class="docutils literal notranslate"><span class="pre">f(x,*args)</span></code>, optional</span></dt><dd><p>A function that evaluates the partial derivatives of func.</p>
+</dd>
+<dt><strong>fprime_eqcons</strong><span class="classifier">callable <code class="docutils literal notranslate"><span class="pre">f(x,*args)</span></code>, optional</span></dt><dd><p>A function of the form <code class="docutils literal notranslate"><span class="pre">f(x,</span> <span class="pre">*args)</span></code> that returns the m by n
+array of equality constraint normals. If not provided,
+the normals will be approximated. The array returned by
+fprime_eqcons should be sized as ( len(eqcons), len(x0) ).</p>
+</dd>
+<dt><strong>fprime_ieqcons</strong><span class="classifier">callable <code class="docutils literal notranslate"><span class="pre">f(x,*args)</span></code>, optional</span></dt><dd><p>A function of the form <code class="docutils literal notranslate"><span class="pre">f(x,</span> <span class="pre">*args)</span></code> that returns the m by n
+array of inequality constraint normals. If not provided,
+the normals will be approximated. The array returned by
+fprime_ieqcons should be sized as ( len(ieqcons), len(x0) ).</p>
+</dd>
+<dt><strong>args</strong><span class="classifier">sequence, optional</span></dt><dd><p>Additional arguments passed to func and fprime.</p>
+</dd>
+<dt><strong>iter</strong><span class="classifier">int, optional</span></dt><dd><p>The maximum number of iterations.</p>
+</dd>
+<dt><strong>acc</strong><span class="classifier">float, optional</span></dt><dd><p>Requested accuracy.</p>
+</dd>
+<dt><strong>iprint</strong><span class="classifier">int, optional</span></dt><dd><p>The verbosity of fmin_slsqp :</p>
+<ul class="simple">
+<li><p>iprint &lt;= 0 : Silent operation</p></li>
+<li><p>iprint == 1 : Print summary upon completion (default)</p></li>
+<li><p>iprint &gt;= 2 : Print status of each iterate and summary</p></li>
+</ul>
+</dd>
+<dt><strong>disp</strong><span class="classifier">int, optional</span></dt><dd><p>Overrides the iprint interface (preferred).</p>
+</dd>
+<dt><strong>full_output</strong><span class="classifier">bool, optional</span></dt><dd><p>If False, return only the minimizer of func (default).
+Otherwise, output final objective function and summary
+information.</p>
+</dd>
+<dt><strong>epsilon</strong><span class="classifier">float, optional</span></dt><dd><p>The step size for finite-difference derivative estimates.</p>
+</dd>
+<dt><strong>callback</strong><span class="classifier">callable, optional</span></dt><dd><p>Called after each iteration, as <code class="docutils literal notranslate"><span class="pre">callback(x)</span></code>, where <code class="docutils literal notranslate"><span class="pre">x</span></code> is the
+current parameter vector.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>out</strong><span class="classifier">ndarray of float</span></dt><dd><p>The final minimizer of func.</p>
+</dd>
+<dt><strong>fx</strong><span class="classifier">ndarray of float, if full_output is true</span></dt><dd><p>The final value of the objective function.</p>
+</dd>
+<dt><strong>its</strong><span class="classifier">int, if full_output is true</span></dt><dd><p>The number of iterations.</p>
+</dd>
+<dt><strong>imode</strong><span class="classifier">int, if full_output is true</span></dt><dd><p>The exit mode from the optimizer (see below).</p>
+</dd>
+<dt><strong>smode</strong><span class="classifier">string, if full_output is true</span></dt><dd><p>Message describing the exit mode from the optimizer.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="scipy.optimize.minimize.html#scipy.optimize.minimize" title="scipy.optimize.minimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minimize</span></code></a></dt><dd><p>Interface to minimization algorithms for multivariate functions. See the ‘SLSQP’ <em class="xref py py-obj">method</em> in particular.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>Exit modes are defined as follows:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-1</span></code> : Gradient evaluation required (g &amp; a)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code> : Optimization terminated successfully</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code> : Function evaluation required (f &amp; c)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code> : More equality constraints than independent variables</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">3</span></code> : More than 3*n iterations in LSQ subproblem</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">4</span></code> : Inequality constraints incompatible</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">5</span></code> : Singular matrix E in LSQ subproblem</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">6</span></code> : Singular matrix C in LSQ subproblem</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">7</span></code> : Rank-deficient equality constraint subproblem HFTI</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">8</span></code> : Positive directional derivative for linesearch</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">9</span></code> : Iteration limit reached</p></li>
+</ul>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="011e15e8-120b-4a67-a24c-f87b79acbd2a">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('011e15e8-120b-4a67-a24c-f87b79acbd2a','98a8e2b1-05b8-4c68-8a86-d87cb75224bf','7187d232-da95-42b8-af00-237581b6af5d','../../lite/tree/../notebooks/index.html?path=a46e5786_98e1_4cf9_be98_4673ddd23368.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>Examples are given <a class="reference internal" href="../../tutorial/optimize.html#tutorial-sqlsp"><span class="std std-ref">in the tutorial</span></a>.</p>
+</div>
+</div>
+<div id="7187d232-da95-42b8-af00-237581b6af5d" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('011e15e8-120b-4a67-a24c-f87b79acbd2a','7187d232-da95-42b8-af00-237581b6af5d')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('011e15e8-120b-4a67-a24c-f87b79acbd2a','7187d232-da95-42b8-af00-237581b6af5d')">Open In Tab</button></div><div id="98a8e2b1-05b8-4c68-8a86-d87cb75224bf" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.optimize.fmin_cobyla.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">fmin_cobyla</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.optimize.fminbound.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">fminbound</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.optimize.fmin_slsqp"><code class="docutils literal notranslate"><span class="pre">fmin_slsqp</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

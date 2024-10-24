@@ -1,0 +1,800 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>zpk2sos &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.signal.zpk2sos';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="zpk2ss" href="scipy.signal.zpk2ss.html" />
+    <link rel="prev" title="zpk2tf" href="scipy.signal.zpk2tf.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../signal.html" class="nav-link">Signal processing (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.signal</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">zpk2sos</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.signal.</div>
+<div class="empty"></div><section id="zpk2sos">
+<h1>zpk2sos<a class="headerlink" href="#zpk2sos" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.signal.zpk2sos">
+<span class="sig-prename descclassname"><span class="pre">scipy.signal.</span></span><span class="sig-name descname"><span class="pre">zpk2sos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">analog</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/signal/_filter_design.py#L1376-L1690"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.signal.zpk2sos" title="Link to this definition">#</a></dt>
+<dd><p>Return second-order sections from zeros, poles, and gain of a system</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>z</strong><span class="classifier">array_like</span></dt><dd><p>Zeros of the transfer function.</p>
+</dd>
+<dt><strong>p</strong><span class="classifier">array_like</span></dt><dd><p>Poles of the transfer function.</p>
+</dd>
+<dt><strong>k</strong><span class="classifier">float</span></dt><dd><p>System gain.</p>
+</dd>
+<dt><strong>pairing</strong><span class="classifier">{None, ‘nearest’, ‘keep_odd’, ‘minimal’}, optional</span></dt><dd><p>The method to use to combine pairs of poles and zeros into sections.
+If analog is False and pairing is None, pairing is set to ‘nearest’;
+if analog is True, pairing must be ‘minimal’, and is set to that if
+it is None.</p>
+</dd>
+<dt><strong>analog</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, system is analog, otherwise discrete.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.8.0.</span></p>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>sos</strong><span class="classifier">ndarray</span></dt><dd><p>Array of second-order filter coefficients, with shape
+<code class="docutils literal notranslate"><span class="pre">(n_sections,</span> <span class="pre">6)</span></code>. See <a class="reference internal" href="scipy.signal.sosfilt.html#scipy.signal.sosfilt" title="scipy.signal.sosfilt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sosfilt</span></code></a> for the SOS filter format
+specification.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="scipy.signal.sosfilt.html#scipy.signal.sosfilt" title="scipy.signal.sosfilt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sosfilt</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>The algorithm used to convert ZPK to SOS format is designed to
+minimize errors due to numerical precision issues. The pairing
+algorithm attempts to minimize the peak gain of each biquadratic
+section. This is done by pairing poles with the nearest zeros, starting
+with the poles closest to the unit circle for discrete-time systems, and
+poles closest to the imaginary axis for continuous-time systems.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pairing='minimal'</span></code> outputs may not be suitable for <a class="reference internal" href="scipy.signal.sosfilt.html#scipy.signal.sosfilt" title="scipy.signal.sosfilt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sosfilt</span></code></a>,
+and <code class="docutils literal notranslate"><span class="pre">analog=True</span></code> outputs will never be suitable for <a class="reference internal" href="scipy.signal.sosfilt.html#scipy.signal.sosfilt" title="scipy.signal.sosfilt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sosfilt</span></code></a>.</p>
+<p><em>Algorithms</em></p>
+<p>The steps in the <code class="docutils literal notranslate"><span class="pre">pairing='nearest'</span></code>, <code class="docutils literal notranslate"><span class="pre">pairing='keep_odd'</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">pairing='minimal'</span></code> algorithms are mostly shared. The
+<code class="docutils literal notranslate"><span class="pre">'nearest'</span></code> algorithm attempts to minimize the peak gain, while
+<code class="docutils literal notranslate"><span class="pre">'keep_odd'</span></code> minimizes peak gain under the constraint that
+odd-order systems should retain one section as first order.
+<code class="docutils literal notranslate"><span class="pre">'minimal'</span></code> is similar to <code class="docutils literal notranslate"><span class="pre">'keep_odd'</span></code>, but no additional
+poles or zeros are introduced</p>
+<p>The algorithm steps are as follows:</p>
+<p>As a pre-processing step for <code class="docutils literal notranslate"><span class="pre">pairing='nearest'</span></code>,
+<code class="docutils literal notranslate"><span class="pre">pairing='keep_odd'</span></code>, add poles or zeros to the origin as
+necessary to obtain the same number of poles and zeros for
+pairing.  If <code class="docutils literal notranslate"><span class="pre">pairing</span> <span class="pre">==</span> <span class="pre">'nearest'</span></code> and there are an odd number
+of poles, add an additional pole and a zero at the origin.</p>
+<p>The following steps are then iterated over until no more poles or
+zeros remain:</p>
+<ol class="arabic">
+<li><p>Take the (next remaining) pole (complex or real) closest to the
+unit circle (or imaginary axis, for <code class="docutils literal notranslate"><span class="pre">analog=True</span></code>) to
+begin a new filter section.</p></li>
+<li><p>If the pole is real and there are no other remaining real poles <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>,
+add the closest real zero to the section and leave it as a first
+order section. Note that after this step we are guaranteed to be
+left with an even number of real poles, complex poles, real zeros,
+and complex zeros for subsequent pairing iterations.</p></li>
+<li><p>Else:</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p>If the pole is complex and the zero is the only remaining real
+zero*, then pair the pole with the <em>next</em> closest zero
+(guaranteed to be complex). This is necessary to ensure that
+there will be a real zero remaining to eventually create a
+first-order section (thus keeping the odd order).</p></li>
+<li><p>Else pair the pole with the closest remaining zero (complex or
+real).</p></li>
+<li><p>Proceed to complete the second-order section by adding another
+pole and zero to the current pole and zero in the section:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>If the current pole and zero are both complex, add their
+conjugates.</p></li>
+<li><p>Else if the pole is complex and the zero is real, add the
+conjugate pole and the next closest real zero.</p></li>
+<li><p>Else if the pole is real and the zero is complex, add the
+conjugate zero and the real pole closest to those zeros.</p></li>
+<li><p>Else (we must have a real pole and real zero) add the next
+real pole closest to the unit circle, and then add the real
+zero closest to that pole.</p></li>
+</ol>
+</div></blockquote>
+</li>
+</ol>
+</div></blockquote>
+</li>
+</ol>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>This conditional can only be met for specific odd-order inputs
+with the <code class="docutils literal notranslate"><span class="pre">pairing</span> <span class="pre">=</span> <span class="pre">'keep_odd'</span></code> or <code class="docutils literal notranslate"><span class="pre">'minimal'</span></code> methods.</p>
+</aside>
+</aside>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 0.16.0.</span></p>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="664b964a-0c07-454c-ac4d-acfba7cd900c">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('664b964a-0c07-454c-ac4d-acfba7cd900c','f3de7e69-d423-4a4c-a6bd-e8ea9752fbe8','eb2c4f1e-8e69-4743-9652-18fa63672332','../../lite/tree/../notebooks/index.html?path=81a79d8c_0c68_4978_b33a_058d93231c26.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>Design a 6th order low-pass elliptic digital filter for a system with a
+sampling rate of 8000 Hz that has a pass-band corner frequency of
+1000 Hz. The ripple in the pass-band should not exceed 0.087 dB, and
+the attenuation in the stop-band should be at least 90 dB.</p>
+<p>In the following call to <a class="reference internal" href="scipy.signal.ellip.html#scipy.signal.ellip" title="scipy.signal.ellip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ellip</span></code></a>, we could use <code class="docutils literal notranslate"><span class="pre">output='sos'</span></code>,
+but for this example, we’ll use <code class="docutils literal notranslate"><span class="pre">output='zpk'</span></code>, and then convert
+to SOS format with <a class="reference internal" href="#scipy.signal.zpk2sos" title="scipy.signal.zpk2sos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zpk2sos</span></code></a>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">signal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">ellip</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">0.087</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">1000</span><span class="o">/</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="mi">8000</span><span class="p">),</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;zpk&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now convert to SOS format.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sos</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">zpk2sos</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The coefficients of the numerators of the sections:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sos</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+<span class="go">array([[0.0014152 , 0.00248677, 0.0014152 ],</span>
+<span class="go">       [1.        , 0.72976874, 1.        ],</span>
+<span class="go">       [1.        , 0.17607852, 1.        ]])</span>
+</pre></div>
+</div>
+<p>The symmetry in the coefficients occurs because all the zeros are on the
+unit circle.</p>
+<p>The coefficients of the denominators of the sections:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sos</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:]</span>
+<span class="go">array([[ 1.        , -1.32544025,  0.46989976],</span>
+<span class="go">       [ 1.        , -1.26118294,  0.62625924],</span>
+<span class="go">       [ 1.        , -1.2570723 ,  0.8619958 ]])</span>
+</pre></div>
+</div>
+<p>The next example shows the effect of the <em class="xref py py-obj">pairing</em> option.  We have a
+system with three poles and three zeros, so the SOS array will have
+shape (2, 6). The means there is, in effect, an extra pole and an extra
+zero at the origin in the SOS representation.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">-</span><span class="mf">0.5</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">+</span><span class="mf">0.5</span><span class="n">j</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.8</span><span class="o">+</span><span class="mf">0.1</span><span class="n">j</span><span class="p">,</span> <span class="mf">0.8</span><span class="o">-</span><span class="mf">0.1</span><span class="n">j</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>With <code class="docutils literal notranslate"><span class="pre">pairing='nearest'</span></code> (the default), we obtain</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">zpk2sos</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">array([[ 1.  ,  1.  ,  0.5 ,  1.  , -0.75,  0.  ],</span>
+<span class="go">       [ 1.  ,  1.  ,  0.  ,  1.  , -1.6 ,  0.65]])</span>
+</pre></div>
+</div>
+<p>The first section has the zeros {-0.5-0.05j, -0.5+0.5j} and the poles
+{0, 0.75}, and the second section has the zeros {-1, 0} and poles
+{0.8+0.1j, 0.8-0.1j}. Note that the extra pole and zero at the origin
+have been assigned to different sections.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">pairing='keep_odd'</span></code>, we obtain:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">zpk2sos</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pairing</span><span class="o">=</span><span class="s1">&#39;keep_odd&#39;</span><span class="p">)</span>
+<span class="go">array([[ 1.  ,  1.  ,  0.  ,  1.  , -0.75,  0.  ],</span>
+<span class="go">       [ 1.  ,  1.  ,  0.5 ,  1.  , -1.6 ,  0.65]])</span>
+</pre></div>
+</div>
+<p>The extra pole and zero at the origin are in the same section.
+The first section is, in effect, a first-order section.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">pairing='minimal'</span></code>, the first-order section doesn’t have
+the extra pole and zero at the origin:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signal</span><span class="o">.</span><span class="n">zpk2sos</span><span class="p">(</span><span class="n">z1</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pairing</span><span class="o">=</span><span class="s1">&#39;minimal&#39;</span><span class="p">)</span>
+<span class="go">array([[ 0.  ,  1.  ,  1.  ,  0.  ,  1.  , -0.75],</span>
+<span class="go">       [ 1.  ,  1.  ,  0.5 ,  1.  , -1.6 ,  0.65]])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div id="eb2c4f1e-8e69-4743-9652-18fa63672332" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('664b964a-0c07-454c-ac4d-acfba7cd900c','eb2c4f1e-8e69-4743-9652-18fa63672332')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('664b964a-0c07-454c-ac4d-acfba7cd900c','eb2c4f1e-8e69-4743-9652-18fa63672332')">Open In Tab</button></div><div id="f3de7e69-d423-4a4c-a6bd-e8ea9752fbe8" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.signal.zpk2tf.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">zpk2tf</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.signal.zpk2ss.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">zpk2ss</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.signal.zpk2sos"><code class="docutils literal notranslate"><span class="pre">zpk2sos</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

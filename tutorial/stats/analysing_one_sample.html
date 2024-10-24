@@ -1,0 +1,842 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Analysing one sample &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorial/stats/analysing_one_sample';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Comparing two samples" href="comparing_two_samples.html" />
+    <link rel="prev" title="Quasi-Monte Carlo" href="quasi_monte_carlo.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../special.html">Special functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.special</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">Integration (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.integrate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">Optimization (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">Fourier Transforms (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.fft</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">Signal Processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">Linear Algebra (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">Sparse Arrays (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arpack.html">Sparse eigenvalue problems with ARPACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csgraph.html">Compressed Sparse Graph Routines (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.csgraph</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">Spatial data structures and algorithms (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code>)</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../stats.html">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="probability_distributions.html">Probability distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sampling.html">Universal Non-Uniform Random Number Sampling in SciPy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel_density_estimation.html">Kernel density estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiscale_graphcorr.html">Multiscale Graph Correlation (MGC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quasi_monte_carlo.html">Quasi-Monte Carlo</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Analysing one sample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparing_two_samples.html">Comparing two samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resampling.html">Resampling and Monte Carlo Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hypothesis_tests.html">Hypothesis tests</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">Multidimensional image processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">File IO (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.io</span></code>)</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy User Guide</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../stats.html" class="nav-link">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Analysing one sample</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="analysing-one-sample">
+<h1>Analysing one sample<a class="headerlink" href="#analysing-one-sample" title="Link to this heading">#</a></h1>
+<p>First, we create some random variables. We set a seed so that in each run
+we get identical results to look at. As an example we take a sample from
+the Student t distribution:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here, we set the required shape parameter of the t distribution, which
+in statistics corresponds to the degrees of freedom, to 10. Using size=1000 means
+that our sample consists of 1000 independently drawn (pseudo) random numbers.
+Since we did not specify the keyword arguments <em class="xref py py-obj">loc</em> and <em class="xref py py-obj">scale</em>, those are
+set to their default values zero and one.</p>
+<section id="descriptive-statistics">
+<h2>Descriptive statistics<a class="headerlink" href="#descriptive-statistics" title="Link to this heading">#</a></h2>
+<p><em class="xref py py-obj">x</em> is a numpy array, and we have direct access to all array methods, e.g.,</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>   <span class="c1"># equivalent to np.min(x)</span>
+<span class="go">-3.78975572422  # random</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>   <span class="c1"># equivalent to np.max(x)</span>
+<span class="go">5.26327732981  # random</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>  <span class="c1"># equivalent to np.mean(x)</span>
+<span class="go">0.0140610663985  # random</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">var</span><span class="p">())</span>   <span class="c1"># equivalent to np.var(x))</span>
+<span class="go">1.28899386208  # random</span>
+</pre></div>
+</div>
+<p>How do the sample properties compare to their theoretical counterparts?</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">m</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">moments</span><span class="o">=</span><span class="s1">&#39;mvsk&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span><span class="p">,</span> <span class="p">(</span><span class="n">smin</span><span class="p">,</span> <span class="n">smax</span><span class="p">),</span> <span class="n">sm</span><span class="p">,</span> <span class="n">sv</span><span class="p">,</span> <span class="n">ss</span><span class="p">,</span> <span class="n">sk</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sstr</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%-14s</span><span class="s1"> mean = </span><span class="si">%6.4f</span><span class="s1">, variance = </span><span class="si">%6.4f</span><span class="s1">, skew = </span><span class="si">%6.4f</span><span class="s1">, kurtosis = </span><span class="si">%6.4f</span><span class="s1">&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sstr</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;distribution:&#39;</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">s</span> <span class="p">,</span><span class="n">k</span><span class="p">))</span>
+<span class="go">distribution:  mean = 0.0000, variance = 1.2500, skew = 0.0000, kurtosis = 1.0000  # random</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sstr</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;sample:&#39;</span><span class="p">,</span> <span class="n">sm</span><span class="p">,</span> <span class="n">sv</span><span class="p">,</span> <span class="n">ss</span><span class="p">,</span> <span class="n">sk</span><span class="p">))</span>
+<span class="go">sample:        mean = 0.0141, variance = 1.2903, skew = 0.2165, kurtosis = 1.0556  # random</span>
+</pre></div>
+</div>
+<p>Note: <em class="xref py py-obj">stats.describe</em> uses the unbiased estimator for the variance, while
+np.var is the biased estimator.</p>
+<p>For our sample the sample statistics differ a by a small amount from
+their theoretical counterparts.</p>
+</section>
+<section id="t-test-and-ks-test">
+<h2>T-test and KS-test<a class="headerlink" href="#t-test-and-ks-test" title="Link to this heading">#</a></h2>
+<p>We can use the t-test to test whether the mean of our sample differs
+in a statistically significant way from the theoretical expectation.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;t-statistic = </span><span class="si">%6.3f</span><span class="s1"> pvalue = </span><span class="si">%6.4f</span><span class="s1">&#39;</span> <span class="o">%</span>  <span class="n">stats</span><span class="o">.</span><span class="n">ttest_1samp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">m</span><span class="p">))</span>
+<span class="go">t-statistic =  0.391 pvalue = 0.6955  # random</span>
+</pre></div>
+</div>
+<p>The pvalue is 0.7, this means that with an alpha error of, for
+example, 10%, we cannot reject the hypothesis that the sample mean
+is equal to zero, the expectation of the standard t-distribution.</p>
+<p>As an exercise, we can calculate our ttest also directly without
+using the provided function, which should give us the same answer,
+and so it does:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tt</span> <span class="o">=</span> <span class="p">(</span><span class="n">sm</span><span class="o">-</span><span class="n">m</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sv</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>  <span class="c1"># t-statistic for mean</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pval</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tt</span><span class="p">),</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span>  <span class="c1"># two-sided pvalue = Prob(abs(t)&gt;tt)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;t-statistic = </span><span class="si">%6.3f</span><span class="s1"> pvalue = </span><span class="si">%6.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tt</span><span class="p">,</span> <span class="n">pval</span><span class="p">))</span>
+<span class="go">t-statistic =  0.391 pvalue = 0.6955  # random</span>
+</pre></div>
+</div>
+<p>The Kolmogorov-Smirnov test can be used to test the hypothesis that
+the sample comes from the standard t-distribution</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;KS-statistic D = </span><span class="si">%6.3f</span><span class="s1"> pvalue = </span><span class="si">%6.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">stats</span><span class="o">.</span><span class="n">kstest</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,)))</span>
+<span class="go">KS-statistic D =  0.016 pvalue = 0.9571  # random</span>
+</pre></div>
+</div>
+<p>Again, the p-value is high enough that we cannot reject the
+hypothesis that the random sample really is distributed according to the
+t-distribution. In real applications, we don’t know what the
+underlying distribution is. If we perform the Kolmogorov-Smirnov
+test of our sample against the standard normal distribution, then we
+also cannot reject the hypothesis that our sample was generated by the
+normal distribution given that, in this example, the p-value is almost 40%.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;KS-statistic D = </span><span class="si">%6.3f</span><span class="s1"> pvalue = </span><span class="si">%6.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">stats</span><span class="o">.</span><span class="n">kstest</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;norm&#39;</span><span class="p">))</span>
+<span class="go">KS-statistic D =  0.028 pvalue = 0.3918  # random</span>
+</pre></div>
+</div>
+<p>However, the standard normal distribution has a variance of 1, while our
+sample has a variance of 1.29. If we standardize our sample and test it
+against the normal distribution, then the p-value is again large enough
+that we cannot reject the hypothesis that the sample came form the
+normal distribution.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="p">,</span> <span class="n">pval</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">kstest</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">/</span><span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="s1">&#39;norm&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;KS-statistic D = </span><span class="si">%6.3f</span><span class="s1"> pvalue = </span><span class="si">%6.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">pval</span><span class="p">))</span>
+<span class="go">KS-statistic D =  0.032 pvalue = 0.2397  # random</span>
+</pre></div>
+</div>
+<p>Note: The Kolmogorov-Smirnov test assumes that we test against a
+distribution with given parameters, since, in the last case, we
+estimated mean and variance, this assumption is violated and the
+distribution of the test statistic, on which the p-value is based, is
+not correct.</p>
+</section>
+<section id="tails-of-the-distribution">
+<h2>Tails of the distribution<a class="headerlink" href="#tails-of-the-distribution" title="Link to this heading">#</a></h2>
+<p>Finally, we can check the upper tail of the distribution. We can use
+the percent point function ppf, which is the inverse of the cdf
+function, to obtain the critical values, or, more directly, we can use
+the inverse of the survival function</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">crit01</span><span class="p">,</span> <span class="n">crit05</span><span class="p">,</span> <span class="n">crit10</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">ppf</span><span class="p">([</span><span class="mi">1</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="mf">0.10</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;critical values from ppf at 1</span><span class="si">%%</span><span class="s1">, 5</span><span class="si">%%</span><span class="s1"> and 10</span><span class="si">%%</span><span class="s1"> </span><span class="si">%8.4f</span><span class="s1"> </span><span class="si">%8.4f</span><span class="s1"> </span><span class="si">%8.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">crit01</span><span class="p">,</span> <span class="n">crit05</span><span class="p">,</span> <span class="n">crit10</span><span class="p">))</span>
+<span class="go">critical values from ppf at 1%, 5% and 10%   2.7638   1.8125   1.3722</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;critical values from isf at 1</span><span class="si">%%</span><span class="s1">, 5</span><span class="si">%%</span><span class="s1"> and 10</span><span class="si">%%</span><span class="s1"> </span><span class="si">%8.4f</span><span class="s1"> </span><span class="si">%8.4f</span><span class="s1"> </span><span class="si">%8.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">isf</span><span class="p">([</span><span class="mf">0.01</span><span class="p">,</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.10</span><span class="p">],</span><span class="mi">10</span><span class="p">)))</span>
+<span class="go">critical values from isf at 1%, 5% and 10%   2.7638   1.8125   1.3722</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">freq01</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="o">&gt;</span><span class="n">crit01</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">freq05</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="o">&gt;</span><span class="n">crit05</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">freq10</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="o">&gt;</span><span class="n">crit10</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;sample </span><span class="si">%%</span><span class="s1">-frequency at 1</span><span class="si">%%</span><span class="s1">, 5</span><span class="si">%%</span><span class="s1"> and 10</span><span class="si">%%</span><span class="s1"> tail </span><span class="si">%8.4f</span><span class="s1"> </span><span class="si">%8.4f</span><span class="s1"> </span><span class="si">%8.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">freq01</span><span class="p">,</span> <span class="n">freq05</span><span class="p">,</span> <span class="n">freq10</span><span class="p">))</span>
+<span class="go">sample %-frequency at 1%, 5% and 10% tail   1.4000   5.8000  10.5000  # random</span>
+</pre></div>
+</div>
+<p>In all three cases, our sample has more weight in the top tail than the
+underlying distribution.
+We can briefly check a larger sample to see if we get a closer match. In this
+case, the empirical frequency is quite close to the theoretical probability,
+but if we repeat this several times, the fluctuations are still pretty large.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">freq05l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">crit05</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.0</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;larger sample </span><span class="si">%%</span><span class="s1">-frequency at 5</span><span class="si">%%</span><span class="s1"> tail </span><span class="si">%8.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">freq05l</span><span class="p">)</span>
+<span class="go">larger sample %-frequency at 5% tail   4.8000  # random</span>
+</pre></div>
+</div>
+<p>We can also compare it with the tail of the normal distribution, which
+has less weight in the tails:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;tail prob. of normal at 1</span><span class="si">%%</span><span class="s1">, 5</span><span class="si">%%</span><span class="s1"> and 10</span><span class="si">%%</span><span class="s1"> </span><span class="si">%8.4f</span><span class="s1"> </span><span class="si">%8.4f</span><span class="s1"> </span><span class="si">%8.4f</span><span class="s1">&#39;</span> <span class="o">%</span>
+<span class="gp">... </span>      <span class="nb">tuple</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">sf</span><span class="p">([</span><span class="n">crit01</span><span class="p">,</span> <span class="n">crit05</span><span class="p">,</span> <span class="n">crit10</span><span class="p">])</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
+<span class="go">tail prob. of normal at 1%, 5% and 10%   0.2857   3.4957   8.5003</span>
+</pre></div>
+</div>
+<p>The chisquare test can be used to test whether for a finite number of bins,
+the observed frequencies differ significantly from the probabilities of the
+hypothesized distribution.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">quantiles</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="mf">0.10</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">crit</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">quantiles</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">crit</span>
+<span class="go">array([       -inf, -2.76376946, -1.81246112, -1.37218364,  1.37218364,</span>
+<span class="go">        1.81246112,  2.76376946,         inf])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n_sample</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">freqcount</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">crit</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tprob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">quantiles</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nprob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">crit</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tch</span><span class="p">,</span> <span class="n">tpval</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">chisquare</span><span class="p">(</span><span class="n">freqcount</span><span class="p">,</span> <span class="n">tprob</span><span class="o">*</span><span class="n">n_sample</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nch</span><span class="p">,</span> <span class="n">npval</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">chisquare</span><span class="p">(</span><span class="n">freqcount</span><span class="p">,</span> <span class="n">nprob</span><span class="o">*</span><span class="n">n_sample</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;chisquare for t:      chi2 = </span><span class="si">%6.2f</span><span class="s1"> pvalue = </span><span class="si">%6.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tch</span><span class="p">,</span> <span class="n">tpval</span><span class="p">))</span>
+<span class="go">chisquare for t:      chi2 =  2.30 pvalue = 0.8901  # random</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;chisquare for normal: chi2 = </span><span class="si">%6.2f</span><span class="s1"> pvalue = </span><span class="si">%6.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">nch</span><span class="p">,</span> <span class="n">npval</span><span class="p">))</span>
+<span class="go">chisquare for normal: chi2 = 64.60 pvalue = 0.0000  # random</span>
+</pre></div>
+</div>
+<p>We see that the standard normal distribution is clearly rejected, while the
+standard t-distribution cannot be rejected. Since the variance of our sample
+differs from both standard distributions, we can again redo the test taking
+the estimate for scale and location into account.</p>
+<p>The fit method of the distributions can be used to estimate the parameters
+of the distribution, and the test is repeated using probabilities of the
+estimated distribution.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tdof</span><span class="p">,</span> <span class="n">tloc</span><span class="p">,</span> <span class="n">tscale</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nloc</span><span class="p">,</span> <span class="n">nscale</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tprob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">crit</span><span class="p">,</span> <span class="n">tdof</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">tloc</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">tscale</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nprob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">crit</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">nloc</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">nscale</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tch</span><span class="p">,</span> <span class="n">tpval</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">chisquare</span><span class="p">(</span><span class="n">freqcount</span><span class="p">,</span> <span class="n">tprob</span><span class="o">*</span><span class="n">n_sample</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nch</span><span class="p">,</span> <span class="n">npval</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">chisquare</span><span class="p">(</span><span class="n">freqcount</span><span class="p">,</span> <span class="n">nprob</span><span class="o">*</span><span class="n">n_sample</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;chisquare for t:      chi2 = </span><span class="si">%6.2f</span><span class="s1"> pvalue = </span><span class="si">%6.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tch</span><span class="p">,</span> <span class="n">tpval</span><span class="p">))</span>
+<span class="go">chisquare for t:      chi2 =  1.58 pvalue = 0.9542  # random</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;chisquare for normal: chi2 = </span><span class="si">%6.2f</span><span class="s1"> pvalue = </span><span class="si">%6.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">nch</span><span class="p">,</span> <span class="n">npval</span><span class="p">))</span>
+<span class="go">chisquare for normal: chi2 = 11.08 pvalue = 0.0858  # random</span>
+</pre></div>
+</div>
+<p>Taking account of the estimated parameters, we can still reject the
+hypothesis that our sample came from a normal distribution (at the 5% level),
+but again, with a p-value of 0.95, we cannot reject the t-distribution.</p>
+</section>
+<section id="special-tests-for-normal-distributions">
+<h2>Special tests for normal distributions<a class="headerlink" href="#special-tests-for-normal-distributions" title="Link to this heading">#</a></h2>
+<p>Since the normal distribution is the most common distribution in statistics,
+there are several additional functions available to test whether a sample
+could have been drawn from a normal distribution.</p>
+<p>First, we can test if skew and kurtosis of our sample differ significantly from
+those of a normal distribution:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;normal skewtest teststat = </span><span class="si">%6.3f</span><span class="s1"> pvalue = </span><span class="si">%6.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">stats</span><span class="o">.</span><span class="n">skewtest</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="go">normal skewtest teststat =  2.785 pvalue = 0.0054  # random</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;normal kurtosistest teststat = </span><span class="si">%6.3f</span><span class="s1"> pvalue = </span><span class="si">%6.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">stats</span><span class="o">.</span><span class="n">kurtosistest</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="go">normal kurtosistest teststat =  4.757 pvalue = 0.0000  # random</span>
+</pre></div>
+</div>
+<p>These two tests are combined in the normality test</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;normaltest teststat = </span><span class="si">%6.3f</span><span class="s1"> pvalue = </span><span class="si">%6.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">stats</span><span class="o">.</span><span class="n">normaltest</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="go">normaltest teststat = 30.379 pvalue = 0.0000  # random</span>
+</pre></div>
+</div>
+<p>In all three tests, the p-values are very low and we can reject the hypothesis
+that the our sample has skew and kurtosis of the normal distribution.</p>
+<p>Since skew and kurtosis of our sample are based on central moments, we get
+exactly the same results if we test the standardized sample:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;normaltest teststat = </span><span class="si">%6.3f</span><span class="s1"> pvalue = </span><span class="si">%6.4f</span><span class="s1">&#39;</span> <span class="o">%</span>
+<span class="gp">... </span>      <span class="n">stats</span><span class="o">.</span><span class="n">normaltest</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">/</span><span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">()))</span>
+<span class="go">normaltest teststat = 30.379 pvalue = 0.0000  # random</span>
+</pre></div>
+</div>
+<p>Because normality is rejected so strongly, we can check whether the
+normaltest gives reasonable results for other cases:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;normaltest teststat = </span><span class="si">%6.3f</span><span class="s1"> pvalue = </span><span class="si">%6.4f</span><span class="s1">&#39;</span> <span class="o">%</span>
+<span class="gp">... </span>      <span class="n">stats</span><span class="o">.</span><span class="n">normaltest</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)))</span>
+<span class="go">normaltest teststat =  4.698 pvalue = 0.0955  # random</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;normaltest teststat = </span><span class="si">%6.3f</span><span class="s1"> pvalue = </span><span class="si">%6.4f</span><span class="s1">&#39;</span> <span class="o">%</span>
+<span class="gp">... </span>             <span class="n">stats</span><span class="o">.</span><span class="n">normaltest</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)))</span>
+<span class="go">normaltest teststat =  0.613 pvalue = 0.7361  # random</span>
+</pre></div>
+</div>
+<p>When testing for normality of a small sample of t-distributed observations
+and a large sample of normal-distributed observations, then in neither case
+can we reject the null hypothesis that the sample comes from a normal
+distribution. In the first case, this is because the test is not powerful
+enough to distinguish a t and a normally distributed random variable in a
+small sample.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="quasi_monte_carlo.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Quasi-Monte Carlo</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="comparing_two_samples.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Comparing two samples</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#descriptive-statistics">Descriptive statistics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#t-test-and-ks-test">T-test and KS-test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tails-of-the-distribution">Tails of the distribution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#special-tests-for-normal-distributions">Special tests for normal distributions</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

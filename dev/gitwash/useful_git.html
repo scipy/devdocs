@@ -1,0 +1,904 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Git tips &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'dev/gitwash/useful_git';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Additional Git Resources" href="git_resources.html" />
+    <link rel="prev" title="Git configuration" href="configure_git.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributing Information</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../conduct/code_of_conduct.html">SciPy Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hacking.html">Ways to Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev_quickstart.html">Contributor quickstart guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributor/development_workflow.html">Development workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributor/contributor_toc.html">SciPy contributor guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Roadmap</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">SciPy Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap-detailed.html">Detailed SciPy Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../toolchain.html">Toolchain Roadmap</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">SciPy Organization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../core-dev/index.html">SciPy Core Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api-dev/api-dev-toc.html">SciPy API Development Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../governance.html">SciPy Project Governance</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Developer Documentation</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../contributor/contributor_toc.html" class="nav-link">SciPy contributor guide</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="gitwash.html" class="nav-link">Git for development</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Git tips</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="git-tips">
+<span id="useful-git"></span><h1>Git tips<a class="headerlink" href="#git-tips" title="Link to this heading">#</a></h1>
+<section id="rebasing-on-main">
+<span id="id1"></span><h2>Rebasing on main<a class="headerlink" href="#rebasing-on-main" title="Link to this heading">#</a></h2>
+<p>This updates your feature branch with changes from the upstream <a class="reference external" href="https://github.com/scipy/scipy">SciPy
+github</a> repo. If you do not absolutely need to do this, try to avoid doing
+it, except perhaps when you are finished. The first step will be to update
+the remote repository with new commits from upstream:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">fetch</span> <span class="n">upstream</span>
+</pre></div>
+</div>
+<p>Next, you need to update the feature branch:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># go to the feature branch</span>
+<span class="n">git</span> <span class="n">checkout</span> <span class="n">my</span><span class="o">-</span><span class="n">new</span><span class="o">-</span><span class="n">feature</span>
+<span class="c1"># make a backup in case you mess up</span>
+<span class="n">git</span> <span class="n">branch</span> <span class="n">tmp</span> <span class="n">my</span><span class="o">-</span><span class="n">new</span><span class="o">-</span><span class="n">feature</span>
+<span class="c1"># rebase on upstream main branch</span>
+<span class="n">git</span> <span class="n">rebase</span> <span class="n">upstream</span><span class="o">/</span><span class="n">main</span>
+</pre></div>
+</div>
+<p>If you have made changes to files that have changed also upstream,
+this may generate merge conflicts that you need to resolve. See
+<a class="reference internal" href="#recovering-from-mess-up"><span class="std std-ref">below</span></a> for help in this case.</p>
+<p>Finally, remove the backup branch upon a successful rebase:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">branch</span> <span class="o">-</span><span class="n">D</span> <span class="n">tmp</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Rebasing on main is preferred over merging upstream back to your
+branch. Using <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">merge</span></code> and <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">pull</span></code> is discouraged when
+working on feature branches.</p>
+</div>
+</section>
+<section id="recovering-from-mess-ups">
+<span id="recovering-from-mess-up"></span><h2>Recovering from mess-ups<a class="headerlink" href="#recovering-from-mess-ups" title="Link to this heading">#</a></h2>
+<p>Sometimes, you mess up merges or rebases. Luckily, in Git it is
+relatively straightforward to recover from such mistakes.</p>
+<p>If you mess up during a rebase:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">rebase</span> <span class="o">--</span><span class="n">abort</span>
+</pre></div>
+</div>
+<p>If you notice you messed up after the rebase:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># reset branch back to the saved point</span>
+<span class="n">git</span> <span class="n">reset</span> <span class="o">--</span><span class="n">hard</span> <span class="n">tmp</span>
+</pre></div>
+</div>
+<p>If you forgot to make a backup branch:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># look at the reflog of the branch</span>
+<span class="n">git</span> <span class="n">reflog</span> <span class="n">show</span> <span class="n">my</span><span class="o">-</span><span class="n">feature</span><span class="o">-</span><span class="n">branch</span>
+
+<span class="mi">8630830</span> <span class="n">my</span><span class="o">-</span><span class="n">feature</span><span class="o">-</span><span class="n">branch</span><span class="o">@</span><span class="p">{</span><span class="mi">0</span><span class="p">}:</span> <span class="n">commit</span><span class="p">:</span> <span class="n">BUG</span><span class="p">:</span> <span class="n">io</span><span class="p">:</span> <span class="n">close</span> <span class="n">file</span> <span class="n">handles</span> <span class="n">immediately</span>
+<span class="mi">278</span><span class="n">dd2a</span> <span class="n">my</span><span class="o">-</span><span class="n">feature</span><span class="o">-</span><span class="n">branch</span><span class="o">@</span><span class="p">{</span><span class="mi">1</span><span class="p">}:</span> <span class="n">rebase</span> <span class="n">finished</span><span class="p">:</span> <span class="n">refs</span><span class="o">/</span><span class="n">heads</span><span class="o">/</span><span class="n">my</span><span class="o">-</span><span class="n">feature</span><span class="o">-</span><span class="n">branch</span> <span class="n">onto</span> <span class="mi">11</span><span class="n">ee694744f2552d</span>
+<span class="mi">26</span><span class="n">aa21a</span> <span class="n">my</span><span class="o">-</span><span class="n">feature</span><span class="o">-</span><span class="n">branch</span><span class="o">@</span><span class="p">{</span><span class="mi">2</span><span class="p">}:</span> <span class="n">commit</span><span class="p">:</span> <span class="n">BUG</span><span class="p">:</span> <span class="n">lib</span><span class="p">:</span> <span class="n">make</span> <span class="n">seek_gzip_factory</span> <span class="ow">not</span> <span class="n">leak</span> <span class="n">gzip</span> <span class="n">obj</span>
+<span class="o">...</span>
+
+<span class="c1"># reset the branch to where it was before the botched rebase</span>
+<span class="n">git</span> <span class="n">reset</span> <span class="o">--</span><span class="n">hard</span> <span class="n">my</span><span class="o">-</span><span class="n">feature</span><span class="o">-</span><span class="n">branch</span><span class="o">@</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>If you didn’t actually mess up but there are merge conflicts, you need to
+resolve those.  This can be one of the trickier things to get right.  For a
+good description of how to do this, see <a class="reference external" href="https://git-scm.com/book/en/Git-Branching-Basic-Branching-and-Merging#Basic-Merge-Conflicts">this article on merging conflicts</a>.</p>
+</section>
+<section id="rewriting-commit-history">
+<span id="id2"></span><h2>Rewriting commit history<a class="headerlink" href="#rewriting-commit-history" title="Link to this heading">#</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Do this only for your own feature branches.</p>
+</div>
+<p>There’s an embarrassing typo in a commit you made? Or perhaps the you
+made several false starts you would like the posterity not to see.</p>
+<p>This can be done via <em>interactive rebasing</em>.</p>
+<p>Suppose that the commit history looks like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">log</span> <span class="o">--</span><span class="n">oneline</span>
+<span class="n">eadc391</span> <span class="n">Fix</span> <span class="n">some</span> <span class="n">remaining</span> <span class="n">bugs</span>
+<span class="n">a815645</span> <span class="n">Modify</span> <span class="n">it</span> <span class="n">so</span> <span class="n">that</span> <span class="n">it</span> <span class="n">works</span>
+<span class="mi">2</span><span class="n">dec1ac</span> <span class="n">Fix</span> <span class="n">a</span> <span class="n">few</span> <span class="n">bugs</span> <span class="o">+</span> <span class="n">disable</span>
+<span class="mi">13</span><span class="n">d7934</span> <span class="n">First</span> <span class="n">implementation</span>
+<span class="mi">6</span><span class="n">ad92e5</span> <span class="o">*</span> <span class="n">masked</span> <span class="ow">is</span> <span class="n">now</span> <span class="n">an</span> <span class="n">instance</span> <span class="n">of</span> <span class="n">a</span> <span class="n">new</span> <span class="nb">object</span><span class="p">,</span> <span class="n">MaskedConstant</span>
+<span class="mi">29001</span><span class="n">ed</span> <span class="n">Add</span> <span class="n">pre</span><span class="o">-</span><span class="n">nep</span> <span class="k">for</span> <span class="n">a</span> <span class="n">copule</span> <span class="n">of</span> <span class="n">structured_array_extensions</span><span class="o">.</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>and <code class="docutils literal notranslate"><span class="pre">6ad92e5</span></code> is the last commit in the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch. Suppose we
+want to make the following changes:</p>
+<ul class="simple">
+<li><p>Rewrite the commit message for <code class="docutils literal notranslate"><span class="pre">13d7934</span></code> to something more sensible.</p></li>
+<li><p>Combine the commits <code class="docutils literal notranslate"><span class="pre">2dec1ac</span></code>, <code class="docutils literal notranslate"><span class="pre">a815645</span></code>, <code class="docutils literal notranslate"><span class="pre">eadc391</span></code> into a single one.</p></li>
+</ul>
+<p>We do as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># make a backup of the current state</span>
+<span class="n">git</span> <span class="n">branch</span> <span class="n">tmp</span> <span class="n">HEAD</span>
+<span class="c1"># interactive rebase</span>
+<span class="n">git</span> <span class="n">rebase</span> <span class="o">-</span><span class="n">i</span> <span class="mi">6</span><span class="n">ad92e5</span>
+</pre></div>
+</div>
+<p>This will open an editor with the following text in it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pick</span> <span class="mi">13</span><span class="n">d7934</span> <span class="n">First</span> <span class="n">implementation</span>
+<span class="n">pick</span> <span class="mi">2</span><span class="n">dec1ac</span> <span class="n">Fix</span> <span class="n">a</span> <span class="n">few</span> <span class="n">bugs</span> <span class="o">+</span> <span class="n">disable</span>
+<span class="n">pick</span> <span class="n">a815645</span> <span class="n">Modify</span> <span class="n">it</span> <span class="n">so</span> <span class="n">that</span> <span class="n">it</span> <span class="n">works</span>
+<span class="n">pick</span> <span class="n">eadc391</span> <span class="n">Fix</span> <span class="n">some</span> <span class="n">remaining</span> <span class="n">bugs</span>
+
+<span class="c1"># Rebase 6ad92e5..eadc391 onto 6ad92e5</span>
+<span class="c1">#</span>
+<span class="c1"># Commands:</span>
+<span class="c1">#  p, pick = use commit</span>
+<span class="c1">#  r, reword = use commit, but edit the commit message</span>
+<span class="c1">#  e, edit = use commit, but stop for amending</span>
+<span class="c1">#  s, squash = use commit, but meld into previous commit</span>
+<span class="c1">#  f, fixup = like &quot;squash&quot;, but discard this commit&#39;s log message</span>
+<span class="c1">#</span>
+<span class="c1"># If you remove a line here THAT COMMIT WILL BE LOST.</span>
+<span class="c1"># However, if you remove everything, the rebase will be aborted.</span>
+<span class="c1">#</span>
+</pre></div>
+</div>
+<p>To achieve what we want, we will make the following changes to it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="mi">13</span><span class="n">d7934</span> <span class="n">First</span> <span class="n">implementation</span>
+<span class="n">pick</span> <span class="mi">2</span><span class="n">dec1ac</span> <span class="n">Fix</span> <span class="n">a</span> <span class="n">few</span> <span class="n">bugs</span> <span class="o">+</span> <span class="n">disable</span>
+<span class="n">f</span> <span class="n">a815645</span> <span class="n">Modify</span> <span class="n">it</span> <span class="n">so</span> <span class="n">that</span> <span class="n">it</span> <span class="n">works</span>
+<span class="n">f</span> <span class="n">eadc391</span> <span class="n">Fix</span> <span class="n">some</span> <span class="n">remaining</span> <span class="n">bugs</span>
+</pre></div>
+</div>
+<p>This means that (i) we want to edit the commit message for
+<code class="docutils literal notranslate"><span class="pre">13d7934</span></code>, and (ii) collapse the last three commits into one. Now we
+save and quit the editor.</p>
+<p>Git will then immediately bring up an editor for editing the commit
+message. After revising it, we get the output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">detached</span> <span class="n">HEAD</span> <span class="mi">721</span><span class="n">fc64</span><span class="p">]</span> <span class="n">FOO</span><span class="p">:</span> <span class="n">First</span> <span class="n">implementation</span>
+ <span class="mi">2</span> <span class="n">files</span> <span class="n">changed</span><span class="p">,</span> <span class="mi">199</span> <span class="n">insertions</span><span class="p">(</span><span class="o">+</span><span class="p">),</span> <span class="mi">66</span> <span class="n">deletions</span><span class="p">(</span><span class="o">-</span><span class="p">)</span>
+<span class="p">[</span><span class="n">detached</span> <span class="n">HEAD</span> <span class="mi">0</span><span class="n">f22701</span><span class="p">]</span> <span class="n">Fix</span> <span class="n">a</span> <span class="n">few</span> <span class="n">bugs</span> <span class="o">+</span> <span class="n">disable</span>
+ <span class="mi">1</span> <span class="n">files</span> <span class="n">changed</span><span class="p">,</span> <span class="mi">79</span> <span class="n">insertions</span><span class="p">(</span><span class="o">+</span><span class="p">),</span> <span class="mi">61</span> <span class="n">deletions</span><span class="p">(</span><span class="o">-</span><span class="p">)</span>
+<span class="n">Successfully</span> <span class="n">rebased</span> <span class="ow">and</span> <span class="n">updated</span> <span class="n">refs</span><span class="o">/</span><span class="n">heads</span><span class="o">/</span><span class="n">my</span><span class="o">-</span><span class="n">feature</span><span class="o">-</span><span class="n">branch</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>and the history looks now like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span><span class="n">f22701</span> <span class="n">Fix</span> <span class="n">a</span> <span class="n">few</span> <span class="n">bugs</span> <span class="o">+</span> <span class="n">disable</span>
+<span class="mi">721</span><span class="n">fc64</span> <span class="n">ENH</span><span class="p">:</span> <span class="n">Sophisticated</span> <span class="n">feature</span>
+<span class="mi">6</span><span class="n">ad92e5</span> <span class="o">*</span> <span class="n">masked</span> <span class="ow">is</span> <span class="n">now</span> <span class="n">an</span> <span class="n">instance</span> <span class="n">of</span> <span class="n">a</span> <span class="n">new</span> <span class="nb">object</span><span class="p">,</span> <span class="n">MaskedConstant</span>
+</pre></div>
+</div>
+<p>If it went wrong, recovery is again possible as explained <a class="reference internal" href="#recovering-from-mess-up"><span class="std std-ref">above</span></a>.</p>
+</section>
+<section id="deleting-a-branch-on-github">
+<h2>Deleting a branch on <a class="reference external" href="https://github.com/scipy/scipy">github</a><a class="headerlink" href="#deleting-a-branch-on-github" title="Link to this heading">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="n">main</span>
+<span class="c1"># delete branch locally</span>
+<span class="n">git</span> <span class="n">branch</span> <span class="o">-</span><span class="n">D</span> <span class="n">my</span><span class="o">-</span><span class="n">unwanted</span><span class="o">-</span><span class="n">branch</span>
+<span class="c1"># delete branch on github</span>
+<span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="p">:</span><span class="n">my</span><span class="o">-</span><span class="n">unwanted</span><span class="o">-</span><span class="n">branch</span>
+</pre></div>
+</div>
+<p>(Note the colon <code class="docutils literal notranslate"><span class="pre">:</span></code> before <code class="docutils literal notranslate"><span class="pre">test-branch</span></code>.  See also:
+<a class="github reference external" href="https://github.com/guides/remove-a-remote-branch">guides/remove-a-remote-branch</a></p>
+</section>
+<section id="several-people-sharing-a-single-repository">
+<h2>Several people sharing a single repository<a class="headerlink" href="#several-people-sharing-a-single-repository" title="Link to this heading">#</a></h2>
+<p>If you want to work on some stuff with other people, where you are all
+committing into the same repository, or even the same branch, then just
+share it via <a class="reference external" href="https://github.com/scipy/scipy">github</a>.</p>
+<p>First fork SciPy into your account, as from <a class="reference internal" href="development_setup.html#forking"><span class="std std-ref">Making your own copy (fork) of SciPy</span></a>.</p>
+<p>Then, go to your forked repository github page, say
+<code class="docutils literal notranslate"><span class="pre">https://github.com/your-user-name/scipy</span></code></p>
+<p>Click on the ‘Admin’ button, and add anyone else to the repo as a
+collaborator:</p>
+<blockquote>
+<div><img alt="../../_images/pull_button.png" src="../../_images/pull_button.png" />
+</div></blockquote>
+<p>Now all those people can do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">your</span><span class="o">-</span><span class="n">user</span><span class="o">-</span><span class="n">name</span><span class="o">/</span><span class="n">scipy</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+<p>Remember that links starting with <code class="docutils literal notranslate"><span class="pre">git&#64;</span></code> use the ssh protocol and are
+read-write; links starting with <code class="docutils literal notranslate"><span class="pre">git://</span></code> are read-only.</p>
+<p>Your collaborators can then commit directly into that repo with the
+usual:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">am</span> <span class="s1">&#39;ENH - much better code&#39;</span>
+<span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="n">my</span><span class="o">-</span><span class="n">feature</span><span class="o">-</span><span class="n">branch</span> <span class="c1"># pushes directly into your repo</span>
+</pre></div>
+</div>
+</section>
+<section id="exploring-your-repository">
+<h2>Exploring your repository<a class="headerlink" href="#exploring-your-repository" title="Link to this heading">#</a></h2>
+<p>To see a graphical representation of the repository branches and
+commits:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gitk</span> <span class="o">--</span><span class="nb">all</span>
+</pre></div>
+</div>
+<p>To see a linear list of commits for this branch:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">log</span>
+</pre></div>
+</div>
+<p>You can also look at the <a class="reference external" href="https://github.com/blog/39-say-hello-to-the-network-graph-visualizer">network graph visualizer</a> for your <a class="reference external" href="https://github.com/scipy/scipy">github</a>
+repo.</p>
+</section>
+<section id="backporting">
+<h2>Backporting<a class="headerlink" href="#backporting" title="Link to this heading">#</a></h2>
+<p>Backporting is the process of copying new feature/fixes committed in
+<a class="reference external" href="https://github.com/scipy/scipy">scipy/main</a> back to stable release branches. To do this you make a branch
+off the branch you are backporting to, cherry pick the commits you want from
+<code class="docutils literal notranslate"><span class="pre">scipy/main</span></code>, and then submit a pull request for the branch containing the
+backport.</p>
+<ol class="arabic">
+<li><p>First, you need to make the branch you will work on. This needs to be
+based on the older version of SciPy (not main):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make a new branch based on scipy/maintenance/1.8.x,</span>
+<span class="c1"># backport-3324 is our new name for the branch.</span>
+<span class="n">git</span> <span class="n">checkout</span> <span class="o">-</span><span class="n">b</span> <span class="n">backport</span><span class="o">-</span><span class="mi">3324</span> <span class="n">upstream</span><span class="o">/</span><span class="n">maintenance</span><span class="o">/</span><span class="mf">1.8</span><span class="o">.</span><span class="n">x</span>
+</pre></div>
+</div>
+</li>
+<li><p>Now you need to apply the changes from main to this branch using
+<a class="reference external" href="https://www.kernel.org/pub/software/scm/git/docs/git-cherry-pick.html">git cherry-pick</a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Update remote</span>
+<span class="n">git</span> <span class="n">fetch</span> <span class="n">upstream</span>
+<span class="c1"># Check the commit log for commits to cherry pick</span>
+<span class="n">git</span> <span class="n">log</span> <span class="n">upstream</span><span class="o">/</span><span class="n">main</span>
+<span class="c1"># This pull request included commits aa7a047 to c098283 (inclusive)</span>
+<span class="c1"># so you use the .. syntax (for a range of commits), the ^ makes the</span>
+<span class="c1"># range inclusive.</span>
+<span class="n">git</span> <span class="n">cherry</span><span class="o">-</span><span class="n">pick</span> <span class="n">aa7a047</span><span class="o">^..</span><span class="n">c098283</span>
+<span class="o">...</span>
+<span class="c1"># Fix any conflicts, then if needed:</span>
+<span class="n">git</span> <span class="n">cherry</span><span class="o">-</span><span class="n">pick</span> <span class="o">--</span><span class="k">continue</span>
+</pre></div>
+</div>
+</li>
+<li><p>You might run into some conflicts cherry picking here. These are
+resolved the same way as merge/rebase conflicts. Except here you can
+use <a class="reference external" href="https://www.kernel.org/pub/software/scm/git/docs/git-blame.html">git blame</a> to see the difference between main and the
+backported branch to make sure nothing gets screwed up.</p></li>
+<li><p>Push the new branch to your Github repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">push</span> <span class="o">-</span><span class="n">u</span> <span class="n">origin</span> <span class="n">backport</span><span class="o">-</span><span class="mi">3324</span>
+</pre></div>
+</div>
+</li>
+<li><p>Finally make a pull request using Github. Make sure it is against the
+maintenance branch and not main, Github will usually suggest you
+make the pull request against main.</p></li>
+</ol>
+</section>
+<section id="pushing-changes-to-the-main-repo">
+<span id="pushing-to-main"></span><h2>Pushing changes to the main repo<a class="headerlink" href="#pushing-changes-to-the-main-repo" title="Link to this heading">#</a></h2>
+<p><em>This is only relevant if you have commit rights to the main SciPy repo.</em></p>
+<p>When you have a set of “ready” changes in a feature branch ready for
+SciPy’s <code class="docutils literal notranslate"><span class="pre">main</span></code> or <code class="docutils literal notranslate"><span class="pre">maintenance</span></code> branches, you can push
+them to <code class="docutils literal notranslate"><span class="pre">upstream</span></code> as follows:</p>
+<ol class="arabic">
+<li><p>First, merge or rebase on the target branch.</p>
+<ol class="loweralpha">
+<li><p>Only a few, unrelated commits then prefer rebasing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">fetch</span> <span class="n">upstream</span>
+<span class="n">git</span> <span class="n">rebase</span> <span class="n">upstream</span><span class="o">/</span><span class="n">main</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="#rebasing-on-main"><span class="std std-ref">Rebasing on main</span></a>.</p>
+</li>
+<li><p>If all of the commits are related, create a merge commit:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">fetch</span> <span class="n">upstream</span>
+<span class="n">git</span> <span class="n">merge</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">ff</span> <span class="n">upstream</span><span class="o">/</span><span class="n">main</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</li>
+<li><p>Check that what you are going to push looks sensible:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">log</span> <span class="o">-</span><span class="n">p</span> <span class="n">upstream</span><span class="o">/</span><span class="n">main</span><span class="o">..</span>
+<span class="n">git</span> <span class="n">log</span> <span class="o">--</span><span class="n">oneline</span> <span class="o">--</span><span class="n">graph</span>
+</pre></div>
+</div>
+</li>
+<li><p>Push to upstream:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">push</span> <span class="n">upstream</span> <span class="n">my</span><span class="o">-</span><span class="n">feature</span><span class="o">-</span><span class="n">branch</span><span class="p">:</span><span class="n">main</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It’s usually a good idea to use the <code class="docutils literal notranslate"><span class="pre">-n</span></code> flag to <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span></code> to check
+first that you’re about to push the changes you want to the place you
+want.</p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="configure_git.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Git configuration</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="git_resources.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Additional Git Resources</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rebasing-on-main">Rebasing on main</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recovering-from-mess-ups">Recovering from mess-ups</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rewriting-commit-history">Rewriting commit history</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deleting-a-branch-on-github">Deleting a branch on github</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#several-people-sharing-a-single-repository">Several people sharing a single repository</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exploring-your-repository">Exploring your repository</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#backporting">Backporting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pushing-changes-to-the-main-repo">Pushing changes to the main repo</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

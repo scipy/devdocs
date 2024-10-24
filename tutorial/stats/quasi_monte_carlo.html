@@ -1,0 +1,889 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Quasi-Monte Carlo &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorial/stats/quasi_monte_carlo';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Analysing one sample" href="analysing_one_sample.html" />
+    <link rel="prev" title="Multiscale Graph Correlation (MGC)" href="multiscale_graphcorr.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../special.html">Special functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.special</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">Integration (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.integrate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">Optimization (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">Fourier Transforms (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.fft</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">Signal Processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">Linear Algebra (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">Sparse Arrays (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arpack.html">Sparse eigenvalue problems with ARPACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csgraph.html">Compressed Sparse Graph Routines (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.csgraph</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">Spatial data structures and algorithms (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code>)</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../stats.html">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="probability_distributions.html">Probability distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sampling.html">Universal Non-Uniform Random Number Sampling in SciPy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kernel_density_estimation.html">Kernel density estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multiscale_graphcorr.html">Multiscale Graph Correlation (MGC)</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Quasi-Monte Carlo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analysing_one_sample.html">Analysing one sample</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparing_two_samples.html">Comparing two samples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resampling.html">Resampling and Monte Carlo Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hypothesis_tests.html">Hypothesis tests</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">Multidimensional image processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">File IO (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.io</span></code>)</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy User Guide</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../stats.html" class="nav-link">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Quasi-Monte Carlo</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="quasi-monte-carlo">
+<span id="id1"></span><h1>Quasi-Monte Carlo<a class="headerlink" href="#quasi-monte-carlo" title="Link to this heading">#</a></h1>
+<p>Before talking about Quasi-Monte Carlo (QMC), a quick introduction about Monte
+Carlo (MC). MC methods, or MC experiments, are a broad class of
+computational algorithms that rely on repeated random sampling to obtain
+numerical results. The underlying concept is to use randomness to solve
+problems that might be deterministic in principle. They are often used in
+physical and mathematical problems and are most useful when it is difficult or
+impossible to use other approaches. MC methods are mainly used in
+three problem classes: optimization, numerical integration, and generating
+draws from a probability distribution.</p>
+<p>Generating random numbers with specific properties is a more complex problem
+than it sounds. Simple MC methods are designed to sample points to be
+independent and identically distributed (IID). But generating multiple sets
+of random points can produce radically different results.</p>
+<figure class="align-center">
+<img alt="&quot; &quot;" class="plot-directive" src="../../_images/qmc_plot_mc.png" />
+</figure>
+<p>In both cases in the plot above, points are generated randomly without any
+knowledge about previously drawn points. It is clear that some regions of
+the space are left unexplored - which can cause problems in simulations as a
+particular set of points might trigger a totally different behaviour.</p>
+<p>A great benefit of MC is that it has known convergence properties.
+Let’s look at the mean of the squared sum in 5 dimensions:</p>
+<div class="math notranslate nohighlight">
+\[f(\mathbf{x}) = \left( \sum_{j=1}^{5}x_j \right)^2,\]</div>
+<p>with <span class="math notranslate nohighlight">\(x_j \sim \mathcal{U}(0,1)\)</span>. It has a known mean value,
+<span class="math notranslate nohighlight">\(\mu = 5/3+5(5-1)/4\)</span>. Using MC sampling, we
+can compute that mean numerically, and the approximation error follows a
+theoretical rate of <span class="math notranslate nohighlight">\(O(n^{-1/2})\)</span>.</p>
+<figure class="align-center">
+<img alt="&quot; &quot;" class="plot-directive" src="../../_images/qmc_plot_conv_mc.png" />
+</figure>
+<p>Although the convergence is ensured, practitioners tend to want to have an
+exploration process which is more deterministic. With normal MC, a seed can be
+used to have a repeatable process. But fixing the seed would break the
+convergence property: a given seed could work for a given class of problem
+and break for another one.</p>
+<p>What is commonly done to walk through the space in a deterministic manner, is
+to use a regular grid spanning all parameter dimensions, also called a
+saturated design. Let’s consider the unit-hypercube, with all bounds ranging
+from 0 to 1. Now, having a distance of 0.1 between points, the number of points
+required to fill the unit interval would be 10. In a 2-dimensional hypercube
+the same spacing would require 100, and in 3 dimensions 1,000 points. As the
+number of dimensions grows, the number of experiments which is required to fill
+the space rises exponentially as the dimensionality of the space increases.
+This exponential growth is called “the curse of dimensionality”.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">disc</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">disc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">disc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">disc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-center">
+<img alt="&quot; &quot;" class="plot-directive" src="../../_images/qmc_plot_curse.png" />
+</figure>
+<p>To mitigate this issue, QMC methods have been designed. They are
+deterministic, have a good coverage of the space and some of them can be
+continued and retain good properties.
+The main difference with MC methods is that the points are not IID but they
+know about previous points. Hence, some methods are also referred to as
+sequences.</p>
+<figure class="align-center">
+<img alt="&quot; &quot;" class="plot-directive" src="../../_images/qmc_plot_mc_qmc.png" />
+</figure>
+<p>This figure presents 2 sets of 256 points. The design of the left is a plain
+MC whereas the design of the right is a QMC design using the <em>Sobol’</em> method.
+We clearly see that the QMC version is more uniform. The points sample better
+near the boundaries and there are less clusters or gaps.</p>
+<p>One way to assess the uniformity is to use a measure called the discrepancy.
+Here the discrepancy of <em>Sobol’</em> points is better than crude MC.</p>
+<p>Coming back to the computation of the mean, QMC methods also have better rates
+of convergence for the error. They can achieve <span class="math notranslate nohighlight">\(O(n^{-1})\)</span> for this
+function, and even better rates on very smooth functions. This figure shows
+that the <em>Sobol’</em> method has a rate of <span class="math notranslate nohighlight">\(O(n^{-1})\)</span>:</p>
+<figure class="align-center">
+<img alt="&quot; &quot;" class="plot-directive" src="../../_images/qmc_plot_conv_mc_sobol.png" />
+</figure>
+<p>We refer to the documentation of <a class="reference internal" href="../../reference/stats.qmc.html#module-scipy.stats.qmc" title="scipy.stats.qmc"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.stats.qmc</span></code></a> for
+more mathematical details.</p>
+<section id="calculate-the-discrepancy">
+<h2>Calculate the discrepancy<a class="headerlink" href="#calculate-the-discrepancy" title="Link to this heading">#</a></h2>
+<p>Let’s consider two sets of points. From the figure below, it is clear that
+the design on the left covers more of the space than the design on the right.
+This can be quantified using a <a class="reference internal" href="../../reference/generated/scipy.stats.qmc.discrepancy.html#scipy.stats.qmc.discrepancy" title="scipy.stats.qmc.discrepancy"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.qmc.discrepancy</span></code></a> measure.
+The lower the discrepancy, the more uniform a sample is.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">qmc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">space_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">space_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">6.5</span><span class="p">,</span> <span class="mf">6.5</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">space_1</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">space_1</span><span class="p">,</span> <span class="n">l_bounds</span><span class="p">,</span> <span class="n">u_bounds</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">space_2</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">space_2</span><span class="p">,</span> <span class="n">l_bounds</span><span class="p">,</span> <span class="n">u_bounds</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qmc</span><span class="o">.</span><span class="n">discrepancy</span><span class="p">(</span><span class="n">space_1</span><span class="p">)</span>
+<span class="go">0.008142039609053464</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">qmc</span><span class="o">.</span><span class="n">discrepancy</span><span class="p">(</span><span class="n">space_2</span><span class="p">)</span>
+<span class="go">0.010456854423869011</span>
+</pre></div>
+</div>
+<figure class="align-center">
+<img alt="&quot; &quot;" class="plot-directive" src="../../_images/qmc_plot_discrepancy.png" />
+</figure>
+</section>
+<section id="using-a-qmc-engine">
+<h2>Using a QMC engine<a class="headerlink" href="#using-a-qmc-engine" title="Link to this heading">#</a></h2>
+<p>Several QMC samplers/engines are implemented. Here we look at two of the most
+used QMC methods: <a class="reference internal" href="../../reference/generated/scipy.stats.qmc.Sobol.html#scipy.stats.qmc.Sobol" title="scipy.stats.qmc.Sobol"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.stats.qmc.Sobol</span></code></a> and
+<a class="reference internal" href="../../reference/generated/scipy.stats.qmc.Halton.html#scipy.stats.qmc.Halton" title="scipy.stats.qmc.Halton"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.stats.qmc.Halton</span></code></a> sequences.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Sobol&#39; and Halton sequences.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">qmc</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+
+<span class="n">n_sample</span> <span class="o">=</span> <span class="mi">256</span>
+<span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">sample</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1"># Sobol&#39;</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">Sobol</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">dim</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="n">sample</span><span class="p">[</span><span class="s2">&quot;Sobol&#39;&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n_sample</span><span class="p">)</span>
+
+<span class="c1"># Halton</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">Halton</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">dim</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="n">sample</span><span class="p">[</span><span class="s2">&quot;Halton&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n_sample</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">kind</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sample</span><span class="p">):</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="n">kind</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">sample</span><span class="p">[</span><span class="n">kind</span><span class="p">][:,</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$x_1$&#39;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$x_2$&#39;</span><span class="p">)</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s1">—$C^2 = $</span><span class="si">{</span><span class="n">qmc</span><span class="o">.</span><span class="n">discrepancy</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="n">kind</span><span class="p">])</span><span class="si">:</span><span class="s1">.2</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-center">
+<img alt="&quot; &quot;" class="plot-directive" src="../../_images/qmc_plot_sobol_halton.png" />
+</figure>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>QMC methods require particular care and the user must read the
+documentation to avoid common pitfalls. <em>Sobol’</em> for instance requires a
+number of points following a power of 2. Also, thinning, burning or other
+point selection can break the properties of the sequence and result in a
+set of points which would not be better than MC.</p>
+</div>
+<p>QMC engines are state-aware. Meaning that you can continue the sequence,
+skip some points, or reset it. Let’s take 5 points from
+<a class="reference internal" href="../../reference/generated/scipy.stats.qmc.Halton.html#scipy.stats.qmc.Halton" title="scipy.stats.qmc.Halton"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.stats.qmc.Halton</span></code></a>. And then ask for a second set of 5 points:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">qmc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">engine</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">Halton</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">engine</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">array([[0.22166437, 0.07980522],  # random</span>
+<span class="go">       [0.72166437, 0.93165708],</span>
+<span class="go">       [0.47166437, 0.41313856],</span>
+<span class="go">       [0.97166437, 0.19091633],</span>
+<span class="go">       [0.01853937, 0.74647189]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">engine</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">array([[0.51853937, 0.52424967],  # random</span>
+<span class="go">       [0.26853937, 0.30202745],</span>
+<span class="go">       [0.76853937, 0.857583  ],</span>
+<span class="go">       [0.14353937, 0.63536078],</span>
+<span class="go">       [0.64353937, 0.01807683]])</span>
+</pre></div>
+</div>
+<p>Now we reset the sequence. Asking for 5 points leads to the same first 5
+points:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">engine</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">engine</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">array([[0.22166437, 0.07980522],  # random</span>
+<span class="go">       [0.72166437, 0.93165708],</span>
+<span class="go">       [0.47166437, 0.41313856],</span>
+<span class="go">       [0.97166437, 0.19091633],</span>
+<span class="go">       [0.01853937, 0.74647189]])</span>
+</pre></div>
+</div>
+<p>And here we advance the sequence to get the same second set of 5 points:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">engine</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">engine</span><span class="o">.</span><span class="n">fast_forward</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">engine</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">array([[0.51853937, 0.52424967],  # random</span>
+<span class="go">       [0.26853937, 0.30202745],</span>
+<span class="go">       [0.76853937, 0.857583  ],</span>
+<span class="go">       [0.14353937, 0.63536078],</span>
+<span class="go">       [0.64353937, 0.01807683]])</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>By default, both <a class="reference internal" href="../../reference/generated/scipy.stats.qmc.Sobol.html#scipy.stats.qmc.Sobol" title="scipy.stats.qmc.Sobol"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.stats.qmc.Sobol</span></code></a> and
+<a class="reference internal" href="../../reference/generated/scipy.stats.qmc.Halton.html#scipy.stats.qmc.Halton" title="scipy.stats.qmc.Halton"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.stats.qmc.Halton</span></code></a> are scrambled. The convergence properties are
+better, and it prevents the appearance of fringes or noticeable patterns
+of points in high dimensions. There should be no practical reason not to
+use the scrambled version.</p>
+</div>
+</section>
+<section id="making-a-qmc-engine-i-e-subclassing-qmcengine">
+<h2>Making a QMC engine, i.e., subclassing <code class="docutils literal notranslate"><span class="pre">QMCEngine</span></code><a class="headerlink" href="#making-a-qmc-engine-i-e-subclassing-qmcengine" title="Link to this heading">#</a></h2>
+<p>To make your own <a class="reference internal" href="../../reference/generated/scipy.stats.qmc.QMCEngine.html#scipy.stats.qmc.QMCEngine" title="scipy.stats.qmc.QMCEngine"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.stats.qmc.QMCEngine</span></code></a>, a few methods have to be
+defined. Following is an example wrapping <a class="reference external" href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code></a>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">qmc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">RandomEngine</span><span class="p">(</span><span class="n">qmc</span><span class="o">.</span><span class="n">QMCEngine</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rng_seed</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">_random</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">workers</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">))</span>
+<span class="gp">...</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rng_seed</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">num_generated</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span>
+<span class="gp">...</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">fast_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span>
+</pre></div>
+</div>
+<p>Then we use it as any other QMC engine:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">engine</span> <span class="o">=</span> <span class="n">RandomEngine</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">engine</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">array([[0.22733602, 0.31675834],  # random</span>
+<span class="go">       [0.79736546, 0.67625467],</span>
+<span class="go">       [0.39110955, 0.33281393],</span>
+<span class="go">       [0.59830875, 0.18673419],</span>
+<span class="go">       [0.67275604, 0.94180287]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">engine</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">engine</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">array([[0.22733602, 0.31675834],  # random</span>
+<span class="go">       [0.79736546, 0.67625467],</span>
+<span class="go">       [0.39110955, 0.33281393],</span>
+<span class="go">       [0.59830875, 0.18673419],</span>
+<span class="go">       [0.67275604, 0.94180287]])</span>
+</pre></div>
+</div>
+</section>
+<section id="guidelines-on-using-qmc">
+<h2>Guidelines on using QMC<a class="headerlink" href="#guidelines-on-using-qmc" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>QMC has rules! Be sure to read the documentation or you might have no
+benefit over MC.</p></li>
+<li><p>Use <a class="reference internal" href="../../reference/generated/scipy.stats.qmc.Sobol.html#scipy.stats.qmc.Sobol" title="scipy.stats.qmc.Sobol"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.stats.qmc.Sobol</span></code></a> if you need <strong>exactly</strong> <span class="math notranslate nohighlight">\(2^m\)</span> points.</p></li>
+<li><p><a class="reference internal" href="../../reference/generated/scipy.stats.qmc.Halton.html#scipy.stats.qmc.Halton" title="scipy.stats.qmc.Halton"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.stats.qmc.Halton</span></code></a> allows to sample, or skip, an arbitrary number
+of points. This is at the cost of a slower rate of convergence than <em>Sobol’</em>.</p></li>
+<li><p>Never remove the first points of the sequence. It will destroy the
+properties.</p></li>
+<li><p>Scrambling is always better.</p></li>
+<li><p>If you use LHS based methods, you cannot add points without losing the LHS
+properties. (There are some methods to do so, but this is not implemented.)</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="multiscale_graphcorr.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Multiscale Graph Correlation (MGC)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="analysing_one_sample.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Analysing one sample</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-the-discrepancy">Calculate the discrepancy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-a-qmc-engine">Using a QMC engine</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#making-a-qmc-engine-i-e-subclassing-qmcengine">Making a QMC engine, i.e., subclassing <code class="docutils literal notranslate"><span class="pre">QMCEngine</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#guidelines-on-using-qmc">Guidelines on using QMC</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

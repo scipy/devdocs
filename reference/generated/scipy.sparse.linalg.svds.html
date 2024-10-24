@@ -1,0 +1,954 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>svds &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.sparse.linalg.svds';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="svds(solver=’arpack’)" href="../sparse.linalg.svds-arpack.html" />
+    <link rel="prev" title="lobpcg" href="scipy.sparse.linalg.lobpcg.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../sparse.html" class="nav-link">Sparse arrays (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../sparse.linalg.html" class="nav-link">Sparse linear algebra (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.sparse.linalg</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">svds</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.sparse.linalg.</div>
+<div class="empty"></div><section id="svds">
+<h1>svds<a class="headerlink" href="#svds" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.sparse.linalg.svds">
+<span class="sig-prename descclassname"><span class="pre">scipy.sparse.linalg.</span></span><span class="sig-name descname"><span class="pre">svds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ncv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'LM'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_singular_vectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'arpack'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/sparse/linalg/_eigen/_svds.py#L99-L545"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.sparse.linalg.svds" title="Link to this definition">#</a></dt>
+<dd><p>Partial singular value decomposition of a sparse matrix.</p>
+<p>Compute the largest or smallest <em class="xref py py-obj">k</em> singular values and corresponding
+singular vectors of a sparse matrix <em class="xref py py-obj">A</em>. The order in which the singular
+values are returned is not guaranteed.</p>
+<p>In the descriptions below, let <code class="docutils literal notranslate"><span class="pre">M,</span> <span class="pre">N</span> <span class="pre">=</span> <span class="pre">A.shape</span></code>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>A</strong><span class="classifier">ndarray, sparse matrix, or LinearOperator</span></dt><dd><p>Matrix to decompose of a floating point numeric dtype.</p>
+</dd>
+<dt><strong>k</strong><span class="classifier">int, default: 6</span></dt><dd><p>Number of singular values and singular vectors to compute.
+Must satisfy <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">&lt;=</span> <span class="pre">k</span> <span class="pre">&lt;=</span> <span class="pre">kmax</span></code>, where <code class="docutils literal notranslate"><span class="pre">kmax=min(M,</span> <span class="pre">N)</span></code> for
+<code class="docutils literal notranslate"><span class="pre">solver='propack'</span></code> and <code class="docutils literal notranslate"><span class="pre">kmax=min(M,</span> <span class="pre">N)</span> <span class="pre">-</span> <span class="pre">1</span></code> otherwise.</p>
+</dd>
+<dt><strong>ncv</strong><span class="classifier">int, optional</span></dt><dd><p>When <code class="docutils literal notranslate"><span class="pre">solver='arpack'</span></code>, this is the number of Lanczos vectors
+generated. See <a class="reference internal" href="../sparse.linalg.svds-arpack.html#sparse-linalg-svds-arpack"><span class="std std-ref">‘arpack’</span></a> for details.
+When <code class="docutils literal notranslate"><span class="pre">solver='lobpcg'</span></code> or <code class="docutils literal notranslate"><span class="pre">solver='propack'</span></code>, this parameter is
+ignored.</p>
+</dd>
+<dt><strong>tol</strong><span class="classifier">float, optional</span></dt><dd><p>Tolerance for singular values. Zero (default) means machine precision.</p>
+</dd>
+<dt><strong>which</strong><span class="classifier">{‘LM’, ‘SM’}</span></dt><dd><p>Which <em class="xref py py-obj">k</em> singular values to find: either the largest magnitude (‘LM’)
+or smallest magnitude (‘SM’) singular values.</p>
+</dd>
+<dt><strong>v0</strong><span class="classifier">ndarray, optional</span></dt><dd><p>The starting vector for iteration; see method-specific
+documentation (<a class="reference internal" href="../sparse.linalg.svds-arpack.html#sparse-linalg-svds-arpack"><span class="std std-ref">‘arpack’</span></a>,
+<a class="reference internal" href="../sparse.linalg.svds-lobpcg.html#sparse-linalg-svds-lobpcg"><span class="std std-ref">‘lobpcg’</span></a>), or
+<a class="reference internal" href="../sparse.linalg.svds-propack.html#sparse-linalg-svds-propack"><span class="std std-ref">‘propack’</span></a> for details.</p>
+</dd>
+<dt><strong>maxiter</strong><span class="classifier">int, optional</span></dt><dd><p>Maximum number of iterations; see method-specific
+documentation (<a class="reference internal" href="../sparse.linalg.svds-arpack.html#sparse-linalg-svds-arpack"><span class="std std-ref">‘arpack’</span></a>,
+<a class="reference internal" href="../sparse.linalg.svds-lobpcg.html#sparse-linalg-svds-lobpcg"><span class="std std-ref">‘lobpcg’</span></a>), or
+<a class="reference internal" href="../sparse.linalg.svds-propack.html#sparse-linalg-svds-propack"><span class="std std-ref">‘propack’</span></a> for details.</p>
+</dd>
+<dt><strong>return_singular_vectors</strong><span class="classifier">{True, False, “u”, “vh”}</span></dt><dd><p>Singular values are always computed and returned; this parameter
+controls the computation and return of singular vectors.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: return singular vectors.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: do not return singular vectors.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;u&quot;</span></code>: if <code class="docutils literal notranslate"><span class="pre">M</span> <span class="pre">&lt;=</span> <span class="pre">N</span></code>, compute only the left singular vectors and
+return <code class="docutils literal notranslate"><span class="pre">None</span></code> for the right singular vectors. Otherwise, compute
+all singular vectors.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;vh&quot;</span></code>: if <code class="docutils literal notranslate"><span class="pre">M</span> <span class="pre">&gt;</span> <span class="pre">N</span></code>, compute only the right singular vectors and
+return <code class="docutils literal notranslate"><span class="pre">None</span></code> for the left singular vectors. Otherwise, compute
+all singular vectors.</p></li>
+</ul>
+<p>If <code class="docutils literal notranslate"><span class="pre">solver='propack'</span></code>, the option is respected regardless of the
+matrix shape.</p>
+</dd>
+<dt><strong>solver</strong><span class="classifier">{‘arpack’, ‘propack’, ‘lobpcg’}, optional</span></dt><dd><p>The solver used.
+<a class="reference internal" href="../sparse.linalg.svds-arpack.html#sparse-linalg-svds-arpack"><span class="std std-ref">‘arpack’</span></a>,
+<a class="reference internal" href="../sparse.linalg.svds-lobpcg.html#sparse-linalg-svds-lobpcg"><span class="std std-ref">‘lobpcg’</span></a>, and
+<a class="reference internal" href="../sparse.linalg.svds-propack.html#sparse-linalg-svds-propack"><span class="std std-ref">‘propack’</span></a> are supported.
+Default: <em class="xref py py-obj">‘arpack’</em>.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">{None, int, <a class="reference external" href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code></a>,</span></dt><dd><blockquote>
+<div><p><a class="reference external" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a>}, optional</p>
+</div></blockquote>
+<p>Pseudorandom number generator state used to generate resamples.</p>
+<p>If <em class="xref py py-obj">random_state</em> is <code class="docutils literal notranslate"><span class="pre">None</span></code> (or <em class="xref py py-obj">np.random</em>), the
+<a class="reference external" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a> singleton is used.
+If <em class="xref py py-obj">random_state</em> is an int, a new <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance is used,
+seeded with <em class="xref py py-obj">random_state</em>.
+If <em class="xref py py-obj">random_state</em> is already a <code class="docutils literal notranslate"><span class="pre">Generator</span></code> or <code class="docutils literal notranslate"><span class="pre">RandomState</span></code>
+instance then that instance is used.</p>
+</dd>
+<dt><strong>options</strong><span class="classifier">dict, optional</span></dt><dd><p>A dictionary of solver-specific options. No solver-specific options
+are currently supported; this parameter is reserved for future use.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>u</strong><span class="classifier">ndarray, shape=(M, k)</span></dt><dd><p>Unitary matrix having left singular vectors as columns.</p>
+</dd>
+<dt><strong>s</strong><span class="classifier">ndarray, shape=(k,)</span></dt><dd><p>The singular values.</p>
+</dd>
+<dt><strong>vh</strong><span class="classifier">ndarray, shape=(k, N)</span></dt><dd><p>Unitary matrix having right singular vectors as rows.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This is a naive implementation using ARPACK or LOBPCG as an eigensolver
+on the matrix <code class="docutils literal notranslate"><span class="pre">A.conj().T</span> <span class="pre">&#64;</span> <span class="pre">A</span></code> or <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">&#64;</span> <span class="pre">A.conj().T</span></code>, depending on
+which one is smaller size, followed by the Rayleigh-Ritz method
+as postprocessing; see
+Using the normal matrix, in Rayleigh-Ritz method, (2022, Nov. 19),
+Wikipedia, <a class="reference external" href="https://w.wiki/4zms">https://w.wiki/4zms</a>.</p>
+<p>Alternatively, the PROPACK solver can be called.</p>
+<p>Choices of the input matrix <em class="xref py py-obj">A</em> numeric dtype may be limited.
+Only <code class="docutils literal notranslate"><span class="pre">solver=&quot;lobpcg&quot;</span></code> supports all floating point dtypes
+real: ‘np.float32’, ‘np.float64’, ‘np.longdouble’ and
+complex: ‘np.complex64’, ‘np.complex128’, ‘np.clongdouble’.
+The <code class="docutils literal notranslate"><span class="pre">solver=&quot;arpack&quot;</span></code> supports only
+‘np.float32’, ‘np.float64’, and ‘np.complex128’.</p>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="3a9141ca-3f73-4ccf-a616-088f2443ceec">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('3a9141ca-3f73-4ccf-a616-088f2443ceec','2fd2fe50-25ec-48f5-8afb-28b796c82c40','87f83245-2a92-48b3-ad97-f90950e6bf25','../../lite/tree/../notebooks/index.html?path=1866e074_ab1c_45d4_86b6_fcc07167926c.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>Construct a matrix <em class="xref py py-obj">A</em> from singular values and vectors.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span><span class="p">,</span> <span class="n">linalg</span><span class="p">,</span> <span class="n">stats</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">svds</span><span class="p">,</span> <span class="n">aslinearoperator</span><span class="p">,</span> <span class="n">LinearOperator</span>
+</pre></div>
+</div>
+<p>Construct a dense matrix <em class="xref py py-obj">A</em> from singular values and vectors.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">orthogonal</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">ortho_group</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>  <span class="c1"># non-zero singular values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u</span> <span class="o">=</span> <span class="n">orthogonal</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">5</span><span class="p">]</span>         <span class="c1"># left singular vectors</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vT</span> <span class="o">=</span> <span class="n">orthogonal</span><span class="p">[:,</span> <span class="mi">5</span><span class="p">:]</span><span class="o">.</span><span class="n">T</span>      <span class="c1"># right singular vectors</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">u</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">@</span> <span class="n">vT</span>
+</pre></div>
+</div>
+<p>With only four singular values/vectors, the SVD approximates the original
+matrix.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">u4</span><span class="p">,</span> <span class="n">s4</span><span class="p">,</span> <span class="n">vT4</span> <span class="o">=</span> <span class="n">svds</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A4</span> <span class="o">=</span> <span class="n">u4</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">s4</span><span class="p">)</span> <span class="o">@</span> <span class="n">vT4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">A4</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>With all five non-zero singular values/vectors, we can reproduce
+the original matrix more accurately.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">u5</span><span class="p">,</span> <span class="n">s5</span><span class="p">,</span> <span class="n">vT5</span> <span class="o">=</span> <span class="n">svds</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A5</span> <span class="o">=</span> <span class="n">u5</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">s5</span><span class="p">)</span> <span class="o">@</span> <span class="n">vT5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">A5</span><span class="p">,</span> <span class="n">A</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>The singular values match the expected singular values.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">s5</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Since the singular values are not close to each other in this example,
+every singular vector matches as expected up to a difference in sign.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u5</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u</span><span class="p">))</span> <span class="ow">and</span>
+<span class="gp">... </span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">vT5</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">vT</span><span class="p">)))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>The singular vectors are also orthogonal.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">u5</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">u5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span> <span class="ow">and</span>
+<span class="gp">... </span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">vT5</span> <span class="o">@</span> <span class="n">vT5</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">5</span><span class="p">)))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>If there are (nearly) multiple singular values, the corresponding
+individual singular vectors may be unstable, but the whole invariant
+subspace containing all such singular vectors is computed accurately
+as can be measured by angles between subspaces via ‘subspace_angles’.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">1e-6</span><span class="p">]</span>  <span class="c1"># non-zero singular values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="mi">99</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">qr</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="mi">99</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vT</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">T</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">u</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">@</span> <span class="n">vT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u2</span><span class="p">,</span> <span class="n">s2</span><span class="p">,</span> <span class="n">vT2</span> <span class="o">=</span> <span class="n">svds</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">s2</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>The angles between the individual exact and computed singular vectors
+may not be so small. To check use:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">linalg</span><span class="o">.</span><span class="n">subspace_angles</span><span class="p">(</span><span class="n">u2</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="n">u</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span>
+<span class="gp">... </span> <span class="n">linalg</span><span class="o">.</span><span class="n">subspace_angles</span><span class="p">(</span><span class="n">u2</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">u</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]))</span>
+<span class="go">array([0.06562513])  # may vary</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">linalg</span><span class="o">.</span><span class="n">subspace_angles</span><span class="p">(</span><span class="n">vT2</span><span class="p">[:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">vT</span><span class="p">[:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span>
+<span class="gp">... </span> <span class="n">linalg</span><span class="o">.</span><span class="n">subspace_angles</span><span class="p">(</span><span class="n">vT2</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">vT</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+<span class="go">array([0.06562507])  # may vary</span>
+</pre></div>
+</div>
+<p>As opposed to the angles between the 2-dimensional invariant subspaces
+that these vectors span, which are small for rights singular vectors</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">linalg</span><span class="o">.</span><span class="n">subspace_angles</span><span class="p">(</span><span class="n">u2</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-6</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>as well as for left singular vectors.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">linalg</span><span class="o">.</span><span class="n">subspace_angles</span><span class="p">(</span><span class="n">vT2</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">vT</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-6</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>The next example follows that of ‘sklearn.decomposition.TruncatedSVD’.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_dense</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_dense</span><span class="p">[:,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">50</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">(</span><span class="n">X_dense</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">singular_values</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">svds</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">singular_values</span><span class="p">)</span>
+<span class="go">[ 4.3293...  4.4491...  4.5420...  4.5987... 35.2410...]</span>
+</pre></div>
+</div>
+<p>The function can be called without the transpose of the input matrix
+ever explicitly constructed.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Glo</span> <span class="o">=</span> <span class="n">aslinearoperator</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">singular_values_svds</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">svds</span><span class="p">(</span><span class="n">Glo</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">singular_values_svd</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">toarray</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">singular_values_svds</span><span class="p">,</span> <span class="n">singular_values_svd</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>The most memory efficient scenario is where neither
+the original matrix, nor its transpose, is explicitly constructed.
+Our example computes the smallest singular values and vectors
+of ‘LinearOperator’ constructed from the numpy function ‘np.diff’ used
+column-wise to be consistent with ‘LinearOperator’ operating on columns.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">diff0</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Let us create the matrix from ‘diff0’ to be used for validation only.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># The dimension of the space.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">M_from_diff0</span> <span class="o">=</span> <span class="n">diff0</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">M_from_diff0</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+<span class="go">[[-1  1  0  0  0]</span>
+<span class="go"> [ 0 -1  1  0  0]</span>
+<span class="go"> [ 0  0 -1  1  0]</span>
+<span class="go"> [ 0  0  0 -1  1]]</span>
+</pre></div>
+</div>
+<p>The matrix ‘M_from_diff0’ is bi-diagonal and could be alternatively
+created directly by</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">M</span> <span class="o">=</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">M</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:],</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">M_from_diff0</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Its transpose</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">M</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="go">[[-1  0  0  0]</span>
+<span class="go"> [ 1 -1  0  0]</span>
+<span class="go"> [ 0  1 -1  0]</span>
+<span class="go"> [ 0  0  1 -1]</span>
+<span class="go"> [ 0  0  0  1]]</span>
+</pre></div>
+</div>
+<p>can be viewed as the incidence matrix; see
+Incidence matrix, (2022, Nov. 19), Wikipedia, <a class="reference external" href="https://w.wiki/5YXU">https://w.wiki/5YXU</a>,
+of a linear graph with 5 vertices and 4 edges. The 5x5 normal matrix
+<code class="docutils literal notranslate"><span class="pre">M.T</span> <span class="pre">&#64;</span> <span class="pre">M</span></code> thus is</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">M</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">M</span><span class="p">)</span>
+<span class="go">[[ 1 -1  0  0  0]</span>
+<span class="go"> [-1  2 -1  0  0]</span>
+<span class="go"> [ 0 -1  2 -1  0]</span>
+<span class="go"> [ 0  0 -1  2 -1]</span>
+<span class="go"> [ 0  0  0 -1  1]]</span>
+</pre></div>
+</div>
+<p>the graph Laplacian, while the actually used in ‘svds’ smaller size
+4x4 normal matrix <code class="docutils literal notranslate"><span class="pre">M</span> <span class="pre">&#64;</span> <span class="pre">M.T</span></code></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">M</span> <span class="o">@</span> <span class="n">M</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="go">[[ 2 -1  0  0]</span>
+<span class="go"> [-1  2 -1  0]</span>
+<span class="go"> [ 0 -1  2 -1]</span>
+<span class="go"> [ 0  0 -1  2]]</span>
+</pre></div>
+</div>
+<p>is the so-called edge-based Laplacian; see
+Symmetric Laplacian via the incidence matrix, in Laplacian matrix,
+(2022, Nov. 19), Wikipedia, <a class="reference external" href="https://w.wiki/5YXW">https://w.wiki/5YXW</a>.</p>
+<p>The ‘LinearOperator’ setup needs the options ‘rmatvec’ and ‘rmatmat’
+of multiplication by the matrix transpose <code class="docutils literal notranslate"><span class="pre">M.T</span></code>, but we want to be
+matrix-free to save memory, so knowing how <code class="docutils literal notranslate"><span class="pre">M.T</span></code> looks like, we
+manually construct the following function to be
+used in <code class="docutils literal notranslate"><span class="pre">rmatmat=diff0t</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">diff0t</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="n">a</span> <span class="o">=</span> <span class="n">a</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>  <span class="c1"># Turn 1D into 2D array</span>
+<span class="gp">... </span>    <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="o">-</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+<span class="gp">... </span>    <span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:]</span>
+<span class="gp">... </span>    <span class="n">d</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">d</span>
+</pre></div>
+</div>
+<p>We check that our function ‘diff0t’ for the matrix transpose is valid.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">M</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">diff0t</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Now we setup our matrix-free ‘LinearOperator’ called ‘diff0_func_aslo’
+and for validation the matrix-based ‘diff0_matrix_aslo’.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">diff0_func_aslo_def</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">LinearOperator</span><span class="p">(</span><span class="n">matvec</span><span class="o">=</span><span class="n">diff0</span><span class="p">,</span>
+<span class="gp">... </span>                          <span class="n">matmat</span><span class="o">=</span><span class="n">diff0</span><span class="p">,</span>
+<span class="gp">... </span>                          <span class="n">rmatvec</span><span class="o">=</span><span class="n">diff0t</span><span class="p">,</span>
+<span class="gp">... </span>                          <span class="n">rmatmat</span><span class="o">=</span><span class="n">diff0t</span><span class="p">,</span>
+<span class="gp">... </span>                          <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">diff0_func_aslo</span> <span class="o">=</span> <span class="n">diff0_func_aslo_def</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">diff0_matrix_aslo</span> <span class="o">=</span> <span class="n">aslinearoperator</span><span class="p">(</span><span class="n">M_from_diff0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And validate both the matrix and its transpose in ‘LinearOperator’.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">diff0_func_aslo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span>
+<span class="gp">... </span>            <span class="n">diff0_matrix_aslo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">diff0_func_aslo</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span>
+<span class="gp">... </span>            <span class="n">diff0_matrix_aslo</span><span class="o">.</span><span class="n">T</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Having the ‘LinearOperator’ setup validated, we run the solver.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">diff0_func_aslo</span> <span class="o">=</span> <span class="n">diff0_func_aslo_def</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vT</span> <span class="o">=</span> <span class="n">svds</span><span class="p">(</span><span class="n">diff0_func_aslo</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;SM&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The singular values squared and the singular vectors are known
+explicitly; see
+Pure Dirichlet boundary conditions, in
+Eigenvalues and eigenvectors of the second derivative,
+(2022, Nov. 19), Wikipedia, <a class="reference external" href="https://w.wiki/5YX6">https://w.wiki/5YX6</a>,
+since ‘diff’ corresponds to first
+derivative, and its smaller size n-1 x n-1 normal matrix
+<code class="docutils literal notranslate"><span class="pre">M</span> <span class="pre">&#64;</span> <span class="pre">M.T</span></code> represent the discrete second derivative with the Dirichlet
+boundary conditions. We use these analytic expressions for validation.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">se</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">n</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span>
+<span class="gp">... </span>                             <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">se</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ue</span><span class="p">),</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div id="87f83245-2a92-48b3-ad97-f90950e6bf25" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('3a9141ca-3f73-4ccf-a616-088f2443ceec','87f83245-2a92-48b3-ad97-f90950e6bf25')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('3a9141ca-3f73-4ccf-a616-088f2443ceec','87f83245-2a92-48b3-ad97-f90950e6bf25')">Open In Tab</button></div><div id="2fd2fe50-25ec-48f5-8afb-28b796c82c40" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.sparse.linalg.lobpcg.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">lobpcg</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../sparse.linalg.svds-arpack.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">svds(solver=’arpack’)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.sparse.linalg.svds"><code class="docutils literal notranslate"><span class="pre">svds</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

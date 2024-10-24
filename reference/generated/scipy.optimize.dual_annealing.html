@@ -1,0 +1,808 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>dual_annealing &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.optimize.dual_annealing';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="direct" href="scipy.optimize.direct.html" />
+    <link rel="prev" title="shgo" href="scipy.optimize.shgo.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../optimize.html" class="nav-link">Optimization and root finding (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">dual_annealing</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.optimize.</div>
+<div class="empty"></div><section id="dual-annealing">
+<h1>dual_annealing<a class="headerlink" href="#dual-annealing" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.optimize.dual_annealing">
+<span class="sig-prename descclassname"><span class="pre">scipy.optimize.</span></span><span class="sig-name descname"><span class="pre">dual_annealing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimizer_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_temp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5230.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restart_temp_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.62</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxfun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_local_search</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/optimize/_dual_annealing.py#L451-L731"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.optimize.dual_annealing" title="Link to this definition">#</a></dt>
+<dd><p>Find the global minimum of a function using Dual Annealing.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>func</strong><span class="classifier">callable</span></dt><dd><p>The objective function to be minimized. Must be in the form
+<code class="docutils literal notranslate"><span class="pre">f(x,</span> <span class="pre">*args)</span></code>, where <code class="docutils literal notranslate"><span class="pre">x</span></code> is the argument in the form of a 1-D array
+and <code class="docutils literal notranslate"><span class="pre">args</span></code> is a  tuple of any additional fixed parameters needed to
+completely specify the function.</p>
+</dd>
+<dt><strong>bounds</strong><span class="classifier">sequence or <a class="reference internal" href="scipy.optimize.Bounds.html#scipy.optimize.Bounds" title="scipy.optimize.Bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bounds</span></code></a></span></dt><dd><p>Bounds for variables. There are two ways to specify the bounds:</p>
+<ol class="arabic simple">
+<li><p>Instance of <a class="reference internal" href="scipy.optimize.Bounds.html#scipy.optimize.Bounds" title="scipy.optimize.Bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bounds</span></code></a> class.</p></li>
+<li><p>Sequence of <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code> pairs for each element in <em class="xref py py-obj">x</em>.</p></li>
+</ol>
+</dd>
+<dt><strong>args</strong><span class="classifier">tuple, optional</span></dt><dd><p>Any additional fixed parameters needed to completely specify the
+objective function.</p>
+</dd>
+<dt><strong>maxiter</strong><span class="classifier">int, optional</span></dt><dd><p>The maximum number of global search iterations. Default value is 1000.</p>
+</dd>
+<dt><strong>minimizer_kwargs</strong><span class="classifier">dict, optional</span></dt><dd><p>Keyword arguments to be passed to the local minimizer
+(<a class="reference internal" href="scipy.optimize.minimize.html#scipy.optimize.minimize" title="scipy.optimize.minimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minimize</span></code></a>). An important option could be <code class="docutils literal notranslate"><span class="pre">method</span></code> for the minimizer
+method to use.
+If no keyword arguments are provided, the local minimizer defaults to
+‘L-BFGS-B’ and uses the already supplied bounds. If <em class="xref py py-obj">minimizer_kwargs</em>
+is specified, then the dict must contain all parameters required to
+control the local minimization. <em class="xref py py-obj">args</em> is ignored in this dict, as it is
+passed automatically. <em class="xref py py-obj">bounds</em> is not automatically passed on to the
+local minimizer as the method may not support them.</p>
+</dd>
+<dt><strong>initial_temp</strong><span class="classifier">float, optional</span></dt><dd><p>The initial temperature, use higher values to facilitates a wider
+search of the energy landscape, allowing dual_annealing to escape
+local minima that it is trapped in. Default value is 5230. Range is
+(0.01, 5.e4].</p>
+</dd>
+<dt><strong>restart_temp_ratio</strong><span class="classifier">float, optional</span></dt><dd><p>During the annealing process, temperature is decreasing, when it
+reaches <code class="docutils literal notranslate"><span class="pre">initial_temp</span> <span class="pre">*</span> <span class="pre">restart_temp_ratio</span></code>, the reannealing process
+is triggered. Default value of the ratio is 2e-5. Range is (0, 1).</p>
+</dd>
+<dt><strong>visit</strong><span class="classifier">float, optional</span></dt><dd><p>Parameter for visiting distribution. Default value is 2.62. Higher
+values give the visiting distribution a heavier tail, this makes
+the algorithm jump to a more distant region. The value range is (1, 3].</p>
+</dd>
+<dt><strong>accept</strong><span class="classifier">float, optional</span></dt><dd><p>Parameter for acceptance distribution. It is used to control the
+probability of acceptance. The lower the acceptance parameter, the
+smaller the probability of acceptance. Default value is -5.0 with
+a range (-1e4, -5].</p>
+</dd>
+<dt><strong>maxfun</strong><span class="classifier">int, optional</span></dt><dd><p>Soft limit for the number of objective function calls. If the
+algorithm is in the middle of a local search, this number will be
+exceeded, the algorithm will stop just after the local search is
+done. Default value is 1e7.</p>
+</dd>
+<dt><strong>seed</strong><span class="classifier">{None, int, <a class="reference external" href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a>}, optional</span></dt><dd><p>If <em class="xref py py-obj">seed</em> is None (or <em class="xref py py-obj">np.random</em>), the <a class="reference external" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a>
+singleton is used.
+If <em class="xref py py-obj">seed</em> is an int, a new <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance is used,
+seeded with <em class="xref py py-obj">seed</em>.
+If <em class="xref py py-obj">seed</em> is already a <code class="docutils literal notranslate"><span class="pre">Generator</span></code> or <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance then
+that instance is used.
+Specify <em class="xref py py-obj">seed</em> for repeatable minimizations. The random numbers
+generated with this seed only affect the visiting distribution function
+and new coordinates generation.</p>
+</dd>
+<dt><strong>no_local_search</strong><span class="classifier">bool, optional</span></dt><dd><p>If <em class="xref py py-obj">no_local_search</em> is set to True, a traditional Generalized
+Simulated Annealing will be performed with no local search
+strategy applied.</p>
+</dd>
+<dt><strong>callback</strong><span class="classifier">callable, optional</span></dt><dd><p>A callback function with signature <code class="docutils literal notranslate"><span class="pre">callback(x,</span> <span class="pre">f,</span> <span class="pre">context)</span></code>,
+which will be called for all minima found.
+<code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">f</span></code> are the coordinates and function value of the
+latest minimum found, and <code class="docutils literal notranslate"><span class="pre">context</span></code> has one of the following
+values:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code>: minimum detected in the annealing process.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code>: detection occurred in the local search process.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2</span></code>: detection done in the dual annealing process.</p></li>
+</ul>
+<p>If the callback implementation returns True, the algorithm will stop.</p>
+</dd>
+<dt><strong>x0</strong><span class="classifier">ndarray, shape(n,), optional</span></dt><dd><p>Coordinates of a single N-D starting point.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>res</strong><span class="classifier">OptimizeResult</span></dt><dd><p>The optimization result represented as a <a class="reference internal" href="scipy.optimize.OptimizeResult.html#scipy.optimize.OptimizeResult" title="scipy.optimize.OptimizeResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptimizeResult</span></code></a> object.
+Important attributes are: <code class="docutils literal notranslate"><span class="pre">x</span></code> the solution array, <code class="docutils literal notranslate"><span class="pre">fun</span></code> the value
+of the function at the solution, and <code class="docutils literal notranslate"><span class="pre">message</span></code> which describes the
+cause of the termination.
+See <a class="reference internal" href="scipy.optimize.OptimizeResult.html#scipy.optimize.OptimizeResult" title="scipy.optimize.OptimizeResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptimizeResult</span></code></a> for a description of other attributes.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This function implements the Dual Annealing optimization. This stochastic
+approach derived from <a class="reference internal" href="#rbaa258a99356-3" id="id1">[3]</a> combines the generalization of CSA (Classical
+Simulated Annealing) and FSA (Fast Simulated Annealing) <a class="reference internal" href="#rbaa258a99356-1" id="id2">[1]</a> <a class="reference internal" href="#rbaa258a99356-2" id="id3">[2]</a> coupled
+to a strategy for applying a local search on accepted locations <a class="reference internal" href="#rbaa258a99356-4" id="id4">[4]</a>.
+An alternative implementation of this same algorithm is described in <a class="reference internal" href="#rbaa258a99356-5" id="id5">[5]</a>
+and benchmarks are presented in <a class="reference internal" href="#rbaa258a99356-6" id="id6">[6]</a>. This approach introduces an advanced
+method to refine the solution found by the generalized annealing
+process. This algorithm uses a distorted Cauchy-Lorentz visiting
+distribution, with its shape controlled by the parameter <span class="math notranslate nohighlight">\(q_{v}\)</span></p>
+<div class="math notranslate nohighlight">
+\[g_{q_{v}}(\Delta x(t)) \propto \frac{ \
+\left[T_{q_{v}}(t) \right]^{-\frac{D}{3-q_{v}}}}{ \
+\left[{1+(q_{v}-1)\frac{(\Delta x(t))^{2}} { \
+\left[T_{q_{v}}(t)\right]^{\frac{2}{3-q_{v}}}}}\right]^{ \
+\frac{1}{q_{v}-1}+\frac{D-1}{2}}}\]</div>
+<p>Where <span class="math notranslate nohighlight">\(t\)</span> is the artificial time. This visiting distribution is used
+to generate a trial jump distance <span class="math notranslate nohighlight">\(\Delta x(t)\)</span> of variable
+<span class="math notranslate nohighlight">\(x(t)\)</span> under artificial temperature <span class="math notranslate nohighlight">\(T_{q_{v}}(t)\)</span>.</p>
+<p>From the starting point, after calling the visiting distribution
+function, the acceptance probability is computed as follows:</p>
+<div class="math notranslate nohighlight">
+\[p_{q_{a}} = \min{\{1,\left[1-(1-q_{a}) \beta \Delta E \right]^{ \
+\frac{1}{1-q_{a}}}\}}\]</div>
+<p>Where <span class="math notranslate nohighlight">\(q_{a}\)</span> is a acceptance parameter. For <span class="math notranslate nohighlight">\(q_{a}&lt;1\)</span>, zero
+acceptance probability is assigned to the cases where</p>
+<div class="math notranslate nohighlight">
+\[[1-(1-q_{a}) \beta \Delta E] &lt; 0\]</div>
+<p>The artificial temperature <span class="math notranslate nohighlight">\(T_{q_{v}}(t)\)</span> is decreased according to</p>
+<div class="math notranslate nohighlight">
+\[T_{q_{v}}(t) = T_{q_{v}}(1) \frac{2^{q_{v}-1}-1}{\left( \
+1 + t\right)^{q_{v}-1}-1}\]</div>
+<p>Where <span class="math notranslate nohighlight">\(q_{v}\)</span> is the visiting parameter.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.2.0.</span></p>
+</div>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="rbaa258a99356-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
+<p>Tsallis C. Possible generalization of Boltzmann-Gibbs
+statistics. Journal of Statistical Physics, 52, 479-487 (1998).</p>
+</div>
+<div class="citation" id="rbaa258a99356-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
+<p>Tsallis C, Stariolo DA. Generalized Simulated Annealing.
+Physica A, 233, 395-406 (1996).</p>
+</div>
+<div class="citation" id="rbaa258a99356-3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">3</a><span class="fn-bracket">]</span></span>
+<p>Xiang Y, Sun DY, Fan W, Gong XG. Generalized Simulated
+Annealing Algorithm and Its Application to the Thomson Model.
+Physics Letters A, 233, 216-220 (1997).</p>
+</div>
+<div class="citation" id="rbaa258a99356-4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
+<p>Xiang Y, Gong XG. Efficiency of Generalized Simulated
+Annealing. Physical Review E, 62, 4473 (2000).</p>
+</div>
+<div class="citation" id="rbaa258a99356-5" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">5</a><span class="fn-bracket">]</span></span>
+<p>Xiang Y, Gubian S, Suomela B, Hoeng J. Generalized
+Simulated Annealing for Efficient Global Optimization: the GenSA
+Package for R. The R Journal, Volume 5/1 (2013).</p>
+</div>
+<div class="citation" id="rbaa258a99356-6" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">6</a><span class="fn-bracket">]</span></span>
+<p>Mullen, K. Continuous Global Optimization in R. Journal of
+Statistical Software, 60(6), 1 - 45, (2014).
+<a class="reference external" href="https://doi.org/10.18637/jss.v060.i06">DOI:10.18637/jss.v060.i06</a></p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="4f2a8f94-bb57-48f9-9a07-33d30d60b616">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('4f2a8f94-bb57-48f9-9a07-33d30d60b616','4307ae37-4cac-4482-a320-4129461985fc','31e5b716-e985-46ba-ac37-c4e75354ce7f','../../lite/tree/../notebooks/index.html?path=05ea7653_f104_4e17_a962_a3c3736c3c0f.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>The following example is a 10-D problem, with many local minima.
+The function involved is called Rastrigin
+(<a class="reference external" href="https://en.wikipedia.org/wiki/Rastrigin_function">https://en.wikipedia.org/wiki/Rastrigin_function</a>)</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">dual_annealing</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span> <span class="o">-</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">x</span><span class="p">))</span> <span class="o">+</span> <span class="mi">10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lw</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.12</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">up</span> <span class="o">=</span> <span class="p">[</span><span class="mf">5.12</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ret</span> <span class="o">=</span> <span class="n">dual_annealing</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">lw</span><span class="p">,</span> <span class="n">up</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ret</span><span class="o">.</span><span class="n">x</span>
+<span class="go">array([-4.26437714e-09, -3.91699361e-09, -1.86149218e-09, -3.97165720e-09,</span>
+<span class="go">       -6.29151648e-09, -6.53145322e-09, -3.93616815e-09, -6.55623025e-09,</span>
+<span class="go">       -6.05775280e-09, -5.00668935e-09]) # random</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ret</span><span class="o">.</span><span class="n">fun</span>
+<span class="go">0.000000</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div id="31e5b716-e985-46ba-ac37-c4e75354ce7f" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('4f2a8f94-bb57-48f9-9a07-33d30d60b616','31e5b716-e985-46ba-ac37-c4e75354ce7f')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('4f2a8f94-bb57-48f9-9a07-33d30d60b616','31e5b716-e985-46ba-ac37-c4e75354ce7f')">Open In Tab</button></div><div id="4307ae37-4cac-4482-a320-4129461985fc" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.optimize.shgo.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">shgo</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.optimize.direct.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">direct</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.optimize.dual_annealing"><code class="docutils literal notranslate"><span class="pre">dual_annealing</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

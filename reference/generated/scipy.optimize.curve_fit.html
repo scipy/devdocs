@@ -1,0 +1,936 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>curve_fit &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.optimize.curve_fit';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="root_scalar" href="scipy.optimize.root_scalar.html" />
+    <link rel="prev" title="isotonic_regression" href="scipy.optimize.isotonic_regression.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../optimize.html" class="nav-link">Optimization and root finding (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">curve_fit</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.optimize.</div>
+<div class="empty"></div><section id="curve-fit">
+<h1>curve_fit<a class="headerlink" href="#curve-fit" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.optimize.curve_fit">
+<span class="sig-prename descclassname"><span class="pre">scipy.optimize.</span></span><span class="sig-name descname"><span class="pre">curve_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xdata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ydata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">absolute_sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_finite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(-inf,</span> <span class="pre">inf)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nan_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/optimize/_minpack_py.py#L589-L1058"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.optimize.curve_fit" title="Link to this definition">#</a></dt>
+<dd><p>Use non-linear least squares to fit a function, f, to data.</p>
+<p>Assumes <code class="docutils literal notranslate"><span class="pre">ydata</span> <span class="pre">=</span> <span class="pre">f(xdata,</span> <span class="pre">*params)</span> <span class="pre">+</span> <span class="pre">eps</span></code>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>f</strong><span class="classifier">callable</span></dt><dd><p>The model function, f(x, …). It must take the independent
+variable as the first argument and the parameters to fit as
+separate remaining arguments.</p>
+</dd>
+<dt><strong>xdata</strong><span class="classifier">array_like</span></dt><dd><p>The independent variable where the data is measured.
+Should usually be an M-length sequence or an (k,M)-shaped array for
+functions with k predictors, and each element should be float
+convertible if it is an array like object.</p>
+</dd>
+<dt><strong>ydata</strong><span class="classifier">array_like</span></dt><dd><p>The dependent data, a length M array - nominally <code class="docutils literal notranslate"><span class="pre">f(xdata,</span> <span class="pre">...)</span></code>.</p>
+</dd>
+<dt><strong>p0</strong><span class="classifier">array_like, optional</span></dt><dd><p>Initial guess for the parameters (length N). If None, then the
+initial values will all be 1 (if the number of parameters for the
+function can be determined using introspection, otherwise a
+ValueError is raised).</p>
+</dd>
+<dt><strong>sigma</strong><span class="classifier">None or scalar or M-length sequence or MxM array, optional</span></dt><dd><p>Determines the uncertainty in <em class="xref py py-obj">ydata</em>. If we define residuals as
+<code class="docutils literal notranslate"><span class="pre">r</span> <span class="pre">=</span> <span class="pre">ydata</span> <span class="pre">-</span> <span class="pre">f(xdata,</span> <span class="pre">*popt)</span></code>, then the interpretation of <em class="xref py py-obj">sigma</em>
+depends on its number of dimensions:</p>
+<ul>
+<li><p>A scalar or 1-D <em class="xref py py-obj">sigma</em> should contain values of standard deviations of
+errors in <em class="xref py py-obj">ydata</em>. In this case, the optimized function is
+<code class="docutils literal notranslate"><span class="pre">chisq</span> <span class="pre">=</span> <span class="pre">sum((r</span> <span class="pre">/</span> <span class="pre">sigma)</span> <span class="pre">**</span> <span class="pre">2)</span></code>.</p></li>
+<li><p>A 2-D <em class="xref py py-obj">sigma</em> should contain the covariance matrix of
+errors in <em class="xref py py-obj">ydata</em>. In this case, the optimized function is
+<code class="docutils literal notranslate"><span class="pre">chisq</span> <span class="pre">=</span> <span class="pre">r.T</span> <span class="pre">&#64;</span> <span class="pre">inv(sigma)</span> <span class="pre">&#64;</span> <span class="pre">r</span></code>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 0.19.</span></p>
+</div>
+</li>
+</ul>
+<p>None (default) is equivalent of 1-D <em class="xref py py-obj">sigma</em> filled with ones.</p>
+</dd>
+<dt><strong>absolute_sigma</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, <em class="xref py py-obj">sigma</em> is used in an absolute sense and the estimated parameter
+covariance <em class="xref py py-obj">pcov</em> reflects these absolute values.</p>
+<p>If False (default), only the relative magnitudes of the <em class="xref py py-obj">sigma</em> values matter.
+The returned parameter covariance matrix <em class="xref py py-obj">pcov</em> is based on scaling
+<em class="xref py py-obj">sigma</em> by a constant factor. This constant is set by demanding that the
+reduced <em class="xref py py-obj">chisq</em> for the optimal parameters <em class="xref py py-obj">popt</em> when using the
+<em>scaled</em> <em class="xref py py-obj">sigma</em> equals unity. In other words, <em class="xref py py-obj">sigma</em> is scaled to
+match the sample variance of the residuals after the fit. Default is False.
+Mathematically,
+<code class="docutils literal notranslate"><span class="pre">pcov(absolute_sigma=False)</span> <span class="pre">=</span> <span class="pre">pcov(absolute_sigma=True)</span> <span class="pre">*</span> <span class="pre">chisq(popt)/(M-N)</span></code></p>
+</dd>
+<dt><strong>check_finite</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, check that the input arrays do not contain nans of infs,
+and raise a ValueError if they do. Setting this parameter to
+False may silently produce nonsensical results if the input arrays
+do contain nans. Default is True if <em class="xref py py-obj">nan_policy</em> is not specified
+explicitly and False otherwise.</p>
+</dd>
+<dt><strong>bounds</strong><span class="classifier">2-tuple of array_like or <a class="reference internal" href="scipy.optimize.Bounds.html#scipy.optimize.Bounds" title="scipy.optimize.Bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bounds</span></code></a>, optional</span></dt><dd><p>Lower and upper bounds on parameters. Defaults to no bounds.
+There are two ways to specify the bounds:</p>
+<ul class="simple">
+<li><p>Instance of <a class="reference internal" href="scipy.optimize.Bounds.html#scipy.optimize.Bounds" title="scipy.optimize.Bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bounds</span></code></a> class.</p></li>
+<li><p>2-tuple of array_like: Each element of the tuple must be either
+an array with the length equal to the number of parameters, or a
+scalar (in which case the bound is taken to be the same for all
+parameters). Use <code class="docutils literal notranslate"><span class="pre">np.inf</span></code> with an appropriate sign to disable
+bounds on all or some parameters.</p></li>
+</ul>
+</dd>
+<dt><strong>method</strong><span class="classifier">{‘lm’, ‘trf’, ‘dogbox’}, optional</span></dt><dd><p>Method to use for optimization. See <a class="reference internal" href="scipy.optimize.least_squares.html#scipy.optimize.least_squares" title="scipy.optimize.least_squares"><code class="xref py py-obj docutils literal notranslate"><span class="pre">least_squares</span></code></a> for more details.
+Default is ‘lm’ for unconstrained problems and ‘trf’ if <em class="xref py py-obj">bounds</em> are
+provided. The method ‘lm’ won’t work when the number of observations
+is less than the number of variables, use ‘trf’ or ‘dogbox’ in this
+case.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 0.17.</span></p>
+</div>
+</dd>
+<dt><strong>jac</strong><span class="classifier">callable, string or None, optional</span></dt><dd><p>Function with signature <code class="docutils literal notranslate"><span class="pre">jac(x,</span> <span class="pre">...)</span></code> which computes the Jacobian
+matrix of the model function with respect to parameters as a dense
+array_like structure. It will be scaled according to provided <em class="xref py py-obj">sigma</em>.
+If None (default), the Jacobian will be estimated numerically.
+String keywords for ‘trf’ and ‘dogbox’ methods can be used to select
+a finite difference scheme, see <a class="reference internal" href="scipy.optimize.least_squares.html#scipy.optimize.least_squares" title="scipy.optimize.least_squares"><code class="xref py py-obj docutils literal notranslate"><span class="pre">least_squares</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 0.18.</span></p>
+</div>
+</dd>
+<dt><strong>full_output</strong><span class="classifier">boolean, optional</span></dt><dd><p>If True, this function returns additional information: <em class="xref py py-obj">infodict</em>,
+<em class="xref py py-obj">mesg</em>, and <em class="xref py py-obj">ier</em>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.9.</span></p>
+</div>
+</dd>
+<dt><strong>nan_policy</strong><span class="classifier">{‘raise’, ‘omit’, None}, optional</span></dt><dd><p>Defines how to handle when input contains nan.
+The following options are available (default is None):</p>
+<ul class="simple">
+<li><p>‘raise’: throws an error</p></li>
+<li><p>‘omit’: performs the calculations ignoring nan values</p></li>
+<li><p>None: no special handling of NaNs is performed
+(except what is done by check_finite); the behavior when NaNs
+are present is implementation-dependent and may change.</p></li>
+</ul>
+<p>Note that if this value is specified explicitly (not None),
+<em class="xref py py-obj">check_finite</em> will be set as False.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.11.</span></p>
+</div>
+</dd>
+<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments passed to <a class="reference internal" href="scipy.optimize.leastsq.html#scipy.optimize.leastsq" title="scipy.optimize.leastsq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">leastsq</span></code></a> for <code class="docutils literal notranslate"><span class="pre">method='lm'</span></code> or
+<a class="reference internal" href="scipy.optimize.least_squares.html#scipy.optimize.least_squares" title="scipy.optimize.least_squares"><code class="xref py py-obj docutils literal notranslate"><span class="pre">least_squares</span></code></a> otherwise.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>popt</strong><span class="classifier">array</span></dt><dd><p>Optimal values for the parameters so that the sum of the squared
+residuals of <code class="docutils literal notranslate"><span class="pre">f(xdata,</span> <span class="pre">*popt)</span> <span class="pre">-</span> <span class="pre">ydata</span></code> is minimized.</p>
+</dd>
+<dt><strong>pcov</strong><span class="classifier">2-D array</span></dt><dd><p>The estimated approximate covariance of popt. The diagonals provide
+the variance of the parameter estimate. To compute one standard
+deviation errors on the parameters, use
+<code class="docutils literal notranslate"><span class="pre">perr</span> <span class="pre">=</span> <span class="pre">np.sqrt(np.diag(pcov))</span></code>. Note that the relationship between
+<em class="xref py py-obj">cov</em> and parameter error estimates is derived based on a linear
+approximation to the model function around the optimum <a class="reference internal" href="#r765c0da07a13-1" id="id1">[1]</a>.
+When this approximation becomes inaccurate, <em class="xref py py-obj">cov</em> may not provide an
+accurate measure of uncertainty.</p>
+<p>How the <em class="xref py py-obj">sigma</em> parameter affects the estimated covariance
+depends on <em class="xref py py-obj">absolute_sigma</em> argument, as described above.</p>
+<p>If the Jacobian matrix at the solution doesn’t have a full rank, then
+‘lm’ method returns a matrix filled with <code class="docutils literal notranslate"><span class="pre">np.inf</span></code>, on the other hand
+‘trf’  and ‘dogbox’ methods use Moore-Penrose pseudoinverse to compute
+the covariance matrix. Covariance matrices with large condition numbers
+(e.g. computed with <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.linalg.cond.html#numpy.linalg.cond" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.linalg.cond</span></code></a>) may indicate that results are
+unreliable.</p>
+</dd>
+<dt><strong>infodict</strong><span class="classifier">dict (returned only if <em class="xref py py-obj">full_output</em> is True)</span></dt><dd><p>a dictionary of optional outputs with the keys:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">nfev</span></code></dt><dd><p>The number of function calls. Methods ‘trf’ and ‘dogbox’ do not
+count function calls for numerical Jacobian approximation,
+as opposed to ‘lm’ method.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">fvec</span></code></dt><dd><p>The residual values evaluated at the solution, for a 1-D <em class="xref py py-obj">sigma</em>
+this is <code class="docutils literal notranslate"><span class="pre">(f(x,</span> <span class="pre">*popt)</span> <span class="pre">-</span> <span class="pre">ydata)/sigma</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">fjac</span></code></dt><dd><p>A permutation of the R matrix of a QR
+factorization of the final approximate
+Jacobian matrix, stored column wise.
+Together with ipvt, the covariance of the
+estimate can be approximated.
+Method ‘lm’ only provides this information.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ipvt</span></code></dt><dd><p>An integer array of length N which defines
+a permutation matrix, p, such that
+fjac*p = q*r, where r is upper triangular
+with diagonal elements of nonincreasing
+magnitude. Column j of p is column ipvt(j)
+of the identity matrix.
+Method ‘lm’ only provides this information.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">qtf</span></code></dt><dd><p>The vector (transpose(q) * fvec).
+Method ‘lm’ only provides this information.</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.9.</span></p>
+</div>
+</dd>
+<dt><strong>mesg</strong><span class="classifier">str (returned only if <em class="xref py py-obj">full_output</em> is True)</span></dt><dd><p>A string message giving information about the solution.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.9.</span></p>
+</div>
+</dd>
+<dt><strong>ier</strong><span class="classifier">int (returned only if <em class="xref py py-obj">full_output</em> is True)</span></dt><dd><p>An integer flag. If it is equal to 1, 2, 3 or 4, the solution was
+found. Otherwise, the solution was not found. In either case, the
+optional output variable <em class="xref py py-obj">mesg</em> gives more information.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.9.</span></p>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>ValueError</dt><dd><p>if either <em class="xref py py-obj">ydata</em> or <em class="xref py py-obj">xdata</em> contain NaNs, or if incompatible options
+are used.</p>
+</dd>
+<dt>RuntimeError</dt><dd><p>if the least-squares minimization fails.</p>
+</dd>
+<dt>OptimizeWarning</dt><dd><p>if covariance of the parameters can not be estimated.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="scipy.optimize.least_squares.html#scipy.optimize.least_squares" title="scipy.optimize.least_squares"><code class="xref py py-obj docutils literal notranslate"><span class="pre">least_squares</span></code></a></dt><dd><p>Minimize the sum of squares of nonlinear functions.</p>
+</dd>
+<dt><a class="reference internal" href="scipy.stats.linregress.html#scipy.stats.linregress" title="scipy.stats.linregress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.linregress</span></code></a></dt><dd><p>Calculate a linear least squares regression for two sets of measurements.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>Users should ensure that inputs <em class="xref py py-obj">xdata</em>, <em class="xref py py-obj">ydata</em>, and the output of <em class="xref py py-obj">f</em>
+are <code class="docutils literal notranslate"><span class="pre">float64</span></code>, or else the optimization may return incorrect results.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">method='lm'</span></code>, the algorithm uses the Levenberg-Marquardt algorithm
+through <a class="reference internal" href="scipy.optimize.leastsq.html#scipy.optimize.leastsq" title="scipy.optimize.leastsq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">leastsq</span></code></a>. Note that this algorithm can only deal with
+unconstrained problems.</p>
+<p>Box constraints can be handled by methods ‘trf’ and ‘dogbox’. Refer to
+the docstring of <a class="reference internal" href="scipy.optimize.least_squares.html#scipy.optimize.least_squares" title="scipy.optimize.least_squares"><code class="xref py py-obj docutils literal notranslate"><span class="pre">least_squares</span></code></a> for more information.</p>
+<p>Parameters to be fitted must have similar scale. Differences of multiple
+orders of magnitude can lead to incorrect results. For the ‘trf’ and
+‘dogbox’ methods, the <em class="xref py py-obj">x_scale</em> keyword argument can be used to scale
+the parameters.</p>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r765c0da07a13-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>K. Vugrin et al. Confidence region estimation techniques for nonlinear
+regression in groundwater flow: Three case studies. Water Resources
+Research, Vol. 43, W03423, <a class="reference external" href="https://doi.org/10.1029/2005WR004804">DOI:10.1029/2005WR004804</a></p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="0ef42895-3be6-484f-899b-dd763329ad5a">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('0ef42895-3be6-484f-899b-dd763329ad5a','2f3df25f-2b2e-456a-99f7-8d90f0e6c9c9','3d4e0cc1-3ae8-488f-a424-24dc70768a11','../../lite/tree/../notebooks/index.html?path=f1182ff7_3374_4d04_9575_8bad9e34637b.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">c</span>
+</pre></div>
+</div>
+<p>Define the data to be fit with some noise:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xdata</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_noise</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">xdata</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ydata</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">y_noise</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Fit for the parameters a, b, c of the function <em class="xref py py-obj">func</em>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">popt</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">popt</span>
+<span class="go">array([2.56274217, 1.37268521, 0.47427475])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">func</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="o">*</span><span class="n">popt</span><span class="p">),</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span>
+<span class="gp">... </span>         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;fit: a=</span><span class="si">%5.3f</span><span class="s1">, b=</span><span class="si">%5.3f</span><span class="s1">, c=</span><span class="si">%5.3f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">popt</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Constrain the optimization to the region of <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;=</span> <span class="pre">a</span> <span class="pre">&lt;=</span> <span class="pre">3</span></code>,
+<code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;=</span> <span class="pre">b</span> <span class="pre">&lt;=</span> <span class="pre">1</span></code> and <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;=</span> <span class="pre">c</span> <span class="pre">&lt;=</span> <span class="pre">0.5</span></code>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">popt</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">popt</span>
+<span class="go">array([2.43736712, 1.        , 0.34463856])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">func</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="o">*</span><span class="n">popt</span><span class="p">),</span> <span class="s1">&#39;g--&#39;</span><span class="p">,</span>
+<span class="gp">... </span>         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;fit: a=</span><span class="si">%5.3f</span><span class="s1">, b=</span><span class="si">%5.3f</span><span class="s1">, c=</span><span class="si">%5.3f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">popt</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-optimize-curve_fit-1_00_00.png" class="plot-directive" src="../../_images/scipy-optimize-curve_fit-1_00_00.png" />
+</figure>
+<p>For reliable results, the model <em class="xref py py-obj">func</em> should not be overparametrized;
+redundant parameters can cause unreliable covariance matrices and, in some
+cases, poorer quality fits. As a quick check of whether the model may be
+overparameterized, calculate the condition number of the covariance matrix:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span><span class="n">pcov</span><span class="p">)</span>
+<span class="go">34.571092161547405  # may vary</span>
+</pre></div>
+</div>
+<p>The value is small, so it does not raise much concern. If, however, we were
+to add a fourth parameter <code class="docutils literal notranslate"><span class="pre">d</span></code> to <em class="xref py py-obj">func</em> with the same effect as <code class="docutils literal notranslate"><span class="pre">a</span></code>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">func2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">d</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">c</span>  <span class="c1"># a and d are redundant</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">popt</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">func2</span><span class="p">,</span> <span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span><span class="n">pcov</span><span class="p">)</span>
+<span class="go">1.13250718925596e+32  # may vary</span>
+</pre></div>
+</div>
+<p>Such a large value is cause for concern. The diagonal elements of the
+covariance matrix, which is related to uncertainty of the fit, gives more
+information:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">pcov</span><span class="p">)</span>
+<span class="go">array([1.48814742e+29, 3.78596560e-02, 5.39253738e-03, 2.76417220e+28])  # may vary</span>
+</pre></div>
+</div>
+<p>Note that the first and last terms are much larger than the other elements,
+suggesting that the optimal values of these parameters are ambiguous and
+that only one of these parameters is needed in the model.</p>
+<p>If the optimal parameters of <em class="xref py py-obj">f</em> differ by multiple orders of magnitude, the
+resulting fit can be inaccurate. Sometimes, <a class="reference internal" href="#scipy.optimize.curve_fit" title="scipy.optimize.curve_fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">curve_fit</span></code></a> can fail to find any
+results:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ydata</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="mi">500000</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">popt</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;trf&#39;</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="go">Optimal parameters not found: The maximum number of function evaluations is</span>
+<span class="go">exceeded.</span>
+</pre></div>
+</div>
+<p>If parameter scale is roughly known beforehand, it can be defined in
+<em class="xref py py-obj">x_scale</em> argument:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">popt</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;trf&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                       <span class="n">x_scale</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">popt</span>
+<span class="go">array([5.00000000e+05, 1.00000000e-02, 1.49999999e+01])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div id="3d4e0cc1-3ae8-488f-a424-24dc70768a11" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('0ef42895-3be6-484f-899b-dd763329ad5a','3d4e0cc1-3ae8-488f-a424-24dc70768a11')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('0ef42895-3be6-484f-899b-dd763329ad5a','3d4e0cc1-3ae8-488f-a424-24dc70768a11')">Open In Tab</button></div><div id="2f3df25f-2b2e-456a-99f7-8d90f0e6c9c9" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.optimize.isotonic_regression.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">isotonic_regression</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.optimize.root_scalar.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">root_scalar</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.optimize.curve_fit"><code class="docutils literal notranslate"><span class="pre">curve_fit</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

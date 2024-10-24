@@ -1,0 +1,893 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>lobpcg &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.sparse.linalg.lobpcg';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="svds" href="scipy.sparse.linalg.svds.html" />
+    <link rel="prev" title="eigsh" href="scipy.sparse.linalg.eigsh.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../sparse.html" class="nav-link">Sparse arrays (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../sparse.linalg.html" class="nav-link">Sparse linear algebra (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.sparse.linalg</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">lobpcg</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.sparse.linalg.</div>
+<div class="empty"></div><section id="lobpcg">
+<h1>lobpcg<a class="headerlink" href="#lobpcg" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.sparse.linalg.lobpcg">
+<span class="sig-prename descclassname"><span class="pre">scipy.sparse.linalg.</span></span><span class="sig-name descname"><span class="pre">lobpcg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">largest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbosityLevel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retLambdaHistory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retResidualNormsHistory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restartControl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/sparse/linalg/_eigen/lobpcg/lobpcg.py#L170-L1110"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.sparse.linalg.lobpcg" title="Link to this definition">#</a></dt>
+<dd><p>Locally Optimal Block Preconditioned Conjugate Gradient Method (LOBPCG).</p>
+<p>LOBPCG is a preconditioned eigensolver for large real symmetric and complex
+Hermitian definite generalized eigenproblems.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>A</strong><span class="classifier">{sparse matrix, ndarray, LinearOperator, callable object}</span></dt><dd><p>The Hermitian linear operator of the problem, usually given by a
+sparse matrix.  Often called the “stiffness matrix”.</p>
+</dd>
+<dt><strong>X</strong><span class="classifier">ndarray, float32 or float64</span></dt><dd><p>Initial approximation to the <code class="docutils literal notranslate"><span class="pre">k</span></code> eigenvectors (non-sparse).
+If <em class="xref py py-obj">A</em> has <code class="docutils literal notranslate"><span class="pre">shape=(n,n)</span></code> then <em class="xref py py-obj">X</em> must have <code class="docutils literal notranslate"><span class="pre">shape=(n,k)</span></code>.</p>
+</dd>
+<dt><strong>B</strong><span class="classifier">{sparse matrix, ndarray, LinearOperator, callable object}</span></dt><dd><p>Optional. By default <code class="docutils literal notranslate"><span class="pre">B</span> <span class="pre">=</span> <span class="pre">None</span></code>, which is equivalent to identity.
+The right hand side operator in a generalized eigenproblem if present.
+Often called the “mass matrix”. Must be Hermitian positive definite.</p>
+</dd>
+<dt><strong>M</strong><span class="classifier">{sparse matrix, ndarray, LinearOperator, callable object}</span></dt><dd><p>Optional. By default <code class="docutils literal notranslate"><span class="pre">M</span> <span class="pre">=</span> <span class="pre">None</span></code>, which is equivalent to identity.
+Preconditioner aiming to accelerate convergence.</p>
+</dd>
+<dt><strong>Y</strong><span class="classifier">ndarray, float32 or float64, default: None</span></dt><dd><p>An <code class="docutils literal notranslate"><span class="pre">n-by-sizeY</span></code> ndarray of constraints with <code class="docutils literal notranslate"><span class="pre">sizeY</span> <span class="pre">&lt;</span> <span class="pre">n</span></code>.
+The iterations will be performed in the <code class="docutils literal notranslate"><span class="pre">B</span></code>-orthogonal complement
+of the column-space of <em class="xref py py-obj">Y</em>. <em class="xref py py-obj">Y</em> must be full rank if present.</p>
+</dd>
+<dt><strong>tol</strong><span class="classifier">scalar, optional</span></dt><dd><p>The default is <code class="docutils literal notranslate"><span class="pre">tol=n*sqrt(eps)</span></code>.
+Solver tolerance for the stopping criterion.</p>
+</dd>
+<dt><strong>maxiter</strong><span class="classifier">int, default: 20</span></dt><dd><p>Maximum number of iterations.</p>
+</dd>
+<dt><strong>largest</strong><span class="classifier">bool, default: True</span></dt><dd><p>When True, solve for the largest eigenvalues, otherwise the smallest.</p>
+</dd>
+<dt><strong>verbosityLevel</strong><span class="classifier">int, optional</span></dt><dd><p>By default <code class="docutils literal notranslate"><span class="pre">verbosityLevel=0</span></code> no output.
+Controls the solver standard/screen output.</p>
+</dd>
+<dt><strong>retLambdaHistory</strong><span class="classifier">bool, default: False</span></dt><dd><p>Whether to return iterative eigenvalue history.</p>
+</dd>
+<dt><strong>retResidualNormsHistory</strong><span class="classifier">bool, default: False</span></dt><dd><p>Whether to return iterative history of residual norms.</p>
+</dd>
+<dt><strong>restartControl</strong><span class="classifier">int, optional.</span></dt><dd><p>Iterations restart if the residuals jump <code class="docutils literal notranslate"><span class="pre">2**restartControl</span></code> times
+compared to the smallest recorded in <code class="docutils literal notranslate"><span class="pre">retResidualNormsHistory</span></code>.
+The default is <code class="docutils literal notranslate"><span class="pre">restartControl=20</span></code>, making the restarts rare for
+backward compatibility.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>lambda</strong><span class="classifier">ndarray of the shape <code class="docutils literal notranslate"><span class="pre">(k,</span> <span class="pre">)</span></code>.</span></dt><dd><p>Array of <code class="docutils literal notranslate"><span class="pre">k</span></code> approximate eigenvalues.</p>
+</dd>
+<dt><strong>v</strong><span class="classifier">ndarray of the same shape as <code class="docutils literal notranslate"><span class="pre">X.shape</span></code>.</span></dt><dd><p>An array of <code class="docutils literal notranslate"><span class="pre">k</span></code> approximate eigenvectors.</p>
+</dd>
+<dt><strong>lambdaHistory</strong><span class="classifier">ndarray, optional.</span></dt><dd><p>The eigenvalue history, if <em class="xref py py-obj">retLambdaHistory</em> is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd>
+<dt><strong>ResidualNormsHistory</strong><span class="classifier">ndarray, optional.</span></dt><dd><p>The history of residual norms, if <em class="xref py py-obj">retResidualNormsHistory</em>
+is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The iterative loop runs <code class="docutils literal notranslate"><span class="pre">maxit=maxiter</span></code> (20 if <code class="docutils literal notranslate"><span class="pre">maxit=None</span></code>)
+iterations at most and finishes earlier if the tolerance is met.
+Breaking backward compatibility with the previous version, LOBPCG
+now returns the block of iterative vectors with the best accuracy rather
+than the last one iterated, as a cure for possible divergence.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">X.dtype</span> <span class="pre">==</span> <span class="pre">np.float32</span></code> and user-provided operations/multiplications
+by <em class="xref py py-obj">A</em>, <em class="xref py py-obj">B</em>, and <em class="xref py py-obj">M</em> all preserve the <code class="docutils literal notranslate"><span class="pre">np.float32</span></code> data type,
+all the calculations and the output are in <code class="docutils literal notranslate"><span class="pre">np.float32</span></code>.</p>
+<p>The size of the iteration history output equals to the number of the best
+(limited by <em class="xref py py-obj">maxit</em>) iterations plus 3: initial, final, and postprocessing.</p>
+<p>If both <em class="xref py py-obj">retLambdaHistory</em> and <em class="xref py py-obj">retResidualNormsHistory</em> are <code class="docutils literal notranslate"><span class="pre">True</span></code>,
+the return tuple has the following format
+<code class="docutils literal notranslate"><span class="pre">(lambda,</span> <span class="pre">V,</span> <span class="pre">lambda</span> <span class="pre">history,</span> <span class="pre">residual</span> <span class="pre">norms</span> <span class="pre">history)</span></code>.</p>
+<p>In the following <code class="docutils literal notranslate"><span class="pre">n</span></code> denotes the matrix size and <code class="docutils literal notranslate"><span class="pre">k</span></code> the number
+of required eigenvalues (smallest or largest).</p>
+<p>The LOBPCG code internally solves eigenproblems of the size <code class="docutils literal notranslate"><span class="pre">3k</span></code> on every
+iteration by calling the dense eigensolver <em class="xref py py-obj">eigh</em>, so if <code class="docutils literal notranslate"><span class="pre">k</span></code> is not
+small enough compared to <code class="docutils literal notranslate"><span class="pre">n</span></code>, it makes no sense to call the LOBPCG code.
+Moreover, if one calls the LOBPCG algorithm for <code class="docutils literal notranslate"><span class="pre">5k</span> <span class="pre">&gt;</span> <span class="pre">n</span></code>, it would likely
+break internally, so the code calls the standard function <em class="xref py py-obj">eigh</em> instead.
+It is not that <code class="docutils literal notranslate"><span class="pre">n</span></code> should be large for the LOBPCG to work, but rather the
+ratio <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">/</span> <span class="pre">k</span></code> should be large. It you call LOBPCG with <code class="docutils literal notranslate"><span class="pre">k=1</span></code>
+and <code class="docutils literal notranslate"><span class="pre">n=10</span></code>, it works though <code class="docutils literal notranslate"><span class="pre">n</span></code> is small. The method is intended
+for extremely large <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">/</span> <span class="pre">k</span></code>.</p>
+<p>The convergence speed depends basically on three factors:</p>
+<ol class="arabic simple">
+<li><p>Quality of the initial approximations <em class="xref py py-obj">X</em> to the seeking eigenvectors.
+Randomly distributed around the origin vectors work well if no better
+choice is known.</p></li>
+<li><p>Relative separation of the desired eigenvalues from the rest
+of the eigenvalues. One can vary <code class="docutils literal notranslate"><span class="pre">k</span></code> to improve the separation.</p></li>
+<li><p>Proper preconditioning to shrink the spectral spread.
+For example, a rod vibration test problem (under tests
+directory) is ill-conditioned for large <code class="docutils literal notranslate"><span class="pre">n</span></code>, so convergence will be
+slow, unless efficient preconditioning is used. For this specific
+problem, a good simple preconditioner function would be a linear solve
+for <em class="xref py py-obj">A</em>, which is easy to code since <em class="xref py py-obj">A</em> is tridiagonal.</p></li>
+</ol>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="rbbbc6164e7a5-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>A. V. Knyazev (2001),
+Toward the Optimal Preconditioned Eigensolver: Locally Optimal
+Block Preconditioned Conjugate Gradient Method.
+SIAM Journal on Scientific Computing 23, no. 2,
+pp. 517-541. <a class="reference external" href="https://doi.org/10.1137/S1064827500366124">DOI:10.1137/S1064827500366124</a></p>
+</div>
+<div class="citation" id="rbbbc6164e7a5-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<p>A. V. Knyazev, I. Lashuk, M. E. Argentati, and E. Ovchinnikov
+(2007), Block Locally Optimal Preconditioned Eigenvalue Xolvers
+(BLOPEX) in hypre and PETSc. <a class="reference external" href="https://arxiv.org/abs/0705.2626">arXiv:0705.2626</a></p>
+</div>
+<div class="citation" id="rbbbc6164e7a5-3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<p>A. V. Knyazev’s C and MATLAB implementations:
+<a class="github reference external" href="https://github.com/lobpcg/blopex">lobpcg/blopex</a></p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="c41a3cff-d7d0-4d67-ac32-5df07f1b7632">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('c41a3cff-d7d0-4d67-ac32-5df07f1b7632','94d80bcd-dacf-414d-b3e4-73adda9afbc7','75e9d063-a74d-40c3-bfed-807217daf4c9','../../lite/tree/../notebooks/index.html?path=2f920589_da99_4635_862e_3d4b6acc9a2d.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>Our first example is minimalistic - find the largest eigenvalue of
+a diagonal matrix by solving the non-generalized eigenvalue problem
+<code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">lambda</span> <span class="pre">x</span></code> without constraints or preconditioning.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">spdiags</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">LinearOperator</span><span class="p">,</span> <span class="n">aslinearoperator</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">lobpcg</span>
+</pre></div>
+</div>
+<p>The square matrix size is</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+</pre></div>
+</div>
+<p>and its diagonal entries are 1, …, 100 defined by</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The first mandatory input parameter in this test is
+the sparse diagonal matrix <em class="xref py py-obj">A</em>
+of the eigenvalue problem <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">x</span> <span class="pre">=</span> <span class="pre">lambda</span> <span class="pre">x</span></code> to solve.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">spdiags</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+<span class="go">array([[  1,   0,   0, ...,   0,   0,   0],</span>
+<span class="go">       [  0,   2,   0, ...,   0,   0,   0],</span>
+<span class="go">       [  0,   0,   3, ...,   0,   0,   0],</span>
+<span class="go">       ...,</span>
+<span class="go">       [  0,   0,   0, ...,  98,   0,   0],</span>
+<span class="go">       [  0,   0,   0, ...,   0,  99,   0],</span>
+<span class="go">       [  0,   0,   0, ...,   0,   0, 100]], dtype=int16)</span>
+</pre></div>
+</div>
+<p>The second mandatory input parameter <em class="xref py py-obj">X</em> is a 2D array with the
+row dimension determining the number of requested eigenvalues.
+<em class="xref py py-obj">X</em> is an initial guess for targeted eigenvectors.
+<em class="xref py py-obj">X</em> must have linearly independent columns.
+If no initial approximations available, randomly oriented vectors
+commonly work best, e.g., with components normally distributed
+around zero or uniformly distributed on the interval [-1 1].
+Setting the initial approximations to dtype <code class="docutils literal notranslate"><span class="pre">np.float32</span></code>
+forces all iterative values to dtype <code class="docutils literal notranslate"><span class="pre">np.float32</span></code> speeding up
+the run while still allowing accurate eigenvalue computations.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lobpcg</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span>
+<span class="go">array([100.], dtype=float32)</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="#scipy.sparse.linalg.lobpcg" title="scipy.sparse.linalg.lobpcg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lobpcg</span></code></a> needs only access the matrix product with <em class="xref py py-obj">A</em> rather
+then the matrix itself. Since the matrix <em class="xref py py-obj">A</em> is diagonal in
+this example, one can write a function of the matrix product
+<code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">&#64;</span> <span class="pre">X</span></code> using the diagonal values <code class="docutils literal notranslate"><span class="pre">vals</span></code> only, e.g., by
+element-wise multiplication with broadcasting in the lambda-function</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">A_lambda</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">X</span><span class="p">:</span> <span class="n">vals</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">X</span>
+</pre></div>
+</div>
+<p>or the regular function</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">A_matmat</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">vals</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">X</span>
+</pre></div>
+</div>
+<p>and use the handle to one of these callables as an input</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lobpcg</span><span class="p">(</span><span class="n">A_lambda</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span>
+<span class="go">array([100.], dtype=float32)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lobpcg</span><span class="p">(</span><span class="n">A_matmat</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span>
+<span class="go">array([100.], dtype=float32)</span>
+</pre></div>
+</div>
+<p>The traditional callable <a class="reference internal" href="scipy.sparse.linalg.LinearOperator.html#scipy.sparse.linalg.LinearOperator" title="scipy.sparse.linalg.LinearOperator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearOperator</span></code></a> is no longer
+necessary but still supported as the input to <a class="reference internal" href="#scipy.sparse.linalg.lobpcg" title="scipy.sparse.linalg.lobpcg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lobpcg</span></code></a>.
+Specifying <code class="docutils literal notranslate"><span class="pre">matmat=A_matmat</span></code> explicitly improves performance.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">A_lo</span> <span class="o">=</span> <span class="n">LinearOperator</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="n">matvec</span><span class="o">=</span><span class="n">A_matmat</span><span class="p">,</span> <span class="n">matmat</span><span class="o">=</span><span class="n">A_matmat</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lobpcg</span><span class="p">(</span><span class="n">A_lo</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span>
+<span class="go">array([100.], dtype=float32)</span>
+</pre></div>
+</div>
+<p>The least efficient callable option is <a class="reference internal" href="scipy.sparse.linalg.aslinearoperator.html#scipy.sparse.linalg.aslinearoperator" title="scipy.sparse.linalg.aslinearoperator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">aslinearoperator</span></code></a>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lobpcg</span><span class="p">(</span><span class="n">aslinearoperator</span><span class="p">(</span><span class="n">A</span><span class="p">),</span> <span class="n">X</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span>
+<span class="go">array([100.], dtype=float32)</span>
+</pre></div>
+</div>
+<p>We now switch to computing the three smallest eigenvalues specifying</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">k</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>and <code class="docutils literal notranslate"><span class="pre">largest=False</span></code> parameter</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lobpcg</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">largest</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span>  
+<span class="go">[1. 2. 3.]</span>
+</pre></div>
+</div>
+<p>The next example illustrates computing 3 smallest eigenvalues of
+the same matrix <em class="xref py py-obj">A</em> given by the function handle <code class="docutils literal notranslate"><span class="pre">A_matmat</span></code> but
+with constraints and preconditioning.</p>
+<p>Constraints - an optional input parameter is a 2D array comprising
+of column vectors that the eigenvectors must be orthogonal to</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The preconditioner acts as the inverse of <em class="xref py py-obj">A</em> in this example, but
+in the reduced precision <code class="docutils literal notranslate"><span class="pre">np.float32</span></code> even though the initial <em class="xref py py-obj">X</em>
+and thus all iterates and the output are in full <code class="docutils literal notranslate"><span class="pre">np.float64</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inv_vals</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">vals</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inv_vals</span> <span class="o">=</span> <span class="n">inv_vals</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">M</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">X</span><span class="p">:</span> <span class="n">inv_vals</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">X</span>
+</pre></div>
+</div>
+<p>Let us now solve the eigenvalue problem for the matrix <em class="xref py py-obj">A</em> first
+without preconditioning requesting 80 iterations</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lobpcg</span><span class="p">(</span><span class="n">A_matmat</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span> <span class="n">largest</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span>
+<span class="go">array([4., 5., 6.])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span><span class="o">.</span><span class="n">dtype</span>
+<span class="go">dtype(&#39;float64&#39;)</span>
+</pre></div>
+</div>
+<p>With preconditioning we need only 20 iterations from the same <em class="xref py py-obj">X</em></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lobpcg</span><span class="p">(</span><span class="n">A_matmat</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="n">M</span><span class="p">,</span> <span class="n">largest</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span>
+<span class="go">array([4., 5., 6.])</span>
+</pre></div>
+</div>
+<p>Note that the vectors passed in <em class="xref py py-obj">Y</em> are the eigenvectors of the 3
+smallest eigenvalues. The results returned above are orthogonal to those.</p>
+<p>The primary matrix <em class="xref py py-obj">A</em> may be indefinite, e.g., after shifting
+<code class="docutils literal notranslate"><span class="pre">vals</span></code> by 50 from 1, …, 100 to -49, …, 50, we still can compute
+the 3 smallest or largest eigenvalues.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vals</span> <span class="o">=</span> <span class="n">vals</span> <span class="o">-</span> <span class="mi">50</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lobpcg</span><span class="p">(</span><span class="n">A_matmat</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">largest</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span>
+<span class="go">array([-49., -48., -47.])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lobpcg</span><span class="p">(</span><span class="n">A_matmat</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">largest</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">99</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eigenvalues</span>
+<span class="go">array([50., 49., 48.])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div id="75e9d063-a74d-40c3-bfed-807217daf4c9" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('c41a3cff-d7d0-4d67-ac32-5df07f1b7632','75e9d063-a74d-40c3-bfed-807217daf4c9')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('c41a3cff-d7d0-4d67-ac32-5df07f1b7632','75e9d063-a74d-40c3-bfed-807217daf4c9')">Open In Tab</button></div><div id="94d80bcd-dacf-414d-b3e4-73adda9afbc7" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.sparse.linalg.eigsh.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">eigsh</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.sparse.linalg.svds.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">svds</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.sparse.linalg.lobpcg"><code class="docutils literal notranslate"><span class="pre">lobpcg</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

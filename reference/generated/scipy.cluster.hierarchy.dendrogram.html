@@ -1,0 +1,876 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>dendrogram &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.cluster.hierarchy.dendrogram';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="ClusterNode" href="scipy.cluster.hierarchy.ClusterNode.html" />
+    <link rel="prev" title="to_mlab_linkage" href="scipy.cluster.hierarchy.to_mlab_linkage.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../cluster.html" class="nav-link">Clustering package (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.cluster</span></code>)</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../cluster.hierarchy.html" class="nav-link">Hierarchical clustering (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.cluster.hierarchy</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">dendrogram</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.cluster.hierarchy.</div>
+<div class="empty"></div><section id="dendrogram">
+<h1>dendrogram<a class="headerlink" href="#dendrogram" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.cluster.hierarchy.dendrogram">
+<span class="sig-prename descclassname"><span class="pre">scipy.cluster.hierarchy.</span></span><span class="sig-name descname"><span class="pre">dendrogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truncate_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_leaves</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count_sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_leaf_counts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaf_font_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaf_rotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaf_label_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_contracted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_color_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">above_threshold_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C0'</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/cluster/hierarchy.py#L2991-L3364"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.cluster.hierarchy.dendrogram" title="Link to this definition">#</a></dt>
+<dd><p>Plot the hierarchical clustering as a dendrogram.</p>
+<p>The dendrogram illustrates how each cluster is
+composed by drawing a U-shaped link between a non-singleton
+cluster and its children. The top of the U-link indicates a
+cluster merge. The two legs of the U-link indicate which clusters
+were merged. The length of the two legs of the U-link represents
+the distance between the child clusters. It is also the
+cophenetic distance between original observations in the two
+children clusters.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Z</strong><span class="classifier">ndarray</span></dt><dd><p>The linkage matrix encoding the hierarchical clustering to
+render as a dendrogram. See the <code class="docutils literal notranslate"><span class="pre">linkage</span></code> function for more
+information on the format of <code class="docutils literal notranslate"><span class="pre">Z</span></code>.</p>
+</dd>
+<dt><strong>p</strong><span class="classifier">int, optional</span></dt><dd><p>The <code class="docutils literal notranslate"><span class="pre">p</span></code> parameter for <code class="docutils literal notranslate"><span class="pre">truncate_mode</span></code>.</p>
+</dd>
+<dt><strong>truncate_mode</strong><span class="classifier">str, optional</span></dt><dd><p>The dendrogram can be hard to read when the original
+observation matrix from which the linkage is derived is
+large. Truncation is used to condense the dendrogram. There
+are several modes:</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">None</span></code></dt><dd><p>No truncation is performed (default).
+Note: <code class="docutils literal notranslate"><span class="pre">'none'</span></code> is an alias for <code class="docutils literal notranslate"><span class="pre">None</span></code> that’s kept for
+backward compatibility.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'lastp'</span></code></dt><dd><p>The last <code class="docutils literal notranslate"><span class="pre">p</span></code> non-singleton clusters formed in the linkage are the
+only non-leaf nodes in the linkage; they correspond to rows
+<code class="docutils literal notranslate"><span class="pre">Z[n-p-2:end]</span></code> in <code class="docutils literal notranslate"><span class="pre">Z</span></code>. All other non-singleton clusters are
+contracted into leaf nodes.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'level'</span></code></dt><dd><p>No more than <code class="docutils literal notranslate"><span class="pre">p</span></code> levels of the dendrogram tree are displayed.
+A “level” includes all nodes with <code class="docutils literal notranslate"><span class="pre">p</span></code> merges from the final merge.</p>
+<p>Note: <code class="docutils literal notranslate"><span class="pre">'mtica'</span></code> is an alias for <code class="docutils literal notranslate"><span class="pre">'level'</span></code> that’s kept for
+backward compatibility.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>color_threshold</strong><span class="classifier">double, optional</span></dt><dd><p>For brevity, let <span class="math notranslate nohighlight">\(t\)</span> be the <code class="docutils literal notranslate"><span class="pre">color_threshold</span></code>.
+Colors all the descendent links below a cluster node
+<span class="math notranslate nohighlight">\(k\)</span> the same color if <span class="math notranslate nohighlight">\(k\)</span> is the first node below
+the cut threshold <span class="math notranslate nohighlight">\(t\)</span>. All links connecting nodes with
+distances greater than or equal to the threshold are colored
+with de default matplotlib color <code class="docutils literal notranslate"><span class="pre">'C0'</span></code>. If <span class="math notranslate nohighlight">\(t\)</span> is less
+than or equal to zero, all nodes are colored <code class="docutils literal notranslate"><span class="pre">'C0'</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">color_threshold</span></code> is None or ‘default’,
+corresponding with MATLAB(TM) behavior, the threshold is set to
+<code class="docutils literal notranslate"><span class="pre">0.7*max(Z[:,2])</span></code>.</p>
+</dd>
+<dt><strong>get_leaves</strong><span class="classifier">bool, optional</span></dt><dd><p>Includes a list <code class="docutils literal notranslate"><span class="pre">R['leaves']=H</span></code> in the result
+dictionary. For each <span class="math notranslate nohighlight">\(i\)</span>, <code class="docutils literal notranslate"><span class="pre">H[i]</span> <span class="pre">==</span> <span class="pre">j</span></code>, cluster node
+<code class="docutils literal notranslate"><span class="pre">j</span></code> appears in position <code class="docutils literal notranslate"><span class="pre">i</span></code> in the left-to-right traversal
+of the leaves, where <span class="math notranslate nohighlight">\(j &lt; 2n-1\)</span> and <span class="math notranslate nohighlight">\(i &lt; n\)</span>.</p>
+</dd>
+<dt><strong>orientation</strong><span class="classifier">str, optional</span></dt><dd><p>The direction to plot the dendrogram, which can be any
+of the following strings:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">'top'</span></code></dt><dd><p>Plots the root at the top, and plot descendent links going downwards.
+(default).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'bottom'</span></code></dt><dd><p>Plots the root at the bottom, and plot descendent links going
+upwards.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'left'</span></code></dt><dd><p>Plots the root at the left, and plot descendent links going right.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'right'</span></code></dt><dd><p>Plots the root at the right, and plot descendent links going left.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>labels</strong><span class="classifier">ndarray, optional</span></dt><dd><p>By default, <code class="docutils literal notranslate"><span class="pre">labels</span></code> is None so the index of the original observation
+is used to label the leaf nodes.  Otherwise, this is an <span class="math notranslate nohighlight">\(n\)</span>-sized
+sequence, with <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">==</span> <span class="pre">Z.shape[0]</span> <span class="pre">+</span> <span class="pre">1</span></code>. The <code class="docutils literal notranslate"><span class="pre">labels[i]</span></code> value is the
+text to put under the <span class="math notranslate nohighlight">\(i\)</span> th leaf node only if it corresponds to
+an original observation and not a non-singleton cluster.</p>
+</dd>
+<dt><strong>count_sort</strong><span class="classifier">str or bool, optional</span></dt><dd><p>For each node n, the order (visually, from left-to-right) n’s
+two descendent links are plotted is determined by this
+parameter, which can be any of the following values:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">False</span></code></dt><dd><p>Nothing is done.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'ascending'</span></code> or <code class="docutils literal notranslate"><span class="pre">True</span></code></dt><dd><p>The child with the minimum number of original objects in its cluster
+is plotted first.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'descending'</span></code></dt><dd><p>The child with the maximum number of original objects in its cluster
+is plotted first.</p>
+</dd>
+</dl>
+<p>Note, <code class="docutils literal notranslate"><span class="pre">distance_sort</span></code> and <code class="docutils literal notranslate"><span class="pre">count_sort</span></code> cannot both be True.</p>
+</dd>
+<dt><strong>distance_sort</strong><span class="classifier">str or bool, optional</span></dt><dd><p>For each node n, the order (visually, from left-to-right) n’s
+two descendent links are plotted is determined by this
+parameter, which can be any of the following values:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">False</span></code></dt><dd><p>Nothing is done.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'ascending'</span></code> or <code class="docutils literal notranslate"><span class="pre">True</span></code></dt><dd><p>The child with the minimum distance between its direct descendents is
+plotted first.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'descending'</span></code></dt><dd><p>The child with the maximum distance between its direct descendents is
+plotted first.</p>
+</dd>
+</dl>
+<p>Note <code class="docutils literal notranslate"><span class="pre">distance_sort</span></code> and <code class="docutils literal notranslate"><span class="pre">count_sort</span></code> cannot both be True.</p>
+</dd>
+<dt><strong>show_leaf_counts</strong><span class="classifier">bool, optional</span></dt><dd><p>When True, leaf nodes representing <span class="math notranslate nohighlight">\(k&gt;1\)</span> original
+observation are labeled with the number of observations they
+contain in parentheses.</p>
+</dd>
+<dt><strong>no_plot</strong><span class="classifier">bool, optional</span></dt><dd><p>When True, the final rendering is not performed. This is
+useful if only the data structures computed for the rendering
+are needed or if matplotlib is not available.</p>
+</dd>
+<dt><strong>no_labels</strong><span class="classifier">bool, optional</span></dt><dd><p>When True, no labels appear next to the leaf nodes in the
+rendering of the dendrogram.</p>
+</dd>
+<dt><strong>leaf_rotation</strong><span class="classifier">double, optional</span></dt><dd><p>Specifies the angle (in degrees) to rotate the leaf
+labels. When unspecified, the rotation is based on the number of
+nodes in the dendrogram (default is 0).</p>
+</dd>
+<dt><strong>leaf_font_size</strong><span class="classifier">int, optional</span></dt><dd><p>Specifies the font size (in points) of the leaf labels. When
+unspecified, the size based on the number of nodes in the
+dendrogram.</p>
+</dd>
+<dt><strong>leaf_label_func</strong><span class="classifier">lambda or function, optional</span></dt><dd><p>When <code class="docutils literal notranslate"><span class="pre">leaf_label_func</span></code> is a callable function, for each
+leaf with cluster index <span class="math notranslate nohighlight">\(k &lt; 2n-1\)</span>. The function
+is expected to return a string with the label for the
+leaf.</p>
+<p>Indices <span class="math notranslate nohighlight">\(k &lt; n\)</span> correspond to original observations
+while indices <span class="math notranslate nohighlight">\(k \geq n\)</span> correspond to non-singleton
+clusters.</p>
+<p>For example, to label singletons with their node id and
+non-singletons with their id, count, and inconsistency
+coefficient, simply do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># First define the leaf label function.</span>
+<span class="k">def</span> <span class="nf">llf</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">id</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;[</span><span class="si">%d</span><span class="s1"> </span><span class="si">%d</span><span class="s1"> </span><span class="si">%1.2f</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">R</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="nb">id</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+
+<span class="c1"># The text for the leaf nodes is going to be big so force</span>
+<span class="c1"># a rotation of 90 degrees.</span>
+<span class="n">dendrogram</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">leaf_label_func</span><span class="o">=</span><span class="n">llf</span><span class="p">,</span> <span class="n">leaf_rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+
+<span class="c1"># leaf_label_func can also be used together with ``truncate_mode``,</span>
+<span class="c1"># in which case you will get your leaves labeled after truncation:</span>
+<span class="n">dendrogram</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">leaf_label_func</span><span class="o">=</span><span class="n">llf</span><span class="p">,</span> <span class="n">leaf_rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
+           <span class="n">truncate_mode</span><span class="o">=</span><span class="s1">&#39;level&#39;</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt><strong>show_contracted</strong><span class="classifier">bool, optional</span></dt><dd><p>When True the heights of non-singleton nodes contracted
+into a leaf node are plotted as crosses along the link
+connecting that leaf node.  This really is only useful when
+truncation is used (see <code class="docutils literal notranslate"><span class="pre">truncate_mode</span></code> parameter).</p>
+</dd>
+<dt><strong>link_color_func</strong><span class="classifier">callable, optional</span></dt><dd><p>If given, <em class="xref py py-obj">link_color_function</em> is called with each non-singleton id
+corresponding to each U-shaped link it will paint. The function is
+expected to return the color to paint the link, encoded as a matplotlib
+color string code. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dendrogram</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">link_color_func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">colors</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>colors the direct links below each untruncated non-singleton node
+<code class="docutils literal notranslate"><span class="pre">k</span></code> using <code class="docutils literal notranslate"><span class="pre">colors[k]</span></code>.</p>
+</dd>
+<dt><strong>ax</strong><span class="classifier">matplotlib Axes instance, optional</span></dt><dd><p>If None and <em class="xref py py-obj">no_plot</em> is not True, the dendrogram will be plotted
+on the current axes.  Otherwise if <em class="xref py py-obj">no_plot</em> is not True the
+dendrogram will be plotted on the given <code class="docutils literal notranslate"><span class="pre">Axes</span></code> instance. This can be
+useful if the dendrogram is part of a more complex figure.</p>
+</dd>
+<dt><strong>above_threshold_color</strong><span class="classifier">str, optional</span></dt><dd><p>This matplotlib color string sets the color of the links above the
+color_threshold. The default is <code class="docutils literal notranslate"><span class="pre">'C0'</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>R</strong><span class="classifier">dict</span></dt><dd><p>A dictionary of data structures computed to render the
+dendrogram. Its has the following keys:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">'color_list'</span></code></dt><dd><p>A list of color names. The k’th element represents the color of the
+k’th link.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'icoord'</span></code> and <code class="docutils literal notranslate"><span class="pre">'dcoord'</span></code></dt><dd><p>Each of them is a list of lists. Let <code class="docutils literal notranslate"><span class="pre">icoord</span> <span class="pre">=</span> <span class="pre">[I1,</span> <span class="pre">I2,</span> <span class="pre">...,</span> <span class="pre">Ip]</span></code>
+where <code class="docutils literal notranslate"><span class="pre">Ik</span> <span class="pre">=</span> <span class="pre">[xk1,</span> <span class="pre">xk2,</span> <span class="pre">xk3,</span> <span class="pre">xk4]</span></code> and <code class="docutils literal notranslate"><span class="pre">dcoord</span> <span class="pre">=</span> <span class="pre">[D1,</span> <span class="pre">D2,</span> <span class="pre">...,</span> <span class="pre">Dp]</span></code>
+where <code class="docutils literal notranslate"><span class="pre">Dk</span> <span class="pre">=</span> <span class="pre">[yk1,</span> <span class="pre">yk2,</span> <span class="pre">yk3,</span> <span class="pre">yk4]</span></code>, then the k’th link painted is
+<code class="docutils literal notranslate"><span class="pre">(xk1,</span> <span class="pre">yk1)</span></code> - <code class="docutils literal notranslate"><span class="pre">(xk2,</span> <span class="pre">yk2)</span></code> - <code class="docutils literal notranslate"><span class="pre">(xk3,</span> <span class="pre">yk3)</span></code> - <code class="docutils literal notranslate"><span class="pre">(xk4,</span> <span class="pre">yk4)</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'ivl'</span></code></dt><dd><p>A list of labels corresponding to the leaf nodes.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'leaves'</span></code></dt><dd><p>For each i, <code class="docutils literal notranslate"><span class="pre">H[i]</span> <span class="pre">==</span> <span class="pre">j</span></code>, cluster node <code class="docutils literal notranslate"><span class="pre">j</span></code> appears in position
+<code class="docutils literal notranslate"><span class="pre">i</span></code> in the left-to-right traversal of the leaves, where
+<span class="math notranslate nohighlight">\(j &lt; 2n-1\)</span> and <span class="math notranslate nohighlight">\(i &lt; n\)</span>. If <code class="docutils literal notranslate"><span class="pre">j</span></code> is less than <code class="docutils literal notranslate"><span class="pre">n</span></code>, the
+<code class="docutils literal notranslate"><span class="pre">i</span></code>-th leaf node corresponds to an original observation.
+Otherwise, it corresponds to a non-singleton cluster.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">'leaves_color_list'</span></code></dt><dd><p>A list of color names. The k’th element represents the color of the
+k’th leaf.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="scipy.cluster.hierarchy.linkage.html#scipy.cluster.hierarchy.linkage" title="scipy.cluster.hierarchy.linkage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linkage</span></code></a>, <a class="reference internal" href="scipy.cluster.hierarchy.set_link_color_palette.html#scipy.cluster.hierarchy.set_link_color_palette" title="scipy.cluster.hierarchy.set_link_color_palette"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_link_color_palette</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>It is expected that the distances in <code class="docutils literal notranslate"><span class="pre">Z[:,2]</span></code> be monotonic, otherwise
+crossings appear in the dendrogram.</p>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="1f363f24-ccce-4cca-b3c4-5bd8d803651c">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('1f363f24-ccce-4cca-b3c4-5bd8d803651c','b3129f7a-f419-4d98-9942-85192f7a1e84','9546628a-3139-4bd6-84f1-2debca87aa43','../../lite/tree/../notebooks/index.html?path=c3f27f61_32d7_485a_ba8b_b4adbe2d9e58.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.cluster</span> <span class="kn">import</span> <span class="n">hierarchy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+<p>A very basic example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ytdist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">662.</span><span class="p">,</span> <span class="mf">877.</span><span class="p">,</span> <span class="mf">255.</span><span class="p">,</span> <span class="mf">412.</span><span class="p">,</span> <span class="mf">996.</span><span class="p">,</span> <span class="mf">295.</span><span class="p">,</span> <span class="mf">468.</span><span class="p">,</span> <span class="mf">268.</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="mf">400.</span><span class="p">,</span> <span class="mf">754.</span><span class="p">,</span> <span class="mf">564.</span><span class="p">,</span> <span class="mf">138.</span><span class="p">,</span> <span class="mf">219.</span><span class="p">,</span> <span class="mf">869.</span><span class="p">,</span> <span class="mf">669.</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Z</span> <span class="o">=</span> <span class="n">hierarchy</span><span class="o">.</span><span class="n">linkage</span><span class="p">(</span><span class="n">ytdist</span><span class="p">,</span> <span class="s1">&#39;single&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dn</span> <span class="o">=</span> <span class="n">hierarchy</span><span class="o">.</span><span class="n">dendrogram</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now, plot in given axes, improve the color scheme and use both vertical and
+horizontal orientations:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">hierarchy</span><span class="o">.</span><span class="n">set_link_color_palette</span><span class="p">([</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dn1</span> <span class="o">=</span> <span class="n">hierarchy</span><span class="o">.</span><span class="n">dendrogram</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">above_threshold_color</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                           <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dn2</span> <span class="o">=</span> <span class="n">hierarchy</span><span class="o">.</span><span class="n">dendrogram</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>                           <span class="n">above_threshold_color</span><span class="o">=</span><span class="s1">&#39;#bcbddc&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                           <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hierarchy</span><span class="o">.</span><span class="n">set_link_color_palette</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># reset to default after use</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-cluster-hierarchy-dendrogram-1_00.png" class="plot-directive" src="../../_images/scipy-cluster-hierarchy-dendrogram-1_00.png" />
+</figure>
+<figure class="align-default">
+<img alt="../../_images/scipy-cluster-hierarchy-dendrogram-1_01.png" class="plot-directive" src="../../_images/scipy-cluster-hierarchy-dendrogram-1_01.png" />
+</figure>
+</div>
+</div>
+<div id="9546628a-3139-4bd6-84f1-2debca87aa43" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('1f363f24-ccce-4cca-b3c4-5bd8d803651c','9546628a-3139-4bd6-84f1-2debca87aa43')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('1f363f24-ccce-4cca-b3c4-5bd8d803651c','9546628a-3139-4bd6-84f1-2debca87aa43')">Open In Tab</button></div><div id="b3129f7a-f419-4d98-9942-85192f7a1e84" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.cluster.hierarchy.to_mlab_linkage.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">to_mlab_linkage</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.cluster.hierarchy.ClusterNode.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">ClusterNode</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.cluster.hierarchy.dendrogram"><code class="docutils literal notranslate"><span class="pre">dendrogram</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

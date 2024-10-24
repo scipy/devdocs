@@ -1,0 +1,1040 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>permutation_test &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.stats.permutation_test';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="bootstrap" href="scipy.stats.bootstrap.html" />
+    <link rel="prev" title="monte_carlo_test" href="scipy.stats.monte_carlo_test.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../stats.html" class="nav-link">Statistical functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">permutation_test</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.stats.</div>
+<div class="empty"></div><section id="permutation-test">
+<h1>permutation_test<a class="headerlink" href="#permutation-test" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.stats.permutation_test">
+<span class="sig-prename descclassname"><span class="pre">scipy.stats.</span></span><span class="sig-name descname"><span class="pre">permutation_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statistic</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">permutation_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'independent'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectorized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_resamples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'two-sided'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/stats/_resampling.py#L1640-L2116"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.stats.permutation_test" title="Link to this definition">#</a></dt>
+<dd><p>Performs a permutation test of a given statistic on provided data.</p>
+<p>For independent sample statistics, the null hypothesis is that the data are
+randomly sampled from the same distribution.
+For paired sample statistics, two null hypothesis can be tested:
+that the data are paired at random or that the data are assigned to samples
+at random.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>data</strong><span class="classifier">iterable of array-like</span></dt><dd><p>Contains the samples, each of which is an array of observations.
+Dimensions of sample arrays must be compatible for broadcasting except
+along <em class="xref py py-obj">axis</em>.</p>
+</dd>
+<dt><strong>statistic</strong><span class="classifier">callable</span></dt><dd><p>Statistic for which the p-value of the hypothesis test is to be
+calculated. <em class="xref py py-obj">statistic</em> must be a callable that accepts samples
+as separate arguments (e.g. <code class="docutils literal notranslate"><span class="pre">statistic(*data)</span></code>) and returns the
+resulting statistic.
+If <em class="xref py py-obj">vectorized</em> is set <code class="docutils literal notranslate"><span class="pre">True</span></code>, <em class="xref py py-obj">statistic</em> must also accept a keyword
+argument <em class="xref py py-obj">axis</em> and be vectorized to compute the statistic along the
+provided <em class="xref py py-obj">axis</em> of the sample arrays.</p>
+</dd>
+<dt><strong>permutation_type</strong><span class="classifier">{‘independent’, ‘samples’, ‘pairings’}, optional</span></dt><dd><p>The type of permutations to be performed, in accordance with the
+null hypothesis. The first two permutation types are for paired sample
+statistics, in which all samples contain the same number of
+observations and observations with corresponding indices along <em class="xref py py-obj">axis</em>
+are considered to be paired; the third is for independent sample
+statistics.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'samples'</span></code> : observations are assigned to different samples
+but remain paired with the same observations from other samples.
+This permutation type is appropriate for paired sample hypothesis
+tests such as the Wilcoxon signed-rank test and the paired t-test.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'pairings'</span></code> : observations are paired with different observations,
+but they remain within the same sample. This permutation type is
+appropriate for association/correlation tests with statistics such
+as Spearman’s <span class="math notranslate nohighlight">\(\rho\)</span>, Kendall’s <span class="math notranslate nohighlight">\(\tau\)</span>, and Pearson’s
+<span class="math notranslate nohighlight">\(r\)</span>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'independent'</span></code> (default) : observations are assigned to different
+samples. Samples may contain different numbers of observations. This
+permutation type is appropriate for independent sample hypothesis
+tests such as the Mann-Whitney <span class="math notranslate nohighlight">\(U\)</span> test and the independent
+sample t-test.</p>
+<p>Please see the Notes section below for more detailed descriptions
+of the permutation types.</p>
+</li>
+</ul>
+</dd>
+<dt><strong>vectorized</strong><span class="classifier">bool, optional</span></dt><dd><p>If <em class="xref py py-obj">vectorized</em> is set <code class="docutils literal notranslate"><span class="pre">False</span></code>, <em class="xref py py-obj">statistic</em> will not be passed
+keyword argument <em class="xref py py-obj">axis</em> and is expected to calculate the statistic
+only for 1D samples. If <code class="docutils literal notranslate"><span class="pre">True</span></code>, <em class="xref py py-obj">statistic</em> will be passed keyword
+argument <em class="xref py py-obj">axis</em> and is expected to calculate the statistic along <em class="xref py py-obj">axis</em>
+when passed an ND sample array. If <code class="docutils literal notranslate"><span class="pre">None</span></code> (default), <em class="xref py py-obj">vectorized</em>
+will be set <code class="docutils literal notranslate"><span class="pre">True</span></code> if <code class="docutils literal notranslate"><span class="pre">axis</span></code> is a parameter of <em class="xref py py-obj">statistic</em>. Use
+of a vectorized statistic typically reduces computation time.</p>
+</dd>
+<dt><strong>n_resamples</strong><span class="classifier">int or np.inf, default: 9999</span></dt><dd><p>Number of random permutations (resamples) used to approximate the null
+distribution. If greater than or equal to the number of distinct
+permutations, the exact null distribution will be computed.
+Note that the number of distinct permutations grows very rapidly with
+the sizes of samples, so exact tests are feasible only for very small
+data sets.</p>
+</dd>
+<dt><strong>batch</strong><span class="classifier">int, optional</span></dt><dd><p>The number of permutations to process in each call to <em class="xref py py-obj">statistic</em>.
+Memory usage is O( <em class="xref py py-obj">batch</em> * <code class="docutils literal notranslate"><span class="pre">n</span></code> ), where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the total size
+of all samples, regardless of the value of <em class="xref py py-obj">vectorized</em>. Default is
+<code class="docutils literal notranslate"><span class="pre">None</span></code>, in which case <code class="docutils literal notranslate"><span class="pre">batch</span></code> is the number of permutations.</p>
+</dd>
+<dt><strong>alternative</strong><span class="classifier">{‘two-sided’, ‘less’, ‘greater’}, optional</span></dt><dd><p>The alternative hypothesis for which the p-value is calculated.
+For each alternative, the p-value is defined for exact tests as
+follows.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">'greater'</span></code> : the percentage of the null distribution that is
+greater than or equal to the observed value of the test statistic.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'less'</span></code> : the percentage of the null distribution that is
+less than or equal to the observed value of the test statistic.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'two-sided'</span></code> (default) : twice the smaller of the p-values above.</p></li>
+</ul>
+<p>Note that p-values for randomized tests are calculated according to the
+conservative (over-estimated) approximation suggested in <a class="reference internal" href="#r5641c5b1ce56-2" id="id1">[2]</a> and <a class="reference internal" href="#r5641c5b1ce56-3" id="id2">[3]</a>
+rather than the unbiased estimator suggested in <a class="reference internal" href="#r5641c5b1ce56-4" id="id3">[4]</a>. That is, when
+calculating the proportion of the randomized null distribution that is
+as extreme as the observed value of the test statistic, the values in
+the numerator and denominator are both increased by one. An
+interpretation of this adjustment is that the observed value of the
+test statistic is always included as an element of the randomized
+null distribution.
+The convention used for two-sided p-values is not universal;
+the observed test statistic and null distribution are returned in
+case a different definition is preferred.</p>
+</dd>
+<dt><strong>axis</strong><span class="classifier">int, default: 0</span></dt><dd><p>The axis of the (broadcasted) samples over which to calculate the
+statistic. If samples have a different number of dimensions,
+singleton dimensions are prepended to samples with fewer dimensions
+before <em class="xref py py-obj">axis</em> is considered.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">{None, int, <a class="reference external" href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code></a>,</span></dt><dd><blockquote>
+<div><p><a class="reference external" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a>}, optional</p>
+</div></blockquote>
+<p>Pseudorandom number generator state used to generate permutations.</p>
+<p>If <em class="xref py py-obj">random_state</em> is <code class="docutils literal notranslate"><span class="pre">None</span></code> (default), the
+<a class="reference external" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a> singleton is used.
+If <em class="xref py py-obj">random_state</em> is an int, a new <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance is used,
+seeded with <em class="xref py py-obj">random_state</em>.
+If <em class="xref py py-obj">random_state</em> is already a <code class="docutils literal notranslate"><span class="pre">Generator</span></code> or <code class="docutils literal notranslate"><span class="pre">RandomState</span></code>
+instance then that instance is used.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>res</strong><span class="classifier">PermutationTestResult</span></dt><dd><p>An object with attributes:</p>
+<dl class="simple">
+<dt>statistic<span class="classifier">float or ndarray</span></dt><dd><p>The observed test statistic of the data.</p>
+</dd>
+<dt>pvalue<span class="classifier">float or ndarray</span></dt><dd><p>The p-value for the given alternative.</p>
+</dd>
+<dt>null_distribution<span class="classifier">ndarray</span></dt><dd><p>The values of the test statistic generated under the null
+hypothesis.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The three types of permutation tests supported by this function are
+described below.</p>
+<p><strong>Unpaired statistics</strong> (<code class="docutils literal notranslate"><span class="pre">permutation_type='independent'</span></code>):</p>
+<p>The null hypothesis associated with this permutation type is that all
+observations are sampled from the same underlying distribution and that
+they have been assigned to one of the samples at random.</p>
+<p>Suppose <code class="docutils literal notranslate"><span class="pre">data</span></code> contains two samples; e.g. <code class="docutils literal notranslate"><span class="pre">a,</span> <span class="pre">b</span> <span class="pre">=</span> <span class="pre">data</span></code>.
+When <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">&lt;</span> <span class="pre">n_resamples</span> <span class="pre">&lt;</span> <span class="pre">binom(n,</span> <span class="pre">k)</span></code>, where</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">k</span></code> is the number of observations in <code class="docutils literal notranslate"><span class="pre">a</span></code>,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n</span></code> is the total number of observations in <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">binom(n,</span> <span class="pre">k)</span></code> is the binomial coefficient (<code class="docutils literal notranslate"><span class="pre">n</span></code> choose <code class="docutils literal notranslate"><span class="pre">k</span></code>),</p></li>
+</ul>
+<p>the data are pooled (concatenated), randomly assigned to either the first
+or second sample, and the statistic is calculated. This process is
+performed repeatedly, <em class="xref py py-obj">permutation</em> times, generating a distribution of the
+statistic under the null hypothesis. The statistic of the original
+data is compared to this distribution to determine the p-value.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">n_resamples</span> <span class="pre">&gt;=</span> <span class="pre">binom(n,</span> <span class="pre">k)</span></code>, an exact test is performed: the data
+are <em>partitioned</em> between the samples in each distinct way exactly once,
+and the exact null distribution is formed.
+Note that for a given partitioning of the data between the samples,
+only one ordering/permutation of the data <em>within</em> each sample is
+considered. For statistics that do not depend on the order of the data
+within samples, this dramatically reduces computational cost without
+affecting the shape of the null distribution (because the frequency/count
+of each value is affected by the same factor).</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">[a1,</span> <span class="pre">a2,</span> <span class="pre">a3,</span> <span class="pre">a4]</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">=</span> <span class="pre">[b1,</span> <span class="pre">b2,</span> <span class="pre">b3]</span></code>, an example of this
+permutation type is <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">[b3,</span> <span class="pre">a1,</span> <span class="pre">a2,</span> <span class="pre">b2]</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">[a4,</span> <span class="pre">b1,</span> <span class="pre">a3]</span></code>.
+Because only one ordering/permutation of the data <em>within</em> each sample
+is considered in an exact test, a resampling like <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">[b3,</span> <span class="pre">a1,</span> <span class="pre">b2,</span> <span class="pre">a2]</span></code>
+and <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">[a4,</span> <span class="pre">a3,</span> <span class="pre">b1]</span></code> would <em>not</em> be considered distinct from the
+example above.</p>
+<p><code class="docutils literal notranslate"><span class="pre">permutation_type='independent'</span></code> does not support one-sample statistics,
+but it can be applied to statistics with more than two samples. In this
+case, if <code class="docutils literal notranslate"><span class="pre">n</span></code> is an array of the number of observations within each
+sample, the number of distinct partitions is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">([</span><span class="n">binom</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">:]),</span> <span class="nb">sum</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:]))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
+</pre></div>
+</div>
+<p><strong>Paired statistics, permute pairings</strong> (<code class="docutils literal notranslate"><span class="pre">permutation_type='pairings'</span></code>):</p>
+<p>The null hypothesis associated with this permutation type is that
+observations within each sample are drawn from the same underlying
+distribution and that pairings with elements of other samples are
+assigned at random.</p>
+<p>Suppose <code class="docutils literal notranslate"><span class="pre">data</span></code> contains only one sample; e.g. <code class="docutils literal notranslate"><span class="pre">a,</span> <span class="pre">=</span> <span class="pre">data</span></code>, and we
+wish to consider all possible pairings of elements of <code class="docutils literal notranslate"><span class="pre">a</span></code> with elements
+of a second sample, <code class="docutils literal notranslate"><span class="pre">b</span></code>. Let <code class="docutils literal notranslate"><span class="pre">n</span></code> be the number of observations in
+<code class="docutils literal notranslate"><span class="pre">a</span></code>, which must also equal the number of observations in <code class="docutils literal notranslate"><span class="pre">b</span></code>.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">&lt;</span> <span class="pre">n_resamples</span> <span class="pre">&lt;</span> <span class="pre">factorial(n)</span></code>, the elements of <code class="docutils literal notranslate"><span class="pre">a</span></code> are
+randomly permuted. The user-supplied statistic accepts one data argument,
+say <code class="docutils literal notranslate"><span class="pre">a_perm</span></code>, and calculates the statistic considering <code class="docutils literal notranslate"><span class="pre">a_perm</span></code> and
+<code class="docutils literal notranslate"><span class="pre">b</span></code>. This process is performed repeatedly, <em class="xref py py-obj">permutation</em> times,
+generating a distribution of the statistic under the null hypothesis.
+The statistic of the original data is compared to this distribution to
+determine the p-value.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">n_resamples</span> <span class="pre">&gt;=</span> <span class="pre">factorial(n)</span></code>, an exact test is performed:
+<code class="docutils literal notranslate"><span class="pre">a</span></code> is permuted in each distinct way exactly once. Therefore, the
+<em class="xref py py-obj">statistic</em> is computed for each unique pairing of samples between <code class="docutils literal notranslate"><span class="pre">a</span></code>
+and <code class="docutils literal notranslate"><span class="pre">b</span></code> exactly once.</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">[a1,</span> <span class="pre">a2,</span> <span class="pre">a3]</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">=</span> <span class="pre">[b1,</span> <span class="pre">b2,</span> <span class="pre">b3]</span></code>, an example of this
+permutation type is <code class="docutils literal notranslate"><span class="pre">a_perm</span> <span class="pre">=</span> <span class="pre">[a3,</span> <span class="pre">a1,</span> <span class="pre">a2]</span></code> while <code class="docutils literal notranslate"><span class="pre">b</span></code> is left
+in its original order.</p>
+<p><code class="docutils literal notranslate"><span class="pre">permutation_type='pairings'</span></code> supports <code class="docutils literal notranslate"><span class="pre">data</span></code> containing any number
+of samples, each of which must contain the same number of observations.
+All samples provided in <code class="docutils literal notranslate"><span class="pre">data</span></code> are permuted <em>independently</em>. Therefore,
+if <code class="docutils literal notranslate"><span class="pre">m</span></code> is the number of samples and <code class="docutils literal notranslate"><span class="pre">n</span></code> is the number of observations
+within each sample, then the number of permutations in an exact test is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">factorial</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">**</span><span class="n">m</span>
+</pre></div>
+</div>
+<p>Note that if a two-sample statistic, for example, does not inherently
+depend on the order in which observations are provided - only on the
+<em>pairings</em> of observations - then only one of the two samples should be
+provided in <code class="docutils literal notranslate"><span class="pre">data</span></code>. This dramatically reduces computational cost without
+affecting the shape of the null distribution (because the frequency/count
+of each value is affected by the same factor).</p>
+<p><strong>Paired statistics, permute samples</strong> (<code class="docutils literal notranslate"><span class="pre">permutation_type='samples'</span></code>):</p>
+<p>The null hypothesis associated with this permutation type is that
+observations within each pair are drawn from the same underlying
+distribution and that the sample to which they are assigned is random.</p>
+<p>Suppose <code class="docutils literal notranslate"><span class="pre">data</span></code> contains two samples; e.g. <code class="docutils literal notranslate"><span class="pre">a,</span> <span class="pre">b</span> <span class="pre">=</span> <span class="pre">data</span></code>.
+Let <code class="docutils literal notranslate"><span class="pre">n</span></code> be the number of observations in <code class="docutils literal notranslate"><span class="pre">a</span></code>, which must also equal
+the number of observations in <code class="docutils literal notranslate"><span class="pre">b</span></code>.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">&lt;</span> <span class="pre">n_resamples</span> <span class="pre">&lt;</span> <span class="pre">2**n</span></code>, the elements of <code class="docutils literal notranslate"><span class="pre">a</span></code> are <code class="docutils literal notranslate"><span class="pre">b</span></code> are
+randomly swapped between samples (maintaining their pairings) and the
+statistic is calculated. This process is performed repeatedly,
+<em class="xref py py-obj">permutation</em> times,  generating a distribution of the statistic under the
+null hypothesis. The statistic of the original data is compared to this
+distribution to determine the p-value.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">n_resamples</span> <span class="pre">&gt;=</span> <span class="pre">2**n</span></code>, an exact test is performed: the observations
+are assigned to the two samples in each distinct way (while maintaining
+pairings) exactly once.</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">[a1,</span> <span class="pre">a2,</span> <span class="pre">a3]</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">=</span> <span class="pre">[b1,</span> <span class="pre">b2,</span> <span class="pre">b3]</span></code>, an example of this
+permutation type is <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">[b1,</span> <span class="pre">a2,</span> <span class="pre">b3]</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">[a1,</span> <span class="pre">b2,</span> <span class="pre">a3]</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">permutation_type='samples'</span></code> supports <code class="docutils literal notranslate"><span class="pre">data</span></code> containing any number
+of samples, each of which must contain the same number of observations.
+If <code class="docutils literal notranslate"><span class="pre">data</span></code> contains more than one sample, paired observations within
+<code class="docutils literal notranslate"><span class="pre">data</span></code> are exchanged between samples <em>independently</em>. Therefore, if <code class="docutils literal notranslate"><span class="pre">m</span></code>
+is the number of samples and <code class="docutils literal notranslate"><span class="pre">n</span></code> is the number of observations within
+each sample, then the number of permutations in an exact test is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">factorial</span><span class="p">(</span><span class="n">m</span><span class="p">)</span><span class="o">**</span><span class="n">n</span>
+</pre></div>
+</div>
+<p>Several paired-sample statistical tests, such as the Wilcoxon signed rank
+test and paired-sample t-test, can be performed considering only the
+<em>difference</em> between two paired elements. Accordingly, if <code class="docutils literal notranslate"><span class="pre">data</span></code> contains
+only one sample, then the null distribution is formed by independently
+changing the <em>sign</em> of each observation.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The p-value is calculated by counting the elements of the null
+distribution that are as extreme or more extreme than the observed
+value of the statistic. Due to the use of finite precision arithmetic,
+some statistic functions return numerically distinct values when the
+theoretical values would be exactly equal. In some cases, this could
+lead to a large error in the calculated p-value. <a class="reference internal" href="#scipy.stats.permutation_test" title="scipy.stats.permutation_test"><code class="xref py py-obj docutils literal notranslate"><span class="pre">permutation_test</span></code></a>
+guards against this by considering elements in the null distribution
+that are “close” (within a relative tolerance of 100 times the
+floating point epsilon of inexact dtypes) to the observed
+value of the test statistic as equal to the observed value of the
+test statistic. However, the user is advised to inspect the null
+distribution to assess whether this method of comparison is
+appropriate, and if not, calculate the p-value manually. See example
+below.</p>
+</div>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r5641c5b1ce56-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<ol class="upperalpha simple" start="18">
+<li><ol class="upperalpha simple">
+<li><p>Fisher. The Design of Experiments, 6th Ed (1951).</p></li>
+</ol>
+</li>
+</ol>
+</div>
+<div class="citation" id="r5641c5b1ce56-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">2</a><span class="fn-bracket">]</span></span>
+<p>B. Phipson and G. K. Smyth. “Permutation P-values Should Never Be
+Zero: Calculating Exact P-values When Permutations Are Randomly Drawn.”
+Statistical Applications in Genetics and Molecular Biology 9.1 (2010).</p>
+</div>
+<div class="citation" id="r5641c5b1ce56-3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">3</a><span class="fn-bracket">]</span></span>
+<p>M. D. Ernst. “Permutation Methods: A Basis for Exact Inference”.
+Statistical Science (2004).</p>
+</div>
+<div class="citation" id="r5641c5b1ce56-4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">4</a><span class="fn-bracket">]</span></span>
+<p>B. Efron and R. J. Tibshirani. An Introduction to the Bootstrap
+(1993).</p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="93e5a28a-77e4-4473-9000-c79809f74063">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('93e5a28a-77e4-4473-9000-c79809f74063','4de8607f-da1e-4aad-b241-5520ae7d0a63','603f6bfd-4463-448c-9227-f3c841034074','../../lite/tree/../notebooks/index.html?path=3a9bd8fb_ed2f_4773_afd3_cc3fdf554708.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>Suppose we wish to test whether two samples are drawn from the same
+distribution. Assume that the underlying distributions are unknown to us,
+and that before observing the data, we hypothesized that the mean of the
+first sample would be less than that of the second sample. We decide that
+we will use the difference between the sample means as a test statistic,
+and we will consider a p-value of 0.05 to be statistically significant.</p>
+<p>For efficiency, we write the function defining the test statistic in a
+vectorized fashion: the samples <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> can be ND arrays, and the
+statistic will be calculated for each axis-slice along <em class="xref py py-obj">axis</em>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">statistic</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>After collecting our data, we calculate the observed value of the test
+statistic.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">loc</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">statistic</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">-3.5411688580987266</span>
+</pre></div>
+</div>
+<p>Indeed, the test statistic is negative, suggesting that the true mean of
+the distribution underlying <code class="docutils literal notranslate"><span class="pre">x</span></code> is less than that of the distribution
+underlying <code class="docutils literal notranslate"><span class="pre">y</span></code>. To determine the probability of this occurring by chance
+if the two samples were drawn from the same distribution, we perform
+a permutation test.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">permutation_test</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># because our statistic is vectorized, we pass `vectorized=True`</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># `n_resamples=np.inf` indicates that an exact test is to be performed</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">permutation_test</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">statistic</span><span class="p">,</span> <span class="n">vectorized</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                       <span class="n">n_resamples</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;less&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">statistic</span><span class="p">)</span>
+<span class="go">-3.5411688580987266</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">pvalue</span><span class="p">)</span>
+<span class="go">0.004329004329004329</span>
+</pre></div>
+</div>
+<p>The probability of obtaining a test statistic less than or equal to the
+observed value under the null hypothesis is 0.4329%. This is less than our
+chosen threshold of 5%, so we consider this to be significant evidence
+against the null hypothesis in favor of the alternative.</p>
+<p>Because the size of the samples above was small, <a class="reference internal" href="#scipy.stats.permutation_test" title="scipy.stats.permutation_test"><code class="xref py py-obj docutils literal notranslate"><span class="pre">permutation_test</span></code></a> could
+perform an exact test. For larger samples, we resort to a randomized
+permutation test.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">permutation_test</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">statistic</span><span class="p">,</span> <span class="n">n_resamples</span><span class="o">=</span><span class="mi">9999</span><span class="p">,</span>
+<span class="gp">... </span>                       <span class="n">vectorized</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;less&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                       <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">statistic</span><span class="p">)</span>
+<span class="go">-0.4230459671240913</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">pvalue</span><span class="p">)</span>
+<span class="go">0.0015</span>
+</pre></div>
+</div>
+<p>The approximate probability of obtaining a test statistic less than or
+equal to the observed value under the null hypothesis is 0.0225%. This is
+again less than our chosen threshold of 5%, so again we have significant
+evidence to reject the null hypothesis in favor of the alternative.</p>
+<p>For large samples and number of permutations, the result is comparable to
+that of the corresponding asymptotic test, the independent sample t-test.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res_asymptotic</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;less&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">res_asymptotic</span><span class="o">.</span><span class="n">pvalue</span><span class="p">)</span>
+<span class="go">0.0014669545224902675</span>
+</pre></div>
+</div>
+<p>The permutation distribution of the test statistic is provided for
+further investigation.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">null_distribution</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Permutation distribution of test statistic&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Value of Statistic&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Frequency&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-stats-permutation_test-1_00_00.png" class="plot-directive" src="../../_images/scipy-stats-permutation_test-1_00_00.png" />
+</figure>
+<p>Inspection of the null distribution is essential if the statistic suffers
+from inaccuracy due to limited machine precision. Consider the following
+case:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">pearsonr</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">statistic</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">pearsonr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span><span class="o">.</span><span class="n">statistic</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">permutation_test</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">statistic</span><span class="p">,</span> <span class="n">vectorized</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                       <span class="n">permutation_type</span><span class="o">=</span><span class="s1">&#39;pairings&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                       <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;greater&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="p">,</span> <span class="n">pvalue</span><span class="p">,</span> <span class="n">null</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">statistic</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">pvalue</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">null_distribution</span>
+</pre></div>
+</div>
+<p>In this case, some elements of the null distribution differ from the
+observed value of the correlation coefficient <code class="docutils literal notranslate"><span class="pre">r</span></code> due to numerical noise.
+We manually inspect the elements of the null distribution that are nearly
+the same as the observed value of the test statistic.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span>
+<span class="go">0.7999999999999999</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unique</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">null</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unique</span>
+<span class="go">array([-1. , -1. , -0.8, -0.8, -0.8, -0.6, -0.4, -0.4, -0.2, -0.2, -0.2,</span>
+<span class="go">    0. ,  0.2,  0.2,  0.2,  0.4,  0.4,  0.6,  0.8,  0.8,  0.8,  1. ,</span>
+<span class="go">    1. ])  # may vary</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unique</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">unique</span><span class="p">)]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="go">[0.7999999999999998, 0.7999999999999999, 0.8]  # may vary</span>
+</pre></div>
+</div>
+<p>If <a class="reference internal" href="#scipy.stats.permutation_test" title="scipy.stats.permutation_test"><code class="xref py py-obj docutils literal notranslate"><span class="pre">permutation_test</span></code></a> were to perform the comparison naively, the
+elements of the null distribution with value <code class="docutils literal notranslate"><span class="pre">0.7999999999999998</span></code> would
+not be considered as extreme or more extreme as the observed value of the
+statistic, so the calculated p-value would be too small.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">incorrect_pvalue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">null</span> <span class="o">&gt;=</span> <span class="n">r</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">null</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">incorrect_pvalue</span>
+<span class="go">0.14583333333333334  # may vary</span>
+</pre></div>
+</div>
+<p>Instead, <a class="reference internal" href="#scipy.stats.permutation_test" title="scipy.stats.permutation_test"><code class="xref py py-obj docutils literal notranslate"><span class="pre">permutation_test</span></code></a> treats elements of the null distribution that
+are within <code class="docutils literal notranslate"><span class="pre">max(1e-14,</span> <span class="pre">abs(r)*1e-14)</span></code> of the observed value of the
+statistic <code class="docutils literal notranslate"><span class="pre">r</span></code> to be equal to <code class="docutils literal notranslate"><span class="pre">r</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">correct_pvalue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">null</span> <span class="o">&gt;=</span> <span class="n">r</span> <span class="o">-</span> <span class="mf">1e-14</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">null</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">correct_pvalue</span>
+<span class="go">0.16666666666666666</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">pvalue</span> <span class="o">==</span> <span class="n">correct_pvalue</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>This method of comparison is expected to be accurate in most practical
+situations, but the user is advised to assess this by inspecting the
+elements of the null distribution that are close to the observed value
+of the statistic. Also, consider the use of statistics that can be
+calculated using exact arithmetic (e.g. integer statistics).</p>
+</div>
+</div>
+<div id="603f6bfd-4463-448c-9227-f3c841034074" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('93e5a28a-77e4-4473-9000-c79809f74063','603f6bfd-4463-448c-9227-f3c841034074')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('93e5a28a-77e4-4473-9000-c79809f74063','603f6bfd-4463-448c-9227-f3c841034074')">Open In Tab</button></div><div id="4de8607f-da1e-4aad-b241-5520ae7d0a63" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.stats.monte_carlo_test.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">monte_carlo_test</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.stats.bootstrap.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">bootstrap</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.stats.permutation_test"><code class="docutils literal notranslate"><span class="pre">permutation_test</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,946 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>1-D interpolation &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorial/interpolate/1D';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Piecewise polynomials and splines" href="splines_and_polynomials.html" />
+    <link rel="prev" title="Interpolation (scipy.interpolate)" href="../interpolate.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../special.html">Special functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.special</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">Integration (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.integrate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">Optimization (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../interpolate.html">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">1-D interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="splines_and_polynomials.html">Piecewise polynomials and splines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="smoothing_splines.html">Smoothing splines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ND_regular_grid.html">Multivariate data interpolation on a regular grid  (<code class="xref py py-class docutils literal notranslate"><span class="pre">RegularGridInterpolator</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ND_unstructured.html">Scattered data interpolation (<code class="xref py py-func docutils literal notranslate"><span class="pre">griddata</span></code>)</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="extrapolation_examples.html">Extrapolation tips and tricks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interp_transition_guide.html">Interpolate transition guide</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">Fourier Transforms (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.fft</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">Signal Processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">Linear Algebra (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">Sparse Arrays (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arpack.html">Sparse eigenvalue problems with ARPACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csgraph.html">Compressed Sparse Graph Routines (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.csgraph</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">Spatial data structures and algorithms (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">Multidimensional image processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">File IO (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.io</span></code>)</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy User Guide</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../interpolate.html" class="nav-link">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">1-D interpolation</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="d-interpolation">
+<span id="tutorial-interpolate-1dsection"></span><h1>1-D interpolation<a class="headerlink" href="#d-interpolation" title="Link to this heading">#</a></h1>
+<section id="piecewise-linear-interpolation">
+<h2>Piecewise linear interpolation<a class="headerlink" href="#piecewise-linear-interpolation" title="Link to this heading">#</a></h2>
+<p>If all you need is a linear (a.k.a. broken line) interpolation, you can use
+the <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.interp.html#numpy.interp" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.interp</span></code></a> routine. It takes two arrays of data to interpolate, <code class="docutils literal notranslate"><span class="pre">x</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">y</span></code>, and a third array, <code class="docutils literal notranslate"><span class="pre">xnew</span></code>, of points to evaluate the interpolation on:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mf">9.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Construct the interpolation</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xnew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1001</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ynew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And plot it</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">ynew</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;linear interp&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/1D-1.png" class="plot-directive" src="../../_images/1D-1.png" />
+</figure>
+<p>One limitation of <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.interp.html#numpy.interp" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.interp</span></code></a> is that it does not allow controlling the
+extrapolation. See the <a class="reference internal" href="#tutorial-interpolate-bsplines"><span class="std std-ref">interpolation with B-Splines section</span></a>
+section for alternative routines which provide this kind of functionality.</p>
+</section>
+<section id="cubic-splines">
+<h2>Cubic splines<a class="headerlink" href="#cubic-splines" title="Link to this heading">#</a></h2>
+<p>Of course, piecewise linear interpolation produces corners at data points,
+where linear pieces join. To produce a smoother curve, you can use cubic
+splines, where the interpolating curve is made of cubic pieces with matching
+first and second derivatives. In code, these objects are represented via the
+<code class="docutils literal notranslate"><span class="pre">CubicSpline</span></code> class instances. An instance is constructed with the <code class="docutils literal notranslate"><span class="pre">x</span></code> and
+<code class="docutils literal notranslate"><span class="pre">y</span></code> arrays of data, and then it can be evaluated using the target <code class="docutils literal notranslate"><span class="pre">xnew</span></code>
+values:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">CubicSpline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spl</span> <span class="o">=</span> <span class="n">CubicSpline</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">36</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spl</span><span class="p">(</span><span class="mf">2.5</span><span class="p">)</span>
+<span class="go">5.57</span>
+</pre></div>
+</div>
+<p>A <a class="reference internal" href="../../reference/generated/scipy.interpolate.CubicSpline.html#scipy.interpolate.CubicSpline" title="scipy.interpolate.CubicSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CubicSpline</span></code></a> object’s <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method accepts both scalar values and
+arrays. It also accepts a second argument, <code class="docutils literal notranslate"><span class="pre">nu</span></code>, to evaluate the
+derivative of order <code class="docutils literal notranslate"><span class="pre">nu</span></code>. As an example, we plot the derivatives of a spline:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">CubicSpline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mf">9.</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spl</span> <span class="o">=</span> <span class="n">CubicSpline</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xnew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1001</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">spl</span><span class="p">(</span><span class="n">xnew</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">spl</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;1st derivative&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">spl</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;2nd derivative&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">spl</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">nu</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;3rd derivative&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/1D-2.png" class="plot-directive" src="../../_images/1D-2.png" />
+</figure>
+<p>Note that the first and second derivatives are continuous by construction, and
+the third derivative jumps at data points.</p>
+</section>
+<section id="monotone-interpolants">
+<h2>Monotone interpolants<a class="headerlink" href="#monotone-interpolants" title="Link to this heading">#</a></h2>
+<p>Cubic splines are by construction twice continuously differentiable. This may
+lead to the spline function oscillating and ‘’overshooting’’ in between the
+data points. In these situations, an alternative is to use the so-called
+<em>monotone</em> cubic interpolants: these are constructed to be only once
+continuously differentiable, and attempt to preserve the local shape implied
+by the data. <a class="reference internal" href="../../reference/interpolate.html#module-scipy.interpolate" title="scipy.interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.interpolate</span></code></a> provides two objects of this kind:
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.PchipInterpolator.html#scipy.interpolate.PchipInterpolator" title="scipy.interpolate.PchipInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PchipInterpolator</span></code></a> and <a class="reference internal" href="../../reference/generated/scipy.interpolate.Akima1DInterpolator.html#scipy.interpolate.Akima1DInterpolator" title="scipy.interpolate.Akima1DInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Akima1DInterpolator</span></code></a> . To illustrate, let’s consider
+data with an outlier:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">CubicSpline</span><span class="p">,</span> <span class="n">PchipInterpolator</span><span class="p">,</span> <span class="n">Akima1DInterpolator</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">,</span> <span class="mf">7.</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">101</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">51</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">CubicSpline</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)(</span><span class="n">xx</span><span class="p">),</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;spline&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">Akima1DInterpolator</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)(</span><span class="n">xx</span><span class="p">),</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Akima1D&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">PchipInterpolator</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)(</span><span class="n">xx</span><span class="p">),</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;pchip&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/1D-3.png" class="plot-directive" src="../../_images/1D-3.png" />
+</figure>
+</section>
+<section id="interpolation-with-b-splines">
+<span id="tutorial-interpolate-bsplines"></span><h2>Interpolation with B-splines<a class="headerlink" href="#interpolation-with-b-splines" title="Link to this heading">#</a></h2>
+<p>B-splines form an alternative (if formally equivalent) representation of piecewise polynomials. This basis is generally more computationally stable than the power basis and is useful for a variety of applications which include interpolation, regression and curve representation. Details are given in the <a class="reference internal" href="splines_and_polynomials.html#tutorial-interpolate-ppoly"><span class="std std-ref">piecewise polynomials section</span></a>, and here we illustrate their usage by constructing the interpolation of a sine function:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To construct the interpolating objects given data arrays, <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>,
+we use the <a class="reference internal" href="../../reference/generated/scipy.interpolate.make_interp_spline.html#scipy.interpolate.make_interp_spline" title="scipy.interpolate.make_interp_spline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_interp_spline</span></code></a> function:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">make_interp_spline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bspl</span> <span class="o">=</span> <span class="n">make_interp_spline</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This function returns an object which has an interface similar to that
+of the <a class="reference internal" href="../../reference/generated/scipy.interpolate.CubicSpline.html#scipy.interpolate.CubicSpline" title="scipy.interpolate.CubicSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CubicSpline</span></code></a> objects.  In particular, it can be evaluated at a data
+point and differentiated:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">der</span> <span class="o">=</span> <span class="n">bspl</span><span class="o">.</span><span class="n">derivative</span><span class="p">()</span>      <span class="c1"># a BSpline representing the derivative</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">51</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">bspl</span><span class="p">(</span><span class="n">xx</span><span class="p">),</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\sin(\pi x)$ approx&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">der</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$d \sin(\pi x)/dx / \pi$ approx&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/1D-4.png" class="plot-directive" src="../../_images/1D-4.png" />
+</figure>
+<p>Note that by specifying <code class="docutils literal notranslate"><span class="pre">k=3</span></code> in the <a class="reference internal" href="../../reference/generated/scipy.interpolate.make_interp_spline.html#scipy.interpolate.make_interp_spline" title="scipy.interpolate.make_interp_spline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_interp_spline</span></code></a> call, we requested
+a cubic spline (this is the default, so <code class="docutils literal notranslate"><span class="pre">k=3</span></code> could have been omitted); the
+derivative of a cubic is a quadratic:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bspl</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">der</span><span class="o">.</span><span class="n">k</span>
+<span class="go">(3, 2)</span>
+</pre></div>
+</div>
+<p>By default, the result of <code class="docutils literal notranslate"><span class="pre">make_interp_spline(x,</span> <span class="pre">y)</span></code> is equivalent to
+<code class="docutils literal notranslate"><span class="pre">CubicSpline(x,</span> <span class="pre">y)</span></code>. The difference is that the former allows several optional
+capabilities: it can construct splines of various degrees (via the optional
+argument <code class="docutils literal notranslate"><span class="pre">k</span></code>) and predefined knots (via the optional argument <code class="docutils literal notranslate"><span class="pre">t</span></code>).</p>
+<p>Boundary conditions for the spline interpolation can be controlled by
+the <code class="docutils literal notranslate"><span class="pre">bc_type</span></code> argument to <a class="reference internal" href="../../reference/generated/scipy.interpolate.make_interp_spline.html#scipy.interpolate.make_interp_spline" title="scipy.interpolate.make_interp_spline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_interp_spline</span></code></a> function and <a class="reference internal" href="../../reference/generated/scipy.interpolate.CubicSpline.html#scipy.interpolate.CubicSpline" title="scipy.interpolate.CubicSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CubicSpline</span></code></a>
+constructor. By default, both use the ‘not-a-knot’ boundary
+condition.</p>
+<section id="non-cubic-splines">
+<h3>Non-cubic splines<a class="headerlink" href="#non-cubic-splines" title="Link to this heading">#</a></h3>
+<p>One use of <code class="docutils literal notranslate"><span class="pre">make_interp_spline</span></code> is constructing a linear interpolant with
+linear extrapolation since <code class="docutils literal notranslate"><span class="pre">make_interp_spline</span></code> extrapolates by default. Consider</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">make_interp_spline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spl</span> <span class="o">=</span> <span class="n">make_interp_spline</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># k=1: linear</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spl</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="go">[-2., 12.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="go">[0., 10.]</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="extrapolation_examples.html#tutorial-extrapolation"><span class="std std-ref">the extrapolation section</span></a> for more details
+and discussion.</p>
+</section>
+</section>
+<section id="parametric-spline-curves">
+<span id="tutorial-interpolate-parametric"></span><h2>Parametric spline curves<a class="headerlink" href="#parametric-spline-curves" title="Link to this heading">#</a></h2>
+<p>So far we considered spline <em>functions</em>, where the data, <code class="docutils literal notranslate"><span class="pre">y</span></code>, is expected to
+depend explicitly on the independent variable <code class="docutils literal notranslate"><span class="pre">x</span></code>—so that the interpolating
+function satisfies <span class="math notranslate nohighlight">\(f(x_j) = y_j\)</span>. Spline <em>curves</em> treat
+the <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> arrays as coordinates of points, <span class="math notranslate nohighlight">\(\mathbf{p}_j\)</span> on a
+plane, and an interpolating curve which passes through these points is
+parameterized by some additional parameter (typically called <code class="docutils literal notranslate"><span class="pre">u</span></code>). Note that
+this construction readily generalizes to higher dimensions where
+<span class="math notranslate nohighlight">\(\mathbf{p}_j\)</span> are points in an N-dimensional space.</p>
+<p>Spline curves can be easily constructed using the fact that interpolation
+functions handle multidimensional data arrays. The values of the parameter
+<code class="docutils literal notranslate"><span class="pre">u</span></code>, corresponding to the data points, need to be separately supplied
+by the user.</p>
+<p>The choice of parametrization is problem-dependent and different parametrizations
+may produce vastly different curves. As an example, we consider three
+parametrizations of (a somewhat difficult) dataset, which we take from
+Chapter 6 of Ref [1] listed in the <a class="reference internal" href="../../reference/generated/scipy.interpolate.BSpline.html#scipy.interpolate.BSpline" title="scipy.interpolate.BSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BSpline</span></code></a> docstring:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span>
+<span class="go">array([[0, 1, 2, 3, 4, 5, 6],</span>
+<span class="go">       [0, 0, 0, 9, 0, 0, 0]])</span>
+</pre></div>
+</div>
+<p>We take elements of the <code class="docutils literal notranslate"><span class="pre">p</span></code> array as coordinates of seven points on the
+plane, where <code class="docutils literal notranslate"><span class="pre">p[:,</span> <span class="pre">j]</span></code> gives the coordinates of the point
+<span class="math notranslate nohighlight">\(\mathbf{p}_j\)</span>.</p>
+<p>First, consider the <em>uniform</em> parametrization, <span class="math notranslate nohighlight">\(u_j = j\)</span>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">u_unif</span> <span class="o">=</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>Second, we consider the so-called <em>cord length</em> parametrization, which is
+nothing but a cumulative length of straight line segments connecting the
+data points:</p>
+<div class="math notranslate nohighlight">
+\[u_j = u_{j-1} + |\mathbf{p}_j - \mathbf{p}_{j-1}|\]</div>
+<p>for <span class="math notranslate nohighlight">\(j=1, 2, \dots\)</span> and <span class="math notranslate nohighlight">\(u_0 = 0\)</span>. Here <span class="math notranslate nohighlight">\(| \cdots |\)</span> is the
+length between the consecutive points <span class="math notranslate nohighlight">\(p_j\)</span> on the plane.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dp</span> <span class="o">=</span> <span class="n">p</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">p</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>      <span class="c1"># 2-vector distances between points</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="p">(</span><span class="n">dp</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>        <span class="c1"># squares of lengths of 2-vectors between points</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u_cord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>   <span class="c1"># cumulative sums of 2-norms</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">u_cord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">u_cord</span><span class="p">]</span>      <span class="c1"># the first point is parameterized at zero</span>
+</pre></div>
+</div>
+<p>Finally, we consider what is sometimes called the <em>centripetal</em>
+parametrization: <span class="math notranslate nohighlight">\(u_j = u_{j-1} + |\mathbf{p}_j - \mathbf{p}_{j-1}|^{1/2}\)</span>.
+Due to the extra square root, the difference between consecutive values
+<span class="math notranslate nohighlight">\(u_j - u_{j-1}\)</span> will be smaller than for the cord length parametrization:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">u_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">((</span><span class="n">dp</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">**</span><span class="mf">0.25</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>Now plot the resulting curves:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">make_interp_spline</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parametrizations</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;uniform&#39;</span><span class="p">,</span> <span class="s1">&#39;cord length&#39;</span><span class="p">,</span> <span class="s1">&#39;centripetal&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="n">u_unif</span><span class="p">,</span> <span class="n">u_cord</span><span class="p">,</span> <span class="n">u_c</span><span class="p">]):</span>
+<span class="gp">... </span>   <span class="n">spl</span> <span class="o">=</span> <span class="n">make_interp_spline</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>    <span class="c1"># note p is a 2D array</span>
+<span class="gp">...</span>
+<span class="gp">... </span>   <span class="n">uu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">u</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">51</span><span class="p">)</span>
+<span class="gp">... </span>   <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span> <span class="o">=</span> <span class="n">spl</span><span class="p">(</span><span class="n">uu</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>   <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="gp">... </span>   <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="gp">... </span>   <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">parametrizations</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/1D-5.png" class="plot-directive" src="../../_images/1D-5.png" />
+</figure>
+</section>
+<section id="legacy-interface-for-1-d-interpolation-interp1d">
+<span id="tutorial-interpolate-interp1d"></span><h2>Legacy interface for 1-D interpolation (<a class="reference internal" href="../../reference/generated/scipy.interpolate.interp1d.html#scipy.interpolate.interp1d" title="scipy.interpolate.interp1d"><code class="xref py py-class docutils literal notranslate"><span class="pre">interp1d</span></code></a>)<a class="headerlink" href="#legacy-interface-for-1-d-interpolation-interp1d" title="Link to this heading">#</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="../../reference/generated/scipy.interpolate.interp1d.html#scipy.interpolate.interp1d" title="scipy.interpolate.interp1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interp1d</span></code></a> is considered legacy API and is not recommended for use in new
+code. Consider using more specific interpolators instead.</p>
+</div>
+<p>The <a class="reference internal" href="../../reference/generated/scipy.interpolate.interp1d.html#scipy.interpolate.interp1d" title="scipy.interpolate.interp1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interp1d</span></code></a> class in <a class="reference internal" href="../../reference/interpolate.html#module-scipy.interpolate" title="scipy.interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.interpolate</span></code></a> is a convenient method to
+create a function based on fixed data points, which can be evaluated
+anywhere within the domain defined by the given data using linear
+interpolation. An instance of this class is created by passing the 1-D
+vectors comprising the data. The instance of this class defines a
+<code class="docutils literal notranslate"><span class="pre">__call__</span></code> method and can therefore be treated like a function which
+interpolates between known data values to obtain unknown values.
+Behavior at the boundary can be
+specified at instantiation time. The following example demonstrates
+its use, for linear and cubic spline interpolation:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="mf">9.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f2</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;cubic&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xnew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">41</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">xnew</span><span class="p">,</span> <span class="n">f</span><span class="p">(</span><span class="n">xnew</span><span class="p">),</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">xnew</span><span class="p">,</span> <span class="n">f2</span><span class="p">(</span><span class="n">xnew</span><span class="p">),</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="s1">&#39;cubic&#39;</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="&quot;This code generates an X-Y plot of a time-series with amplitude on the Y axis and time on the X axis. The original time-series is shown as a series of blue markers roughly defining some kind of oscillation. An orange trace showing the linear interpolation is drawn atop the data forming a jagged representation of the original signal. A dotted green cubic interpolation is also drawn that appears to smoothly represent the source data.&quot;" class="plot-directive" src="../../_images/1D-6.png" />
+</figure>
+<p>The ‘cubic’ kind of <a class="reference internal" href="../../reference/generated/scipy.interpolate.interp1d.html#scipy.interpolate.interp1d" title="scipy.interpolate.interp1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interp1d</span></code></a> is equivalent to <a class="reference internal" href="../../reference/generated/scipy.interpolate.make_interp_spline.html#scipy.interpolate.make_interp_spline" title="scipy.interpolate.make_interp_spline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_interp_spline</span></code></a>, and
+the ‘linear’ kind is equivalent to <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.interp.html#numpy.interp" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.interp</span></code></a> while also allowing
+N-dimensional <code class="docutils literal notranslate"><span class="pre">y</span></code> arrays.</p>
+<p>Another set of interpolations in <a class="reference internal" href="../../reference/generated/scipy.interpolate.interp1d.html#scipy.interpolate.interp1d" title="scipy.interpolate.interp1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interp1d</span></code></a> is <em class="xref py py-obj">nearest</em>, <em class="xref py py-obj">previous</em>, and
+<em class="xref py py-obj">next</em>, where they return the nearest, previous, or next point along the
+x-axis. Nearest and next can be thought of as a special case of a causal
+interpolating filter. The following example demonstrates their use, using the
+same data as in the previous example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">interp1d</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="mf">9.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f1</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f2</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;previous&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f3</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;next&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xnew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1001</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">f1</span><span class="p">(</span><span class="n">xnew</span><span class="p">),</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">xnew</span><span class="p">,</span> <span class="n">f2</span><span class="p">(</span><span class="n">xnew</span><span class="p">),</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">xnew</span><span class="p">,</span> <span class="n">f3</span><span class="p">(</span><span class="n">xnew</span><span class="p">),</span> <span class="s1">&#39;:&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;nearest&#39;</span><span class="p">,</span> <span class="s1">&#39;previous&#39;</span><span class="p">,</span> <span class="s1">&#39;next&#39;</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="&quot;This code generates an X-Y plot of a time-series with amplitude on the Y axis and time on the X axis. The original time-series is shown as a series of blue markers roughly defining some kind of oscillation. An orange trace showing the nearest neighbor interpolation is drawn atop the original with a stair-like appearance where the original data is right in the middle of each stair step. A green trace showing the previous neighbor interpolation looks similar to the orange trace but the original data is at the back of each stair step. Similarly a dotted red trace showing the next neighbor interpolation goes through each of the previous points, but it is centered at the front edge of each stair.&quot;" class="plot-directive" src="../../_images/1D-7.png" />
+</figure>
+</section>
+<section id="missing-data">
+<h2>Missing data<a class="headerlink" href="#missing-data" title="Link to this heading">#</a></h2>
+<p>We note that <a class="reference internal" href="../../reference/interpolate.html#module-scipy.interpolate" title="scipy.interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.interpolate</span></code></a> does <em>not</em> support interpolation with missing
+data. Two popular ways of representing missing data are using masked arrays of
+the <a class="reference external" href="https://numpy.org/doc/stable/reference/maskedarray.generic.html#module-numpy.ma" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ma</span></code></a> library, and encoding missing values as not-a-number, <code class="docutils literal notranslate"><span class="pre">NaN</span></code>.</p>
+<p>Neither of these two approaches is directly supported in <a class="reference internal" href="../../reference/interpolate.html#module-scipy.interpolate" title="scipy.interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.interpolate</span></code></a>.
+Individual routines may offer partial support, and/or workarounds, but in
+general, the library firmly adheres to the IEEE 754 semantics where a <code class="docutils literal notranslate"><span class="pre">NaN</span></code>
+means <em>not-a-number</em>, i.e. a result of an illegal mathematical operation
+(think a division by zero), not <em>missing</em>.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../interpolate.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="splines_and_polynomials.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Piecewise polynomials and splines</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#piecewise-linear-interpolation">Piecewise linear interpolation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cubic-splines">Cubic splines</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#monotone-interpolants">Monotone interpolants</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpolation-with-b-splines">Interpolation with B-splines</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#non-cubic-splines">Non-cubic splines</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametric-spline-curves">Parametric spline curves</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#legacy-interface-for-1-d-interpolation-interp1d">Legacy interface for 1-D interpolation (<code class="xref py py-class docutils literal notranslate"><span class="pre">interp1d</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#missing-data">Missing data</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1084 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>linprog &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.optimize.linprog';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="linprog(method=’simplex’)" href="../optimize.linprog-simplex.html" />
+    <link rel="prev" title="milp" href="scipy.optimize.milp.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../optimize.html" class="nav-link">Optimization and root finding (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">linprog</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.optimize.</div>
+<div class="empty"></div><section id="linprog">
+<h1>linprog<a class="headerlink" href="#linprog" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.optimize.linprog">
+<span class="sig-prename descclassname"><span class="pre">scipy.optimize.</span></span><span class="sig-name descname"><span class="pre">linprog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A_ub</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_ub</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A_eq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_eq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">None)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'highs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integrality</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/optimize/_linprog.py#L178-L733"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.optimize.linprog" title="Link to this definition">#</a></dt>
+<dd><p>Linear programming: minimize a linear objective function subject to linear
+equality and inequality constraints.</p>
+<p>Linear programming solves problems of the following form:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\min_x \ &amp; c^T x \\
+\mbox{such that} \ &amp; A_{ub} x \leq b_{ub},\\
+&amp; A_{eq} x = b_{eq},\\
+&amp; l \leq x \leq u ,\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(x\)</span> is a vector of decision variables; <span class="math notranslate nohighlight">\(c\)</span>,
+<span class="math notranslate nohighlight">\(b_{ub}\)</span>, <span class="math notranslate nohighlight">\(b_{eq}\)</span>, <span class="math notranslate nohighlight">\(l\)</span>, and <span class="math notranslate nohighlight">\(u\)</span> are vectors; and
+<span class="math notranslate nohighlight">\(A_{ub}\)</span> and <span class="math notranslate nohighlight">\(A_{eq}\)</span> are matrices.</p>
+<p>Alternatively, that’s:</p>
+<ul>
+<li><p>minimize</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">c</span> <span class="o">@</span> <span class="n">x</span>
+</pre></div>
+</div>
+</li>
+<li><p>such that</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">A_ub</span> <span class="o">@</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">b_ub</span>
+<span class="n">A_eq</span> <span class="o">@</span> <span class="n">x</span> <span class="o">==</span> <span class="n">b_eq</span>
+<span class="n">lb</span> <span class="o">&lt;=</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">ub</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Note that by default <code class="docutils literal notranslate"><span class="pre">lb</span> <span class="pre">=</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">ub</span> <span class="pre">=</span> <span class="pre">None</span></code>. Other bounds can be
+specified with <code class="docutils literal notranslate"><span class="pre">bounds</span></code>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>c</strong><span class="classifier">1-D array</span></dt><dd><p>The coefficients of the linear objective function to be minimized.</p>
+</dd>
+<dt><strong>A_ub</strong><span class="classifier">2-D array, optional</span></dt><dd><p>The inequality constraint matrix. Each row of <code class="docutils literal notranslate"><span class="pre">A_ub</span></code> specifies the
+coefficients of a linear inequality constraint on <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
+</dd>
+<dt><strong>b_ub</strong><span class="classifier">1-D array, optional</span></dt><dd><p>The inequality constraint vector. Each element represents an
+upper bound on the corresponding value of <code class="docutils literal notranslate"><span class="pre">A_ub</span> <span class="pre">&#64;</span> <span class="pre">x</span></code>.</p>
+</dd>
+<dt><strong>A_eq</strong><span class="classifier">2-D array, optional</span></dt><dd><p>The equality constraint matrix. Each row of <code class="docutils literal notranslate"><span class="pre">A_eq</span></code> specifies the
+coefficients of a linear equality constraint on <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
+</dd>
+<dt><strong>b_eq</strong><span class="classifier">1-D array, optional</span></dt><dd><p>The equality constraint vector. Each element of <code class="docutils literal notranslate"><span class="pre">A_eq</span> <span class="pre">&#64;</span> <span class="pre">x</span></code> must equal
+the corresponding element of <code class="docutils literal notranslate"><span class="pre">b_eq</span></code>.</p>
+</dd>
+<dt><strong>bounds</strong><span class="classifier">sequence, optional</span></dt><dd><p>A sequence of <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code> pairs for each element in <code class="docutils literal notranslate"><span class="pre">x</span></code>, defining
+the minimum and maximum values of that decision variable.
+If a single tuple <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code> is provided, then <code class="docutils literal notranslate"><span class="pre">min</span></code> and <code class="docutils literal notranslate"><span class="pre">max</span></code>
+will serve as bounds for all decision variables.
+Use <code class="docutils literal notranslate"><span class="pre">None</span></code> to indicate that there is no bound. For instance, the
+default bound <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">None)</span></code> means that all decision variables are
+non-negative, and the pair <code class="docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">None)</span></code> means no bounds at all,
+i.e. all variables are allowed to be any real.</p>
+</dd>
+<dt><strong>method</strong><span class="classifier">str, optional</span></dt><dd><p>The algorithm used to solve the standard form problem.
+The following are supported.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../optimize.linprog-highs.html#optimize-linprog-highs"><span class="std std-ref">‘highs’</span></a> (default)</p></li>
+<li><p><a class="reference internal" href="../optimize.linprog-highs-ds.html#optimize-linprog-highs-ds"><span class="std std-ref">‘highs-ds’</span></a></p></li>
+<li><p><a class="reference internal" href="../optimize.linprog-highs-ipm.html#optimize-linprog-highs-ipm"><span class="std std-ref">‘highs-ipm’</span></a></p></li>
+<li><p><a class="reference internal" href="../optimize.linprog-interior-point.html#optimize-linprog-interior-point"><span class="std std-ref">‘interior-point’</span></a> (legacy)</p></li>
+<li><p><a class="reference internal" href="../optimize.linprog-revised_simplex.html#optimize-linprog-revised-simplex"><span class="std std-ref">‘revised simplex’</span></a> (legacy)</p></li>
+<li><p><a class="reference internal" href="../optimize.linprog-simplex.html#optimize-linprog-simplex"><span class="std std-ref">‘simplex’</span></a> (legacy)</p></li>
+</ul>
+<p>The legacy methods are deprecated and will be removed in SciPy 1.11.0.</p>
+</dd>
+<dt><strong>callback</strong><span class="classifier">callable, optional</span></dt><dd><p>If a callback function is provided, it will be called at least once per
+iteration of the algorithm. The callback function must accept a single
+<a class="reference internal" href="scipy.optimize.OptimizeResult.html#scipy.optimize.OptimizeResult" title="scipy.optimize.OptimizeResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.OptimizeResult</span></code></a> consisting of the following fields:</p>
+<dl>
+<dt>x<span class="classifier">1-D array</span></dt><dd><p>The current solution vector.</p>
+</dd>
+<dt>fun<span class="classifier">float</span></dt><dd><p>The current value of the objective function <code class="docutils literal notranslate"><span class="pre">c</span> <span class="pre">&#64;</span> <span class="pre">x</span></code>.</p>
+</dd>
+<dt>success<span class="classifier">bool</span></dt><dd><p><code class="docutils literal notranslate"><span class="pre">True</span></code> when the algorithm has completed successfully.</p>
+</dd>
+<dt>slack<span class="classifier">1-D array</span></dt><dd><p>The (nominally positive) values of the slack,
+<code class="docutils literal notranslate"><span class="pre">b_ub</span> <span class="pre">-</span> <span class="pre">A_ub</span> <span class="pre">&#64;</span> <span class="pre">x</span></code>.</p>
+</dd>
+<dt>con<span class="classifier">1-D array</span></dt><dd><p>The (nominally zero) residuals of the equality constraints,
+<code class="docutils literal notranslate"><span class="pre">b_eq</span> <span class="pre">-</span> <span class="pre">A_eq</span> <span class="pre">&#64;</span> <span class="pre">x</span></code>.</p>
+</dd>
+<dt>phase<span class="classifier">int</span></dt><dd><p>The phase of the algorithm being executed.</p>
+</dd>
+<dt>status<span class="classifier">int</span></dt><dd><p>An integer representing the status of the algorithm.</p>
+<p><code class="docutils literal notranslate"><span class="pre">0</span></code> : Optimization proceeding nominally.</p>
+<p><code class="docutils literal notranslate"><span class="pre">1</span></code> : Iteration limit reached.</p>
+<p><code class="docutils literal notranslate"><span class="pre">2</span></code> : Problem appears to be infeasible.</p>
+<p><code class="docutils literal notranslate"><span class="pre">3</span></code> : Problem appears to be unbounded.</p>
+<p><code class="docutils literal notranslate"><span class="pre">4</span></code> : Numerical difficulties encountered.</p>
+</dd>
+<dt>nit<span class="classifier">int</span></dt><dd><p>The current iteration number.</p>
+</dd>
+<dt>message<span class="classifier">str</span></dt><dd><p>A string descriptor of the algorithm status.</p>
+</dd>
+</dl>
+<p>Callback functions are not currently supported by the HiGHS methods.</p>
+</dd>
+<dt><strong>options</strong><span class="classifier">dict, optional</span></dt><dd><p>A dictionary of solver options. All methods accept the following
+options:</p>
+<dl class="simple">
+<dt>maxiter<span class="classifier">int</span></dt><dd><p>Maximum number of iterations to perform.
+Default: see method-specific documentation.</p>
+</dd>
+<dt>disp<span class="classifier">bool</span></dt><dd><p>Set to <code class="docutils literal notranslate"><span class="pre">True</span></code> to print convergence messages.
+Default: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+<dt>presolve<span class="classifier">bool</span></dt><dd><p>Set to <code class="docutils literal notranslate"><span class="pre">False</span></code> to disable automatic presolve.
+Default: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd>
+</dl>
+<p>All methods except the HiGHS solvers also accept:</p>
+<dl>
+<dt>tol<span class="classifier">float</span></dt><dd><p>A tolerance which determines when a residual is “close enough” to
+zero to be considered exactly zero.</p>
+</dd>
+<dt>autoscale<span class="classifier">bool</span></dt><dd><p>Set to <code class="docutils literal notranslate"><span class="pre">True</span></code> to automatically perform equilibration.
+Consider using this option if the numerical values in the
+constraints are separated by several orders of magnitude.
+Default: <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+<dt>rr<span class="classifier">bool</span></dt><dd><p>Set to <code class="docutils literal notranslate"><span class="pre">False</span></code> to disable automatic redundancy removal.
+Default: <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd>
+<dt>rr_method<span class="classifier">string</span></dt><dd><p>Method used to identify and remove redundant rows from the
+equality constraint matrix after presolve. For problems with
+dense input, the available methods for redundancy removal are:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">SVD</span></code>:</dt><dd><p>Repeatedly performs singular value decomposition on
+the matrix, detecting redundant rows based on nonzeros
+in the left singular vectors that correspond with
+zero singular values. May be fast when the matrix is
+nearly full rank.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">pivot</span></code>:</dt><dd><p>Uses the algorithm presented in <a class="reference internal" href="#ree0cad483161-5" id="id1">[5]</a> to identify
+redundant rows.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ID</span></code>:</dt><dd><p>Uses a randomized interpolative decomposition.
+Identifies columns of the matrix transpose not used in
+a full-rank interpolative decomposition of the matrix.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">None</span></code>:</dt><dd><p>Uses <code class="docutils literal notranslate"><span class="pre">svd</span></code> if the matrix is nearly full rank, that is,
+the difference between the matrix rank and the number
+of rows is less than five. If not, uses <code class="docutils literal notranslate"><span class="pre">pivot</span></code>. The
+behavior of this default is subject to change without
+prior notice.</p>
+</dd>
+</dl>
+<p>Default: None.
+For problems with sparse input, this option is ignored, and the
+pivot-based algorithm presented in <a class="reference internal" href="#ree0cad483161-5" id="id2">[5]</a> is used.</p>
+</dd>
+</dl>
+<p>For method-specific options, see
+<a class="reference internal" href="scipy.optimize.show_options.html#scipy.optimize.show_options" title="scipy.optimize.show_options"><code class="xref py py-func docutils literal notranslate"><span class="pre">show_options('linprog')</span></code></a>.</p>
+</dd>
+<dt><strong>x0</strong><span class="classifier">1-D array, optional</span></dt><dd><p>Guess values of the decision variables, which will be refined by
+the optimization algorithm. This argument is currently used only by the
+<a class="reference internal" href="../optimize.linprog-revised_simplex.html#optimize-linprog-revised-simplex"><span class="std std-ref">‘revised simplex’</span></a> method,
+and can only be used if <em class="xref py py-obj">x0</em> represents a basic feasible solution.</p>
+</dd>
+<dt><strong>integrality</strong><span class="classifier">1-D array or int, optional</span></dt><dd><p>Indicates the type of integrality constraint on each decision variable.</p>
+<p><code class="docutils literal notranslate"><span class="pre">0</span></code> : Continuous variable; no integrality constraint.</p>
+<p><code class="docutils literal notranslate"><span class="pre">1</span></code> : Integer variable; decision variable must be an integer
+within <em class="xref py py-obj">bounds</em>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">2</span></code> : Semi-continuous variable; decision variable must be within
+<em class="xref py py-obj">bounds</em> or take value <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">3</span></code> : Semi-integer variable; decision variable must be an integer
+within <em class="xref py py-obj">bounds</em> or take value <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+<p>By default, all variables are continuous.</p>
+<p>For mixed integrality constraints, supply an array of shape <code class="docutils literal notranslate"><span class="pre">c.shape</span></code>.
+To infer a constraint on each decision variable from shorter inputs,
+the argument will be broadcast to <code class="docutils literal notranslate"><span class="pre">c.shape</span></code> using <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.broadcast_to.html#numpy.broadcast_to" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.broadcast_to</span></code></a>.</p>
+<p>This argument is currently used only by the
+<a class="reference internal" href="../optimize.linprog-highs.html#optimize-linprog-highs"><span class="std std-ref">‘highs’</span></a> method and is ignored otherwise.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>res</strong><span class="classifier">OptimizeResult</span></dt><dd><p>A <a class="reference internal" href="scipy.optimize.OptimizeResult.html#scipy.optimize.OptimizeResult" title="scipy.optimize.OptimizeResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.optimize.OptimizeResult</span></code></a> consisting of the fields
+below. Note that the return types of the fields may depend on whether
+the optimization was successful, therefore it is recommended to check
+<em class="xref py py-obj">OptimizeResult.status</em> before relying on the other fields:</p>
+<dl>
+<dt>x<span class="classifier">1-D array</span></dt><dd><p>The values of the decision variables that minimizes the
+objective function while satisfying the constraints.</p>
+</dd>
+<dt>fun<span class="classifier">float</span></dt><dd><p>The optimal value of the objective function <code class="docutils literal notranslate"><span class="pre">c</span> <span class="pre">&#64;</span> <span class="pre">x</span></code>.</p>
+</dd>
+<dt>slack<span class="classifier">1-D array</span></dt><dd><p>The (nominally positive) values of the slack variables,
+<code class="docutils literal notranslate"><span class="pre">b_ub</span> <span class="pre">-</span> <span class="pre">A_ub</span> <span class="pre">&#64;</span> <span class="pre">x</span></code>.</p>
+</dd>
+<dt>con<span class="classifier">1-D array</span></dt><dd><p>The (nominally zero) residuals of the equality constraints,
+<code class="docutils literal notranslate"><span class="pre">b_eq</span> <span class="pre">-</span> <span class="pre">A_eq</span> <span class="pre">&#64;</span> <span class="pre">x</span></code>.</p>
+</dd>
+<dt>success<span class="classifier">bool</span></dt><dd><p><code class="docutils literal notranslate"><span class="pre">True</span></code> when the algorithm succeeds in finding an optimal
+solution.</p>
+</dd>
+<dt>status<span class="classifier">int</span></dt><dd><p>An integer representing the exit status of the algorithm.</p>
+<p><code class="docutils literal notranslate"><span class="pre">0</span></code> : Optimization terminated successfully.</p>
+<p><code class="docutils literal notranslate"><span class="pre">1</span></code> : Iteration limit reached.</p>
+<p><code class="docutils literal notranslate"><span class="pre">2</span></code> : Problem appears to be infeasible.</p>
+<p><code class="docutils literal notranslate"><span class="pre">3</span></code> : Problem appears to be unbounded.</p>
+<p><code class="docutils literal notranslate"><span class="pre">4</span></code> : Numerical difficulties encountered.</p>
+</dd>
+<dt>nit<span class="classifier">int</span></dt><dd><p>The total number of iterations performed in all phases.</p>
+</dd>
+<dt>message<span class="classifier">str</span></dt><dd><p>A string descriptor of the exit status of the algorithm.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="scipy.optimize.show_options.html#scipy.optimize.show_options" title="scipy.optimize.show_options"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show_options</span></code></a></dt><dd><p>Additional options accepted by the solvers.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>This section describes the available solvers that can be selected by the
+‘method’ parameter.</p>
+<p><a class="reference internal" href="../optimize.linprog-highs-ds.html#optimize-linprog-highs-ds"><span class="std std-ref">‘highs-ds’</span></a>, and
+<a class="reference internal" href="../optimize.linprog-highs-ipm.html#optimize-linprog-highs-ipm"><span class="std std-ref">‘highs-ipm’</span></a> are interfaces to the
+HiGHS simplex and interior-point method solvers <a class="reference internal" href="#ree0cad483161-13" id="id3">[13]</a>, respectively.
+<a class="reference internal" href="../optimize.linprog-highs.html#optimize-linprog-highs"><span class="std std-ref">‘highs’</span></a> (default) chooses between
+the two automatically. These are the fastest linear
+programming solvers in SciPy, especially for large, sparse problems;
+which of these two is faster is problem-dependent.
+The other solvers are legacy methods and will be removed when <em class="xref py py-obj">callback</em> is
+supported by the HiGHS methods.</p>
+<p>Method <a class="reference internal" href="../optimize.linprog-highs-ds.html#optimize-linprog-highs-ds"><span class="std std-ref">‘highs-ds’</span></a>, is a wrapper of the C++ high
+performance dual revised simplex implementation (HSOL) <a class="reference internal" href="#ree0cad483161-13" id="id4">[13]</a>, <a class="reference internal" href="#ree0cad483161-14" id="id5">[14]</a>.
+Method <a class="reference internal" href="../optimize.linprog-highs-ipm.html#optimize-linprog-highs-ipm"><span class="std std-ref">‘highs-ipm’</span></a> is a wrapper of a C++
+implementation of an <strong>i</strong>nterior-<strong>p</strong>oint <strong>m</strong>ethod <a class="reference internal" href="#ree0cad483161-13" id="id6">[13]</a>; it
+features a crossover routine, so it is as accurate as a simplex solver.
+Method <a class="reference internal" href="../optimize.linprog-highs.html#optimize-linprog-highs"><span class="std std-ref">‘highs’</span></a> chooses between the two
+automatically.
+For new code involving <a class="reference internal" href="#scipy.optimize.linprog" title="scipy.optimize.linprog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linprog</span></code></a>, we recommend explicitly choosing one of
+these three method values.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.6.0.</span></p>
+</div>
+<p>Method <a class="reference internal" href="../optimize.linprog-interior-point.html#optimize-linprog-interior-point"><span class="std std-ref">‘interior-point’</span></a>
+uses the primal-dual path following algorithm
+as outlined in <a class="reference internal" href="#ree0cad483161-4" id="id7">[4]</a>. This algorithm supports sparse constraint matrices and
+is typically faster than the simplex methods, especially for large, sparse
+problems. Note, however, that the solution returned may be slightly less
+accurate than those of the simplex methods and will not, in general,
+correspond with a vertex of the polytope defined by the constraints.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.0.0.</span></p>
+</div>
+<p>Method <a class="reference internal" href="../optimize.linprog-revised_simplex.html#optimize-linprog-revised-simplex"><span class="std std-ref">‘revised simplex’</span></a>
+uses the revised simplex method as described in
+<a class="reference internal" href="#ree0cad483161-9" id="id8">[9]</a>, except that a factorization <a class="reference internal" href="#ree0cad483161-11" id="id9">[11]</a> of the basis matrix, rather than
+its inverse, is efficiently maintained and used to solve the linear systems
+at each iteration of the algorithm.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.0.</span></p>
+</div>
+<p>Method <a class="reference internal" href="../optimize.linprog-simplex.html#optimize-linprog-simplex"><span class="std std-ref">‘simplex’</span></a> uses a traditional,
+full-tableau implementation of
+Dantzig’s simplex algorithm <a class="reference internal" href="#ree0cad483161-1" id="id10">[1]</a>, <a class="reference internal" href="#ree0cad483161-2" id="id11">[2]</a> (<em>not</em> the
+Nelder-Mead simplex). This algorithm is included for backwards
+compatibility and educational purposes.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 0.15.0.</span></p>
+</div>
+<p>Before applying <a class="reference internal" href="../optimize.linprog-interior-point.html#optimize-linprog-interior-point"><span class="std std-ref">‘interior-point’</span></a>,
+<a class="reference internal" href="../optimize.linprog-revised_simplex.html#optimize-linprog-revised-simplex"><span class="std std-ref">‘revised simplex’</span></a>, or
+<a class="reference internal" href="../optimize.linprog-simplex.html#optimize-linprog-simplex"><span class="std std-ref">‘simplex’</span></a>,
+a presolve procedure based on <a class="reference internal" href="#ree0cad483161-8" id="id12">[8]</a> attempts
+to identify trivial infeasibilities, trivial unboundedness, and potential
+problem simplifications. Specifically, it checks for:</p>
+<ul class="simple">
+<li><p>rows of zeros in <code class="docutils literal notranslate"><span class="pre">A_eq</span></code> or <code class="docutils literal notranslate"><span class="pre">A_ub</span></code>, representing trivial constraints;</p></li>
+<li><p>columns of zeros in <code class="docutils literal notranslate"><span class="pre">A_eq</span></code> <em class="xref py py-obj">and</em> <code class="docutils literal notranslate"><span class="pre">A_ub</span></code>, representing unconstrained
+variables;</p></li>
+<li><p>column singletons in <code class="docutils literal notranslate"><span class="pre">A_eq</span></code>, representing fixed variables; and</p></li>
+<li><p>column singletons in <code class="docutils literal notranslate"><span class="pre">A_ub</span></code>, representing simple bounds.</p></li>
+</ul>
+<p>If presolve reveals that the problem is unbounded (e.g. an unconstrained
+and unbounded variable has negative cost) or infeasible (e.g., a row of
+zeros in <code class="docutils literal notranslate"><span class="pre">A_eq</span></code> corresponds with a nonzero in <code class="docutils literal notranslate"><span class="pre">b_eq</span></code>), the solver
+terminates with the appropriate status code. Note that presolve terminates
+as soon as any sign of unboundedness is detected; consequently, a problem
+may be reported as unbounded when in reality the problem is infeasible
+(but infeasibility has not been detected yet). Therefore, if it is
+important to know whether the problem is actually infeasible, solve the
+problem again with option <code class="docutils literal notranslate"><span class="pre">presolve=False</span></code>.</p>
+<p>If neither infeasibility nor unboundedness are detected in a single pass
+of the presolve, bounds are tightened where possible and fixed
+variables are removed from the problem. Then, linearly dependent rows
+of the <code class="docutils literal notranslate"><span class="pre">A_eq</span></code> matrix are removed, (unless they represent an
+infeasibility) to avoid numerical difficulties in the primary solve
+routine. Note that rows that are nearly linearly dependent (within a
+prescribed tolerance) may also be removed, which can change the optimal
+solution in rare cases. If this is a concern, eliminate redundancy from
+your problem formulation and run with option <code class="docutils literal notranslate"><span class="pre">rr=False</span></code> or
+<code class="docutils literal notranslate"><span class="pre">presolve=False</span></code>.</p>
+<p>Several potential improvements can be made here: additional presolve
+checks outlined in <a class="reference internal" href="#ree0cad483161-8" id="id13">[8]</a> should be implemented, the presolve routine should
+be run multiple times (until no further simplifications can be made), and
+more of the efficiency improvements from <a class="reference internal" href="#ree0cad483161-5" id="id14">[5]</a> should be implemented in the
+redundancy removal routines.</p>
+<p>After presolve, the problem is transformed to standard form by converting
+the (tightened) simple bounds to upper bound constraints, introducing
+non-negative slack variables for inequality constraints, and expressing
+unbounded variables as the difference between two non-negative variables.
+Optionally, the problem is automatically scaled via equilibration <a class="reference internal" href="#ree0cad483161-12" id="id15">[12]</a>.
+The selected algorithm solves the standard form problem, and a
+postprocessing routine converts the result to a solution to the original
+problem.</p>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="ree0cad483161-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">1</a><span class="fn-bracket">]</span></span>
+<p>Dantzig, George B., Linear programming and extensions. Rand
+Corporation Research Study Princeton Univ. Press, Princeton, NJ,
+1963</p>
+</div>
+<div class="citation" id="ree0cad483161-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">2</a><span class="fn-bracket">]</span></span>
+<p>Hillier, S.H. and Lieberman, G.J. (1995), “Introduction to
+Mathematical Programming”, McGraw-Hill, Chapter 4.</p>
+</div>
+<div class="citation" id="ree0cad483161-3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<p>Bland, Robert G. New finite pivoting rules for the simplex method.
+Mathematics of Operations Research (2), 1977: pp. 103-107.</p>
+</div>
+<div class="citation" id="ree0cad483161-4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">4</a><span class="fn-bracket">]</span></span>
+<p>Andersen, Erling D., and Knud D. Andersen. “The MOSEK interior point
+optimizer for linear programming: an implementation of the
+homogeneous algorithm.” High performance optimization. Springer US,
+2000. 197-232.</p>
+</div>
+<div class="citation" id="ree0cad483161-5" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id2">2</a>,<a role="doc-backlink" href="#id14">3</a>)</span>
+<p>Andersen, Erling D. “Finding all linearly dependent rows in
+large-scale linear programming.” Optimization Methods and Software
+6.3 (1995): 219-227.</p>
+</div>
+<div class="citation" id="ree0cad483161-6" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></span>
+<p>Freund, Robert M. “Primal-Dual Interior-Point Methods for Linear
+Programming based on Newton’s Method.” Unpublished Course Notes,
+March 2004. Available 2/25/2017 at
+<a class="reference external" href="https://ocw.mit.edu/courses/sloan-school-of-management/15-084j-nonlinear-programming-spring-2004/lecture-notes/lec14_int_pt_mthd.pdf">https://ocw.mit.edu/courses/sloan-school-of-management/15-084j-nonlinear-programming-spring-2004/lecture-notes/lec14_int_pt_mthd.pdf</a></p>
+</div>
+<div class="citation" id="ree0cad483161-7" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></span>
+<p>Fourer, Robert. “Solving Linear Programs by Interior-Point Methods.”
+Unpublished Course Notes, August 26, 2005. Available 2/25/2017 at
+<a class="reference external" href="http://www.4er.org/CourseNotes/Book%20B/B-III.pdf">http://www.4er.org/CourseNotes/Book%20B/B-III.pdf</a></p>
+</div>
+<div class="citation" id="ree0cad483161-8" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id12">1</a>,<a role="doc-backlink" href="#id13">2</a>)</span>
+<p>Andersen, Erling D., and Knud D. Andersen. “Presolving in linear
+programming.” Mathematical Programming 71.2 (1995): 221-245.</p>
+</div>
+<div class="citation" id="ree0cad483161-9" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">9</a><span class="fn-bracket">]</span></span>
+<p>Bertsimas, Dimitris, and J. Tsitsiklis. “Introduction to linear
+programming.” Athena Scientific 1 (1997): 997.</p>
+</div>
+<div class="citation" id="ree0cad483161-10" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></span>
+<p>Andersen, Erling D., et al. Implementation of interior point
+methods for large scale linear programming. HEC/Universite de
+Geneve, 1996.</p>
+</div>
+<div class="citation" id="ree0cad483161-11" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">11</a><span class="fn-bracket">]</span></span>
+<p>Bartels, Richard H. “A stabilization of the simplex method.”
+Journal in  Numerische Mathematik 16.5 (1971): 414-434.</p>
+</div>
+<div class="citation" id="ree0cad483161-12" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id15">12</a><span class="fn-bracket">]</span></span>
+<p>Tomlin, J. A. “On scaling linear programming problems.”
+Mathematical Programming Study 4 (1975): 146-166.</p>
+</div>
+<div class="citation" id="ree0cad483161-13" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id4">2</a>,<a role="doc-backlink" href="#id6">3</a>)</span>
+<p>Huangfu, Q., Galabova, I., Feldmeier, M., and Hall, J. A. J.
+“HiGHS - high performance software for linear optimization.”
+<a class="reference external" href="https://highs.dev/">https://highs.dev/</a></p>
+</div>
+<div class="citation" id="ree0cad483161-14" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">14</a><span class="fn-bracket">]</span></span>
+<p>Huangfu, Q. and Hall, J. A. J. “Parallelizing the dual revised
+simplex method.” Mathematical Programming Computation, 10 (1),
+119-142, 2018. DOI: 10.1007/s12532-017-0130-5</p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="9ec8a882-56a8-485a-a878-42da89723876">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('9ec8a882-56a8-485a-a878-42da89723876','5ec63e85-b479-4301-8fd8-316300868de8','55061563-ab0c-4896-a983-61289c5277f2','../../lite/tree/../notebooks/index.html?path=432534aa_7219_4c81_b741_d9e0a1a6f8c7.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>Consider the following problem:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\min_{x_0, x_1} \ -x_0 + 4x_1 &amp; \\
+\mbox{such that} \ -3x_0 + x_1 &amp; \leq 6,\\
+-x_0 - 2x_1 &amp; \geq -4,\\
+x_1 &amp; \geq -3.\end{split}\]</div>
+<p>The problem is not presented in the form accepted by <a class="reference internal" href="#scipy.optimize.linprog" title="scipy.optimize.linprog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linprog</span></code></a>. This is
+easily remedied by converting the “greater than” inequality
+constraint to a “less than” inequality constraint by
+multiplying both sides by a factor of <span class="math notranslate nohighlight">\(-1\)</span>. Note also that the last
+constraint is really the simple bound <span class="math notranslate nohighlight">\(-3 \leq x_1 \leq \infty\)</span>.
+Finally, since there are no bounds on <span class="math notranslate nohighlight">\(x_0\)</span>, we must explicitly
+specify the bounds <span class="math notranslate nohighlight">\(-\infty \leq x_0 \leq \infty\)</span>, as the
+default is for variables to be non-negative. After collecting coeffecients
+into arrays and tuples, the input for this problem is:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">linprog</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x0_bounds</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x1_bounds</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">linprog</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">A_ub</span><span class="o">=</span><span class="n">A</span><span class="p">,</span> <span class="n">b_ub</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">[</span><span class="n">x0_bounds</span><span class="p">,</span> <span class="n">x1_bounds</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">fun</span>
+<span class="go">-22.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">x</span>
+<span class="go">array([10., -3.])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">message</span>
+<span class="go">&#39;Optimization terminated successfully. (HiGHS Status 7: Optimal)&#39;</span>
+</pre></div>
+</div>
+<p>The marginals (AKA dual values / shadow prices / Lagrange multipliers)
+and residuals (slacks) are also available.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">ineqlin</span>
+<span class="go">  residual: [ 3.900e+01  0.000e+00]</span>
+<span class="go"> marginals: [-0.000e+00 -1.000e+00]</span>
+</pre></div>
+</div>
+<p>For example, because the marginal associated with the second inequality
+constraint is -1, we expect the optimal value of the objective function
+to decrease by <code class="docutils literal notranslate"><span class="pre">eps</span></code> if we add a small amount <code class="docutils literal notranslate"><span class="pre">eps</span></code> to the right hand
+side of the second inequality constraint:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eps</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">eps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linprog</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">A_ub</span><span class="o">=</span><span class="n">A</span><span class="p">,</span> <span class="n">b_ub</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">[</span><span class="n">x0_bounds</span><span class="p">,</span> <span class="n">x1_bounds</span><span class="p">])</span><span class="o">.</span><span class="n">fun</span>
+<span class="go">-22.05</span>
+</pre></div>
+</div>
+<p>Also, because the residual on the first inequality constraint is 39, we
+can decrease the right hand side of the first constraint by 39 without
+affecting the optimal solution.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>  <span class="c1"># reset to original values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">39</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">linprog</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">A_ub</span><span class="o">=</span><span class="n">A</span><span class="p">,</span> <span class="n">b_ub</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">[</span><span class="n">x0_bounds</span><span class="p">,</span> <span class="n">x1_bounds</span><span class="p">])</span><span class="o">.</span><span class="n">fun</span>
+<span class="go">-22.0</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div id="55061563-ab0c-4896-a983-61289c5277f2" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('9ec8a882-56a8-485a-a878-42da89723876','55061563-ab0c-4896-a983-61289c5277f2')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('9ec8a882-56a8-485a-a878-42da89723876','55061563-ab0c-4896-a983-61289c5277f2')">Open In Tab</button></div><div id="5ec63e85-b479-4301-8fd8-316300868de8" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.optimize.milp.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">milp</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../optimize.linprog-simplex.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">linprog(method=’simplex’)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.optimize.linprog"><code class="docutils literal notranslate"><span class="pre">linprog</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

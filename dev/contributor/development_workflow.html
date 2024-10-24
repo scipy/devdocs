@@ -1,0 +1,895 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Development workflow &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'dev/contributor/development_workflow';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="SciPy contributor guide" href="contributor_toc.html" />
+    <link rel="prev" title="Contributor quickstart guide" href="../dev_quickstart.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributing Information</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../conduct/code_of_conduct.html">SciPy Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hacking.html">Ways to Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev_quickstart.html">Contributor quickstart guide</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Development workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributor_toc.html">SciPy contributor guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Roadmap</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">SciPy Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap-detailed.html">Detailed SciPy Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../toolchain.html">Toolchain Roadmap</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">SciPy Organization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../core-dev/index.html">SciPy Core Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api-dev/api-dev-toc.html">SciPy API Development Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../governance.html">SciPy Project Governance</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Developer Documentation</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Development workflow</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="development-workflow">
+<span id="id1"></span><h1>Development workflow<a class="headerlink" href="#development-workflow" title="Link to this heading">#</a></h1>
+<p><em>Note: consider watching</em> <a class="reference external" href="https://youtu.be/HgU01gJbzMY">SciPy Development Workflow</a> <em>before or after
+reading to see an example of fixing a bug and submitting a pull request.</em></p>
+<p>This guide assumes that you have created your own fork (copy) of the SciPy
+repository, cloned the repository on your own machine, and built SciPy from this
+source code. If you haven’t, check the <a class="reference internal" href="../../building/index.html#building-from-source"><span class="std std-ref">Building from source</span></a> pages appropriate to your
+system. Before getting started here, there are two other things you need to do
+just once before you start modifying SciPy.</p>
+<ol class="arabic">
+<li><p>In a terminal, introduce yourself to Git:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">config</span> <span class="o">--</span><span class="k">global</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="n">you</span><span class="nd">@yourdomain</span><span class="o">.</span><span class="n">com</span>
+<span class="n">git</span> <span class="n">config</span> <span class="o">--</span><span class="k">global</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="s2">&quot;Your Name&quot;</span>
+</pre></div>
+</div>
+<p>This information credits you for your work, but note that it will become
+publicly available if you “push” your work to GitHub. See
+<a class="reference external" href="https://help.github.com/en/articles/setting-your-commit-email-address-in-git">Setting your commit email address in Git</a> for more information.</p>
+</li>
+<li><p>Navigate to the root directory of your local SciPy repository and enter:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">remote</span> <span class="n">add</span> <span class="n">upstream</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">scipy</span><span class="o">/</span><span class="n">scipy</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+<p>This associates the name <code class="docutils literal notranslate"><span class="pre">upstream</span></code> with the official SciPy repository
+located at <a class="github reference external" href="https://github.com/scipy/scipy.git">scipy/scipy.git</a>.
+Note that when you cloned your fork of the SciPy repository, Git already
+associated the name <code class="docutils literal notranslate"><span class="pre">origin</span></code> with your fork. The reason you need both of
+these <a class="reference external" href="https://help.github.com/en/categories/managing-remotes">“remotes”</a> is that you will typically start with the latest version
+of SciPy from the official repository <code class="docutils literal notranslate"><span class="pre">upstream</span></code>, make changes, “push”
+your changes to your fork of the repository <code class="docutils literal notranslate"><span class="pre">origin</span></code>, and then submit
+a “pull request” asking SciPy to “pull” your changes from your fork into
+the official repository.</p>
+</li>
+<li><p>Initialize git submodules:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">submodule</span> <span class="n">update</span> <span class="o">--</span><span class="n">init</span>
+</pre></div>
+</div>
+<p>This fetches and updates any submodules that SciPy needs (such as <em class="xref py py-obj">Boost</em>).</p>
+</li>
+</ol>
+<section id="basic-workflow">
+<h2>Basic workflow<a class="headerlink" href="#basic-workflow" title="Link to this heading">#</a></h2>
+<p>In short:</p>
+<ol class="arabic simple">
+<li><p>Start a new <em>feature branch</em> for each set of edits that you do.
+See <a class="reference internal" href="#making-a-new-feature-branch"><span class="std std-ref">below</span></a>.</p></li>
+<li><p>Hack away! See <a class="reference internal" href="#editing-workflow"><span class="std std-ref">below</span></a>.</p></li>
+<li><p>When finished:</p>
+<ul class="simple">
+<li><p><em>Contributors</em>: push your feature branch to your own Github repo, and
+<a class="reference internal" href="#asking-for-merging"><span class="std std-ref">create a pull request</span></a>.</p></li>
+<li><p><em>Core developers</em> If you want to push changes without
+further review, see the notes <a class="reference internal" href="../gitwash/useful_git.html#pushing-to-main"><span class="std std-ref">below</span></a>.</p></li>
+</ul>
+</li>
+</ol>
+<p>This way of working helps to keep work well organized and the history
+as clear as possible.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>There are many online tutorials to help you <a class="reference external" href="https://www.atlassian.com/git/tutorials/">learn git</a>. For discussions
+of specific git workflows, see these discussions on <a class="reference external" href="https://www.mail-archive.com/dri-devel&#64;lists.sourceforge.net/msg39091.html">linux git workflow</a>,
+and <a class="reference external" href="https://mail.python.org/pipermail/ipython-dev/2010-October/005632.html">ipython git workflow</a>.</p>
+</div>
+<section id="making-a-new-feature-branch">
+<span id="id2"></span><h3>Making a new feature branch<a class="headerlink" href="#making-a-new-feature-branch" title="Link to this heading">#</a></h3>
+<p>First, navigate to the SciPy root directory in your terminal and fetch new
+commits from the <code class="docutils literal notranslate"><span class="pre">upstream</span></code> repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">fetch</span> <span class="n">upstream</span>
+</pre></div>
+</div>
+<p>Then, create a new branch based on the main branch of the upstream
+repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="o">-</span><span class="n">b</span> <span class="n">my</span><span class="o">-</span><span class="n">new</span><span class="o">-</span><span class="n">feature</span> <span class="n">upstream</span><span class="o">/</span><span class="n">main</span>
+</pre></div>
+</div>
+<p>Equivalently, you might want to keep the main branch of your own repository
+up to date and create a new branch based on that:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="n">main</span>
+<span class="n">git</span> <span class="n">rebase</span> <span class="n">upstream</span><span class="o">/</span><span class="n">main</span>
+<span class="n">git</span> <span class="n">checkout</span> <span class="o">-</span><span class="n">b</span> <span class="n">my</span><span class="o">-</span><span class="n">new</span><span class="o">-</span><span class="n">feature</span>
+</pre></div>
+</div>
+<p>In order, these commands</p>
+<ol class="arabic simple">
+<li><p>ensure that the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch of your local repository is checked out,</p></li>
+<li><p>apply all the latest changes from the <code class="docutils literal notranslate"><span class="pre">upstream/main</span></code> (main SciPy
+repository main branch) to your local <code class="docutils literal notranslate"><span class="pre">main</span></code> branch, and</p></li>
+<li><p>create and check out a new branch (<code class="docutils literal notranslate"><span class="pre">-b</span></code>) based on your local <code class="docutils literal notranslate"><span class="pre">main</span></code>
+branch.</p></li>
+</ol>
+<p>In any case, it’s important that your feature branch include the latest
+changes from the upstream main to help avoid
+<a class="reference external" href="https://help.github.com/en/articles/resolving-a-merge-conflict-using-the-command-line">merge conflicts</a>
+when it’s time to submit a pull request.</p>
+<p>It’s also a good idea to build this branch and run tests before continuing.
+Assuming you’ve followed one of the <a class="reference internal" href="../../building/index.html#building-from-source"><span class="std std-ref">Building from source</span></a> pages to set up
+your development environment, you’ll need to activate your development
+environment and then run tests (note that the <code class="docutils literal notranslate"><span class="pre">dev.py</span> <span class="pre">test</span></code> command will
+perform a build automatically if needed):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">activate</span> <span class="n">scipy</span><span class="o">-</span><span class="n">dev</span>
+<span class="n">python</span> <span class="n">dev</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span> <span class="o">-</span><span class="n">v</span>
+</pre></div>
+</div>
+</section>
+<section id="the-editing-workflow">
+<span id="editing-workflow"></span><h3>The editing workflow<a class="headerlink" href="#the-editing-workflow" title="Link to this heading">#</a></h3>
+<section id="overview">
+<h4>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># hack hack</span>
+<span class="n">git</span> <span class="n">status</span> <span class="c1"># Optional</span>
+<span class="n">git</span> <span class="n">diff</span> <span class="c1"># Optional</span>
+<span class="n">git</span> <span class="n">add</span> <span class="n">modified_file</span>
+<span class="n">git</span> <span class="n">commit</span>
+<span class="c1"># push the branch to your own Github repo</span>
+<span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="n">my</span><span class="o">-</span><span class="n">new</span><span class="o">-</span><span class="n">feature</span>
+</pre></div>
+</div>
+</section>
+<section id="in-more-detail">
+<h4>In more detail<a class="headerlink" href="#in-more-detail" title="Link to this heading">#</a></h4>
+<ol class="arabic">
+<li><p>Make some changes. When you feel that you’ve made a complete, working set
+of related changes, move on to the next steps.</p></li>
+<li><p>Optional: Check which files have changed with <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">status</span></code> (see <a class="reference external" href="https://www.kernel.org/pub/software/scm/git/docs/git-status.html">git
+status</a>). You’ll see a listing like this one:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># On branch my-new-feature</span>
+<span class="c1"># Changed but not updated:</span>
+<span class="c1">#   (use &quot;git add &lt;file&gt;...&quot; to update what will be committed)</span>
+<span class="c1">#   (use &quot;git checkout -- &lt;file&gt;...&quot; to discard changes in working directory)</span>
+<span class="c1">#</span>
+<span class="c1">#  modified:   README</span>
+<span class="c1">#</span>
+<span class="c1"># Untracked files:</span>
+<span class="c1">#   (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)</span>
+<span class="c1">#</span>
+<span class="c1">#  INSTALL</span>
+<span class="n">no</span> <span class="n">changes</span> <span class="n">added</span> <span class="n">to</span> <span class="n">commit</span> <span class="p">(</span><span class="n">use</span> <span class="s2">&quot;git add&quot;</span> <span class="ow">and</span><span class="o">/</span><span class="ow">or</span> <span class="s2">&quot;git commit -a&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Optional: Compare the changes with the previous version using with <code class="docutils literal notranslate"><span class="pre">git</span>
+<span class="pre">diff</span></code> (<a class="reference external" href="https://www.kernel.org/pub/software/scm/git/docs/git-diff.html">git diff</a>). This brings up a simple text browser interface that
+highlights the difference between your files and the previous version.</p></li>
+<li><p>Add any relevant modified or new files using  <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">add</span> <span class="pre">modified_file</span></code>
+(see <a class="reference external" href="https://www.kernel.org/pub/software/scm/git/docs/git-add.html">git add</a>). This puts the files into a staging area, which is a queue
+of files that will be added to your next commit. Only add files that have
+related, complete changes. Leave files with unfinished changes for later
+commits.</p></li>
+<li><p>To commit the staged files into the local copy of your repo, do <code class="docutils literal notranslate"><span class="pre">git</span>
+<span class="pre">commit</span></code>. At this point, a text editor will open up to allow you to write a
+commit message. Read the <a class="reference internal" href="#writing-the-commit-message"><span class="std std-ref">commit message
+section</span></a> to be sure that you are writing a
+properly formatted and sufficiently detailed commit message. After saving
+your message and closing the editor, your commit will be saved. For trivial
+commits, a short commit message can be passed in through the command line
+using the <code class="docutils literal notranslate"><span class="pre">-m</span></code> flag. For example, <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span> <span class="pre">-am</span> <span class="pre">&quot;ENH:</span> <span class="pre">Some</span> <span class="pre">message&quot;</span></code>.</p>
+<p>In some cases, you will see this form of the commit command: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span>
+<span class="pre">-a</span></code>. The extra <code class="docutils literal notranslate"><span class="pre">-a</span></code> flag automatically commits all modified files and
+removes all deleted files. This can save you some typing of numerous <code class="docutils literal notranslate"><span class="pre">git</span>
+<span class="pre">add</span></code> commands; however, it can add unwanted changes to a commit if you’re
+not careful. For more information, see <a class="reference external" href="http://www.gitready.com/beginner/2009/01/18/the-staging-area.html">why the -a flag?</a> - and the
+helpful use-case description in the <a class="reference external" href="https://tomayko.com/writings/the-thing-about-git">tangled working copy problem</a>.</p>
+</li>
+<li><p>Push the changes to your forked repo on <a class="reference external" href="https://github.com/scipy/scipy">github</a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="n">my</span><span class="o">-</span><span class="n">new</span><span class="o">-</span><span class="n">feature</span>
+</pre></div>
+</div>
+<p>For more information, see <a class="reference external" href="https://www.kernel.org/pub/software/scm/git/docs/git-push.html">git push</a>.</p>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Assuming you have followed the instructions in these pages, git will create
+a default link to your <a class="reference external" href="https://github.com/scipy/scipy">github</a> repo called <code class="docutils literal notranslate"><span class="pre">origin</span></code>. In git &gt;= 1.7, you
+can ensure that the link to origin is permanently set by using the
+<code class="docutils literal notranslate"><span class="pre">--set-upstream</span></code> option:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">push</span> <span class="o">--</span><span class="nb">set</span><span class="o">-</span><span class="n">upstream</span> <span class="n">origin</span> <span class="n">my</span><span class="o">-</span><span class="n">new</span><span class="o">-</span><span class="n">feature</span>
+</pre></div>
+</div>
+<p>From now on, <a class="reference external" href="https://git-scm.com/">git</a> will know that <code class="docutils literal notranslate"><span class="pre">my-new-feature</span></code> is related to the
+<code class="docutils literal notranslate"><span class="pre">my-new-feature</span></code> branch in your own <a class="reference external" href="https://github.com/scipy/scipy">github</a> repo. Subsequent push calls
+are then simplified to the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">push</span>
+</pre></div>
+</div>
+<p>You have to use <code class="docutils literal notranslate"><span class="pre">--set-upstream</span></code> for each new branch that you create.</p>
+</div>
+<p>It may be the case that while you were working on your edits, new commits have
+been added to <code class="docutils literal notranslate"><span class="pre">upstream</span></code> that affect your work. In this case, follow the
+<a class="reference internal" href="../gitwash/useful_git.html#rebasing-on-main"><span class="std std-ref">Rebasing on main</span></a> instructions to apply those changes to your branch.</p>
+</section>
+<section id="writing-the-commit-message">
+<span id="id3"></span><h4>Writing the commit message<a class="headerlink" href="#writing-the-commit-message" title="Link to this heading">#</a></h4>
+<p>Commit messages should be clear and follow a few basic rules.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>MAINT/TST: fft: remove xp backend skips, test `fftfreq` `device`
+
+The first line of the commit message starts with a capitalized acronym
+(or multiple, options listed below) indicating what type of commit this is.
+Then a blank line, then more text if needed.
+References to code names should be enclosed in backticks.
+If changes are limited to certain submodules or functions, they should be
+included after the acronym(s) - backticks are not needed here.
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>BUG:sparse.linalg.gmres: add early exit when `x0` already solves problem
+
+Lines shouldn&#39;t be longer than 72 characters. If the commit is related to an issue,
+indicate that with &quot;See gh-3456&quot;, &quot;Closes gh-3456&quot;, or similar,
+in the extended description.
+However, if you are pushing many commits to a PR, you should avoid including
+this in every commit message as it will clutter the linked issue.
+</pre></div>
+</div>
+<p>Describing the motivation for a change, the nature of a bug for bug fixes or
+some details on what an enhancement does are also good to include in a commit
+message. Messages should be understandable without looking at the code
+changes. A commit message like <code class="docutils literal notranslate"><span class="pre">MAINT:</span> <span class="pre">fixed</span> <span class="pre">another</span> <span class="pre">one</span></code> is an example of
+what not to do; the reader has to go look for context elsewhere.</p>
+<p>Standard acronyms to start the commit message with are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">API</span><span class="p">:</span> <span class="n">an</span> <span class="p">(</span><span class="n">incompatible</span><span class="p">)</span> <span class="n">API</span> <span class="n">change</span>
+<span class="n">BENCH</span><span class="p">:</span> <span class="n">changes</span> <span class="n">to</span> <span class="n">the</span> <span class="n">benchmark</span> <span class="n">suite</span>
+<span class="n">BLD</span><span class="p">:</span> <span class="n">change</span> <span class="n">related</span> <span class="n">to</span> <span class="n">building</span> <span class="n">SciPy</span>
+<span class="n">BUG</span><span class="p">:</span> <span class="n">bug</span> <span class="n">fix</span>
+<span class="n">DEP</span><span class="p">:</span> <span class="n">deprecate</span> <span class="n">something</span><span class="p">,</span> <span class="ow">or</span> <span class="n">remove</span> <span class="n">a</span> <span class="n">deprecated</span> <span class="nb">object</span>
+<span class="n">DEV</span><span class="p">:</span> <span class="n">development</span> <span class="n">tool</span> <span class="ow">or</span> <span class="n">utility</span>
+<span class="n">DOC</span><span class="p">:</span> <span class="n">documentation</span>
+<span class="n">ENH</span><span class="p">:</span> <span class="n">enhancement</span>
+<span class="n">MAINT</span><span class="p">:</span> <span class="n">maintenance</span> <span class="n">commit</span> <span class="p">(</span><span class="n">refactoring</span><span class="p">,</span> <span class="n">typos</span><span class="p">,</span> <span class="n">etc</span><span class="o">.</span><span class="p">)</span>
+<span class="n">REV</span><span class="p">:</span> <span class="n">revert</span> <span class="n">an</span> <span class="n">earlier</span> <span class="n">commit</span>
+<span class="n">STY</span><span class="p">:</span> <span class="n">style</span> <span class="n">fix</span> <span class="p">(</span><span class="n">whitespace</span><span class="p">,</span> <span class="n">PEP8</span><span class="p">)</span>
+<span class="n">TST</span><span class="p">:</span> <span class="n">addition</span> <span class="ow">or</span> <span class="n">modification</span> <span class="n">of</span> <span class="n">tests</span>
+<span class="n">REL</span><span class="p">:</span> <span class="n">related</span> <span class="n">to</span> <span class="n">releasing</span> <span class="n">SciPy</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can add some markers to skip part of the continuous integration.
+See <a class="reference internal" href="continuous_integration.html#continuous-integration"><span class="std std-ref">Continuous Integration</span></a>.</p>
+</div>
+</section>
+<section id="asking-for-your-changes-to-be-merged-with-the-main-repo">
+<span id="asking-for-merging"></span><h4>Asking for your changes to be merged with the main repo<a class="headerlink" href="#asking-for-your-changes-to-be-merged-with-the-main-repo" title="Link to this heading">#</a></h4>
+<p>When you feel your work is finished, you can create a pull request (PR). Github
+has a nice help page that outlines the process for <a class="reference external" href="https://help.github.com/articles/using-pull-requests/#initiating-the-pull-request">filing pull requests</a>.</p>
+<p>If your changes involve modifications to the API or addition/modification of a
+function, you should initiate a code review. This involves sending an email to
+the <a class="reference external" href="https://discuss.scientific-python.org/c/contributor/scipy">SciPy forum</a> with a link to your PR along with a description of
+and a motivation for your changes.</p>
+</section>
+<section id="checklist-before-submitting-a-pr">
+<span id="pr-checklist"></span><h4>Checklist before submitting a PR<a class="headerlink" href="#checklist-before-submitting-a-pr" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>Did you check that the code can be distributed under a BSD license? See
+<a class="reference internal" href="../hacking.html#license-considerations"><span class="std std-ref">License Considerations</span></a>.</p></li>
+<li><p>Are there unit tests with good code coverage? See
+<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/testing.html">NumPy/SciPy Testing Guidelines</a>.</p></li>
+<li><p>Do all unit tests pass locally? See <a class="reference internal" href="../../building/index.html#the-dev-py-interface"><span class="std std-ref">Building from source for SciPy development</span></a>.</p></li>
+<li><p>Do all public function have docstrings including examples? See the
+<a class="reference external" href="https://numpydoc.readthedocs.io/en/latest/format.html">numpydoc docstring guide</a>.</p></li>
+<li><p>Does the documentation render correctly? See <a class="reference internal" href="rendering_documentation.html#rendering-documentation"><span class="std std-ref">Rendering documentation locally with Sphinx</span></a>.</p></li>
+<li><p>Is the code style correct? See <a class="reference internal" href="pep8.html#pep8-scipy"><span class="std std-ref">PEP8 and SciPy</span></a>.</p></li>
+<li><p>Are there benchmarks? See <a class="reference internal" href="benchmarking.html#benchmarking-with-asv"><span class="std std-ref">Benchmarking SciPy with airspeed velocity</span></a>.</p></li>
+<li><p>Is the commit message <a class="reference external" href="https://numpy.org/doc/stable/dev/development_workflow.html#writing-the-commit-message" title="(in NumPy v2.1)"><span class="xref std std-ref">formatted correctly</span></a>?</p></li>
+<li><p>Is the docstring of the new functionality tagged with
+<code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">versionadded::</span> <span class="pre">X.Y.Z</span></code> (where <code class="docutils literal notranslate"><span class="pre">X.Y.Z</span></code> is the version number of the
+next release? See the <code class="docutils literal notranslate"><span class="pre">updating</span></code>, <code class="docutils literal notranslate"><span class="pre">workers</span></code>, and <code class="docutils literal notranslate"><span class="pre">constraints</span></code>
+documentation of <a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/optimize/_differentialevolution.py"><code class="docutils literal notranslate"><span class="pre">differential_evolution</span></code></a>, for example.</p></li>
+<li><p>In case of larger additions, is there a tutorial or more extensive
+module-level description? Tutorial files are in <code class="docutils literal notranslate"><span class="pre">doc/source/tutorial</span></code>.</p></li>
+<li><p>If new files are added, are they integrated correctly via <code class="docutils literal notranslate"><span class="pre">meson.build</span></code>?
+See <a class="reference internal" href="contributor_toc.html#compiled-code"><span class="std std-ref">Compiled code</span></a> for more information.</p></li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../dev_quickstart.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Contributor quickstart guide</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="contributor_toc.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">SciPy contributor guide</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-workflow">Basic workflow</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#making-a-new-feature-branch">Making a new feature branch</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-editing-workflow">The editing workflow</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#in-more-detail">In more detail</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#writing-the-commit-message">Writing the commit message</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#asking-for-your-changes-to-be-merged-with-the-main-repo">Asking for your changes to be merged with the main repo</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#checklist-before-submitting-a-pr">Checklist before submitting a PR</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

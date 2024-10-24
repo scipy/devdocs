@@ -1,0 +1,954 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>sobol_indices &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.stats.sobol_indices';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="ppcc_max" href="scipy.stats.ppcc_max.html" />
+    <link rel="prev" title="circstd" href="scipy.stats.circstd.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../stats.html" class="nav-link">Statistical functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">sobol_indices</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.stats.</div>
+<div class="empty"></div><section id="sobol-indices">
+<h1>sobol_indices<a class="headerlink" href="#sobol-indices" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.stats.sobol_indices">
+<span class="sig-prename descclassname"><span class="pre">scipy.stats.</span></span><span class="sig-name descname"><span class="pre">sobol_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dists</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'saltelli_2010'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/stats/_sensitivity_analysis.py#L248-L712"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.stats.sobol_indices" title="Link to this definition">#</a></dt>
+<dd><p>Global sensitivity indices of Sobol’.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>func</strong><span class="classifier">callable or dict(str, array_like)</span></dt><dd><p>If <em class="xref py py-obj">func</em> is a callable, function to compute the Sobol’ indices from.
+Its signature must be:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayLike</span>
+</pre></div>
+</div>
+<p>with <code class="docutils literal notranslate"><span class="pre">x</span></code> of shape <code class="docutils literal notranslate"><span class="pre">(d,</span> <span class="pre">n)</span></code> and output of shape <code class="docutils literal notranslate"><span class="pre">(s,</span> <span class="pre">n)</span></code> where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">d</span></code> is the input dimensionality of <em class="xref py py-obj">func</em>
+(number of input variables),</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">s</span></code> is the output dimensionality of <em class="xref py py-obj">func</em>
+(number of output variables), and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n</span></code> is the number of samples (see <em class="xref py py-obj">n</em> below).</p></li>
+</ul>
+<p>Function evaluation values must be finite.</p>
+<p>If <em class="xref py py-obj">func</em> is a dictionary, contains the function evaluations from three
+different arrays. Keys must be: <code class="docutils literal notranslate"><span class="pre">f_A</span></code>, <code class="docutils literal notranslate"><span class="pre">f_B</span></code> and <code class="docutils literal notranslate"><span class="pre">f_AB</span></code>.
+<code class="docutils literal notranslate"><span class="pre">f_A</span></code> and <code class="docutils literal notranslate"><span class="pre">f_B</span></code> should have a shape <code class="docutils literal notranslate"><span class="pre">(s,</span> <span class="pre">n)</span></code> and <code class="docutils literal notranslate"><span class="pre">f_AB</span></code>
+should have a shape <code class="docutils literal notranslate"><span class="pre">(d,</span> <span class="pre">s,</span> <span class="pre">n)</span></code>.
+This is an advanced feature and misuse can lead to wrong analysis.</p>
+</dd>
+<dt><strong>n</strong><span class="classifier">int</span></dt><dd><p>Number of samples used to generate the matrices <code class="docutils literal notranslate"><span class="pre">A</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code>.
+Must be a power of 2. The total number of points at which <em class="xref py py-obj">func</em> is
+evaluated will be <code class="docutils literal notranslate"><span class="pre">n*(d+2)</span></code>.</p>
+</dd>
+<dt><strong>dists</strong><span class="classifier">list(distributions), optional</span></dt><dd><p>List of each parameter’s distribution. The distribution of parameters
+depends on the application and should be carefully chosen.
+Parameters are assumed to be independently distributed, meaning there
+is no constraint nor relationship between their values.</p>
+<p>Distributions must be an instance of a class with a <code class="docutils literal notranslate"><span class="pre">ppf</span></code>
+method.</p>
+<p>Must be specified if <em class="xref py py-obj">func</em> is a callable, and ignored otherwise.</p>
+</dd>
+<dt><strong>method</strong><span class="classifier">Callable or str, default: ‘saltelli_2010’</span></dt><dd><p>Method used to compute the first and total Sobol’ indices.</p>
+<p>If a callable, its signature must be:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">func</span><span class="p">(</span><span class="n">f_A</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">f_B</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">f_AB</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+<span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>with <code class="docutils literal notranslate"><span class="pre">f_A,</span> <span class="pre">f_B</span></code> of shape <code class="docutils literal notranslate"><span class="pre">(s,</span> <span class="pre">n)</span></code> and <code class="docutils literal notranslate"><span class="pre">f_AB</span></code> of shape
+<code class="docutils literal notranslate"><span class="pre">(d,</span> <span class="pre">s,</span> <span class="pre">n)</span></code>.
+These arrays contain the function evaluations from three different sets
+of samples.
+The output is a tuple of the first and total indices with
+shape <code class="docutils literal notranslate"><span class="pre">(s,</span> <span class="pre">d)</span></code>.
+This is an advanced feature and misuse can lead to wrong analysis.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">{None, int, <a class="reference external" href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code></a>}, optional</span></dt><dd><p>If <em class="xref py py-obj">random_state</em> is an int or None, a new <a class="reference external" href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code></a> is
+created using <code class="docutils literal notranslate"><span class="pre">np.random.default_rng(random_state)</span></code>.
+If <em class="xref py py-obj">random_state</em> is already a <code class="docutils literal notranslate"><span class="pre">Generator</span></code> instance, then the
+provided instance is used.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>res</strong><span class="classifier">SobolResult</span></dt><dd><p>An object with attributes:</p>
+<dl class="simple">
+<dt>first_order<span class="classifier">ndarray of shape (s, d)</span></dt><dd><p>First order Sobol’ indices.</p>
+</dd>
+<dt>total_order<span class="classifier">ndarray of shape (s, d)</span></dt><dd><p>Total order Sobol’ indices.</p>
+</dd>
+</dl>
+<p>And method:</p>
+<p>bootstrap(confidence_level: float, n_resamples: int)
+-&gt; BootstrapSobolResult</p>
+<blockquote>
+<div><p>A method providing confidence intervals on the indices.
+See <a class="reference internal" href="scipy.stats.bootstrap.html#scipy.stats.bootstrap" title="scipy.stats.bootstrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.bootstrap</span></code></a> for more details.</p>
+<p>The bootstrapping is done on both first and total order indices,
+and they are available in <em class="xref py py-obj">BootstrapSobolResult</em> as attributes
+<code class="docutils literal notranslate"><span class="pre">first_order</span></code> and <code class="docutils literal notranslate"><span class="pre">total_order</span></code>.</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The Sobol’ method <a class="reference internal" href="#rb9e0fd5192f6-1" id="id1">[1]</a>, <a class="reference internal" href="#rb9e0fd5192f6-2" id="id2">[2]</a> is a variance-based Sensitivity Analysis which
+obtains the contribution of each parameter to the variance of the
+quantities of interest (QoIs; i.e., the outputs of <em class="xref py py-obj">func</em>).
+Respective contributions can be used to rank the parameters and
+also gauge the complexity of the model by computing the
+model’s effective (or mean) dimension.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Parameters are assumed to be independently distributed. Each
+parameter can still follow any distribution. In fact, the distribution
+is very important and should match the real distribution of the
+parameters.</p>
+</div>
+<p>It uses a functional decomposition of the variance of the function to
+explore</p>
+<div class="math notranslate nohighlight">
+\[\mathbb{V}(Y) = \sum_{i}^{d} \mathbb{V}_i (Y) + \sum_{i&lt;j}^{d}
+\mathbb{V}_{ij}(Y) + ... + \mathbb{V}_{1,2,...,d}(Y),\]</div>
+<p>introducing conditional variances:</p>
+<div class="math notranslate nohighlight">
+\[\mathbb{V}_i(Y) = \mathbb{\mathbb{V}}[\mathbb{E}(Y|x_i)]
+\qquad
+\mathbb{V}_{ij}(Y) = \mathbb{\mathbb{V}}[\mathbb{E}(Y|x_i x_j)]
+- \mathbb{V}_i(Y) - \mathbb{V}_j(Y),\]</div>
+<p>Sobol’ indices are expressed as</p>
+<div class="math notranslate nohighlight">
+\[S_i = \frac{\mathbb{V}_i(Y)}{\mathbb{V}[Y]}
+\qquad
+S_{ij} =\frac{\mathbb{V}_{ij}(Y)}{\mathbb{V}[Y]}.\]</div>
+<p><span class="math notranslate nohighlight">\(S_{i}\)</span> corresponds to the first-order term which apprises the
+contribution of the i-th parameter, while <span class="math notranslate nohighlight">\(S_{ij}\)</span> corresponds to the
+second-order term which informs about the contribution of interactions
+between the i-th and the j-th parameters. These equations can be
+generalized to compute higher order terms; however, they are expensive to
+compute and their interpretation is complex.
+This is why only first order indices are provided.</p>
+<p>Total order indices represent the global contribution of the parameters
+to the variance of the QoI and are defined as:</p>
+<div class="math notranslate nohighlight">
+\[S_{T_i} = S_i + \sum_j S_{ij} + \sum_{j,k} S_{ijk} + ...
+= 1 - \frac{\mathbb{V}[\mathbb{E}(Y|x_{\sim i})]}{\mathbb{V}[Y]}.\]</div>
+<p>First order indices sum to at most 1, while total order indices sum to at
+least 1. If there are no interactions, then first and total order indices
+are equal, and both first and total order indices sum to 1.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Negative Sobol’ values are due to numerical errors. Increasing the
+number of points <em class="xref py py-obj">n</em> should help.</p>
+<p>The number of sample required to have a good analysis increases with
+the dimensionality of the problem. e.g. for a 3 dimension problem,
+consider at minima <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">&gt;=</span> <span class="pre">2**12</span></code>. The more complex the model is,
+the more samples will be needed.</p>
+<p>Even for a purely additive model, the indices may not sum to 1 due
+to numerical noise.</p>
+</div>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="rb9e0fd5192f6-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Sobol, I. M.. “Sensitivity analysis for nonlinear mathematical
+models.” Mathematical Modeling and Computational Experiment, 1:407-414,
+1993.</p>
+</div>
+<div class="citation" id="rb9e0fd5192f6-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Sobol, I. M. (2001). “Global sensitivity indices for nonlinear
+mathematical models and their Monte Carlo estimates.” Mathematics
+and Computers in Simulation, 55(1-3):271-280,
+<a class="reference external" href="https://doi.org/10.1016/S0378-4754(00)00270-6">DOI:10.1016/S0378-4754(00)00270-6</a>, 2001.</p>
+</div>
+<div class="citation" id="rb9e0fd5192f6-3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<p>Saltelli, A. “Making best use of model evaluations to
+compute sensitivity indices.”  Computer Physics Communications,
+145(2):280-297, <a class="reference external" href="https://doi.org/10.1016/S0010-4655(02)00280-1">DOI:10.1016/S0010-4655(02)00280-1</a>, 2002.</p>
+</div>
+<div class="citation" id="rb9e0fd5192f6-4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<p>Saltelli, A., M. Ratto, T. Andres, F. Campolongo, J. Cariboni,
+D. Gatelli, M. Saisana, and S. Tarantola. “Global Sensitivity Analysis.
+The Primer.” 2007.</p>
+</div>
+<div class="citation" id="rb9e0fd5192f6-5" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></span>
+<p>Saltelli, A., P. Annoni, I. Azzini, F. Campolongo, M. Ratto, and
+S. Tarantola. “Variance based sensitivity analysis of model
+output. Design and estimator for the total sensitivity index.”
+Computer Physics Communications, 181(2):259-270,
+<a class="reference external" href="https://doi.org/10.1016/j.cpc.2009.09.018">DOI:10.1016/j.cpc.2009.09.018</a>, 2010.</p>
+</div>
+<div class="citation" id="rb9e0fd5192f6-6" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">6</a><span class="fn-bracket">]</span></span>
+<p>Ishigami, T. and T. Homma. “An importance quantification technique
+in uncertainty analysis for computer models.” IEEE,
+<a class="reference external" href="https://doi.org/10.1109/ISUMA.1990.151285">DOI:10.1109/ISUMA.1990.151285</a>, 1990.</p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="451afc40-a69a-4a39-a801-629f54e26a31">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('451afc40-a69a-4a39-a801-629f54e26a31','79189969-7e77-4871-96a9-195959f02e9f','5b995b69-7b49-4a20-b8e2-aa3cd1810407','../../lite/tree/../notebooks/index.html?path=12a70d36_2fd4_443e_94e3_50a1055ef0f1.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>The following is an example with the Ishigami function <a class="reference internal" href="#rb9e0fd5192f6-6" id="id9">[6]</a></p>
+<div class="math notranslate nohighlight">
+\[Y(\mathbf{x}) = \sin x_1 + 7 \sin^2 x_2 + 0.1 x_3^4 \sin x_1,\]</div>
+<p>with <span class="math notranslate nohighlight">\(\mathbf{x} \in [-\pi, \pi]^3\)</span>. This function exhibits strong
+non-linearity and non-monotonicity.</p>
+<p>Remember, Sobol’ indices assumes that samples are independently
+distributed. In this case we use a uniform distribution on each marginals.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">sobol_indices</span><span class="p">,</span> <span class="n">uniform</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f_ishigami</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">f_eval</span> <span class="o">=</span> <span class="p">(</span>
+<span class="gp">... </span>        <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">... </span>        <span class="o">+</span> <span class="mi">7</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span>
+<span class="gp">... </span>        <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">f_eval</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">indices</span> <span class="o">=</span> <span class="n">sobol_indices</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">func</span><span class="o">=</span><span class="n">f_ishigami</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">dists</span><span class="o">=</span><span class="p">[</span>
+<span class="gp">... </span>        <span class="n">uniform</span><span class="p">(</span><span class="n">loc</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="n">uniform</span><span class="p">(</span><span class="n">loc</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="n">uniform</span><span class="p">(</span><span class="n">loc</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="p">],</span>
+<span class="gp">... </span>    <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">indices</span><span class="o">.</span><span class="n">first_order</span>
+<span class="go">array([0.31637954, 0.43781162, 0.00318825])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">indices</span><span class="o">.</span><span class="n">total_order</span>
+<span class="go">array([0.56122127, 0.44287857, 0.24229595])</span>
+</pre></div>
+</div>
+<p>Confidence interval can be obtained using bootstrapping.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">boot</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Then, this information can be easily visualized.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">indices</span><span class="o">.</span><span class="n">first_order</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">yerr</span><span class="o">=</span><span class="p">[</span>
+<span class="gp">... </span>        <span class="n">indices</span><span class="o">.</span><span class="n">first_order</span> <span class="o">-</span> <span class="n">boot</span><span class="o">.</span><span class="n">first_order</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">low</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">boot</span><span class="o">.</span><span class="n">first_order</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">high</span> <span class="o">-</span> <span class="n">indices</span><span class="o">.</span><span class="n">first_order</span>
+<span class="gp">... </span>    <span class="p">],</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;First order Sobol&#39; indices&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Input parameters&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">indices</span><span class="o">.</span><span class="n">total_order</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">yerr</span><span class="o">=</span><span class="p">[</span>
+<span class="gp">... </span>        <span class="n">indices</span><span class="o">.</span><span class="n">total_order</span> <span class="o">-</span> <span class="n">boot</span><span class="o">.</span><span class="n">total_order</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">low</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">boot</span><span class="o">.</span><span class="n">total_order</span><span class="o">.</span><span class="n">confidence_interval</span><span class="o">.</span><span class="n">high</span> <span class="o">-</span> <span class="n">indices</span><span class="o">.</span><span class="n">total_order</span>
+<span class="gp">... </span>    <span class="p">],</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Total order Sobol&#39; indices&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Input parameters&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-stats-sobol_indices-1_00_00.png" class="plot-directive" src="../../_images/scipy-stats-sobol_indices-1_00_00.png" />
+</figure>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>By default, <a class="reference internal" href="scipy.stats.uniform.html#scipy.stats.uniform" title="scipy.stats.uniform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.uniform</span></code></a> has support <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>.
+Using the parameters <code class="docutils literal notranslate"><span class="pre">loc</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span></code>, one obtains the uniform
+distribution on <code class="docutils literal notranslate"><span class="pre">[loc,</span> <span class="pre">loc</span> <span class="pre">+</span> <span class="pre">scale]</span></code>.</p>
+</div>
+<p>This result is particularly interesting because the first order index
+<span class="math notranslate nohighlight">\(S_{x_3} = 0\)</span> whereas its total order is <span class="math notranslate nohighlight">\(S_{T_{x_3}} = 0.244\)</span>.
+This means that higher order interactions with <span class="math notranslate nohighlight">\(x_3\)</span> are responsible
+for the difference. Almost 25% of the observed variance
+on the QoI is due to the correlations between <span class="math notranslate nohighlight">\(x_3\)</span> and <span class="math notranslate nohighlight">\(x_1\)</span>,
+although <span class="math notranslate nohighlight">\(x_3\)</span> by itself has no impact on the QoI.</p>
+<p>The following gives a visual explanation of Sobol’ indices on this
+function. Let’s generate 1024 samples in <span class="math notranslate nohighlight">\([-\pi, \pi]^3\)</span> and
+calculate the value of the output.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">qmc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n_dim</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;$x_1$&#39;</span><span class="p">,</span> <span class="s1">&#39;$x_2$&#39;</span><span class="p">,</span> <span class="s1">&#39;$x_3$&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sample</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">Sobol</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">n_dim</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sample</span> <span class="o">=</span> <span class="n">qmc</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">sample</span><span class="o">=</span><span class="n">sample</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">l_bounds</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">u_bounds</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">output</span> <span class="o">=</span> <span class="n">f_ishigami</span><span class="p">(</span><span class="n">sample</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we can do scatter plots of the output with respect to each parameter.
+This gives a visual way to understand how each parameter impacts the
+output of the function.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">xi</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">p_labels</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-stats-sobol_indices-1_01_00.png" class="plot-directive" src="../../_images/scipy-stats-sobol_indices-1_01_00.png" />
+</figure>
+<p>Now Sobol’ goes a step further:
+by conditioning the output value by given values of the parameter
+(black lines), the conditional output mean is computed. It corresponds to
+the term <span class="math notranslate nohighlight">\(\mathbb{E}(Y|x_i)\)</span>. Taking the variance of this term gives
+the numerator of the Sobol’ indices.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mini</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">maxi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n_bins</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dx</span> <span class="o">=</span> <span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">bins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_dim</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">xi</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">p_labels</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">bin_</span> <span class="ow">in</span> <span class="n">bins</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">bin_</span> <span class="o">&lt;=</span> <span class="n">xi</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">xi</span> <span class="o">&lt;=</span> <span class="n">bin_</span> <span class="o">+</span> <span class="n">dx</span><span class="p">))</span>
+<span class="gp">... </span>        <span class="n">xi_</span> <span class="o">=</span> <span class="n">xi</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+<span class="gp">... </span>        <span class="n">y_</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+<span class="gp">... </span>        <span class="n">ave_y_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y_</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">bin_</span> <span class="o">+</span> <span class="n">dx</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="n">mini</span><span class="p">,</span> <span class="n">maxi</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">bin_</span> <span class="o">+</span> <span class="n">dx</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">ave_y_</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-stats-sobol_indices-1_02_00.png" class="plot-directive" src="../../_images/scipy-stats-sobol_indices-1_02_00.png" />
+</figure>
+<p>Looking at <span class="math notranslate nohighlight">\(x_3\)</span>, the variance
+of the mean is zero leading to <span class="math notranslate nohighlight">\(S_{x_3} = 0\)</span>. But we can further
+observe that the variance of the output is not constant along the parameter
+values of <span class="math notranslate nohighlight">\(x_3\)</span>. This heteroscedasticity is explained by higher order
+interactions. Moreover, an heteroscedasticity is also noticeable on
+<span class="math notranslate nohighlight">\(x_1\)</span> leading to an interaction between <span class="math notranslate nohighlight">\(x_3\)</span> and <span class="math notranslate nohighlight">\(x_1\)</span>.
+On <span class="math notranslate nohighlight">\(x_2\)</span>, the variance seems to be constant and thus null interaction
+with this parameter can be supposed.</p>
+<p>This case is fairly simple to analyse visually—although it is only a
+qualitative analysis. Nevertheless, when the number of input parameters
+increases such analysis becomes unrealistic as it would be difficult to
+conclude on high-order terms. Hence the benefit of using Sobol’ indices.</p>
+</div>
+</div>
+<div id="5b995b69-7b49-4a20-b8e2-aa3cd1810407" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('451afc40-a69a-4a39-a801-629f54e26a31','5b995b69-7b49-4a20-b8e2-aa3cd1810407')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('451afc40-a69a-4a39-a801-629f54e26a31','5b995b69-7b49-4a20-b8e2-aa3cd1810407')">Open In Tab</button></div><div id="79189969-7e77-4871-96a9-195959f02e9f" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.stats.circstd.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">circstd</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.stats.ppcc_max.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">ppcc_max</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.stats.sobol_indices"><code class="docutils literal notranslate"><span class="pre">sobol_indices</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

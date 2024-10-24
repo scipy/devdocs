@@ -1,0 +1,1252 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Debugging linear algebra related issues &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'dev/contributor/debugging_linalg_issues';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Contributing to the SciPy documentation" href="rendering_documentation.html" />
+    <link rel="prev" title="Running SciPy Tests Locally" href="devpy_test.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributing Information</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../conduct/code_of_conduct.html">SciPy Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hacking.html">Ways to Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev_quickstart.html">Contributor quickstart guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development_workflow.html">Development workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributor_toc.html">SciPy contributor guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Roadmap</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">SciPy Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap-detailed.html">Detailed SciPy Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../toolchain.html">Toolchain Roadmap</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">SciPy Organization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../core-dev/index.html">SciPy Core Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api-dev/api-dev-toc.html">SciPy API Development Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../governance.html">SciPy Project Governance</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Developer Documentation</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="contributor_toc.html" class="nav-link">SciPy contributor guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Debugging linear algebra related issues</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="debugging-linear-algebra-related-issues">
+<span id="debugging-linalg-issues"></span><h1>Debugging linear algebra related issues<a class="headerlink" href="#debugging-linear-algebra-related-issues" title="Link to this heading">#</a></h1>
+<p>Linear algebra related bug reports are among the most challenging issues to
+diagnose and address. This is not only because linear algebra can be
+challenging mathematically/algorithmically (that is true for many parts of
+SciPy), but because BLAS/LAPACK libraries are a complex build-time as well as
+runtime dependency - and we support a significant number of BLAS/LAPACK
+libraries.</p>
+<p>This document aims to provide guidance about how to go about debugging linear
+algebra issues.</p>
+<p>If there is a real bug, it can be in one of three places:</p>
+<ul class="simple">
+<li><p>In the BLAS library being used,</p></li>
+<li><p>In SciPy’s bindings for BLAS or LAPACK (generated by <code class="docutils literal notranslate"><span class="pre">numpy.f2py</span></code> and/or
+Cython),</p></li>
+<li><p>In SciPy’s algorithmic code.</p></li>
+</ul>
+<p>A key first step is to determine whether the bug is in SciPy or in the BLAS
+library. To do so, the most efficient way to disambiguate the two is to set up
+your environment in such a way that you can achieve runtime switching between
+different BLAS libraries (something we don’t support out of the box, and isn’t
+possible with SciPy’s wheels from PyPI).</p>
+<p>Upstream BLAS library authors strongly prefer to get clean reproducers (just
+like we do), which means: no Python involved. So this guide will also cover how
+to create reproducers in C or Fortran.</p>
+<section id="finding-the-blas-library-being-used">
+<h2>Finding the BLAS library being used<a class="headerlink" href="#finding-the-blas-library-being-used" title="Link to this heading">#</a></h2>
+<p>SciPy has one function, <a class="reference internal" href="../../reference/generated/scipy.show_config.html#scipy.show_config" title="scipy.show_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show_config</span></code></a>, to introspect the build
+configuration of an installed package. This allows querying for details of BLAS
+and LAPACK. E.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">blas_dep</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">show_config</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;dicts&#39;</span><span class="p">)[</span><span class="s1">&#39;Build Dependencies&#39;</span><span class="p">][</span><span class="s1">&#39;blas&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">blas_dep</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">:  </span><span class="si">{</span><span class="n">blas_dep</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">name:  openblas</span>
+<span class="go">found:  True</span>
+<span class="go">version:  0.3.23</span>
+<span class="go">detection method:  pkgconfig</span>
+<span class="go">include directory:  /home/user/miniforge/envs/scipy-dev/include</span>
+<span class="go">lib directory:  /home/user/miniforge/envs/scipy-dev/lib</span>
+<span class="go">openblas configuration:  USE_64BITINT=0 DYNAMIC_ARCH=1 DYNAMIC_OLDER= NO_CBLAS= NO_LAPACK=0 NO_LAPACKE= NO_AFFINITY=1 USE_OPENMP=0 PRESCOTT MAX_THREADS=128</span>
+<span class="go">pc file directory:  /home/user/miniforge/envs/scipy-dev/lib/pkgconfig</span>
+</pre></div>
+</div>
+<p>This method will be correct for SciPy wheels and for local dev builds. It <em>may</em>
+be correct for other installs, however keep in mind that distros like
+conda-forge and Debian may be building against stub libraries (typically
+<code class="docutils literal notranslate"><span class="pre">blas.so</span></code>/<code class="docutils literal notranslate"><span class="pre">lapack.so</span></code>) and then installing another library for the user -
+in such cases, plain <code class="docutils literal notranslate"><span class="pre">blas</span></code> and <code class="docutils literal notranslate"><span class="pre">lapack</span></code> will be reported even if for
+example OpenBLAS or MKL is installed in the environment. For such installs,
+<a class="reference external" href="https://github.com/joblib/threadpoolctl">threadpoolctl</a> will usually be
+able to report what the actual BLAS library in use is (except it doesn’t report
+on plain Netlib BLAS, see
+<a class="reference external" href="https://github.com/joblib/threadpoolctl/issues/159">threadpoolctl#159</a>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m threadpoolctl -i scipy.linalg
+[
+  {
+    &quot;user_api&quot;: &quot;blas&quot;,
+    &quot;internal_api&quot;: &quot;openblas&quot;,
+    &quot;prefix&quot;: &quot;libopenblas&quot;,
+    &quot;filepath&quot;: &quot;/home/user/miniforge/envs/dev/lib/libopenblasp-r0.3.21.so&quot;,
+    &quot;version&quot;: &quot;0.3.21&quot;,
+    &quot;threading_layer&quot;: &quot;pthreads&quot;,
+    &quot;architecture&quot;: &quot;SkylakeX&quot;,
+    &quot;num_threads&quot;: 24
+  }
+]
+</pre></div>
+</div>
+<p>Other ways of introspecting that can be helpful in local dev environments include:</p>
+<ol class="arabic simple">
+<li><p>Checking dependencies of shared libraries:</p></li>
+</ol>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="linux" for="sd-tab-item-0">
+Linux</label><div class="sd-tab-content docutils">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ldd build/scipy/linalg/_fblas.cpython-*.so
+...
+libopenblas.so.0 =&gt; /home/user/miniforge/envs/scipy-dev/lib/libopenblas.so.0 (0x0000780d6d000000)
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="macos" for="sd-tab-item-1">
+macOS</label><div class="sd-tab-content docutils">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">otool</span> <span class="o">-</span><span class="n">L</span> <span class="n">build</span><span class="o">/</span><span class="n">scipy</span><span class="o">/</span><span class="n">linalg</span><span class="o">/</span><span class="n">_fblas</span><span class="o">.</span><span class="n">cpython</span><span class="o">-</span><span class="mi">310</span><span class="o">-</span><span class="n">darwin</span><span class="o">.</span><span class="n">so</span>
+<span class="n">build</span><span class="o">/</span><span class="n">scipy</span><span class="o">/</span><span class="n">linalg</span><span class="o">/</span><span class="n">_fblas</span><span class="o">.*.</span><span class="n">so</span><span class="p">:</span>
+    <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libSystem</span><span class="o">.</span><span class="n">B</span><span class="o">.</span><span class="n">dylib</span> <span class="p">(</span><span class="n">compatibility</span> <span class="n">version</span> <span class="mf">1.0.0</span><span class="p">,</span> <span class="n">current</span> <span class="n">version</span> <span class="mf">1336.61.1</span><span class="p">)</span>
+    <span class="nd">@rpath</span><span class="o">/</span><span class="n">libopenblas</span><span class="mf">.0</span><span class="o">.</span><span class="n">dylib</span> <span class="p">(</span><span class="n">compatibility</span> <span class="n">version</span> <span class="mf">0.0.0</span><span class="p">,</span> <span class="n">current</span> <span class="n">version</span> <span class="mf">0.0.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Checking whether the linked library contains a given symbol. E.g.,
+conda-forge installs a <code class="docutils literal notranslate"><span class="pre">libblas.so</span></code> that may be any supported library:</p></li>
+</ol>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-2" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="linux" for="sd-tab-item-2">
+Linux</label><div class="sd-tab-content docutils">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ nm -gD ~/miniforge/envs/scipy-dev/lib/libblas.so | rg openblas_set_num_threads
+0000000000362990 T openblas_set_num_threads
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-3" name="sd-tab-set-1" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="macos" for="sd-tab-item-3">
+macOS</label><div class="sd-tab-content docutils">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span> <span class="n">nm</span> <span class="o">~/</span><span class="n">miniforge</span><span class="o">/</span><span class="n">envs</span><span class="o">/</span><span class="n">scipy</span><span class="o">-</span><span class="n">dev</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libblas</span><span class="mf">.3</span><span class="o">.</span><span class="n">dylib</span> <span class="o">|</span> <span class="n">rg</span> <span class="n">openblas_set_num_threads</span>
+<span class="mi">000000000015</span><span class="n">b6b0</span> <span class="n">T</span> <span class="n">_openblas_set_num_threads</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="setting-up-your-environment-for-switching-blas-libraries">
+<h2>Setting up your environment for switching BLAS libraries<a class="headerlink" href="#setting-up-your-environment-for-switching-blas-libraries" title="Link to this heading">#</a></h2>
+<p>We’ll cover several ways of switching between different BLAS libraries, because
+the easiest method may depend on your OS/distro and on whether you want a
+released version of SciPy or a development build.</p>
+<section id="conda-forge">
+<h3>Conda-forge<a class="headerlink" href="#conda-forge" title="Link to this heading">#</a></h3>
+<p>Perhaps the easiest way is to use the runtime switching abilities provided by
+distros. For example, to create a conda environment with the latest SciPy
+release installed and then switching between OpenBLAS, Netlib BLAS/LAPACK, and
+MKL is as simple as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mamba create -n blas-switch scipy threadpoolctl
+$ mamba activate blas-switch
+$ python -m threadpoolctl -i scipy.linalg
+...
+    &quot;user_api&quot;: &quot;blas&quot;,
+    &quot;internal_api&quot;: &quot;openblas&quot;,
+
+$ mamba install &quot;libblas=*=*netlib&quot;
+...
+  libblas                         3.9.0-21_linux64_openblas --&gt; 3.9.0-5_h92ddd45_netlib
+  libcblas                        3.9.0-21_linux64_openblas --&gt; 3.9.0-5_h92ddd45_netlib
+  liblapack                       3.9.0-21_linux64_openblas --&gt; 3.9.0-5_h92ddd45_netlib
+
+$ mamba install &quot;libblas=*=*mkl&quot;
+...
+  libblas                           3.9.0-5_h92ddd45_netlib --&gt; 3.9.0-21_linux64_mkl
+  libcblas                          3.9.0-5_h92ddd45_netlib --&gt; 3.9.0-21_linux64_mkl
+  liblapack                         3.9.0-5_h92ddd45_netlib --&gt; 3.9.0-21_linux64_mkl
+
+$ python -m threadpoolctl -i scipy.linalg
+...
+  &quot;user_api&quot;: &quot;blas&quot;,
+  &quot;internal_api&quot;: &quot;mkl&quot;,
+</pre></div>
+</div>
+<p>This can be done for development builds as well, when building via <code class="docutils literal notranslate"><span class="pre">dev.py</span></code>
+in the exact same way as in <a class="reference external" href="https://github.com/conda-forge/scipy-feedstock/blob/main/recipe/build.sh">SciPy’s conda-forge build recipe</a>
+(outputs omitted for brevity, they’re similar to the ones above):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mamba env create -f environment.yml
+$ mamba activate scipy-dev
+$ mamba install &quot;libblas=*=*netlib&quot;  # necessary, we need to build against blas/lapack
+$ python dev.py build -C-Dblas=blas -C-Dlapack=lapack -C-Duse-g77-abi=true
+$ python dev.py test -s linalg  # run tests to verify
+$ mamba install &quot;libblas=*=*mkl&quot;
+$ python dev.py test -s linalg
+$ mamba install &quot;libblas=*=*openblas&quot;
+</pre></div>
+</div>
+</section>
+<section id="linux-distro-package-managers">
+<h3>Linux distro package managers<a class="headerlink" href="#linux-distro-package-managers" title="Link to this heading">#</a></h3>
+<p>A number of Linux distros use the <code class="docutils literal notranslate"><span class="pre">update-alternatives</span></code> mechanism to allow
+switching between different BLAS libraries via the system package manager. Note
+that this is a generic mechanism to manage “multiple implementations of the
+same library or tool” situations, rather than something specific to
+BLAS/LAPACK. It’s similar to the conda-forge method above, in that it works for
+distro-provided <code class="docutils literal notranslate"><span class="pre">scipy</span></code> packages as well as for development builds against
+the reference <code class="docutils literal notranslate"><span class="pre">libblas</span></code>/<code class="docutils literal notranslate"><span class="pre">liblapack</span></code> interfaces.</p>
+<p>The interface looks like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ update-alternatives --config libblas.so.3
+$ update-alternatives --config liblapack.so.3
+</pre></div>
+</div>
+<p>which will open a menu in the terminal with all available libraries to choose from.
+Because the interface and available options are likely to vary across distros,
+we link here to <a class="reference external" href="https://wiki.debian.org/DebianScience/LinearAlgebraLibraries">the Debian documentation for BLAS/LAPACK switching</a> and avoid
+documenting in more detail how this works on other distros.</p>
+<p>Note that Fedora is an exception; it is the only distro that ships FlexiBLAS
+(see the next section for more on that) and allows installing multiple BLAS
+libraries in parallel so true runtime switching without having to invoke the
+system package manager becomes possible. See <a class="reference external" href="https://docs.fedoraproject.org/en-US/packaging-guidelines/BLAS_LAPACK/#_backend_selection">the Fedora docs on system-level
+and user-level selection</a>
+for more details.</p>
+</section>
+<section id="flexiblas">
+<h3>FlexiBLAS<a class="headerlink" href="#flexiblas" title="Link to this heading">#</a></h3>
+<p><a class="reference external" href="https://github.com/mpimd-csc/flexiblas">FlexiBLAS</a> provides runtime
+switching support (among other things) for all installed BLAS libraries that it
+can detect. There are a few limitations at the time of writing (March 2024),
+primarily: no support for Windows, no support for macOS Accelerate (the updated
+version, with <code class="docutils literal notranslate"><span class="pre">NEWLAPACK</span></code> symbols). If those limitations don’t matter for
+you, FlexiBLAS can be a quite useful tool for efficient debugging, including
+for versions of OpenBLAS and other BLAS libraries that you have to build from
+source.</p>
+<p>Once you have everything set up, the development experience is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python dev.py build -C-Dblas=flexiblas -C-Dlapack=flexiblas
+$ FLEXIBLAS=NETLIB python dev.py test -s linalg
+$ FLEXIBLAS=OpenBLAS python dev.py test -s linalg
+# Or export the environment variable to make the selection stick:
+$ export FLEXIBLAS=OpenBLAS
+</pre></div>
+</div>
+<p>You can also provide a path to a built BLAS library (e.g.,
+<code class="docutils literal notranslate"><span class="pre">FLEXIBLAS=&quot;libbhlas_atlas.so&quot;</span></code>) - see the <a class="reference external" href="https://github.com/mpimd-csc/flexiblas#selecting-the-backend-at-runtime">usage docs in its README</a>
+for more details.</p>
+<p>Unless you’re on Fedora, you will likely have to build FlexiBLAS from source,
+which is a bit of work. The good news is that this should work no matter if
+you’re on Linux or macOS, and use Python via virtualenvs, conda environments,
+or in some other way. We’ll go through how to build OpenBLAS and FlexiBLAS
+from source, to allow debugging whether something in the latest OpenBLAS
+version is different from Netlib BLAS/LAPACK (or MKL) or not.</p>
+<p>The below should work in any environment where you can build SciPy itself; the
+only additional tool we need is CMake (install with, for example, <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span>
+<span class="pre">cmake</span></code>).</p>
+<p>Clone each repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd ..  # starting from the root of the local `scipy` repo
+$ mkdir flexiblas-setup &amp;&amp; cd flexiblas-setup
+$ git clone https://github.com/OpenMathLib/OpenBLAS.git openblas
+$ git clone https://github.com/mpimd-csc/flexiblas.git
+$ mkdir built-libs  # our local prefix to install everything to
+</pre></div>
+</div>
+<p>Build OpenBLAS:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd openblas
+$ mkdir build &amp;&amp; cd build
+$ cmake .. -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX=$PWD/../../built-libs
+$ cmake --build . -j
+$ cmake --install . --prefix $PWD/../../built-libs
+$ cd ../..
+</pre></div>
+</div>
+<p>Build FlexiBLAS:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd flexiblas
+$ mkdir build &amp;&amp; cd build
+$ # Note: this will also pick up the libraries in your system/env libdir
+$ cmake .. -DEXTRA=&quot;OpenBLAS&quot; -DLAPACK_API_VERSION=3.9.0 \
+    -DOpenBLAS_LIBRARY=$PWD/../../built-libs/lib/libopenblas.so \
+    -DCMAKE_INSTALL_PREFIX=$PWD/../../built-libs
+$ cmake --build . -j
+$ cmake --install . --prefix $PWD/../../built-libs
+$ cd ../..
+</pre></div>
+</div>
+<p>We’re now ready to build SciPy against FlexiBLAS:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export PKG_CONFIG_PATH=$PWD/flexiblas-setup/built-libs/lib/pkgconfig/
+$ cd scipy
+$ python dev.py build -C-Dblas=flexiblas -C-Dlapack=flexiblas
+...
+Run-time dependency flexiblas found: YES 3.4.2
+</pre></div>
+</div>
+<p>Now we can run the tests. Note that the <code class="docutils literal notranslate"><span class="pre">NETLIB</span></code> option is built without
+having to specify it; it’s the default in FlexiBLAS and sources are included in
+its repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ FLEXIBLAS=OpenBLAS python dev.py test -s linalg
+$ FLEXIBLAS=NETLIB python dev.py test -s linalg
+$ python dev.py test -s linalg  # uses the default (NETLIB)
+</pre></div>
+</div>
+<p>This backend switching can also be done inside a Python interpreter with
+<code class="docutils literal notranslate"><span class="pre">threadpoolctl</span></code> (see <a class="reference external" href="https://github.com/joblib/threadpoolctl#switching-the-flexiblas-backend">its README</a>
+for details).</p>
+<p>Other libraries available on the system can be inspected with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./flexiblas-setup/built-libs/bin/flexiblas list
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Using local builds of reference BLAS/LAPACK or BLIS is more difficult,
+because FlexiBLAS requires a single shared library which contains all
+needed symbols. It <a class="reference external" href="https://github.com/mpimd-csc/flexiblas#setup-with-precompiled-reference-blas-and-lapack">may be feasible</a>
+to use a separate <code class="docutils literal notranslate"><span class="pre">libblas</span></code> and <code class="docutils literal notranslate"><span class="pre">liblapack</span></code> as the “system library”,
+but this has proven to be more fragile and difficult to build (so this is
+YMMV). In case you do want to try:</p>
+<p>Build reference BLAS and LAPACK:</p>
+<blockquote>
+<div><p>$ git clone <a class="github reference external" href="https://github.com/Reference-LAPACK/lapack.git">Reference-LAPACK/lapack.git</a>
+$ cd lapack
+$ mkdir build &amp;&amp; cd build
+$ cmake -DCBLAS=ON -DBUILD_SHARED_LIBS=OFF ..
+$ cmake –build . -j
+$ cmake –install . –prefix $PWD/../../built-libs</p>
+</div></blockquote>
+<p>Then add the following two lines to the <code class="docutils literal notranslate"><span class="pre">cmake</span> <span class="pre">..</span></code> configure command for
+FlexiBLAS:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>-DSYS_BLAS_LIBRARY=$PWD/../../built-libs/lib/libblas.a \
+-DSYS_LAPACK_LIBRARY=$PWD/../../built-libs/lib/liblapack.a \
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="creating-reproducers-in-c-or-fortran">
+<h2>Creating reproducers in C or Fortran<a class="headerlink" href="#creating-reproducers-in-c-or-fortran" title="Link to this heading">#</a></h2>
+<p>Our experience tells us that a large majority of bugs are inside SciPy rather
+than in OpenBLAS or another BLAS library. If the testing with different BLAS
+libraries tells us though that the problem is specific to a single BLAS library
+(maybe even a single version of that library with a regression), the next step
+is to produce a reproducer in C or Fortran; doing so is necessary for reporting
+the bug upstream, and makes it much easier for the BLAS library developers to
+address the problem.</p>
+<p>To get from a Python reproducer which uses a <code class="docutils literal notranslate"><span class="pre">scipy</span></code> function with NumPy
+arrays as input to a C/Fortran reproducer, it is necessary to find the code
+path taken in SciPy and determine which exact BLAS or LAPACK function is
+called, and with what inputs (note: the answer may be contained in the
+<code class="docutils literal notranslate"><span class="pre">.pyf.src</span></code> f2py signature files; looking into the generated
+<code class="docutils literal notranslate"><span class="pre">_flapackmodule.c</span></code> in the build directory may be useful too). This can then
+be reproduced in C/Fortran by defining some integer/float variables and arrays
+(typically small arrays with hardcoded numbers are enough).</p>
+<p>Argument lists of BLAS and LAPACK functions can be looked up in for example
+<a class="reference external" href="https://www.netlib.org/lapack/explore-html/">the Netlib LAPACK docs</a> or the
+<a class="reference external" href="https://github.com/Reference-LAPACK/lapack">Reference-LAPACK/lapack repository</a>.</p>
+<p>Below a reproducer is shown for an issue in reference LAPACK, which was
+reported as a SciPy issue in <a class="reference external" href="https://github.com/scipy/scipy/issues/11577">scipy#11577</a>. We’ll name the file
+<code class="docutils literal notranslate"><span class="pre">ggev_repro_gh_11577.c|f90</span></code>:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-4" name="sd-tab-set-2" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="C" for="sd-tab-item-4">
+C</label><div class="sd-tab-content docutils">
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;lapacke.h&quot;</span>
+
+<span class="cp">#define n 4</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">lda</span><span class="o">=</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">ldb</span><span class="o">=</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">ldvr</span><span class="o">=</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">ldvl</span><span class="o">=</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">info</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">jobvl</span><span class="o">=</span><span class="sc">&#39;V&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">jobvr</span><span class="o">=</span><span class="sc">&#39;V&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">alphar</span><span class="p">[</span><span class="n">n</span><span class="p">],</span><span class="w"> </span><span class="n">alphai</span><span class="p">[</span><span class="n">n</span><span class="p">],</span><span class="w"> </span><span class="n">beta</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>
+
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">vl</span><span class="p">[</span><span class="n">n</span><span class="o">*</span><span class="n">n</span><span class="p">],</span><span class="w"> </span><span class="n">vr</span><span class="p">[</span><span class="n">n</span><span class="o">*</span><span class="n">n</span><span class="p">];</span>
+<span class="w">    </span><span class="c1">// int lwork = 156;</span>
+<span class="w">    </span><span class="c1">// double work[156];    /* cheat: 156 is the optimal lwork from the actual lapack call*/</span>
+
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">n</span><span class="o">*</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mf">12.0</span><span class="p">,</span><span class="w"> </span><span class="mf">28.0</span><span class="p">,</span><span class="w"> </span><span class="mf">76.0</span><span class="p">,</span><span class="w"> </span><span class="mf">220.0</span><span class="p">,</span>
+<span class="w">                     </span><span class="mf">16.0</span><span class="p">,</span><span class="w"> </span><span class="mf">32.0</span><span class="p">,</span><span class="w"> </span><span class="mf">80.0</span><span class="p">,</span><span class="w"> </span><span class="mf">224.0</span><span class="p">,</span>
+<span class="w">                     </span><span class="mf">24.0</span><span class="p">,</span><span class="w"> </span><span class="mf">40.0</span><span class="p">,</span><span class="w"> </span><span class="mf">88.0</span><span class="p">,</span><span class="w"> </span><span class="mf">232.0</span><span class="p">,</span>
+<span class="w">                     </span><span class="mf">40.0</span><span class="p">,</span><span class="w"> </span><span class="mf">56.0</span><span class="p">,</span><span class="w"> </span><span class="mf">104.0</span><span class="p">,</span><span class="w"> </span><span class="mf">248.0</span><span class="p">};</span>
+
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">n</span><span class="o">*</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">4.0</span><span class="p">,</span><span class="w"> </span><span class="mf">10.0</span><span class="p">,</span><span class="w"> </span><span class="mf">28.0</span><span class="p">,</span>
+<span class="w">                     </span><span class="mf">3.0</span><span class="p">,</span><span class="w"> </span><span class="mf">5.0</span><span class="p">,</span><span class="w"> </span><span class="mf">11.0</span><span class="p">,</span><span class="w"> </span><span class="mf">29.0</span><span class="p">,</span>
+<span class="w">                     </span><span class="mf">5.0</span><span class="p">,</span><span class="w"> </span><span class="mf">7.0</span><span class="p">,</span><span class="w"> </span><span class="mf">13.0</span><span class="p">,</span><span class="w"> </span><span class="mf">31.0</span><span class="p">,</span>
+<span class="w">                     </span><span class="mf">9.0</span><span class="p">,</span><span class="w"> </span><span class="mf">11.0</span><span class="p">,</span><span class="w"> </span><span class="mf">17.0</span><span class="p">,</span><span class="w"> </span><span class="mf">35.0</span><span class="p">};</span>
+
+<span class="w">    </span><span class="n">info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LAPACKE_dggev</span><span class="p">(</span><span class="n">LAPACK_ROW_MAJOR</span><span class="p">,</span><span class="w"> </span><span class="n">jobvl</span><span class="p">,</span><span class="w"> </span><span class="n">jobvr</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">lda</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span>
+<span class="w">                         </span><span class="n">ldb</span><span class="p">,</span><span class="w"> </span><span class="n">alphar</span><span class="p">,</span><span class="w"> </span><span class="n">alphai</span><span class="p">,</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="n">vl</span><span class="p">,</span><span class="w"> </span><span class="n">ldvl</span><span class="p">,</span><span class="w"> </span><span class="n">vr</span><span class="p">,</span><span class="w"> </span><span class="n">ldvr</span><span class="p">);</span><span class="w"> </span><span class="c1">//, work, lwork, info);</span>
+
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;info = %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">info</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Re(eigv) = &quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+<span class="w">        </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%f , &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">alphar</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">beta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">Im(eigv = &quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="k">for</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+<span class="w">        </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%f , &quot;</span><span class="p">,</span><span class="w"> </span><span class="n">alphai</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">beta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-5" name="sd-tab-set-2" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="Fortran" for="sd-tab-item-5">
+Fortran</label><div class="sd-tab-content docutils">
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="c">!A = numpy.array([[12.0, 28.0, 76.0, 220.0], [16.0, 32.0, 80.0, 224.0], [24.0, 40.0, 88.0, 232.0], [40.0, 56.0, 104.0, 248.0]], dtype=&#39;float64&#39;)</span>
+<span class="c">! B = numpy.array([[2.0, 4.0, 10.0, 28.0], [3.0, 5.0, 11.0, 29.0], [5.0, 7.0, 13.0, 31.0], [9.0, 11.0, 17.0, 35.0]], dtype=&#39;float64&#39;)</span>
+<span class="c">! D, V = scipy.linalg.eig(A, B); D </span>
+<span class="k">implicit none</span>
+<span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+
+<span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">lda</span><span class="p">,</span><span class="w"> </span><span class="n">ldb</span><span class="p">,</span><span class="w"> </span><span class="n">ldvr</span><span class="p">,</span><span class="w"> </span><span class="n">ldvl</span><span class="p">,</span><span class="w"> </span><span class="n">lwork</span><span class="p">,</span><span class="w"> </span><span class="n">info</span>
+<span class="kt">character</span><span class="o">*</span><span class="mi">1</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">jobvl</span><span class="p">,</span><span class="w"> </span><span class="n">jobvr</span>
+<span class="kt">real</span><span class="o">*</span><span class="mi">8</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">alphar</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="kt">real</span><span class="o">*</span><span class="mi">8</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">alphai</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="kt">real</span><span class="o">*</span><span class="mi">8</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">beta</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="kt">real</span><span class="o">*</span><span class="mi">8</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">vl</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="kt">real</span><span class="o">*</span><span class="mi">8</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">vr</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="kt">real</span><span class="o">*</span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">work</span><span class="p">(:)</span>
+
+
+<span class="kt">real</span><span class="o">*</span><span class="mi">8</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">a</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="kt">real</span><span class="o">*</span><span class="mi">8</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">a</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p">:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">/</span><span class="mi">1</span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="mf">8.0</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="mf">6.0</span><span class="p">,</span><span class="w"> </span><span class="mi">22</span><span class="mf">0.0</span><span class="o">/</span><span class="p">)</span>
+<span class="n">a</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="p">:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">/</span><span class="mi">1</span><span class="mf">6.0</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mi">22</span><span class="mf">4.0</span><span class="o">/</span><span class="p">)</span>
+<span class="n">a</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="p">:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">/</span><span class="mi">2</span><span class="mf">4.0</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="mf">8.0</span><span class="p">,</span><span class="w"> </span><span class="mi">23</span><span class="mf">2.0</span><span class="o">/</span><span class="p">)</span>
+<span class="n">a</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="p">:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">/</span><span class="mi">4</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="mf">6.0</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="mf">4.0</span><span class="p">,</span><span class="w"> </span><span class="mi">24</span><span class="mf">8.0</span><span class="o">/</span><span class="p">)</span>
+
+<span class="n">b</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p">:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">4.0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="mf">8.0</span><span class="o">/</span><span class="p">)</span>
+<span class="n">b</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="p">:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">/</span><span class="mf">3.0</span><span class="p">,</span><span class="w"> </span><span class="mf">5.0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="mf">9.0</span><span class="o">/</span><span class="p">)</span>
+<span class="n">b</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="p">:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">/</span><span class="mf">5.0</span><span class="p">,</span><span class="w"> </span><span class="mf">7.0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="mf">3.0</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="mf">1.0</span><span class="o">/</span><span class="p">)</span>
+<span class="n">b</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="p">:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">/</span><span class="mf">9.0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="mf">7.0</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="mf">5.0</span><span class="o">/</span><span class="p">)</span>
+
+<span class="n">lda</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span>
+<span class="n">ldb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span>
+<span class="n">ldvr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span>
+<span class="n">ldvl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span>
+<span class="n">jobvr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;V&#39;</span>
+<span class="n">jobvl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;V&#39;</span>
+
+<span class="c">! workspace query</span>
+
+<span class="k">allocate</span><span class="p">(</span><span class="n">work</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">8</span><span class="o">*</span><span class="n">n</span><span class="p">))</span><span class="w"> </span><span class="c">! min value</span>
+<span class="n">lwork</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span>
+
+<span class="k">print</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;workspace query: lwork = &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">lwork</span>
+
+<span class="k">call </span><span class="n">dggev</span><span class="p">(</span><span class="n">jobvl</span><span class="p">,</span><span class="w"> </span><span class="n">jobvr</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">lda</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">ldb</span><span class="p">,</span><span class="w"> </span><span class="n">alphar</span><span class="p">,</span><span class="w"> </span><span class="n">alphai</span><span class="p">,</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="n">vl</span><span class="p">,</span><span class="w"> </span><span class="n">ldvl</span><span class="p">,</span><span class="w"> </span><span class="n">vr</span><span class="p">,</span><span class="w"> </span><span class="n">ldvr</span><span class="p">,</span><span class="w"> </span><span class="n">work</span><span class="p">,</span><span class="w"> </span><span class="n">lwork</span><span class="p">,</span><span class="w"> </span><span class="n">info</span><span class="p">)</span>
+
+<span class="k">print</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;info = &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">info</span>
+<span class="n">lwork</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">work</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="k">print</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;opt lwork =&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">lwork</span>
+
+<span class="c">! do the work</span>
+
+<span class="k">deallocate</span><span class="p">(</span><span class="n">work</span><span class="p">)</span>
+<span class="k">allocate</span><span class="p">(</span><span class="n">work</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">lwork</span><span class="p">))</span>
+
+<span class="k">call </span><span class="n">dggev</span><span class="p">(</span><span class="n">jobvl</span><span class="p">,</span><span class="w"> </span><span class="n">jobvr</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">lda</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">ldb</span><span class="p">,</span><span class="w"> </span><span class="n">alphar</span><span class="p">,</span><span class="w"> </span><span class="n">alphai</span><span class="p">,</span><span class="w"> </span><span class="n">beta</span><span class="p">,</span><span class="w"> </span><span class="n">vl</span><span class="p">,</span><span class="w"> </span><span class="n">ldvl</span><span class="p">,</span><span class="w"> </span><span class="n">vr</span><span class="p">,</span><span class="w"> </span><span class="n">ldvr</span><span class="p">,</span><span class="w"> </span><span class="n">work</span><span class="p">,</span><span class="w"> </span><span class="n">lwork</span><span class="p">,</span><span class="w"> </span><span class="n">info</span><span class="p">)</span>
+
+<span class="k">print</span><span class="o">*</span>
+<span class="k">print</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;info = &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">info</span>
+<span class="k">print</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;alphar = &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">alphar</span>
+<span class="k">print</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;alphai = &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">alphai</span>
+<span class="k">print</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;beta = &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">beta</span>
+<span class="k">print</span><span class="o">*</span>
+<span class="k">print</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Re(eigv) = &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">alphar</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">beta</span>
+<span class="k">print</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Im(eigv) = &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">alphai</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">beta</span>
+
+<span class="k">deallocate</span><span class="p">(</span><span class="n">work</span><span class="p">)</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we need to compile this reproducer locally and run it. If we’re invoking a
+compiler directly, we need to add the needed compile and link flags by hand.
+The include path will depend on your local install, and the link flags will
+depend on which library you’re testing. For example, to test against a local
+build of OpenBLAS:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-6" name="sd-tab-set-3" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="C" for="sd-tab-item-6">
+C</label><div class="sd-tab-content docutils">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gcc ggev_repro_gh_11577.c \
+  -I$PWD/../flexiblas-setup/built-libs/include/ \
+  -L$PWD/../flexiblas-setup/built-libs/lib -lopenblas
+$ ./a.out  # to run the reproducer
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-7" name="sd-tab-set-3" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="Fortran" for="sd-tab-item-7">
+Fortran</label><div class="sd-tab-content docutils">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gfortran ggev_repro_gh_11577.f90 \
+  -I/$PWD/../flexiblas-setup/built-libs/include/ \
+  -L$PWD/../flexiblas-setup/built-libs/lib -lopenblas
+$ ./a.out  # to run the reproducer
+</pre></div>
+</div>
+</div>
+</div>
+<p>For reference BLAS/LAPACK, the <code class="docutils literal notranslate"><span class="pre">-lopenblas</span></code> should be replaced with
+<code class="docutils literal notranslate"><span class="pre">-lblas</span> <span class="pre">-llapack</span></code>.</p>
+<p>Note that the explicit paths are only needed for libraries in non-standard
+locations (like the ones we built in this guide). For building against a
+package manager-installed library for which the shared library and headers are
+on the normal compiler search path (e.g., in <code class="docutils literal notranslate"><span class="pre">/usr/lib</span></code> and <code class="docutils literal notranslate"><span class="pre">/usr/include</span></code>,
+or inside a conda env when using compilers from the same env), they can be left out:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-8" name="sd-tab-set-4" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="C" for="sd-tab-item-8">
+C</label><div class="sd-tab-content docutils">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gcc ggev_repro_gh_11577.c -lopenblas
+$ ./a.out  # to run the reproducer
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-9" name="sd-tab-set-4" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="Fortran" for="sd-tab-item-9">
+Fortran</label><div class="sd-tab-content docutils">
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gfortran ggev_repro_gh_11577.f90 -lopenblas
+$ ./a.out  # to run the reproducer
+</pre></div>
+</div>
+</div>
+</div>
+<p>Alternatively (and probably a more robust way), use a small <code class="docutils literal notranslate"><span class="pre">meson.build</span></code>
+file to automate this and avoid the manual paths:</p>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-10" name="sd-tab-set-5" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="C" for="sd-tab-item-10">
+C</label><div class="sd-tab-content docutils">
+<div class="highlight-meson notranslate"><div class="highlight"><pre><span></span><span class="nb">project</span><span class="p">(</span><span class="s">&#39;repro_gh_11577&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;c&#39;</span><span class="p">)</span>
+
+<span class="n">openblas_dep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">dependency</span><span class="p">(</span><span class="s">&#39;openblas&#39;</span><span class="p">)</span>
+
+<span class="nb">executable</span><span class="p">(</span><span class="s">&#39;repro_c&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&#39;ggev_repro_gh_11577.c&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">dependencies</span><span class="p">:</span><span class="w"> </span><span class="n">openblas_dep</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>To then build the test and run it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export PKG_CONFIG_PATH=~/code/tmp/flexiblas-setup/built-libs/lib/pkgconfig/
+$ meson setup build
+$ ninja -C build
+$ ./build/repro_c  # output may vary
+
+info = 0
+Re(eigv) = 4.000000 , 8.000000 , inf , -inf ,
+Im(eigv = 0.000000 , 0.000000 , -nan , -nan ,
+</pre></div>
+</div>
+</div>
+<input id="sd-tab-item-11" name="sd-tab-set-5" type="radio">
+<label class="sd-tab-label" data-sync-group="tab" data-sync-id="Fortran" for="sd-tab-item-11">
+Fortran</label><div class="sd-tab-content docutils">
+<div class="highlight-meson notranslate"><div class="highlight"><pre><span></span><span class="nb">project</span><span class="p">(</span><span class="s">&#39;repro_gh_11577&#39;</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;fortran&#39;</span><span class="p">)</span>
+
+<span class="n">openblas_dep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">dependency</span><span class="p">(</span><span class="s">&#39;openblas&#39;</span><span class="p">)</span>
+
+<span class="nb">executable</span><span class="p">(</span><span class="s">&#39;repro_f90&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&#39;ggev_repro_gh_11577.f90&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">dependencies</span><span class="p">:</span><span class="w"> </span><span class="n">openblas_dep</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>To then build the test and run it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export PKG_CONFIG_PATH=~/code/tmp/flexiblas-setup/built-libs/lib/pkgconfig/
+$ meson setup build
+$ ninja -C build
+$ ./build/repro_f90  # output may vary
+
+workspace query: lwork =           -1
+info =            0
+opt lwork =         156
+
+info =            0
+alphar =    1.0204501477442456        11.707793036240817        3.7423579363517347E-014  -1.1492523608519701E-014
+alphai =    0.0000000000000000        0.0000000000000000        0.0000000000000000        0.0000000000000000
+beta =   0.25511253693606051        1.4634741295300704        0.0000000000000000        0.0000000000000000
+
+Re(eigv) =    4.0000000000000142        8.0000000000001741                       Infinity                 -Infinity
+Im(eigv) =    0.0000000000000000        0.0000000000000000                            NaN                       NaN
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When you have multiple versions/builds of the same BLAS library on your
+machine, it’s easy to accidentally pick up the wrong one during the build
+(remember: <code class="docutils literal notranslate"><span class="pre">-lopenblas</span></code> only says “link against <em>some</em>
+<code class="docutils literal notranslate"><span class="pre">libopenblas.so</span></code>). If you’re not sure, use <code class="docutils literal notranslate"><span class="pre">ldd</span></code> on the test executable
+you built to inspect which shared library it’s linked against.</p>
+</div>
+</section>
+<section id="debugging-linalg-issues-with-gdb">
+<h2>Debugging linalg issues with <code class="docutils literal notranslate"><span class="pre">gdb</span></code><a class="headerlink" href="#debugging-linalg-issues-with-gdb" title="Link to this heading">#</a></h2>
+<p>When debugging linalg issues, it is sometimes useful to step through both Python
+and C code. You can use <code class="docutils literal notranslate"><span class="pre">pdb</span></code> for the former, and <code class="docutils literal notranslate"><span class="pre">gdb</span></code> for the latter.</p>
+<p>First, prepare a small python reproducer, with a breakpoint. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat chol.py
+import numpy as np
+from scipy import linalg
+n = 40
+rng = np.random.default_rng(1234)
+x = rng.uniform(size=n)
+a = x[:, None] @ x[None, :] + np.identity(n)
+
+breakpoint()      # note a breakpoint
+linalg.cholesky(a)
+</pre></div>
+</div>
+<p>Then, you will need to run it under the <code class="docutils literal notranslate"><span class="pre">gdb</span></code> and add a C-level breakpoint at
+the LAPACK function. This way, your execution will stop twice: first on the
+Python breakpoint and then on the C breakpoint, and you will be able to step
+through and inspect values of both Python and C variables.</p>
+<p>To find out the LAPACK name, read the python source of the SciPy function and
+use <code class="docutils literal notranslate"><span class="pre">nm</span></code> on the <code class="docutils literal notranslate"><span class="pre">.so</span></code> library to find out the exact name.
+For the Cholesky factorization above, the LAPACK function is <code class="docutils literal notranslate"><span class="pre">?potrf</span></code>, and the
+C name on Ubuntu linux is <code class="docutils literal notranslate"><span class="pre">dpotrf_</span></code> (it may be spelled with or without the
+trailing underscore, in uppper case or lower case, depending on the system).</p>
+<p>Here is an example <code class="docutils literal notranslate"><span class="pre">gdb</span></code> session:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ gdb --args python chol.py
+...
+(gdb) b dpotrf_     # this adds a C breakpoint (type &quot;y&quot; below)
+Function &quot;dpotrf_&quot; not defined.
+Make breakpoint pending on future shared library load? (y or [n]) y
+Breakpoint 1 (dpotrf_) pending.
+(gdb) run    # run the python script
+...
+&gt; /home/br/temp/chol/chol.py(12)&lt;module&gt;()
+-&gt; linalg.cholesky(a)   # execution stopped at the python breakpoint
+(Pdb) p a.shape  # ... inspect the python state here
+(40, 40)
+(Pdb) c     # continue execution until the C breakpoint
+
+Thread 1 &quot;python&quot; hit Breakpoint 1, 0x00007ffff4c48820 in dpotrf_ ()
+   from /home/br/miniforge/envs/scipy-dev/lib/python3.10/site-packages/numpy/core/../../../../libcblas.so.3
+(gdb) s     # step through the C function
+Single stepping until exit from function dpotrf_,
+which has no line number information.
+f2py_rout__flapack_dpotrf (capi_self=&lt;optimized out&gt;, capi_args=&lt;optimized out&gt;,
+    capi_keywds=&lt;optimized out&gt;, f2py_func=0x7ffff4c48820 &lt;dpotrf_&gt;)
+    at scipy/linalg/_flapackmodule.c:63281
+....
+(gdb) p lda    # inspect values of C variables
+$1 = 40
+
+# print out the C backtrace
+(gdb) bt
+#0  0x00007ffff3056b1e in f2py_rout.flapack_dpotrf ()
+   from /path/to/site-packages/scipy/linalg/_flapack.cpython-311-x86_64-linux-gnu.so
+#1  0x0000555555734323 in _PyObject_MakeTpCall (tstate=0x555555ad0558 &lt;_PyRuntime+166328&gt;,
+    callable=&lt;fortran at remote 0x7ffff40ffc00&gt;, args=&lt;optimized out&gt;, nargs=1,
+    keywords=(&#39;lower&#39;, &#39;overwrite_a&#39;, &#39;clean&#39;))
+    at /usr/local/src/conda/python-3.11.8/Objects/call.c:214
+...
+</pre></div>
+</div>
+<p>Depending on your system, you may need to build SciPy with debug build type,
+and unset CFLAGS/CXXFLAGS environment variables. See the <a class="reference external" href="https://numpy.org/devdocs/dev/development_environment.html#debugging">NumPy debugging guide</a> for
+more details.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="devpy_test.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Running SciPy Tests Locally</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="rendering_documentation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Contributing to the SciPy documentation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-the-blas-library-being-used">Finding the BLAS library being used</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-up-your-environment-for-switching-blas-libraries">Setting up your environment for switching BLAS libraries</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#conda-forge">Conda-forge</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linux-distro-package-managers">Linux distro package managers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flexiblas">FlexiBLAS</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-reproducers-in-c-or-fortran">Creating reproducers in C or Fortran</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging-linalg-issues-with-gdb">Debugging linalg issues with <code class="docutils literal notranslate"><span class="pre">gdb</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

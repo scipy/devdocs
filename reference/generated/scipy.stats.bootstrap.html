@@ -1,0 +1,971 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>bootstrap &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.stats.bootstrap';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="power" href="scipy.stats.power.html" />
+    <link rel="prev" title="permutation_test" href="scipy.stats.permutation_test.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../stats.html" class="nav-link">Statistical functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">bootstrap</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.stats.</div>
+<div class="empty"></div><section id="bootstrap">
+<h1>bootstrap<a class="headerlink" href="#bootstrap" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.stats.bootstrap">
+<span class="sig-prename descclassname"><span class="pre">scipy.stats.</span></span><span class="sig-name descname"><span class="pre">bootstrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statistic</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_resamples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectorized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paired</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'two-sided'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'BCa'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bootstrap_result</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/stats/_resampling.py#L294-L687"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.stats.bootstrap" title="Link to this definition">#</a></dt>
+<dd><p>Compute a two-sided bootstrap confidence interval of a statistic.</p>
+<p>When <em class="xref py py-obj">method</em> is <code class="docutils literal notranslate"><span class="pre">'percentile'</span></code> and <em class="xref py py-obj">alternative</em> is <code class="docutils literal notranslate"><span class="pre">'two-sided'</span></code>,
+a bootstrap confidence interval is computed according to the following
+procedure.</p>
+<ol class="arabic simple">
+<li><p>Resample the data: for each sample in <em class="xref py py-obj">data</em> and for each of
+<em class="xref py py-obj">n_resamples</em>, take a random sample of the original sample
+(with replacement) of the same size as the original sample.</p></li>
+<li><p>Compute the bootstrap distribution of the statistic: for each set of
+resamples, compute the test statistic.</p></li>
+<li><p>Determine the confidence interval: find the interval of the bootstrap
+distribution that is</p>
+<ul class="simple">
+<li><p>symmetric about the median and</p></li>
+<li><p>contains <em class="xref py py-obj">confidence_level</em> of the resampled statistic values.</p></li>
+</ul>
+</li>
+</ol>
+<p>While the <code class="docutils literal notranslate"><span class="pre">'percentile'</span></code> method is the most intuitive, it is rarely
+used in practice. Two more common methods are available, <code class="docutils literal notranslate"><span class="pre">'basic'</span></code>
+(‘reverse percentile’) and <code class="docutils literal notranslate"><span class="pre">'BCa'</span></code> (‘bias-corrected and accelerated’);
+they differ in how step 3 is performed.</p>
+<p>If the samples in <em class="xref py py-obj">data</em> are  taken at random from their respective
+distributions <span class="math notranslate nohighlight">\(n\)</span> times, the confidence interval returned by
+<a class="reference internal" href="#scipy.stats.bootstrap" title="scipy.stats.bootstrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bootstrap</span></code></a> will contain the true value of the statistic for those
+distributions approximately <em class="xref py py-obj">confidence_level</em><span class="math notranslate nohighlight">\(\, \times \, n\)</span> times.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>data</strong><span class="classifier">sequence of array-like</span></dt><dd><p>Each element of <em class="xref py py-obj">data</em> is a sample containing scalar observations from an
+underlying distribution. Elements of <em class="xref py py-obj">data</em> must be broadcastable to the
+same shape (with the possible exception of the dimension specified by <em class="xref py py-obj">axis</em>).</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 1.14.0: </span><a class="reference internal" href="#scipy.stats.bootstrap" title="scipy.stats.bootstrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bootstrap</span></code></a> will now emit a <code class="docutils literal notranslate"><span class="pre">FutureWarning</span></code> if the shapes of the
+elements of <em class="xref py py-obj">data</em> are not the same (with the exception of the dimension
+specified by <em class="xref py py-obj">axis</em>).
+Beginning in SciPy 1.16.0, <a class="reference internal" href="#scipy.stats.bootstrap" title="scipy.stats.bootstrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bootstrap</span></code></a> will explicitly broadcast the
+elements to the same shape (except along <em class="xref py py-obj">axis</em>) before performing
+the calculation.</p>
+</div>
+</dd>
+<dt><strong>statistic</strong><span class="classifier">callable</span></dt><dd><p>Statistic for which the confidence interval is to be calculated.
+<em class="xref py py-obj">statistic</em> must be a callable that accepts <code class="docutils literal notranslate"><span class="pre">len(data)</span></code> samples
+as separate arguments and returns the resulting statistic.
+If <em class="xref py py-obj">vectorized</em> is set <code class="docutils literal notranslate"><span class="pre">True</span></code>,
+<em class="xref py py-obj">statistic</em> must also accept a keyword argument <em class="xref py py-obj">axis</em> and be
+vectorized to compute the statistic along the provided <em class="xref py py-obj">axis</em>.</p>
+</dd>
+<dt><strong>n_resamples</strong><span class="classifier">int, default: <code class="docutils literal notranslate"><span class="pre">9999</span></code></span></dt><dd><p>The number of resamples performed to form the bootstrap distribution
+of the statistic.</p>
+</dd>
+<dt><strong>batch</strong><span class="classifier">int, optional</span></dt><dd><p>The number of resamples to process in each vectorized call to
+<em class="xref py py-obj">statistic</em>. Memory usage is O( <em class="xref py py-obj">batch</em> * <code class="docutils literal notranslate"><span class="pre">n</span></code> ), where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the
+sample size. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>, in which case <code class="docutils literal notranslate"><span class="pre">batch</span> <span class="pre">=</span> <span class="pre">n_resamples</span></code>
+(or <code class="docutils literal notranslate"><span class="pre">batch</span> <span class="pre">=</span> <span class="pre">max(n_resamples,</span> <span class="pre">n)</span></code> for <code class="docutils literal notranslate"><span class="pre">method='BCa'</span></code>).</p>
+</dd>
+<dt><strong>vectorized</strong><span class="classifier">bool, optional</span></dt><dd><p>If <em class="xref py py-obj">vectorized</em> is set <code class="docutils literal notranslate"><span class="pre">False</span></code>, <em class="xref py py-obj">statistic</em> will not be passed
+keyword argument <em class="xref py py-obj">axis</em> and is expected to calculate the statistic
+only for 1D samples. If <code class="docutils literal notranslate"><span class="pre">True</span></code>, <em class="xref py py-obj">statistic</em> will be passed keyword
+argument <em class="xref py py-obj">axis</em> and is expected to calculate the statistic along <em class="xref py py-obj">axis</em>
+when passed an ND sample array. If <code class="docutils literal notranslate"><span class="pre">None</span></code> (default), <em class="xref py py-obj">vectorized</em>
+will be set <code class="docutils literal notranslate"><span class="pre">True</span></code> if <code class="docutils literal notranslate"><span class="pre">axis</span></code> is a parameter of <em class="xref py py-obj">statistic</em>. Use of
+a vectorized statistic typically reduces computation time.</p>
+</dd>
+<dt><strong>paired</strong><span class="classifier">bool, default: <code class="docutils literal notranslate"><span class="pre">False</span></code></span></dt><dd><p>Whether the statistic treats corresponding elements of the samples
+in <em class="xref py py-obj">data</em> as paired. If True, <a class="reference internal" href="#scipy.stats.bootstrap" title="scipy.stats.bootstrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bootstrap</span></code></a> resamples an array of
+<em>indices</em> and uses the same indices for all arrays in <em class="xref py py-obj">data</em>; otherwise,
+<a class="reference internal" href="#scipy.stats.bootstrap" title="scipy.stats.bootstrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bootstrap</span></code></a> independently resamples the elements of each array.</p>
+</dd>
+<dt><strong>axis</strong><span class="classifier">int, default: <code class="docutils literal notranslate"><span class="pre">0</span></code></span></dt><dd><p>The axis of the samples in <em class="xref py py-obj">data</em> along which the <em class="xref py py-obj">statistic</em> is
+calculated.</p>
+</dd>
+<dt><strong>confidence_level</strong><span class="classifier">float, default: <code class="docutils literal notranslate"><span class="pre">0.95</span></code></span></dt><dd><p>The confidence level of the confidence interval.</p>
+</dd>
+<dt><strong>alternative</strong><span class="classifier">{‘two-sided’, ‘less’, ‘greater’}, default: <code class="docutils literal notranslate"><span class="pre">'two-sided'</span></code></span></dt><dd><p>Choose <code class="docutils literal notranslate"><span class="pre">'two-sided'</span></code> (default) for a two-sided confidence interval,
+<code class="docutils literal notranslate"><span class="pre">'less'</span></code> for a one-sided confidence interval with the lower bound
+at <code class="docutils literal notranslate"><span class="pre">-np.inf</span></code>, and <code class="docutils literal notranslate"><span class="pre">'greater'</span></code> for a one-sided confidence interval
+with the upper bound at <code class="docutils literal notranslate"><span class="pre">np.inf</span></code>. The other bound of the one-sided
+confidence intervals is the same as that of a two-sided confidence
+interval with <em class="xref py py-obj">confidence_level</em> twice as far from 1.0; e.g. the upper
+bound of a 95% <code class="docutils literal notranslate"><span class="pre">'less'</span></code>  confidence interval is the same as the upper
+bound of a 90% <code class="docutils literal notranslate"><span class="pre">'two-sided'</span></code> confidence interval.</p>
+</dd>
+<dt><strong>method</strong><span class="classifier">{‘percentile’, ‘basic’, ‘bca’}, default: <code class="docutils literal notranslate"><span class="pre">'BCa'</span></code></span></dt><dd><p>Whether to return the ‘percentile’ bootstrap confidence interval
+(<code class="docutils literal notranslate"><span class="pre">'percentile'</span></code>), the ‘basic’ (AKA ‘reverse’) bootstrap confidence
+interval (<code class="docutils literal notranslate"><span class="pre">'basic'</span></code>), or the bias-corrected and accelerated bootstrap
+confidence interval (<code class="docutils literal notranslate"><span class="pre">'BCa'</span></code>).</p>
+</dd>
+<dt><strong>bootstrap_result</strong><span class="classifier">BootstrapResult, optional</span></dt><dd><p>Provide the result object returned by a previous call to <a class="reference internal" href="#scipy.stats.bootstrap" title="scipy.stats.bootstrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bootstrap</span></code></a>
+to include the previous bootstrap distribution in the new bootstrap
+distribution. This can be used, for example, to change
+<em class="xref py py-obj">confidence_level</em>, change <em class="xref py py-obj">method</em>, or see the effect of performing
+additional resampling without repeating computations.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">{None, int, <a class="reference external" href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code></a>,</span></dt><dd><blockquote>
+<div><p><a class="reference external" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a>}, optional</p>
+</div></blockquote>
+<p>Pseudorandom number generator state used to generate resamples.</p>
+<p>If <em class="xref py py-obj">random_state</em> is <code class="docutils literal notranslate"><span class="pre">None</span></code> (or <em class="xref py py-obj">np.random</em>), the
+<a class="reference external" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a> singleton is used.
+If <em class="xref py py-obj">random_state</em> is an int, a new <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance is used,
+seeded with <em class="xref py py-obj">random_state</em>.
+If <em class="xref py py-obj">random_state</em> is already a <code class="docutils literal notranslate"><span class="pre">Generator</span></code> or <code class="docutils literal notranslate"><span class="pre">RandomState</span></code>
+instance then that instance is used.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>res</strong><span class="classifier">BootstrapResult</span></dt><dd><p>An object with attributes:</p>
+<dl class="simple">
+<dt>confidence_interval<span class="classifier">ConfidenceInterval</span></dt><dd><p>The bootstrap confidence interval as an instance of
+<a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.namedtuple" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collections.namedtuple</span></code></a> with attributes <em class="xref py py-obj">low</em> and <em class="xref py py-obj">high</em>.</p>
+</dd>
+<dt>bootstrap_distribution<span class="classifier">ndarray</span></dt><dd><p>The bootstrap distribution, that is, the value of <em class="xref py py-obj">statistic</em> for
+each resample. The last dimension corresponds with the resamples
+(e.g. <code class="docutils literal notranslate"><span class="pre">res.bootstrap_distribution.shape[-1]</span> <span class="pre">==</span> <span class="pre">n_resamples</span></code>).</p>
+</dd>
+<dt>standard_error<span class="classifier">float or ndarray</span></dt><dd><p>The bootstrap standard error, that is, the sample standard
+deviation of the bootstrap distribution.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Warns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference internal" href="scipy.stats.DegenerateDataWarning.html#scipy.stats.DegenerateDataWarning" title="scipy.stats.DegenerateDataWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DegenerateDataWarning</span></code></a></dt><dd><p>Generated when <code class="docutils literal notranslate"><span class="pre">method='BCa'</span></code> and the bootstrap distribution is
+degenerate (e.g. all elements are identical).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Elements of the confidence interval may be NaN for <code class="docutils literal notranslate"><span class="pre">method='BCa'</span></code> if
+the bootstrap distribution is degenerate (e.g. all elements are identical).
+In this case, consider using another <em class="xref py py-obj">method</em> or inspecting <em class="xref py py-obj">data</em> for
+indications that other analysis may be more appropriate (e.g. all
+observations are identical).</p>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r18c1dcdea113-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>B. Efron and R. J. Tibshirani, An Introduction to the Bootstrap,
+Chapman &amp; Hall/CRC, Boca Raton, FL, USA (1993)</p>
+</div>
+<div class="citation" id="r18c1dcdea113-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<p>Nathaniel E. Helwig, “Bootstrap Confidence Intervals”,
+<a class="reference external" href="http://users.stat.umn.edu/~helwig/notes/bootci-Notes.pdf">http://users.stat.umn.edu/~helwig/notes/bootci-Notes.pdf</a></p>
+</div>
+<div class="citation" id="r18c1dcdea113-3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<p>Bootstrapping (statistics), Wikipedia,
+<a class="reference external" href="https://en.wikipedia.org/wiki/Bootstrapping_%28statistics%29">https://en.wikipedia.org/wiki/Bootstrapping_%28statistics%29</a></p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="cc6ef7ec-b0b8-401c-9eb0-7e7e5e2c579c">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('cc6ef7ec-b0b8-401c-9eb0-7e7e5e2c579c','6a99e82b-b0ae-4515-9846-02287c6d7673','3039d330-bb0c-4866-bf0f-7f9adb7232d0','../../lite/tree/../notebooks/index.html?path=a90d1184_4cdb_481e_837e_22e75c884e2b.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>Suppose we have sampled data from an unknown distribution.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dist</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># our &quot;unknown&quot; distribution</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We are interested in the standard deviation of the distribution.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">std_true</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>      <span class="c1"># the true value of the statistic</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">std_true</span><span class="p">)</span>
+<span class="go">4.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">std_sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># the sample statistic</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">std_sample</span><span class="p">)</span>
+<span class="go">3.9460644295563863</span>
+</pre></div>
+</div>
+<p>The bootstrap is used to approximate the variability we would expect if we
+were to repeatedly sample from the unknown distribution and calculate the
+statistic of the sample each time. It does this by repeatedly resampling
+values <em>from the original sample</em> with replacement and calculating the
+statistic of each resample. This results in a “bootstrap distribution” of
+the statistic.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">bootstrap</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="p">,)</span>  <span class="c1"># samples must be in a sequence</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">bootstrap_distribution</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Bootstrap Distribution&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;statistic value&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;frequency&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-stats-bootstrap-1_00_00.png" class="plot-directive" src="../../_images/scipy-stats-bootstrap-1_00_00.png" />
+</figure>
+<p>The standard error quantifies this variability. It is calculated as the
+standard deviation of the bootstrap distribution.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">standard_error</span>
+<span class="go">0.24427002125829136</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">standard_error</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">bootstrap_distribution</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>The bootstrap distribution of the statistic is often approximately normal
+with scale equal to the standard error.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pdf</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">std_sample</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">res</span><span class="o">.</span><span class="n">standard_error</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">bootstrap_distribution</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">pdf</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Normal Approximation of the Bootstrap Distribution&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;statistic value&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-stats-bootstrap-1_01_00.png" class="plot-directive" src="../../_images/scipy-stats-bootstrap-1_01_00.png" />
+</figure>
+<p>This suggests that we could construct a 90% confidence interval on the
+statistic based on quantiles of this normal distribution.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">norm</span><span class="o">.</span><span class="n">interval</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">std_sample</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">res</span><span class="o">.</span><span class="n">standard_error</span><span class="p">)</span>
+<span class="go">(3.5442759991341726, 4.3478528599786)</span>
+</pre></div>
+</div>
+<p>Due to central limit theorem, this normal approximation is accurate for a
+variety of statistics and distributions underlying the samples; however,
+the approximation is not reliable in all cases. Because <a class="reference internal" href="#scipy.stats.bootstrap" title="scipy.stats.bootstrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bootstrap</span></code></a> is
+designed to work with arbitrary underlying distributions and statistics,
+it uses more advanced techniques to generate an accurate confidence
+interval.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="p">)</span>
+<span class="go">ConfidenceInterval(low=3.57655333533867, high=4.382043696342881)</span>
+</pre></div>
+</div>
+<p>If we sample from the original distribution 100 times and form a bootstrap
+confidence interval for each sample, the confidence interval
+contains the true value of the statistic approximately 90% of the time.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n_trials</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ci_contains_true_std</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_trials</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">),)</span>
+<span class="gp">... </span>   <span class="n">res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">n_resamples</span><span class="o">=</span><span class="mi">999</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">... </span>   <span class="n">ci</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span>
+<span class="gp">... </span>   <span class="k">if</span> <span class="n">ci</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">std_true</span> <span class="o">&lt;</span> <span class="n">ci</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+<span class="gp">... </span>       <span class="n">ci_contains_true_std</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ci_contains_true_std</span><span class="p">)</span>
+<span class="go">88</span>
+</pre></div>
+</div>
+<p>Rather than writing a loop, we can also determine the confidence intervals
+for all 100 samples at once.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_trials</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">),)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">n_resamples</span><span class="o">=</span><span class="mi">999</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ci_l</span><span class="p">,</span> <span class="n">ci_u</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span>
+</pre></div>
+</div>
+<p>Here, <em class="xref py py-obj">ci_l</em> and <em class="xref py py-obj">ci_u</em> contain the confidence interval for each of the
+<code class="docutils literal notranslate"><span class="pre">n_trials</span> <span class="pre">=</span> <span class="pre">100</span></code> samples.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ci_l</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+<span class="go">[3.86401283 3.33304394 3.52474647 3.54160981 3.80569252]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ci_u</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+<span class="go">[4.80217409 4.18143252 4.39734707 4.37549713 4.72843584]</span>
+</pre></div>
+</div>
+<p>And again, approximately 90% contain the true value, <code class="docutils literal notranslate"><span class="pre">std_true</span> <span class="pre">=</span> <span class="pre">4</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">ci_l</span> <span class="o">&lt;</span> <span class="n">std_true</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">std_true</span> <span class="o">&lt;</span> <span class="n">ci_u</span><span class="p">)))</span>
+<span class="go">93</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="#scipy.stats.bootstrap" title="scipy.stats.bootstrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bootstrap</span></code></a> can also be used to estimate confidence intervals of
+multi-sample statistics. For example, to get a confidence interval
+for the difference between means, we write a function that accepts
+two sample arguments and returns only the statistic. The use of the
+<code class="docutils literal notranslate"><span class="pre">axis</span></code> argument ensures that all mean calculations are perform in
+a single vectorized call, which is faster than looping over pairs
+of resamples in Python.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">my_statistic</span><span class="p">(</span><span class="n">sample1</span><span class="p">,</span> <span class="n">sample2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">mean1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sample1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">mean2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sample2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">mean1</span> <span class="o">-</span> <span class="n">mean2</span>
+</pre></div>
+</div>
+<p>Here, we use the ‘percentile’ method with the default 95% confidence level.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample1</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sample2</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">sample1</span><span class="p">,</span> <span class="n">sample2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">my_statistic</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;basic&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">my_statistic</span><span class="p">(</span><span class="n">sample1</span><span class="p">,</span> <span class="n">sample2</span><span class="p">))</span>
+<span class="go">0.16661030792089523</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="p">)</span>
+<span class="go">ConfidenceInterval(low=-0.29087973240818693, high=0.6371338699912273)</span>
+</pre></div>
+</div>
+<p>The bootstrap estimate of the standard error is also available.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">standard_error</span><span class="p">)</span>
+<span class="go">0.238323948262459</span>
+</pre></div>
+</div>
+<p>Paired-sample statistics work, too. For example, consider the Pearson
+correlation coefficient.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">pearsonr</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># element 0 is the statistic</span>
+<span class="go">0.9954306665125647</span>
+</pre></div>
+</div>
+<p>We wrap <a class="reference internal" href="scipy.stats.pearsonr.html#scipy.stats.pearsonr" title="scipy.stats.pearsonr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pearsonr</span></code></a> so that it returns only the statistic, ensuring
+that we use the <em class="xref py py-obj">axis</em> argument because it is available.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">my_statistic</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">pearsonr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>We call <a class="reference internal" href="#scipy.stats.bootstrap" title="scipy.stats.bootstrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bootstrap</span></code></a> using <code class="docutils literal notranslate"><span class="pre">paired=True</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">my_statistic</span><span class="p">,</span> <span class="n">paired</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span><span class="p">)</span>
+<span class="go">ConfidenceInterval(low=0.9941504301315878, high=0.996377412215445)</span>
+</pre></div>
+</div>
+<p>The result object can be passed back into <a class="reference internal" href="#scipy.stats.bootstrap" title="scipy.stats.bootstrap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bootstrap</span></code></a> to perform additional
+resampling:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">bootstrap_distribution</span><span class="p">)</span>
+<span class="go">9999</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">my_statistic</span><span class="p">,</span> <span class="n">paired</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">n_resamples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">bootstrap_result</span><span class="o">=</span><span class="n">res</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">bootstrap_distribution</span><span class="p">)</span>
+<span class="go">10999</span>
+</pre></div>
+</div>
+<p>or to change the confidence interval options:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res2</span> <span class="o">=</span> <span class="n">bootstrap</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">my_statistic</span><span class="p">,</span> <span class="n">paired</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                 <span class="n">n_resamples</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">bootstrap_result</span><span class="o">=</span><span class="n">res</span><span class="p">,</span>
+<span class="gp">... </span>                 <span class="n">method</span><span class="o">=</span><span class="s1">&#39;percentile&#39;</span><span class="p">,</span> <span class="n">confidence_level</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">res2</span><span class="o">.</span><span class="n">bootstrap_distribution</span><span class="p">,</span>
+<span class="gp">... </span>                        <span class="n">res</span><span class="o">.</span><span class="n">bootstrap_distribution</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">confidence_interval</span>
+<span class="go">ConfidenceInterval(low=0.9941574828235082, high=0.9963781698210212)</span>
+</pre></div>
+</div>
+<p>without repeating computation of the original bootstrap distribution.</p>
+</div>
+</div>
+<div id="3039d330-bb0c-4866-bf0f-7f9adb7232d0" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('cc6ef7ec-b0b8-401c-9eb0-7e7e5e2c579c','3039d330-bb0c-4866-bf0f-7f9adb7232d0')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('cc6ef7ec-b0b8-401c-9eb0-7e7e5e2c579c','3039d330-bb0c-4866-bf0f-7f9adb7232d0')">Open In Tab</button></div><div id="6a99e82b-b0ae-4515-9846-02287c6d7673" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.stats.permutation_test.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">permutation_test</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.stats.power.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">power</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.stats.bootstrap"><code class="docutils literal notranslate"><span class="pre">bootstrap</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

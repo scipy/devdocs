@@ -1,0 +1,753 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Radau &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.integrate.Radau';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="dense_output" href="scipy.integrate.Radau.dense_output.html" />
+    <link rel="prev" title="step" href="scipy.integrate.DOP853.step.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../integrate.html" class="nav-link">Integration and ODEs (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.integrate</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Radau</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.integrate.</div>
+<div class="empty"></div><section id="radau">
+<h1>Radau<a class="headerlink" href="#radau" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="scipy.integrate.Radau">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scipy.integrate.</span></span><span class="sig-name descname"><span class="pre">Radau</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fun</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rtol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jac_sparsity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectorized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">extraneous</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/integrate/_ivp/radau.py#L179-L546"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.integrate.Radau" title="Link to this definition">#</a></dt>
+<dd><p>Implicit Runge-Kutta method of Radau IIA family of order 5.</p>
+<p>The implementation follows <a class="reference internal" href="#r04c194a64501-1" id="id1">[1]</a>. The error is controlled with a
+third-order accurate embedded formula. A cubic polynomial which satisfies
+the collocation conditions is used for the dense output.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>fun</strong><span class="classifier">callable</span></dt><dd><p>Right-hand side of the system: the time derivative of the state <code class="docutils literal notranslate"><span class="pre">y</span></code>
+at time <code class="docutils literal notranslate"><span class="pre">t</span></code>. The calling signature is <code class="docutils literal notranslate"><span class="pre">fun(t,</span> <span class="pre">y)</span></code>, where <code class="docutils literal notranslate"><span class="pre">t</span></code> is a
+scalar and <code class="docutils literal notranslate"><span class="pre">y</span></code> is an ndarray with <code class="docutils literal notranslate"><span class="pre">len(y)</span> <span class="pre">=</span> <span class="pre">len(y0)</span></code>. <code class="docutils literal notranslate"><span class="pre">fun</span></code> must
+return an array of the same shape as <code class="docutils literal notranslate"><span class="pre">y</span></code>. See <em class="xref py py-obj">vectorized</em> for more
+information.</p>
+</dd>
+<dt><strong>t0</strong><span class="classifier">float</span></dt><dd><p>Initial time.</p>
+</dd>
+<dt><strong>y0</strong><span class="classifier">array_like, shape (n,)</span></dt><dd><p>Initial state.</p>
+</dd>
+<dt><strong>t_bound</strong><span class="classifier">float</span></dt><dd><p>Boundary time - the integration won’t continue beyond it. It also
+determines the direction of the integration.</p>
+</dd>
+<dt><strong>first_step</strong><span class="classifier">float or None, optional</span></dt><dd><p>Initial step size. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code> which means that the algorithm
+should choose.</p>
+</dd>
+<dt><strong>max_step</strong><span class="classifier">float, optional</span></dt><dd><p>Maximum allowed step size. Default is np.inf, i.e., the step size is not
+bounded and determined solely by the solver.</p>
+</dd>
+<dt><strong>rtol, atol</strong><span class="classifier">float and array_like, optional</span></dt><dd><p>Relative and absolute tolerances. The solver keeps the local error
+estimates less than <code class="docutils literal notranslate"><span class="pre">atol</span> <span class="pre">+</span> <span class="pre">rtol</span> <span class="pre">*</span> <span class="pre">abs(y)</span></code>. HHere <em class="xref py py-obj">rtol</em> controls a
+relative accuracy (number of correct digits), while <em class="xref py py-obj">atol</em> controls
+absolute accuracy (number of correct decimal places). To achieve the
+desired <em class="xref py py-obj">rtol</em>, set <em class="xref py py-obj">atol</em> to be smaller than the smallest value that
+can be expected from <code class="docutils literal notranslate"><span class="pre">rtol</span> <span class="pre">*</span> <span class="pre">abs(y)</span></code> so that <em class="xref py py-obj">rtol</em> dominates the
+allowable error. If <em class="xref py py-obj">atol</em> is larger than <code class="docutils literal notranslate"><span class="pre">rtol</span> <span class="pre">*</span> <span class="pre">abs(y)</span></code> the
+number of correct digits is not guaranteed. Conversely, to achieve the
+desired <em class="xref py py-obj">atol</em> set <em class="xref py py-obj">rtol</em> such that <code class="docutils literal notranslate"><span class="pre">rtol</span> <span class="pre">*</span> <span class="pre">abs(y)</span></code> is always smaller
+than <em class="xref py py-obj">atol</em>. If components of y have different scales, it might be
+beneficial to set different <em class="xref py py-obj">atol</em> values for different components by
+passing array_like with shape (n,) for <em class="xref py py-obj">atol</em>. Default values are
+1e-3 for <em class="xref py py-obj">rtol</em> and 1e-6 for <em class="xref py py-obj">atol</em>.</p>
+</dd>
+<dt><strong>jac</strong><span class="classifier">{None, array_like, sparse_matrix, callable}, optional</span></dt><dd><p>Jacobian matrix of the right-hand side of the system with respect to
+y, required by this method. The Jacobian matrix has shape (n, n) and
+its element (i, j) is equal to <code class="docutils literal notranslate"><span class="pre">d</span> <span class="pre">f_i</span> <span class="pre">/</span> <span class="pre">d</span> <span class="pre">y_j</span></code>.
+There are three ways to define the Jacobian:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>If array_like or sparse_matrix, the Jacobian is assumed to
+be constant.</p></li>
+<li><p>If callable, the Jacobian is assumed to depend on both
+t and y; it will be called as <code class="docutils literal notranslate"><span class="pre">jac(t,</span> <span class="pre">y)</span></code> as necessary.
+For the ‘Radau’ and ‘BDF’ methods, the return value might be a
+sparse matrix.</p></li>
+<li><p>If None (default), the Jacobian will be approximated by
+finite differences.</p></li>
+</ul>
+</div></blockquote>
+<p>It is generally recommended to provide the Jacobian rather than
+relying on a finite-difference approximation.</p>
+</dd>
+<dt><strong>jac_sparsity</strong><span class="classifier">{None, array_like, sparse matrix}, optional</span></dt><dd><p>Defines a sparsity structure of the Jacobian matrix for a
+finite-difference approximation. Its shape must be (n, n). This argument
+is ignored if <em class="xref py py-obj">jac</em> is not <em class="xref py py-obj">None</em>. If the Jacobian has only few non-zero
+elements in <em>each</em> row, providing the sparsity structure will greatly
+speed up the computations <a class="reference internal" href="#r04c194a64501-2" id="id2">[2]</a>. A zero entry means that a corresponding
+element in the Jacobian is always zero. If None (default), the Jacobian
+is assumed to be dense.</p>
+</dd>
+<dt><strong>vectorized</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether <em class="xref py py-obj">fun</em> can be called in a vectorized fashion. Default is False.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">vectorized</span></code> is False, <em class="xref py py-obj">fun</em> will always be called with <code class="docutils literal notranslate"><span class="pre">y</span></code> of
+shape <code class="docutils literal notranslate"><span class="pre">(n,)</span></code>, where <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">=</span> <span class="pre">len(y0)</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">vectorized</span></code> is True, <em class="xref py py-obj">fun</em> may be called with <code class="docutils literal notranslate"><span class="pre">y</span></code> of shape
+<code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">k)</span></code>, where <code class="docutils literal notranslate"><span class="pre">k</span></code> is an integer. In this case, <em class="xref py py-obj">fun</em> must behave
+such that <code class="docutils literal notranslate"><span class="pre">fun(t,</span> <span class="pre">y)[:,</span> <span class="pre">i]</span> <span class="pre">==</span> <span class="pre">fun(t,</span> <span class="pre">y[:,</span> <span class="pre">i])</span></code> (i.e. each column of
+the returned array is the time derivative of the state corresponding
+with a column of <code class="docutils literal notranslate"><span class="pre">y</span></code>).</p>
+<p>Setting <code class="docutils literal notranslate"><span class="pre">vectorized=True</span></code> allows for faster finite difference
+approximation of the Jacobian by this method, but may result in slower
+execution overall in some circumstances (e.g. small <code class="docutils literal notranslate"><span class="pre">len(y0)</span></code>).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>n</strong><span class="classifier">int</span></dt><dd><p>Number of equations.</p>
+</dd>
+<dt><strong>status</strong><span class="classifier">string</span></dt><dd><p>Current status of the solver: ‘running’, ‘finished’ or ‘failed’.</p>
+</dd>
+<dt><strong>t_bound</strong><span class="classifier">float</span></dt><dd><p>Boundary time.</p>
+</dd>
+<dt><strong>direction</strong><span class="classifier">float</span></dt><dd><p>Integration direction: +1 or -1.</p>
+</dd>
+<dt><strong>t</strong><span class="classifier">float</span></dt><dd><p>Current time.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">ndarray</span></dt><dd><p>Current state.</p>
+</dd>
+<dt><strong>t_old</strong><span class="classifier">float</span></dt><dd><p>Previous time. None if no steps were made yet.</p>
+</dd>
+<dt><strong>step_size</strong><span class="classifier">float</span></dt><dd><p>Size of the last successful step. None if no steps were made yet.</p>
+</dd>
+<dt><strong>nfev</strong><span class="classifier">int</span></dt><dd><p>Number of evaluations of the right-hand side.</p>
+</dd>
+<dt><strong>njev</strong><span class="classifier">int</span></dt><dd><p>Number of evaluations of the Jacobian.</p>
+</dd>
+<dt><strong>nlu</strong><span class="classifier">int</span></dt><dd><p>Number of LU decompositions.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="scipy.integrate.Radau.dense_output.html#scipy.integrate.Radau.dense_output" title="scipy.integrate.Radau.dense_output"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dense_output</span></code></a>()</p></td>
+<td><p>Compute a local interpolant over the last successful step.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scipy.integrate.Radau.step.html#scipy.integrate.Radau.step" title="scipy.integrate.Radau.step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">step</span></code></a>()</p></td>
+<td><p>Perform one integration step.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r04c194a64501-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>E. Hairer, G. Wanner, “Solving Ordinary Differential Equations II:
+Stiff and Differential-Algebraic Problems”, Sec. IV.8.</p>
+</div>
+<div class="citation" id="r04c194a64501-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>A. Curtis, M. J. D. Powell, and J. Reid, “On the estimation of
+sparse Jacobian matrices”, Journal of the Institute of Mathematics
+and its Applications, 13, pp. 117-120, 1974.</p>
+</div>
+</div>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.integrate.DOP853.step.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">step</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.integrate.Radau.dense_output.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">dense_output</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.integrate.Radau"><code class="docutils literal notranslate"><span class="pre">Radau</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1009 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>goodness_of_fit &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.stats.goodness_of_fit';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="chisquare" href="scipy.stats.chisquare.html" />
+    <link rel="prev" title="ks_1samp" href="scipy.stats.ks_1samp.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../stats.html" class="nav-link">Statistical functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">goodness_of_fit</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.stats.</div>
+<div class="empty"></div><section id="goodness-of-fit">
+<h1>goodness_of_fit<a class="headerlink" href="#goodness-of-fit" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.stats.goodness_of_fit">
+<span class="sig-prename descclassname"><span class="pre">scipy.stats.</span></span><span class="sig-name descname"><span class="pre">goodness_of_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">known_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guessed_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">statistic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ad'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_mc_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/stats/_fit.py#L741-L1163"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.stats.goodness_of_fit" title="Link to this definition">#</a></dt>
+<dd><p>Perform a goodness of fit test comparing data to a distribution family.</p>
+<p>Given a distribution family and data, perform a test of the null hypothesis
+that the data were drawn from a distribution in that family. Any known
+parameters of the distribution may be specified. Remaining parameters of
+the distribution will be fit to the data, and the p-value of the test
+is computed accordingly. Several statistics for comparing the distribution
+to data are available.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>dist</strong><span class="classifier"><a class="reference internal" href="scipy.stats.rv_continuous.html#scipy.stats.rv_continuous" title="scipy.stats.rv_continuous"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.rv_continuous</span></code></a></span></dt><dd><p>The object representing the distribution family under the null
+hypothesis.</p>
+</dd>
+<dt><strong>data</strong><span class="classifier">1D array_like</span></dt><dd><p>Finite, uncensored data to be tested.</p>
+</dd>
+<dt><strong>known_params</strong><span class="classifier">dict, optional</span></dt><dd><p>A dictionary containing name-value pairs of known distribution
+parameters. Monte Carlo samples are randomly drawn from the
+null-hypothesized distribution with these values of the parameters.
+Before the statistic is evaluated for each Monte Carlo sample, only
+remaining unknown parameters of the null-hypothesized distribution
+family are fit to the samples; the known parameters are held fixed.
+If all parameters of the distribution family are known, then the step
+of fitting the distribution family to each sample is omitted.</p>
+</dd>
+<dt><strong>fit_params</strong><span class="classifier">dict, optional</span></dt><dd><p>A dictionary containing name-value pairs of distribution parameters
+that have already been fit to the data, e.g. using <a class="reference internal" href="scipy.stats.fit.html#scipy.stats.fit" title="scipy.stats.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.fit</span></code></a>
+or the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method of <em class="xref py py-obj">dist</em>. Monte Carlo samples are drawn from the
+null-hypothesized distribution with these specified values of the
+parameter. On those Monte Carlo samples, however, these and all other
+unknown parameters of the null-hypothesized distribution family are
+fit before the statistic is evaluated.</p>
+</dd>
+<dt><strong>guessed_params</strong><span class="classifier">dict, optional</span></dt><dd><p>A dictionary containing name-value pairs of distribution parameters
+which have been guessed. These parameters are always considered as
+free parameters and are fit both to the provided <em class="xref py py-obj">data</em> as well as
+to the Monte Carlo samples drawn from the null-hypothesized
+distribution. The purpose of these <em class="xref py py-obj">guessed_params</em> is to be used as
+initial values for the numerical fitting procedure.</p>
+</dd>
+<dt><strong>statistic</strong><span class="classifier">{“ad”, “ks”, “cvm”, “filliben”} or callable, optional</span></dt><dd><p>The statistic used to compare data to a distribution after fitting
+unknown parameters of the distribution family to the data. The
+Anderson-Darling (“ad”) <a class="reference internal" href="#r48df2cf935d3-1" id="id1">[1]</a>, Kolmogorov-Smirnov (“ks”) <a class="reference internal" href="#r48df2cf935d3-1" id="id2">[1]</a>,
+Cramer-von Mises (“cvm”) <a class="reference internal" href="#r48df2cf935d3-1" id="id3">[1]</a>, and Filliben (“filliben”) <a class="reference internal" href="#r48df2cf935d3-7" id="id4">[7]</a>
+statistics are available.  Alternatively, a callable with signature
+<code class="docutils literal notranslate"><span class="pre">(dist,</span> <span class="pre">data,</span> <span class="pre">axis)</span></code> may be supplied to compute the statistic. Here
+<code class="docutils literal notranslate"><span class="pre">dist</span></code> is a frozen distribution object (potentially with array
+parameters), <code class="docutils literal notranslate"><span class="pre">data</span></code> is an array of Monte Carlo samples (of
+compatible shape), and <code class="docutils literal notranslate"><span class="pre">axis</span></code> is the axis of <code class="docutils literal notranslate"><span class="pre">data</span></code> along which
+the statistic must be computed.</p>
+</dd>
+<dt><strong>n_mc_samples</strong><span class="classifier">int, default: 9999</span></dt><dd><p>The number of Monte Carlo samples drawn from the null hypothesized
+distribution to form the null distribution of the statistic. The
+sample size of each is the same as the given <em class="xref py py-obj">data</em>.</p>
+</dd>
+<dt><strong>random_state</strong><span class="classifier">{None, int, <a class="reference external" href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code></a>,</span></dt><dd><blockquote>
+<div><p><a class="reference external" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a>}, optional</p>
+</div></blockquote>
+<p>Pseudorandom number generator state used to generate the Monte Carlo
+samples.</p>
+<p>If <em class="xref py py-obj">random_state</em> is <code class="docutils literal notranslate"><span class="pre">None</span></code> (default), the
+<a class="reference external" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a> singleton is used.
+If <em class="xref py py-obj">random_state</em> is an int, a new <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance is used,
+seeded with <em class="xref py py-obj">random_state</em>.
+If <em class="xref py py-obj">random_state</em> is already a <code class="docutils literal notranslate"><span class="pre">Generator</span></code> or <code class="docutils literal notranslate"><span class="pre">RandomState</span></code>
+instance, then the provided instance is used.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>res</strong><span class="classifier">GoodnessOfFitResult</span></dt><dd><p>An object with the following attributes.</p>
+<dl>
+<dt>fit_result<span class="classifier"><a class="reference internal" href="scipy.stats._result_classes.FitResult.html#scipy.stats._result_classes.FitResult" title="scipy.stats._result_classes.FitResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FitResult</span></code></a></span></dt><dd><p>An object representing the fit of the provided <em class="xref py py-obj">dist</em> to <em class="xref py py-obj">data</em>.
+This  object includes the values of distribution family parameters
+that fully define the null-hypothesized distribution, that is,
+the distribution from which Monte Carlo samples are drawn.</p>
+</dd>
+<dt>statistic<span class="classifier">float</span></dt><dd><p>The value of the statistic comparing provided <em class="xref py py-obj">data</em> to the
+null-hypothesized distribution.</p>
+</dd>
+<dt>pvalue<span class="classifier">float</span></dt><dd><p>The proportion of elements in the null distribution with
+statistic values at least as extreme as the statistic value of the
+provided <em class="xref py py-obj">data</em>.</p>
+</dd>
+<dt>null_distribution<span class="classifier">ndarray</span></dt><dd><p>The value of the statistic for each Monte Carlo sample
+drawn from the null-hypothesized distribution.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This is a generalized Monte Carlo goodness-of-fit procedure, special cases
+of which correspond with various Anderson-Darling tests, Lilliefors’ test,
+etc. The test is described in <a class="reference internal" href="#r48df2cf935d3-2" id="id5">[2]</a>, <a class="reference internal" href="#r48df2cf935d3-3" id="id6">[3]</a>, and <a class="reference internal" href="#r48df2cf935d3-4" id="id7">[4]</a> as a parametric
+bootstrap test. This is a Monte Carlo test in which parameters that
+specify the distribution from which samples are drawn have been estimated
+from the data. We describe the test using “Monte Carlo” rather than
+“parametric bootstrap” throughout to avoid confusion with the more familiar
+nonparametric bootstrap, and describe how the test is performed below.</p>
+<p><em>Traditional goodness of fit tests</em></p>
+<p>Traditionally, critical values corresponding with a fixed set of
+significance levels are pre-calculated using Monte Carlo methods. Users
+perform the test by calculating the value of the test statistic only for
+their observed <em class="xref py py-obj">data</em> and comparing this value to tabulated critical
+values. This practice is not very flexible, as tables are not available for
+all distributions and combinations of known and unknown parameter values.
+Also, results can be inaccurate when critical values are interpolated from
+limited tabulated data to correspond with the user’s sample size and
+fitted parameter values. To overcome these shortcomings, this function
+allows the user to perform the Monte Carlo trials adapted to their
+particular data.</p>
+<p><em>Algorithmic overview</em></p>
+<p>In brief, this routine executes the following steps:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Fit unknown parameters to the given <em class="xref py py-obj">data</em>, thereby forming the
+“null-hypothesized” distribution, and compute the statistic of
+this pair of data and distribution.</p></li>
+<li><p>Draw random samples from this null-hypothesized distribution.</p></li>
+<li><p>Fit the unknown parameters to each random sample.</p></li>
+<li><p>Calculate the statistic between each sample and the distribution that
+has been fit to the sample.</p></li>
+<li><p>Compare the value of the statistic corresponding with <em class="xref py py-obj">data</em> from (1)
+against the values of the statistic corresponding with the random
+samples from (4). The p-value is the proportion of samples with a
+statistic value greater than or equal to the statistic of the observed
+data.</p></li>
+</ol>
+</div></blockquote>
+<p>In more detail, the steps are as follows.</p>
+<p>First, any unknown parameters of the distribution family specified by
+<em class="xref py py-obj">dist</em> are fit to the provided <em class="xref py py-obj">data</em> using maximum likelihood estimation.
+(One exception is the normal distribution with unknown location and scale:
+we use the bias-corrected standard deviation <code class="docutils literal notranslate"><span class="pre">np.std(data,</span> <span class="pre">ddof=1)</span></code> for
+the scale as recommended in <a class="reference internal" href="#r48df2cf935d3-1" id="id8">[1]</a>.)
+These values of the parameters specify a particular member of the
+distribution family referred to as the “null-hypothesized distribution”,
+that is, the distribution from which the data were sampled under the null
+hypothesis. The <em class="xref py py-obj">statistic</em>, which compares data to a distribution, is
+computed between <em class="xref py py-obj">data</em> and the null-hypothesized distribution.</p>
+<p>Next, many (specifically <em class="xref py py-obj">n_mc_samples</em>) new samples, each containing the
+same number of observations as <em class="xref py py-obj">data</em>, are drawn from the
+null-hypothesized distribution. All unknown parameters of the distribution
+family <em class="xref py py-obj">dist</em> are fit to <em>each resample</em>, and the <em class="xref py py-obj">statistic</em> is computed
+between each sample and its corresponding fitted distribution. These
+values of the statistic form the Monte Carlo null distribution (not to be
+confused with the “null-hypothesized distribution” above).</p>
+<p>The p-value of the test is the proportion of statistic values in the Monte
+Carlo null distribution that are at least as extreme as the statistic value
+of the provided <em class="xref py py-obj">data</em>. More precisely, the p-value is given by</p>
+<div class="math notranslate nohighlight">
+\[p = \frac{b + 1}
+         {m + 1}\]</div>
+<p>where <span class="math notranslate nohighlight">\(b\)</span> is the number of statistic values in the Monte Carlo null
+distribution that are greater than or equal to the statistic value
+calculated for <em class="xref py py-obj">data</em>, and <span class="math notranslate nohighlight">\(m\)</span> is the number of elements in the
+Monte Carlo null distribution (<em class="xref py py-obj">n_mc_samples</em>). The addition of <span class="math notranslate nohighlight">\(1\)</span>
+to the numerator and denominator can be thought of as including the
+value of the statistic corresponding with <em class="xref py py-obj">data</em> in the null distribution,
+but a more formal explanation is given in <a class="reference internal" href="#r48df2cf935d3-5" id="id9">[5]</a>.</p>
+<p><em>Limitations</em></p>
+<p>The test can be very slow for some distribution families because unknown
+parameters of the distribution family must be fit to each of the Monte
+Carlo samples, and for most distributions in SciPy, distribution fitting
+performed via numerical optimization.</p>
+<p><em>Anti-Pattern</em></p>
+<p>For this reason, it may be tempting
+to treat parameters of the distribution pre-fit to <em class="xref py py-obj">data</em> (by the user)
+as though they were <em class="xref py py-obj">known_params</em>, as specification of all parameters of
+the distribution precludes the need to fit the distribution to each Monte
+Carlo sample. (This is essentially how the original Kilmogorov-Smirnov
+test is performed.) Although such a test can provide evidence against the
+null hypothesis, the test is conservative in the sense that small p-values
+will tend to (greatly) <em>overestimate</em> the probability of making a type I
+error (that is, rejecting the null hypothesis although it is true), and the
+power of the test is low (that is, it is less likely to reject the null
+hypothesis even when the null hypothesis is false).
+This is because the Monte Carlo samples are less likely to agree with the
+null-hypothesized distribution as well as <em class="xref py py-obj">data</em>. This tends to increase
+the values of the statistic recorded in the null distribution, so that a
+larger number of them exceed the value of statistic for <em class="xref py py-obj">data</em>, thereby
+inflating the p-value.</p>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r48df2cf935d3-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id2">2</a>,<a role="doc-backlink" href="#id3">3</a>,<a role="doc-backlink" href="#id8">4</a>,<a role="doc-backlink" href="#id18">5</a>)</span>
+<p>M. A. Stephens (1974). “EDF Statistics for Goodness of Fit and
+Some Comparisons.” Journal of the American Statistical Association,
+Vol. 69, pp. 730-737.</p>
+</div>
+<div class="citation" id="r48df2cf935d3-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">2</a><span class="fn-bracket">]</span></span>
+<p>W. Stute, W. G. Manteiga, and M. P. Quindimil (1993).
+“Bootstrap based goodness-of-fit-tests.” Metrika 40.1: 243-256.</p>
+</div>
+<div class="citation" id="r48df2cf935d3-3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">3</a><span class="fn-bracket">]</span></span>
+<p>C. Genest, &amp; B Rémillard. (2008). “Validity of the parametric
+bootstrap for goodness-of-fit testing in semiparametric models.”
+Annales de l’IHP Probabilités et statistiques. Vol. 44. No. 6.</p>
+</div>
+<div class="citation" id="r48df2cf935d3-4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">4</a><span class="fn-bracket">]</span></span>
+<p>I. Kojadinovic and J. Yan (2012). “Goodness-of-fit testing based on
+a weighted bootstrap: A fast large-sample alternative to the
+parametric bootstrap.” Canadian Journal of Statistics 40.3: 480-500.</p>
+</div>
+<div class="citation" id="r48df2cf935d3-5" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">5</a><span class="fn-bracket">]</span></span>
+<p>B. Phipson and G. K. Smyth (2010). “Permutation P-values Should
+Never Be Zero: Calculating Exact P-values When Permutations Are
+Randomly Drawn.” Statistical Applications in Genetics and Molecular
+Biology 9.1.</p>
+</div>
+<div class="citation" id="r48df2cf935d3-6" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id17">6</a><span class="fn-bracket">]</span></span>
+<p>H. W. Lilliefors (1967). “On the Kolmogorov-Smirnov test for
+normality with mean and variance unknown.” Journal of the American
+statistical Association 62.318: 399-402.</p>
+</div>
+<div class="citation" id="r48df2cf935d3-7" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">7</a><span class="fn-bracket">]</span></span>
+<p>Filliben, James J. “The probability plot correlation coefficient
+test for normality.” Technometrics 17.1 (1975): 111-117.</p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="7fb7b76c-48b4-4a68-a947-9affaf6cf0af">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('7fb7b76c-48b4-4a68-a947-9affaf6cf0af','df0442a3-c42f-4f25-9e50-857c38ca5583','d4ab156c-46d7-41e3-8b9e-36e5ad6db0e5','../../lite/tree/../notebooks/index.html?path=89d27c61_fa9f_4ad8_830c_02ea47051831.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>A well-known test of the null hypothesis that data were drawn from a
+given distribution is the Kolmogorov-Smirnov (KS) test, available in SciPy
+as <a class="reference internal" href="scipy.stats.ks_1samp.html#scipy.stats.ks_1samp" title="scipy.stats.ks_1samp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.ks_1samp</span></code></a>. Suppose we wish to test whether the following
+data:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">uniform</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>were sampled from a normal distribution. To perform a KS test, the
+empirical distribution function of the observed data will be compared
+against the (theoretical) cumulative distribution function of a normal
+distribution. Of course, to do this, the normal distribution under the null
+hypothesis must be fully specified. This is commonly done by first fitting
+the <code class="docutils literal notranslate"><span class="pre">loc</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span></code> parameters of the distribution to the observed
+data, then performing the test.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loc</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cdf</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span><span class="o">.</span><span class="n">cdf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stats</span><span class="o">.</span><span class="n">ks_1samp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cdf</span><span class="p">)</span>
+<span class="go">KstestResult(statistic=0.1119257570456813,</span>
+<span class="go">             pvalue=0.2827756409939257,</span>
+<span class="go">             statistic_location=0.7751845155861765,</span>
+<span class="go">             statistic_sign=-1)</span>
+</pre></div>
+</div>
+<p>An advantage of the KS-test is that the p-value - the probability of
+obtaining a value of the test statistic under the null hypothesis as
+extreme as the value obtained from the observed data - can be calculated
+exactly and efficiently. <a class="reference internal" href="#scipy.stats.goodness_of_fit" title="scipy.stats.goodness_of_fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">goodness_of_fit</span></code></a> can only approximate these
+results.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">known_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;loc&#39;</span><span class="p">:</span> <span class="n">loc</span><span class="p">,</span> <span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="n">scale</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">goodness_of_fit</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">known_params</span><span class="o">=</span><span class="n">known_params</span><span class="p">,</span>
+<span class="gp">... </span>                            <span class="n">statistic</span><span class="o">=</span><span class="s1">&#39;ks&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">statistic</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">pvalue</span>
+<span class="go">(0.1119257570456813, 0.2788)</span>
+</pre></div>
+</div>
+<p>The statistic matches exactly, but the p-value is estimated by forming
+a “Monte Carlo null distribution”, that is, by explicitly drawing random
+samples from <a class="reference internal" href="scipy.stats.norm.html#scipy.stats.norm" title="scipy.stats.norm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.norm</span></code></a> with the provided parameters and
+calculating the stastic for each. The fraction of these statistic values
+at least as extreme as <code class="docutils literal notranslate"><span class="pre">res.statistic</span></code> approximates the exact p-value
+calculated by <a class="reference internal" href="scipy.stats.ks_1samp.html#scipy.stats.ks_1samp" title="scipy.stats.ks_1samp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.ks_1samp</span></code></a>.</p>
+<p>However, in many cases, we would prefer to test only that the data were
+sampled from one of <em>any</em> member of the normal distribution family, not
+specifically from the normal distribution with the location and scale
+fitted to the observed sample. In this case, Lilliefors <a class="reference internal" href="#r48df2cf935d3-6" id="id17">[6]</a> argued that
+the KS test is far too conservative (that is, the p-value overstates
+the actual probability of rejecting a true null hypothesis) and thus lacks
+power - the ability to reject the null hypothesis when the null hypothesis
+is actually false.
+Indeed, our p-value above is approximately 0.28, which is far too large
+to reject the null hypothesis at any common significance level.</p>
+<p>Consider why this might be. Note that in the KS test above, the statistic
+always compares data against the CDF of a normal distribution fitted to the
+<em>observed data</em>. This tends to reduce the value of the statistic for the
+observed data, but it is “unfair” when computing the statistic for other
+samples, such as those we randomly draw to form the Monte Carlo null
+distribution. It is easy to correct for this: whenever we compute the KS
+statistic of a sample, we use the CDF of a normal distribution fitted
+to <em>that sample</em>. The null distribution in this case has not been
+calculated exactly and is tyically approximated using Monte Carlo methods
+as described above. This is where <a class="reference internal" href="#scipy.stats.goodness_of_fit" title="scipy.stats.goodness_of_fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">goodness_of_fit</span></code></a> excels.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">goodness_of_fit</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">statistic</span><span class="o">=</span><span class="s1">&#39;ks&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                            <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">statistic</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">pvalue</span>
+<span class="go">(0.1119257570456813, 0.0196)</span>
+</pre></div>
+</div>
+<p>Indeed, this p-value is much smaller, and small enough to (correctly)
+reject the null hypothesis at common significance levels, including 5% and
+2.5%.</p>
+<p>However, the KS statistic is not very sensitive to all deviations from
+normality. The original advantage of the KS statistic was the ability
+to compute the null distribution theoretically, but a more sensitive
+statistic - resulting in a higher test power - can be used now that we can
+approximate the null distribution
+computationally. The Anderson-Darling statistic <a class="reference internal" href="#r48df2cf935d3-1" id="id18">[1]</a> tends to be more
+sensitive, and critical values of the this statistic have been tabulated
+for various significance levels and sample sizes using Monte Carlo methods.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">anderson</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;norm&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">statistic</span><span class="p">)</span>
+<span class="go">1.2139573337497467</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">critical_values</span><span class="p">)</span>
+<span class="go">[0.549 0.625 0.75  0.875 1.041]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">significance_level</span><span class="p">)</span>
+<span class="go">[15.  10.   5.   2.5  1. ]</span>
+</pre></div>
+</div>
+<p>Here, the observed value of the statistic exceeds the critical value
+corresponding with a 1% significance level. This tells us that the p-value
+of the observed data is less than 1%, but what is it? We could interpolate
+from these (already-interpolated) values, but <a class="reference internal" href="#scipy.stats.goodness_of_fit" title="scipy.stats.goodness_of_fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">goodness_of_fit</span></code></a> can
+estimate it directly.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">goodness_of_fit</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">statistic</span><span class="o">=</span><span class="s1">&#39;ad&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                            <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">statistic</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">pvalue</span>
+<span class="go">(1.2139573337497467, 0.0034)</span>
+</pre></div>
+</div>
+<p>A further advantage is that use of <a class="reference internal" href="#scipy.stats.goodness_of_fit" title="scipy.stats.goodness_of_fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">goodness_of_fit</span></code></a> is not limited to
+a particular set of distributions or conditions on which parameters
+are known versus which must be estimated from data. Instead,
+<a class="reference internal" href="#scipy.stats.goodness_of_fit" title="scipy.stats.goodness_of_fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">goodness_of_fit</span></code></a> can estimate p-values relatively quickly for any
+distribution with a sufficiently fast and reliable <code class="docutils literal notranslate"><span class="pre">fit</span></code> method. For
+instance, here we perform a goodness of fit test using the Cramer-von Mises
+statistic against the Rayleigh distribution with known location and unknown
+scale.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">chi</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mf">2.2</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">goodness_of_fit</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">rayleigh</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">statistic</span><span class="o">=</span><span class="s1">&#39;cvm&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                            <span class="n">known_params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;loc&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This executes fairly quickly, but to check the reliability of the <code class="docutils literal notranslate"><span class="pre">fit</span></code>
+method, we should inspect the fit result.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">fit_result</span>  <span class="c1"># location is as specified, and scale is reasonable</span>
+<span class="go">  params: FitParams(loc=0.0, scale=2.1026719844231243)</span>
+<span class="go"> success: True</span>
+<span class="go"> message: &#39;The fit was performed successfully.&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># matplotlib must be installed to plot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">fit_result</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-stats-goodness_of_fit-1_00_00.png" class="plot-directive" src="../../_images/scipy-stats-goodness_of_fit-1_00_00.png" />
+</figure>
+<p>If the distribution is not fit to the observed data as well as possible,
+the test may not control the type I error rate, that is, the chance of
+rejecting the null hypothesis even when it is true.</p>
+<p>We should also look for extreme outliers in the null distribution that
+may be caused by unreliable fitting. These do not necessarily invalidate
+the result, but they tend to reduce the test’s power.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">null_distribution</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;log10 of CVM statistic under the null hypothesis&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Frequency&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Histogram of the Monte Carlo null distribution&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-stats-goodness_of_fit-1_01_00.png" class="plot-directive" src="../../_images/scipy-stats-goodness_of_fit-1_01_00.png" />
+</figure>
+<p>This plot seems reassuring.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">fit</span></code> method is working reliably, and if the distribution of the test
+statistic is not particularly sensitive to the values of the fitted
+parameters, then the p-value provided by <a class="reference internal" href="#scipy.stats.goodness_of_fit" title="scipy.stats.goodness_of_fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">goodness_of_fit</span></code></a> is expected to
+be a good approximation.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">statistic</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">pvalue</span>
+<span class="go">(0.2231991510248692, 0.0525)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div id="d4ab156c-46d7-41e3-8b9e-36e5ad6db0e5" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('7fb7b76c-48b4-4a68-a947-9affaf6cf0af','d4ab156c-46d7-41e3-8b9e-36e5ad6db0e5')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('7fb7b76c-48b4-4a68-a947-9affaf6cf0af','d4ab156c-46d7-41e3-8b9e-36e5ad6db0e5')">Open In Tab</button></div><div id="df0442a3-c42f-4f25-9e50-857c38ca5583" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.stats.ks_1samp.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">ks_1samp</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.stats.chisquare.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">chisquare</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.stats.goodness_of_fit"><code class="docutils literal notranslate"><span class="pre">goodness_of_fit</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

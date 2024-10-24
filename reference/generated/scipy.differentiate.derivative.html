@@ -1,0 +1,942 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>derivative &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.differentiate.derivative';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="jacobian" href="scipy.differentiate.jacobian.html" />
+    <link rel="prev" title="Finite Difference Differentiation (scipy.differentiate)" href="../differentiate.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../differentiate.html" class="nav-link">Finite Difference Differentiation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.differentiate</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">derivative</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.differentiate.</div>
+<div class="empty"></div><section id="derivative">
+<h1>derivative<a class="headerlink" href="#derivative" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.differentiate.derivative">
+<span class="sig-prename descclassname"><span class="pre">scipy.differentiate.</span></span><span class="sig-name descname"><span class="pre">derivative</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerances</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preserve_shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/differentiate/_differentiate.py#L59-L583"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.differentiate.derivative" title="Link to this definition">#</a></dt>
+<dd><p>Evaluate the derivative of a elementwise, real scalar function numerically.</p>
+<p>For each element of the output of <em class="xref py py-obj">f</em>, <a class="reference internal" href="#scipy.differentiate.derivative" title="scipy.differentiate.derivative"><code class="xref py py-obj docutils literal notranslate"><span class="pre">derivative</span></code></a> approximates the first
+derivative of <em class="xref py py-obj">f</em> at the corresponding element of <em class="xref py py-obj">x</em> using finite difference
+differentiation.</p>
+<p>This function works elementwise when <em class="xref py py-obj">x</em>, <em class="xref py py-obj">step_direction</em>, and <em class="xref py py-obj">args</em> contain
+(broadcastable) arrays.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>f</strong><span class="classifier">callable</span></dt><dd><p>The function whose derivative is desired. The signature must be:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">(</span><span class="n">xi</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="n">argsi</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span>
+</pre></div>
+</div>
+<p>where each element of <code class="docutils literal notranslate"><span class="pre">xi</span></code> is a finite real number and <code class="docutils literal notranslate"><span class="pre">argsi</span></code> is a tuple,
+which may contain an arbitrary number of arrays that are broadcastable with
+<code class="docutils literal notranslate"><span class="pre">xi</span></code>. <em class="xref py py-obj">f</em> must be an elementwise function: each scalar element <code class="docutils literal notranslate"><span class="pre">f(xi)[j]</span></code>
+must equal <code class="docutils literal notranslate"><span class="pre">f(xi[j])</span></code> for valid indices <code class="docutils literal notranslate"><span class="pre">j</span></code>. It must not mutate the array
+<code class="docutils literal notranslate"><span class="pre">xi</span></code> or the arrays in <code class="docutils literal notranslate"><span class="pre">argsi</span></code>.</p>
+</dd>
+<dt><strong>x</strong><span class="classifier">float array_like</span></dt><dd><p>Abscissae at which to evaluate the derivative. Must be broadcastable with
+<em class="xref py py-obj">args</em> and <em class="xref py py-obj">step_direction</em>.</p>
+</dd>
+<dt><strong>args</strong><span class="classifier">tuple of array_like, optional</span></dt><dd><p>Additional positional array arguments to be passed to <em class="xref py py-obj">f</em>. Arrays
+must be broadcastable with one another and the arrays of <em class="xref py py-obj">init</em>.
+If the callable for which the root is desired requires arguments that are
+not broadcastable with <em class="xref py py-obj">x</em>, wrap that callable with <em class="xref py py-obj">f</em> such that <em class="xref py py-obj">f</em>
+accepts only <em class="xref py py-obj">x</em> and broadcastable <code class="docutils literal notranslate"><span class="pre">*args</span></code>.</p>
+</dd>
+<dt><strong>tolerances</strong><span class="classifier">dictionary of floats, optional</span></dt><dd><p>Absolute and relative tolerances. Valid keys of the dictionary are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">atol</span></code> - absolute tolerance on the derivative</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rtol</span></code> - relative tolerance on the derivative</p></li>
+</ul>
+<p>Iteration will stop when <code class="docutils literal notranslate"><span class="pre">res.error</span> <span class="pre">&lt;</span> <span class="pre">atol</span> <span class="pre">+</span> <span class="pre">rtol</span> <span class="pre">*</span> <span class="pre">abs(res.df)</span></code>. The default
+<em class="xref py py-obj">atol</em> is the smallest normal number of the appropriate dtype, and
+the default <em class="xref py py-obj">rtol</em> is the square root of the precision of the
+appropriate dtype.</p>
+</dd>
+<dt><strong>order</strong><span class="classifier">int, default: 8</span></dt><dd><p>The (positive integer) order of the finite difference formula to be
+used. Odd integers will be rounded up to the next even integer.</p>
+</dd>
+<dt><strong>initial_step</strong><span class="classifier">float array_like, default: 0.5</span></dt><dd><p>The (absolute) initial step size for the finite difference derivative
+approximation.</p>
+</dd>
+<dt><strong>step_factor</strong><span class="classifier">float, default: 2.0</span></dt><dd><p>The factor by which the step size is <em>reduced</em> in each iteration; i.e.
+the step size in iteration 1 is <code class="docutils literal notranslate"><span class="pre">initial_step/step_factor</span></code>. If
+<code class="docutils literal notranslate"><span class="pre">step_factor</span> <span class="pre">&lt;</span> <span class="pre">1</span></code>, subsequent steps will be greater than the initial
+step; this may be useful if steps smaller than some threshold are
+undesirable (e.g. due to subtractive cancellation error).</p>
+</dd>
+<dt><strong>maxiter</strong><span class="classifier">int, default: 10</span></dt><dd><p>The maximum number of iterations of the algorithm to perform. See
+Notes.</p>
+</dd>
+<dt><strong>step_direction</strong><span class="classifier">integer array_like</span></dt><dd><p>An array representing the direction of the finite difference steps (for
+use when <em class="xref py py-obj">x</em> lies near to the boundary of the domain of the function.)
+Must be broadcastable with <em class="xref py py-obj">x</em> and all <em class="xref py py-obj">args</em>.
+Where 0 (default), central differences are used; where negative (e.g.
+-1), steps are non-positive; and where positive (e.g. 1), all steps are
+non-negative.</p>
+</dd>
+<dt><strong>preserve_shape</strong><span class="classifier">bool, default: False</span></dt><dd><p>In the following, “arguments of <em class="xref py py-obj">f</em>” refers to the array <code class="docutils literal notranslate"><span class="pre">xi</span></code> and
+any arrays within <code class="docutils literal notranslate"><span class="pre">argsi</span></code>. Let <code class="docutils literal notranslate"><span class="pre">shape</span></code> be the broadcasted shape
+of <em class="xref py py-obj">x</em> and all elements of <em class="xref py py-obj">args</em> (which is conceptually
+distinct from <code class="docutils literal notranslate"><span class="pre">xi`</span> <span class="pre">and</span> <span class="pre">``argsi</span></code> passed into <em class="xref py py-obj">f</em>).</p>
+<ul class="simple">
+<li><p>When <code class="docutils literal notranslate"><span class="pre">preserve_shape=False</span></code> (default), <em class="xref py py-obj">f</em> must accept arguments
+of <em>any</em> broadcastable shapes.</p></li>
+<li><p>When <code class="docutils literal notranslate"><span class="pre">preserve_shape=True</span></code>, <em class="xref py py-obj">f</em> must accept arguments of shape
+<code class="docutils literal notranslate"><span class="pre">shape</span></code> <em>or</em> <code class="docutils literal notranslate"><span class="pre">shape</span> <span class="pre">+</span> <span class="pre">(n,)</span></code>, where <code class="docutils literal notranslate"><span class="pre">(n,)</span></code> is the number of
+abscissae at which the function is being evaluated.</p></li>
+</ul>
+<p>In either case, for each scalar element <code class="docutils literal notranslate"><span class="pre">xi[j]</span></code> within <code class="docutils literal notranslate"><span class="pre">xi</span></code>, the array
+returned by <em class="xref py py-obj">f</em> must include the scalar <code class="docutils literal notranslate"><span class="pre">f(xi[j])</span></code> at the same index.
+Consequently, the shape of the output is always the shape of the input
+<code class="docutils literal notranslate"><span class="pre">xi</span></code>.</p>
+<p>See Examples.</p>
+</dd>
+<dt><strong>callback</strong><span class="classifier">callable, optional</span></dt><dd><p>An optional user-supplied function to be called before the first
+iteration and after each iteration.
+Called as <code class="docutils literal notranslate"><span class="pre">callback(res)</span></code>, where <code class="docutils literal notranslate"><span class="pre">res</span></code> is a <code class="docutils literal notranslate"><span class="pre">_RichResult</span></code>
+similar to that returned by <a class="reference internal" href="#scipy.differentiate.derivative" title="scipy.differentiate.derivative"><code class="xref py py-obj docutils literal notranslate"><span class="pre">derivative</span></code></a> (but containing the current
+iterate’s values of all variables). If <em class="xref py py-obj">callback</em> raises a
+<code class="docutils literal notranslate"><span class="pre">StopIteration</span></code>, the algorithm will terminate immediately and
+<a class="reference internal" href="#scipy.differentiate.derivative" title="scipy.differentiate.derivative"><code class="xref py py-obj docutils literal notranslate"><span class="pre">derivative</span></code></a> will return a result. <em class="xref py py-obj">callback</em> must not mutate
+<em class="xref py py-obj">res</em> or its attributes.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>res</strong><span class="classifier">_RichResult</span></dt><dd><p>An object similar to an instance of <a class="reference internal" href="scipy.optimize.OptimizeResult.html#scipy.optimize.OptimizeResult" title="scipy.optimize.OptimizeResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.OptimizeResult</span></code></a> with the
+following attributes. The descriptions are written as though the values will
+be scalars; however, if <em class="xref py py-obj">f</em> returns an array, the outputs will be
+arrays of the same shape.</p>
+<dl class="simple">
+<dt>success<span class="classifier">bool array</span></dt><dd><p><code class="docutils literal notranslate"><span class="pre">True</span></code> where the algorithm terminated successfully (status <code class="docutils literal notranslate"><span class="pre">0</span></code>);
+<code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+<dt>status<span class="classifier">int array</span></dt><dd><p>An integer representing the exit status of the algorithm.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code> : The algorithm converged to the specified tolerances.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-1</span></code> : The error estimate increased, so iteration was terminated.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-2</span></code> : The maximum number of iterations was reached.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-3</span></code> : A non-finite value was encountered.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-4</span></code> : Iteration was terminated by <em class="xref py py-obj">callback</em>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code> : The algorithm is proceeding normally (in <em class="xref py py-obj">callback</em> only).</p></li>
+</ul>
+</dd>
+<dt>df<span class="classifier">float array</span></dt><dd><p>The derivative of <em class="xref py py-obj">f</em> at <em class="xref py py-obj">x</em>, if the algorithm terminated
+successfully.</p>
+</dd>
+<dt>error<span class="classifier">float array</span></dt><dd><p>An estimate of the error: the magnitude of the difference between
+the current estimate of the derivative and the estimate in the
+previous iteration.</p>
+</dd>
+<dt>nit<span class="classifier">int array</span></dt><dd><p>The number of iterations of the algorithm that were performed.</p>
+</dd>
+<dt>nfev<span class="classifier">int array</span></dt><dd><p>The number of points at which <em class="xref py py-obj">f</em> was evaluated.</p>
+</dd>
+<dt>x<span class="classifier">float array</span></dt><dd><p>The value at which the derivative of <em class="xref py py-obj">f</em> was evaluated
+(after broadcasting with <em class="xref py py-obj">args</em> and <em class="xref py py-obj">step_direction</em>).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="scipy.differentiate.jacobian.html#scipy.differentiate.jacobian" title="scipy.differentiate.jacobian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jacobian</span></code></a>, <a class="reference internal" href="scipy.differentiate.hessian.html#scipy.differentiate.hessian" title="scipy.differentiate.hessian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>The implementation was inspired by jacobi <a class="reference internal" href="#r6d1d6582a693-1" id="id1">[1]</a>, numdifftools <a class="reference internal" href="#r6d1d6582a693-2" id="id2">[2]</a>, and
+DERIVEST <a class="reference internal" href="#r6d1d6582a693-3" id="id3">[3]</a>, but the implementation follows the theory of Taylor series
+more straightforwardly (and arguably naively so).
+In the first iteration, the derivative is estimated using a finite
+difference formula of order <em class="xref py py-obj">order</em> with maximum step size <em class="xref py py-obj">initial_step</em>.
+Each subsequent iteration, the maximum step size is reduced by
+<em class="xref py py-obj">step_factor</em>, and the derivative is estimated again until a termination
+condition is reached. The error estimate is the magnitude of the difference
+between the current derivative approximation and that of the previous
+iteration.</p>
+<p>The stencils of the finite difference formulae are designed such that
+abscissae are “nested”: after <em class="xref py py-obj">f</em> is evaluated at <code class="docutils literal notranslate"><span class="pre">order</span> <span class="pre">+</span> <span class="pre">1</span></code>
+points in the first iteration, <em class="xref py py-obj">f</em> is evaluated at only two new points
+in each subsequent iteration; <code class="docutils literal notranslate"><span class="pre">order</span> <span class="pre">-</span> <span class="pre">1</span></code> previously evaluated function
+values required by the finite difference formula are reused, and two
+function values (evaluations at the points furthest from <em class="xref py py-obj">x</em>) are unused.</p>
+<p>Step sizes are absolute. When the step size is small relative to the
+magnitude of <em class="xref py py-obj">x</em>, precision is lost; for example, if <em class="xref py py-obj">x</em> is <code class="docutils literal notranslate"><span class="pre">1e20</span></code>, the
+default initial step size of <code class="docutils literal notranslate"><span class="pre">0.5</span></code> cannot be resolved. Accordingly,
+consider using larger initial step sizes for large magnitudes of <em class="xref py py-obj">x</em>.</p>
+<p>The default tolerances are challenging to satisfy at points where the
+true derivative is exactly zero. If the derivative may be exactly zero,
+consider specifying an absolute tolerance (e.g. <code class="docutils literal notranslate"><span class="pre">atol=1e-12</span></code>) to
+improve convergence.</p>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r6d1d6582a693-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Hans Dembinski (&#64;HDembinski). jacobi.
+<a class="github reference external" href="https://github.com/HDembinski/jacobi">HDembinski/jacobi</a></p>
+</div>
+<div class="citation" id="r6d1d6582a693-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Per A. Brodtkorb and John D’Errico. numdifftools.
+<a class="reference external" href="https://numdifftools.readthedocs.io/en/latest/">https://numdifftools.readthedocs.io/en/latest/</a></p>
+</div>
+<div class="citation" id="r6d1d6582a693-3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p>John D’Errico. DERIVEST: Adaptive Robust Numerical Differentiation.
+<a class="reference external" href="https://www.mathworks.com/matlabcentral/fileexchange/13490-adaptive-robust-numerical-differentiation">https://www.mathworks.com/matlabcentral/fileexchange/13490-adaptive-robust-numerical-differentiation</a></p>
+</div>
+<div class="citation" id="r6d1d6582a693-4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<p>Numerical Differentition. Wikipedia.
+<a class="reference external" href="https://en.wikipedia.org/wiki/Numerical_differentiation">https://en.wikipedia.org/wiki/Numerical_differentiation</a></p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="df7b7934-d2db-4d56-bd0a-1b5a6b6ae460">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('df7b7934-d2db-4d56-bd0a-1b5a6b6ae460','f956e815-bc71-4ffa-8055-0c437a3c5c96','67f1e477-7ba5-4bbd-8682-7309c450512c','../../lite/tree/../notebooks/index.html?path=7df85c3f_83f6_4df5_b30e_b58c40c61948.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>Evaluate the derivative of <code class="docutils literal notranslate"><span class="pre">np.exp</span></code> at several points <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.differentiate</span> <span class="kn">import</span> <span class="n">derivative</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span>  <span class="c1"># true derivative</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">df</span>  <span class="c1"># approximation of the derivative</span>
+<span class="go">array([2.71828183, 3.49034296, 4.48168907, 5.75460268, 7.3890561 ])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">error</span>  <span class="c1"># estimate of the error</span>
+<span class="go">array([7.13740178e-12, 9.16600129e-12, 1.17594823e-11, 1.51061386e-11,</span>
+<span class="go">       1.94262384e-11])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">abs</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">df</span> <span class="o">-</span> <span class="n">df</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>  <span class="c1"># true error</span>
+<span class="go">array([2.53130850e-14, 3.55271368e-14, 5.77315973e-14, 5.59552404e-14,</span>
+<span class="go">       6.92779167e-14])</span>
+</pre></div>
+</div>
+<p>Show the convergence of the approximation as the step size is reduced.
+Each iteration, the step size is reduced by <em class="xref py py-obj">step_factor</em>, so for
+sufficiently small initial step, each iteration reduces the error by a
+factor of <code class="docutils literal notranslate"><span class="pre">1/step_factor**order</span></code> until finite precision arithmetic
+inhibits further improvement.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">iter</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>  <span class="c1"># maximum iterations</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hfac</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># step size reduction per iteration</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hdir</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># compare left-, central-, and right- steps</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">order</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># order of differentiation formula</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ref</span> <span class="o">=</span> <span class="n">df</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># true error</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">res</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">step_factor</span><span class="o">=</span><span class="n">hfac</span><span class="p">,</span>
+<span class="gp">... </span>                     <span class="n">step_direction</span><span class="o">=</span><span class="n">hdir</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">,</span>
+<span class="gp">... </span>                     <span class="c1"># prevent early termination</span>
+<span class="gp">... </span>                     <span class="n">tolerances</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">atol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="gp">... </span>    <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">df</span> <span class="o">-</span> <span class="n">ref</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">errors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="nb">iter</span><span class="p">,</span> <span class="n">errors</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;left differences&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="nb">iter</span><span class="p">,</span> <span class="n">errors</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;central differences&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="nb">iter</span><span class="p">,</span> <span class="n">errors</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;right differences&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;iteration&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-differentiate-derivative-1_00_00.png" class="plot-directive" src="../../_images/scipy-differentiate-derivative-1_00_00.png" />
+</figure>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">errors</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">errors</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">hfac</span><span class="o">**</span><span class="n">order</span><span class="p">)</span>
+<span class="go">(0.06215223140159822, 0.0625)</span>
+</pre></div>
+</div>
+<p>The implementation is vectorized over <em class="xref py py-obj">x</em>, <em class="xref py py-obj">step_direction</em>, and <em class="xref py py-obj">args</em>.
+The function is evaluated once before the first iteration to perform input
+validation and standardization, and once per iteration thereafter.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">f</span><span class="o">.</span><span class="n">nit</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="n">p</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">nit</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">df</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">p</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="p">(</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hdir</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">p</span><span class="p">,),</span> <span class="n">step_direction</span><span class="o">=</span><span class="n">hdir</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">df</span><span class="p">,</span> <span class="n">df</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(3, 5, 4)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">nit</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+<p>By default, <em class="xref py py-obj">preserve_shape</em> is False, and therefore the callable
+<em class="xref py py-obj">f</em> may be called with arrays of any broadcastable shapes.
+For example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shapes</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_shapes</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="gp">... </span>   <span class="n">shapes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+<span class="gp">... </span>   <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">c</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">c</span><span class="p">,))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shapes</span>
+<span class="go">[(4,), (4, 8), (4, 2), (3, 2), (2, 2), (1, 2)]</span>
+</pre></div>
+</div>
+<p>To understand where these shapes are coming from - and to better
+understand how <a class="reference internal" href="#scipy.differentiate.derivative" title="scipy.differentiate.derivative"><code class="xref py py-obj docutils literal notranslate"><span class="pre">derivative</span></code></a> computes accurate results - note that
+higher values of <code class="docutils literal notranslate"><span class="pre">c</span></code> correspond with higher frequency sinusoids.
+The higher frequency sinusoids make the function’s derivative change
+faster, so more function evaluations are required to achieve the target
+accuracy:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">nfev</span>
+<span class="go">array([11, 13, 15, 17], dtype=int32)</span>
+</pre></div>
+</div>
+<p>The initial <code class="docutils literal notranslate"><span class="pre">shape</span></code>, <code class="docutils literal notranslate"><span class="pre">(4,)</span></code>, corresponds with evaluating the
+function at a single abscissa and all four frequencies; this is used
+for input validation and to determine the size and dtype of the arrays
+that store results. The next shape corresponds with evaluating the
+function at an initial grid of abscissae and all four frequencies.
+Successive calls to the function evaluate the function at two more
+abscissae, increasing the effective order of the approximation by two.
+However, in later function evaluations, the function is evaluated at
+fewer frequencies because the corresponding derivative has already
+converged to the required tolerance. This saves function evaluations to
+improve performance, but it requires the function to accept arguments of
+any shape.</p>
+<p>“Vector-valued” functions are unlikely to satisfy this requirement.
+For example, consider</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="k">return</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">x</span><span class="p">),</span> <span class="n">x</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">20</span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>This integrand is not compatible with <a class="reference internal" href="#scipy.differentiate.derivative" title="scipy.differentiate.derivative"><code class="xref py py-obj docutils literal notranslate"><span class="pre">derivative</span></code></a> as written; for instance,
+the shape of the output will not be the same as the shape of <code class="docutils literal notranslate"><span class="pre">x</span></code>. Such a
+function <em>could</em> be converted to a compatible form with the introduction of
+additional parameters, but this would be inconvenient. In such cases,
+a simpler solution would be to use <em class="xref py py-obj">preserve_shape</em>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shapes</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">shapes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span> <span class="o">=</span> <span class="n">x</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">[</span><span class="n">x0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">x1</span><span class="p">),</span> <span class="n">x2</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="n">x2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">20</span><span class="o">*</span><span class="n">x3</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x3</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">preserve_shape</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shapes</span>
+<span class="go">[(4,), (4, 8), (4, 2), (4, 2), (4, 2), (4, 2)]</span>
+</pre></div>
+</div>
+<p>Here, the shape of <code class="docutils literal notranslate"><span class="pre">x</span></code> is <code class="docutils literal notranslate"><span class="pre">(4,)</span></code>. With <code class="docutils literal notranslate"><span class="pre">preserve_shape=True</span></code>, the
+function may be called with argument <code class="docutils literal notranslate"><span class="pre">x</span></code> of shape <code class="docutils literal notranslate"><span class="pre">(4,)</span></code> or <code class="docutils literal notranslate"><span class="pre">(4,</span> <span class="pre">n)</span></code>,
+and this is what we observe.</p>
+</div>
+</div>
+<div id="67f1e477-7ba5-4bbd-8682-7309c450512c" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('df7b7934-d2db-4d56-bd0a-1b5a6b6ae460','67f1e477-7ba5-4bbd-8682-7309c450512c')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('df7b7934-d2db-4d56-bd0a-1b5a6b6ae460','67f1e477-7ba5-4bbd-8682-7309c450512c')">Open In Tab</button></div><div id="f956e815-bc71-4ffa-8055-0c437a3c5c96" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../differentiate.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Finite Difference Differentiation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.differentiate</span></code>)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.differentiate.jacobian.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">jacobian</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.differentiate.derivative"><code class="docutils literal notranslate"><span class="pre">derivative</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

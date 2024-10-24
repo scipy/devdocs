@@ -1,0 +1,971 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Migration from spmatrix to sparray &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/sparse.migration_to_sparray';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="bsr_array" href="generated/scipy.sparse.bsr_array.html" />
+    <link rel="prev" title="scipy.sparse.linalg.ArpackError" href="generated/scipy.sparse.linalg.ArpackError.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signal.html">scipy.signal</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="sparse.html" class="nav-link">Sparse arrays (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Migration from spmatrix to sparray</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="migration-from-spmatrix-to-sparray">
+<span id="migration-to-sparray"></span><h1>Migration from spmatrix to sparray<a class="headerlink" href="#migration-from-spmatrix-to-sparray" title="Link to this heading">#</a></h1>
+<p>This document provides guidance for converting code from sparse <em>matrices</em>
+to sparse <em>arrays</em> in <code class="docutils literal notranslate"><span class="pre">scipy.sparse</span></code>.</p>
+<p>The change from sparse matrices to sparse arrays mirrors conversion from
+<code class="docutils literal notranslate"><span class="pre">np.matrix</span></code> to <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code>. Essentially we must move from an all-2D
+matrix-multiplication-centric <code class="docutils literal notranslate"><span class="pre">matrix</span></code> object to a 1D or 2D “array”
+object that supports the matrix multiplication operator and elementwise
+computation.</p>
+<p>Notation: For this guide we denote the sparse array classes generally as
+<code class="docutils literal notranslate"><span class="pre">sparray</span></code> and the sparse matrix classes <code class="docutils literal notranslate"><span class="pre">spmatrix</span></code>. Dense numpy
+arrays are denoted <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> and dense matrix classes are
+<code class="docutils literal notranslate"><span class="pre">np.matrix</span></code>. Supported sparse formats are denoted BSR, COO, CSC, CSR,
+DIA, DOK, LIL and all formats are supported by both sparray and
+spmatrix. The term <code class="docutils literal notranslate"><span class="pre">sparse</span></code> refers to either <code class="docutils literal notranslate"><span class="pre">sparray</span></code> or
+<code class="docutils literal notranslate"><span class="pre">spmatrix</span></code>, while <code class="docutils literal notranslate"><span class="pre">dense</span></code> refers to either <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> or
+<code class="docutils literal notranslate"><span class="pre">np.matrix</span></code>.</p>
+<section id="overview-and-big-picture">
+<h2>Overview and big picture<a class="headerlink" href="#overview-and-big-picture" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>The constructor names <code class="docutils literal notranslate"><span class="pre">*_matrix</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">csr_matrix</span></code>, are changed
+to <code class="docutils literal notranslate"><span class="pre">*_array</span></code>.</p></li>
+<li><p>spmatrix <code class="docutils literal notranslate"><span class="pre">M</span></code> is always 2D (rows x columns) even e.g. <code class="docutils literal notranslate"><span class="pre">M.min(axis=0)</span></code>.
+sparray <code class="docutils literal notranslate"><span class="pre">A</span></code> can be 1D or 2D.
+Numpy scalars are returned for full (0D) reductions, i.e. <code class="docutils literal notranslate"><span class="pre">M.min()</span></code>.</p></li>
+<li><p>Iterating over a sparray gives 1D sparrays. Iterating spmatrix gives 2D row spmatrices</p></li>
+<li><p>Operators that change behavior are: <code class="docutils literal notranslate"><span class="pre">*,</span> <span class="pre">&#64;,</span> <span class="pre">*=,</span> <span class="pre">&#64;=,</span> <span class="pre">**</span></code></p>
+<ul>
+<li><p>Scalar multiplication, e.g. <code class="docutils literal notranslate"><span class="pre">5</span> <span class="pre">*</span> <span class="pre">A</span></code>, uses <code class="docutils literal notranslate"><span class="pre">*</span></code>, and <code class="docutils literal notranslate"><span class="pre">5</span> <span class="pre">&#64;</span> <span class="pre">A</span></code> is not
+implemented.</p></li>
+<li><p>sparrays use <code class="docutils literal notranslate"><span class="pre">*</span></code> for elementwise multiplication and <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> for
+matrix multiplication while spmatrices use either operator
+<code class="docutils literal notranslate"><span class="pre">*</span></code> or <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> for matrix multiplication. Either can use
+<code class="docutils literal notranslate"><span class="pre">A.multiply(B)</span></code> for elementwise multiplication.</p></li>
+<li><p>Scalar exponents, e.g. <code class="docutils literal notranslate"><span class="pre">A**2</span></code>, use elementwise power for sparray and
+matrix power for spmatrix. To get matrix power for sparrays use
+<code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.matrix_power(A,</span> <span class="pre">n)</span></code>.</p></li>
+</ul>
+</li>
+<li><p>Checking the sparse type and format:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">issparse(A)</span></code> returns <code class="docutils literal notranslate"><span class="pre">True</span></code> for any sparse array/matrix.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">isspmatrix(M)</span></code> returns <code class="docutils literal notranslate"><span class="pre">True</span></code> for any sparse matrix.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">isspmatrix_csr(M)</span></code> checks for a sparse matrix with specific format.
+It should be replaced with an array compatible version such as:</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">issparse(A)</span> <span class="pre">and</span> <span class="pre">A.format</span> <span class="pre">==</span> <span class="pre">'csr'</span></code> looks for a CSR sparse
+array/matrix.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="recommended-steps-for-migration">
+<h2>Recommended steps for migration<a class="headerlink" href="#recommended-steps-for-migration" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>First pass (leaving spmatrix in the code):</p>
+<ul>
+<li><p>In your spmatrix code, change <code class="docutils literal notranslate"><span class="pre">*</span></code> to <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> for matrix
+multiplication. Note that scalar multiplication with sparse should
+use <code class="docutils literal notranslate"><span class="pre">*</span></code>.</p></li>
+<li><p>Matrix powers, e.g. <code class="docutils literal notranslate"><span class="pre">M**3</span></code>, should be converted to
+<code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.matrix_power(A,</span> <span class="pre">3)</span></code></p></li>
+<li><p>Implement alternatives to unsupported functions/methods like
+<code class="docutils literal notranslate"><span class="pre">A.getnnz()</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">A.nnz</span></code> (see <a class="reference internal" href="#sparse-migration-removed-methods"><span class="std std-ref">Removed methods and attributes</span></a>
+below).</p></li>
+<li><p>Change any logic regarding <code class="docutils literal notranslate"><span class="pre">issparse()</span></code> and <code class="docutils literal notranslate"><span class="pre">isspmatrix()</span></code> as
+needed. Usually, this means replacing <code class="docutils literal notranslate"><span class="pre">isspmatrix</span></code> with <code class="docutils literal notranslate"><span class="pre">issparse</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">isspmatrix_csr(G)</span></code> with <code class="docutils literal notranslate"><span class="pre">issparse(G)</span> <span class="pre">and</span> <span class="pre">G.format</span> <span class="pre">==</span> <span class="pre">&quot;csr&quot;</span></code>.
+Moreover <code class="docutils literal notranslate"><span class="pre">isspmatrix_csr(G)</span> <span class="pre">or</span> <span class="pre">isspmatrix_csc(G)</span></code> becomes
+<code class="docutils literal notranslate"><span class="pre">issparse(G)</span> <span class="pre">and</span> <span class="pre">G.format</span> <span class="pre">in</span> <span class="pre">['csr',</span> <span class="pre">'csc']</span></code>.</p></li>
+<li><p>Convert all <code class="docutils literal notranslate"><span class="pre">spdiags</span></code> calls to <code class="docutils literal notranslate"><span class="pre">dia_matrix</span></code>.
+See docs in <a class="reference internal" href="generated/scipy.sparse.spdiags.html#scipy.sparse.spdiags" title="scipy.sparse.spdiags"><code class="xref py py-func docutils literal notranslate"><span class="pre">spdiags</span></code></a>.</p></li>
+<li><p>Run all your tests on the resulting code. You are still using
+spmatrix, not sparray. But your code and tests are prepared for
+the change.</p></li>
+</ul>
+</li>
+<li><p>Second pass (switching to sparray):</p>
+<ul>
+<li><p>Convert construction functions like <code class="docutils literal notranslate"><span class="pre">diags</span></code> and <code class="docutils literal notranslate"><span class="pre">triu</span></code> to the
+array version (see <a class="reference internal" href="#sparse-migration-construction"><span class="std std-ref">Details: construction functions</span></a> below).</p></li>
+<li><p>Check all functions/methods for which migration causes 1D return
+values. These are mostly indexing and the reduction functions
+(see <a class="reference internal" href="#sparse-migration-shapes-reductions"><span class="std std-ref">Details: shape changes and reductions</span></a> below).</p></li>
+<li><p>Check all places where you iterate over spmatrices and change them
+to account for the sparrays yielding 1D sparrays rather than 2D spmatrices.</p></li>
+<li><p>Find and change places where your code makes use of <code class="docutils literal notranslate"><span class="pre">np.matrix</span></code>
+features. Convert those to <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> features.</p></li>
+<li><p>Rename all <code class="docutils literal notranslate"><span class="pre">*_matrix</span></code> constructor calls to <code class="docutils literal notranslate"><span class="pre">*_array</span></code>.</p></li>
+<li><p>Test your code. And <strong>read</strong> your code. You have migrated to
+sparray.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="details-construction-functions">
+<span id="sparse-migration-construction"></span><h2>Details: construction functions<a class="headerlink" href="#details-construction-functions" title="Link to this heading">#</a></h2>
+<p>These four functions are new and only handle sparrays:
+<a class="reference internal" href="generated/scipy.sparse.block_array.html#scipy.sparse.block_array" title="scipy.sparse.block_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">block_array</span></code></a>, <a class="reference internal" href="generated/scipy.sparse.diags_array.html#scipy.sparse.diags_array" title="scipy.sparse.diags_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">diags_array</span></code></a>,
+<a class="reference internal" href="generated/scipy.sparse.eye_array.html#scipy.sparse.eye_array" title="scipy.sparse.eye_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">eye_array</span></code></a>, and <a class="reference internal" href="generated/scipy.sparse.random_array.html#scipy.sparse.random_array" title="scipy.sparse.random_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">random_array</span></code></a>.
+Their signatures are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">block_array</span><span class="p">(</span><span class="n">blocks</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">diags_array</span><span class="p">(</span><span class="n">diagonals</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">offsets</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">eye_array</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">random_array</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;coo&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</pre></div>
+</div>
+<section id="existing-functions-that-need-careful-migration">
+<h3>Existing functions that need careful migration<a class="headerlink" href="#existing-functions-that-need-careful-migration" title="Link to this heading">#</a></h3>
+<p>These functions return sparray or spmatrix, depending on the input types they
+receive: <a class="reference internal" href="generated/scipy.sparse.kron.html#scipy.sparse.kron" title="scipy.sparse.kron"><code class="xref py py-func docutils literal notranslate"><span class="pre">kron</span></code></a>, <a class="reference internal" href="generated/scipy.sparse.kronsum.html#scipy.sparse.kronsum" title="scipy.sparse.kronsum"><code class="xref py py-func docutils literal notranslate"><span class="pre">kronsum</span></code></a>,
+<a class="reference internal" href="generated/scipy.sparse.hstack.html#scipy.sparse.hstack" title="scipy.sparse.hstack"><code class="xref py py-func docutils literal notranslate"><span class="pre">hstack</span></code></a>, <a class="reference internal" href="generated/scipy.sparse.vstack.html#scipy.sparse.vstack" title="scipy.sparse.vstack"><code class="xref py py-func docutils literal notranslate"><span class="pre">vstack</span></code></a>,
+<a class="reference internal" href="generated/scipy.sparse.block_diag.html#scipy.sparse.block_diag" title="scipy.sparse.block_diag"><code class="xref py py-func docutils literal notranslate"><span class="pre">block_diag</span></code></a>, <a class="reference internal" href="generated/scipy.sparse.tril.html#scipy.sparse.tril" title="scipy.sparse.tril"><code class="xref py py-func docutils literal notranslate"><span class="pre">tril</span></code></a>, and
+<a class="reference internal" href="generated/scipy.sparse.triu.html#scipy.sparse.triu" title="scipy.sparse.triu"><code class="xref py py-func docutils literal notranslate"><span class="pre">triu</span></code></a>. Their signatures are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">kron</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">kronsum</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">hstack</span><span class="p">(</span><span class="n">blocks</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">vstack</span><span class="p">(</span><span class="n">blocks</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">block_diag</span><span class="p">(</span><span class="n">mats</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">tril</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">triu</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>Use of these functions should be examined and inputs adjusted to ensure return
+values are sparrays. And in turn the outputs should be treated as sparrays.
+To return sparrays, at least one input must be an sparray. If you use
+list-of-lists or numpy arrays as input you should convert one of them
+to a sparse array to get sparse arrays out.</p>
+</section>
+<section id="functions-that-changed-names-for-the-migration">
+<h3>Functions that changed names for the migration<a class="headerlink" href="#functions-that-changed-names-for-the-migration" title="Link to this heading">#</a></h3>
+<blockquote>
+<div><div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>New function</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>eye</p></td>
+<td><p>eye_array</p></td>
+</tr>
+<tr class="row-odd"><td><p>identity</p></td>
+<td><p>eye_array</p></td>
+</tr>
+<tr class="row-even"><td><p>diags</p></td>
+<td><p>diags_array</p></td>
+</tr>
+<tr class="row-odd"><td><p>spdiags</p></td>
+<td><p>dia_array</p></td>
+</tr>
+<tr class="row-even"><td><p>bmat</p></td>
+<td><p>block</p></td>
+</tr>
+<tr class="row-odd"><td><p>rand</p></td>
+<td><p>random_array</p></td>
+</tr>
+<tr class="row-even"><td><p>random</p></td>
+<td><p>random_array</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div></blockquote>
+</section>
+</section>
+<section id="details-shape-changes-and-reductions">
+<span id="sparse-migration-shapes-reductions"></span><h2>Details: shape changes and reductions<a class="headerlink" href="#details-shape-changes-and-reductions" title="Link to this heading">#</a></h2>
+<ul>
+<li><p>Construction using 1d-list of values:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">csr_matrix([1,</span> <span class="pre">2,</span> <span class="pre">3]).shape</span> <span class="pre">==</span> <span class="pre">(1,</span> <span class="pre">3)</span></code> creates a 2D matrix.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">csr_array([1,</span> <span class="pre">2,</span> <span class="pre">3]).shape</span> <span class="pre">==</span> <span class="pre">(3,)</span></code> creates a 1D array</p></li>
+</ul>
+</li>
+<li><p>Indexing:</p>
+<ul class="simple">
+<li><p>Indexing of sparray allows 1D objects which can be made 2D using
+<code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>. E.g., <code class="docutils literal notranslate"><span class="pre">A[3,</span> <span class="pre">None,</span> <span class="pre">:]</span></code> gives a 2D
+row. Indexing of 2D sparray with implicit (not given) column index
+gives a 1D result, e.g. <code class="docutils literal notranslate"><span class="pre">A[3]</span></code> (note: best not to do this - write it as
+<code class="docutils literal notranslate"><span class="pre">A[3,</span> <span class="pre">:]</span></code> instead). If you need a 2D result, use <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">None</span></code> in your index, or wrap the integer index as a list for which
+fancy indexing gives 2D, e.g. <code class="docutils literal notranslate"><span class="pre">A[[3],</span> <span class="pre">:]</span></code>.</p></li>
+<li><p>Iteration over sparse object: <code class="docutils literal notranslate"><span class="pre">next(M)</span></code> yields a sparse 2D row matrix,
+<code class="docutils literal notranslate"><span class="pre">next(A)</span></code> yields a sparse 1D array.</p></li>
+</ul>
+</li>
+<li><p>Reduction operations along an axis reduce the shape:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">M.sum(axis=1)</span></code> returns a 2D row matrix by summing along axis 1.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">A.sum(axis=1)</span></code> returns a 1D <code class="docutils literal notranslate"><span class="pre">coo_array</span></code> summing along axis 1.
+Some reductions return dense arrays/matrices instead of sparse ones:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Result</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>sum(axis)</p></td>
+<td><p>dense</p></td>
+</tr>
+<tr class="row-odd"><td><p>mean(axis)</p></td>
+<td><p>dense</p></td>
+</tr>
+<tr class="row-even"><td><p>argmin(axis)</p></td>
+<td><p>dense</p></td>
+</tr>
+<tr class="row-odd"><td><p>argmax(axis)</p></td>
+<td><p>dense</p></td>
+</tr>
+<tr class="row-even"><td><p>min(axis)</p></td>
+<td><p>sparse</p></td>
+</tr>
+<tr class="row-odd"><td><p>max(axis)</p></td>
+<td><p>sparse</p></td>
+</tr>
+<tr class="row-even"><td><p>nanmin(axis)</p></td>
+<td><p>sparse</p></td>
+</tr>
+<tr class="row-odd"><td><p>nanmax(axis)</p></td>
+<td><p>sparse</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+</ul>
+<p>Generally, 2D sparray inputs lead to 1D results. 2D spmatrix
+inputs lead to 2D results.</p>
+</li>
+<li><p>Some reductions return a scalar. Those should behave as they did
+before and shouldn’t need to be considered during migration. E.g.
+<code class="docutils literal notranslate"><span class="pre">A.sum()</span></code></p></li>
+</ul>
+</section>
+<section id="removed-methods-and-attributes">
+<span id="sparse-migration-removed-methods"></span><h2>Removed methods and attributes<a class="headerlink" href="#removed-methods-and-attributes" title="Link to this heading">#</a></h2>
+<ul>
+<li><p>The methods <code class="docutils literal notranslate"><span class="pre">get_shape</span></code>, <code class="docutils literal notranslate"><span class="pre">getrow</span></code>, <code class="docutils literal notranslate"><span class="pre">getcol</span></code>, <code class="docutils literal notranslate"><span class="pre">asfptype</span></code>, <code class="docutils literal notranslate"><span class="pre">getnnz</span></code>,
+<code class="docutils literal notranslate"><span class="pre">getH</span></code> and the attributes <code class="docutils literal notranslate"><span class="pre">.A</span></code> and <code class="docutils literal notranslate"><span class="pre">.H</span></code> are only present on spmatrices,
+not sparrays. It is recommended that you replace usage of them with
+alternatives before starting the shift to sparray.</p>
+<blockquote>
+<div><div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Alternative</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>M.get_shape()</p></td>
+<td><p>A.shape</p></td>
+</tr>
+<tr class="row-odd"><td><p>M.getformat()</p></td>
+<td><p>A.format</p></td>
+</tr>
+<tr class="row-even"><td><p>M.asfptype(…)</p></td>
+<td><p>A.astype(…)</p></td>
+</tr>
+<tr class="row-odd"><td><p>M.getmaxprint()</p></td>
+<td><p>A.maxprint</p></td>
+</tr>
+<tr class="row-even"><td><p>M.getnnz()</p></td>
+<td><p>A.nnz</p></td>
+</tr>
+<tr class="row-odd"><td><p>M.getnnz(axis)</p></td>
+<td><p>A.count_nonzero(axis)</p></td>
+</tr>
+<tr class="row-even"><td><p>M.getH()</p></td>
+<td><p>A.conj().T</p></td>
+</tr>
+<tr class="row-odd"><td><p>M.getrow(i)</p></td>
+<td><p>A[i, :]</p></td>
+</tr>
+<tr class="row-even"><td><p>M.getcol(j)</p></td>
+<td><p>A[:, j]</p></td>
+</tr>
+<tr class="row-odd"><td><p>M.A</p></td>
+<td><p>A.toarray()</p></td>
+</tr>
+<tr class="row-even"><td><p>M.H</p></td>
+<td><p>A.conj().T</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div></blockquote>
+</li>
+<li><p>Shape assignment (<code class="docutils literal notranslate"><span class="pre">M.shape</span> <span class="pre">=</span> <span class="pre">(2,</span> <span class="pre">6)</span></code>) is not permitted for sparray.
+Instead you should use <code class="docutils literal notranslate"><span class="pre">A.reshape</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">M.getnnz()</span></code> returns the number of stored values – not the number
+of non-zeros. <code class="docutils literal notranslate"><span class="pre">A.nnz</span></code> does the same. To get the number of
+non-zeros, use <code class="docutils literal notranslate"><span class="pre">A.count_nonzero()</span></code>. This is not new to the
+migration, but can be confusing.</p>
+<p>To migrate from the <code class="docutils literal notranslate"><span class="pre">axis</span></code> parameter of <code class="docutils literal notranslate"><span class="pre">M.getnnz(axis=...)</span></code>,
+you can use <code class="docutils literal notranslate"><span class="pre">A.count_nonzero(axis=...)</span></code>
+but it is not an exact replacement because it counts nonzero
+values instead of stored values. The difference is the number
+of explicitly stored zero values. If you really want the number
+of stored values by axis you will need to use some numpy tools.</p>
+<p>The numpy tools approach works for COO, CSR, CSC formats, so convert
+to one of them. For CSR and CSC, the major axis is compressed and
+<code class="docutils literal notranslate"><span class="pre">np.diff(A.indptr)</span></code> returns a dense 1D array with the number of
+stored values for each major axis value (row for CSR and column
+for CSC). The minor axes can be computed using
+<code class="docutils literal notranslate"><span class="pre">np.bincount(A.indices,</span> <span class="pre">minlength=N)</span></code> where <code class="docutils literal notranslate"><span class="pre">N</span></code> is the length
+of the minor axis (e.g. <code class="docutils literal notranslate"><span class="pre">A.shape[1]</span></code> for CSR). The <code class="docutils literal notranslate"><span class="pre">bincount</span></code>
+function works for any axis of COO format using <code class="docutils literal notranslate"><span class="pre">A.coords[axis]</span></code>
+in place of <code class="docutils literal notranslate"><span class="pre">A.indices</span></code>.</p>
+</li>
+</ul>
+</section>
+<section id="other">
+<h2>Other<a class="headerlink" href="#other" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>If you provide compressed data to a constructor,
+e.g. <code class="docutils literal notranslate"><span class="pre">csr_array((data,</span> <span class="pre">indices,</span> <span class="pre">indptr))</span></code> sparse arrays set the index
+dtype by only checking the index arrays dtype, while sparse matrices check the
+index values too and may downcast to int32
+(see <a class="reference external" href="https://github.com/scipy/scipy/pull/18509">gh-18509</a> for more details).</p></li>
+<li><p>Binary operations with operators <code class="docutils literal notranslate"><span class="pre">+,</span> <span class="pre">-,</span> <span class="pre">*,</span> <span class="pre">/,</span> <span class="pre">&#64;,</span> <span class="pre">!=,</span> <span class="pre">&gt;</span></code> and sparse and/or
+dense operands:</p>
+<ul>
+<li><p>If all inputs are sparse, the output is usually sparse as well. The
+exception being <code class="docutils literal notranslate"><span class="pre">/</span></code> which returns dense (dividing by the default
+value <code class="docutils literal notranslate"><span class="pre">0</span></code> is <code class="docutils literal notranslate"><span class="pre">nan</span></code>).</p></li>
+<li><p>If inputs are mixed sparse and dense, the result is usually dense
+(i.e., <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code>). Exceptions are <code class="docutils literal notranslate"><span class="pre">*</span></code> which is sparse, and <code class="docutils literal notranslate"><span class="pre">/</span></code>
+which is not implemented for <code class="docutils literal notranslate"><span class="pre">dense</span> <span class="pre">/</span> <span class="pre">sparse</span></code>, and returns sparse for
+<code class="docutils literal notranslate"><span class="pre">sparse</span> <span class="pre">/</span> <span class="pre">dense</span></code>.</p></li>
+</ul>
+</li>
+<li><p>Binary operations with operators <code class="docutils literal notranslate"><span class="pre">+,</span> <span class="pre">-,</span> <span class="pre">*,</span> <span class="pre">/,</span> <span class="pre">&#64;,</span> <span class="pre">!=,</span> <span class="pre">&gt;</span></code> and array
+and/or matrix operands:</p>
+<ul>
+<li><p>If all inputs are arrays, the outputs are arrays and the same is true for
+matrices.</p></li>
+<li><p>When mixing sparse arrays with sparse matrices, the leading operand
+provides the type for the output, e.g. <code class="docutils literal notranslate"><span class="pre">sparray</span> <span class="pre">+</span> <span class="pre">spmatrix</span></code> gives a
+sparse array while reversing the order gives a sparse matrix.</p></li>
+<li><p>When mixing dense matrices with sparse arrays, the results are usually
+arrays with exceptions for comparisons, e.g. <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> which return dense
+matrices.</p></li>
+<li><p>When mixing dense arrays with sparse matrices, the results are usually
+matrices with an exception for <code class="docutils literal notranslate"><span class="pre">array</span> <span class="pre">&#64;</span> <span class="pre">sparse</span> <span class="pre">matrix</span></code> which returns a
+dense array.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="generated/scipy.sparse.linalg.ArpackError.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">scipy.sparse.linalg.ArpackError</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="generated/scipy.sparse.bsr_array.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">bsr_array</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-and-big-picture">Overview and big picture</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-steps-for-migration">Recommended steps for migration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#details-construction-functions">Details: construction functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#existing-functions-that-need-careful-migration">Existing functions that need careful migration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#functions-that-changed-names-for-the-migration">Functions that changed names for the migration</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#details-shape-changes-and-reductions">Details: shape changes and reductions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#removed-methods-and-attributes">Removed methods and attributes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other">Other</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

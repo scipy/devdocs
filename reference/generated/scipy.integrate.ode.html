@@ -1,0 +1,893 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>ode &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.integrate.ode';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="get_return_code" href="scipy.integrate.ode.get_return_code.html" />
+    <link rel="prev" title="odeint" href="scipy.integrate.odeint.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../integrate.html" class="nav-link">Integration and ODEs (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.integrate</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">ode</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.integrate.</div>
+<div class="empty"></div><section id="ode">
+<h1>ode<a class="headerlink" href="#ode" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="scipy.integrate.ode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scipy.integrate.</span></span><span class="sig-name descname"><span class="pre">ode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jac</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/integrate/_ode.py#L103-L571"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.integrate.ode" title="Link to this definition">#</a></dt>
+<dd><p>A generic interface class to numeric integrators.</p>
+<p>Solve an equation system <span class="math notranslate nohighlight">\(y'(t) = f(t,y)\)</span> with (optional) <code class="docutils literal notranslate"><span class="pre">jac</span> <span class="pre">=</span> <span class="pre">df/dy</span></code>.</p>
+<p><em>Note</em>: The first two arguments of <code class="docutils literal notranslate"><span class="pre">f(t,</span> <span class="pre">y,</span> <span class="pre">...)</span></code> are in the
+opposite order of the arguments in the system definition function used
+by <a class="reference internal" href="scipy.integrate.odeint.html#scipy.integrate.odeint" title="scipy.integrate.odeint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.integrate.odeint</span></code></a>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>f</strong><span class="classifier">callable <code class="docutils literal notranslate"><span class="pre">f(t,</span> <span class="pre">y,</span> <span class="pre">*f_args)</span></code></span></dt><dd><p>Right-hand side of the differential equation. t is a scalar,
+<code class="docutils literal notranslate"><span class="pre">y.shape</span> <span class="pre">==</span> <span class="pre">(n,)</span></code>.
+<code class="docutils literal notranslate"><span class="pre">f_args</span></code> is set by calling <code class="docutils literal notranslate"><span class="pre">set_f_params(*args)</span></code>.
+<em class="xref py py-obj">f</em> should return a scalar, array or list (not a tuple).</p>
+</dd>
+<dt><strong>jac</strong><span class="classifier">callable <code class="docutils literal notranslate"><span class="pre">jac(t,</span> <span class="pre">y,</span> <span class="pre">*jac_args)</span></code>, optional</span></dt><dd><p>Jacobian of the right-hand side, <code class="docutils literal notranslate"><span class="pre">jac[i,j]</span> <span class="pre">=</span> <span class="pre">d</span> <span class="pre">f[i]</span> <span class="pre">/</span> <span class="pre">d</span> <span class="pre">y[j]</span></code>.
+<code class="docutils literal notranslate"><span class="pre">jac_args</span></code> is set by calling <code class="docutils literal notranslate"><span class="pre">set_jac_params(*args)</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>t</strong><span class="classifier">float</span></dt><dd><p>Current time.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">ndarray</span></dt><dd><p>Current variable values.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="scipy.integrate.ode.get_return_code.html#scipy.integrate.ode.get_return_code" title="scipy.integrate.ode.get_return_code"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_return_code</span></code></a>()</p></td>
+<td><p>Extracts the return code for the integration to enable better control if the integration fails.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scipy.integrate.ode.integrate.html#scipy.integrate.ode.integrate" title="scipy.integrate.ode.integrate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">integrate</span></code></a>(t[, step, relax])</p></td>
+<td><p>Find y=y(t), set y as an initial condition, and return y.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="scipy.integrate.ode.set_f_params.html#scipy.integrate.ode.set_f_params" title="scipy.integrate.ode.set_f_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_f_params</span></code></a>(*args)</p></td>
+<td><p>Set extra parameters for user-supplied function f.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scipy.integrate.ode.set_initial_value.html#scipy.integrate.ode.set_initial_value" title="scipy.integrate.ode.set_initial_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_initial_value</span></code></a>(y[, t])</p></td>
+<td><p>Set initial conditions y(t) = y.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="scipy.integrate.ode.set_integrator.html#scipy.integrate.ode.set_integrator" title="scipy.integrate.ode.set_integrator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_integrator</span></code></a>(name, **integrator_params)</p></td>
+<td><p>Set integrator by name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scipy.integrate.ode.set_jac_params.html#scipy.integrate.ode.set_jac_params" title="scipy.integrate.ode.set_jac_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_jac_params</span></code></a>(*args)</p></td>
+<td><p>Set extra parameters for user-supplied function jac.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="scipy.integrate.ode.set_solout.html#scipy.integrate.ode.set_solout" title="scipy.integrate.ode.set_solout"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_solout</span></code></a>(solout)</p></td>
+<td><p>Set callable to be called at every successful integration step.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scipy.integrate.ode.successful.html#scipy.integrate.ode.successful" title="scipy.integrate.ode.successful"><code class="xref py py-obj docutils literal notranslate"><span class="pre">successful</span></code></a>()</p></td>
+<td><p>Check if integration was successful.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="scipy.integrate.odeint.html#scipy.integrate.odeint" title="scipy.integrate.odeint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">odeint</span></code></a></dt><dd><p>an integrator with a simpler interface based on lsoda from ODEPACK</p>
+</dd>
+<dt><a class="reference internal" href="scipy.integrate.quad.html#scipy.integrate.quad" title="scipy.integrate.quad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quad</span></code></a></dt><dd><p>for finding the area under a curve</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>Available integrators are listed below. They can be selected using
+the <a class="reference internal" href="scipy.integrate.ode.set_integrator.html#scipy.integrate.ode.set_integrator" title="scipy.integrate.ode.set_integrator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_integrator</span></code></a> method.</p>
+<p>“vode”</p>
+<blockquote>
+<div><p>Real-valued Variable-coefficient Ordinary Differential Equation
+solver, with fixed-leading-coefficient implementation. It provides
+implicit Adams method (for non-stiff problems) and a method based on
+backward differentiation formulas (BDF) (for stiff problems).</p>
+<p>Source: <a class="reference external" href="http://www.netlib.org/ode/vode.f">http://www.netlib.org/ode/vode.f</a></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This integrator is not re-entrant. You cannot have two <a class="reference internal" href="#scipy.integrate.ode" title="scipy.integrate.ode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ode</span></code></a>
+instances using the “vode” integrator at the same time.</p>
+</div>
+<p>This integrator accepts the following parameters in <a class="reference internal" href="scipy.integrate.ode.set_integrator.html#scipy.integrate.ode.set_integrator" title="scipy.integrate.ode.set_integrator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_integrator</span></code></a>
+method of the <a class="reference internal" href="#scipy.integrate.ode" title="scipy.integrate.ode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ode</span></code></a> class:</p>
+<ul class="simple">
+<li><p>atol : float or sequence
+absolute tolerance for solution</p></li>
+<li><p>rtol : float or sequence
+relative tolerance for solution</p></li>
+<li><p>lband : None or int</p></li>
+<li><p>uband : None or int
+Jacobian band width, jac[i,j] != 0 for i-lband &lt;= j &lt;= i+uband.
+Setting these requires your jac routine to return the jacobian
+in packed format, jac_packed[i-j+uband, j] = jac[i,j]. The
+dimension of the matrix must be (lband+uband+1, len(y)).</p></li>
+<li><p>method: ‘adams’ or ‘bdf’
+Which solver to use, Adams (non-stiff) or BDF (stiff)</p></li>
+<li><p>with_jacobian : bool
+This option is only considered when the user has not supplied a
+Jacobian function and has not indicated (by setting either band)
+that the Jacobian is banded. In this case, <em class="xref py py-obj">with_jacobian</em> specifies
+whether the iteration method of the ODE solver’s correction step is
+chord iteration with an internally generated full Jacobian or
+functional iteration with no Jacobian.</p></li>
+<li><p>nsteps : int
+Maximum number of (internally defined) steps allowed during one
+call to the solver.</p></li>
+<li><p>first_step : float</p></li>
+<li><p>min_step : float</p></li>
+<li><p>max_step : float
+Limits for the step sizes used by the integrator.</p></li>
+<li><p>order : int
+Maximum order used by the integrator,
+order &lt;= 12 for Adams, &lt;= 5 for BDF.</p></li>
+</ul>
+</div></blockquote>
+<p>“zvode”</p>
+<blockquote>
+<div><p>Complex-valued Variable-coefficient Ordinary Differential Equation
+solver, with fixed-leading-coefficient implementation. It provides
+implicit Adams method (for non-stiff problems) and a method based on
+backward differentiation formulas (BDF) (for stiff problems).</p>
+<p>Source: <a class="reference external" href="http://www.netlib.org/ode/zvode.f">http://www.netlib.org/ode/zvode.f</a></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This integrator is not re-entrant. You cannot have two <a class="reference internal" href="#scipy.integrate.ode" title="scipy.integrate.ode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ode</span></code></a>
+instances using the “zvode” integrator at the same time.</p>
+</div>
+<p>This integrator accepts the same parameters in <a class="reference internal" href="scipy.integrate.ode.set_integrator.html#scipy.integrate.ode.set_integrator" title="scipy.integrate.ode.set_integrator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_integrator</span></code></a>
+as the “vode” solver.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When using ZVODE for a stiff system, it should only be used for
+the case in which the function f is analytic, that is, when each f(i)
+is an analytic function of each y(j). Analyticity means that the
+partial derivative df(i)/dy(j) is a unique complex number, and this
+fact is critical in the way ZVODE solves the dense or banded linear
+systems that arise in the stiff case. For a complex stiff ODE system
+in which f is not analytic, ZVODE is likely to have convergence
+failures, and for this problem one should instead use DVODE on the
+equivalent real system (in the real and imaginary parts of y).</p>
+</div>
+</div></blockquote>
+<p>“lsoda”</p>
+<blockquote>
+<div><p>Real-valued Variable-coefficient Ordinary Differential Equation
+solver, with fixed-leading-coefficient implementation. It provides
+automatic method switching between implicit Adams method (for non-stiff
+problems) and a method based on backward differentiation formulas (BDF)
+(for stiff problems).</p>
+<p>Source: <a class="reference external" href="http://www.netlib.org/odepack">http://www.netlib.org/odepack</a></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This integrator is not re-entrant. You cannot have two <a class="reference internal" href="#scipy.integrate.ode" title="scipy.integrate.ode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ode</span></code></a>
+instances using the “lsoda” integrator at the same time.</p>
+</div>
+<p>This integrator accepts the following parameters in <a class="reference internal" href="scipy.integrate.ode.set_integrator.html#scipy.integrate.ode.set_integrator" title="scipy.integrate.ode.set_integrator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_integrator</span></code></a>
+method of the <a class="reference internal" href="#scipy.integrate.ode" title="scipy.integrate.ode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ode</span></code></a> class:</p>
+<ul class="simple">
+<li><p>atol : float or sequence
+absolute tolerance for solution</p></li>
+<li><p>rtol : float or sequence
+relative tolerance for solution</p></li>
+<li><p>lband : None or int</p></li>
+<li><p>uband : None or int
+Jacobian band width, jac[i,j] != 0 for i-lband &lt;= j &lt;= i+uband.
+Setting these requires your jac routine to return the jacobian
+in packed format, jac_packed[i-j+uband, j] = jac[i,j].</p></li>
+<li><p>with_jacobian : bool
+<em>Not used.</em></p></li>
+<li><p>nsteps : int
+Maximum number of (internally defined) steps allowed during one
+call to the solver.</p></li>
+<li><p>first_step : float</p></li>
+<li><p>min_step : float</p></li>
+<li><p>max_step : float
+Limits for the step sizes used by the integrator.</p></li>
+<li><p>max_order_ns : int
+Maximum order used in the nonstiff case (default 12).</p></li>
+<li><p>max_order_s : int
+Maximum order used in the stiff case (default 5).</p></li>
+<li><p>max_hnil : int
+Maximum number of messages reporting too small step size (t + h = t)
+(default 0)</p></li>
+<li><p>ixpr : int
+Whether to generate extra printing at method switches (default False).</p></li>
+</ul>
+</div></blockquote>
+<p>“dopri5”</p>
+<blockquote>
+<div><p>This is an explicit runge-kutta method of order (4)5 due to Dormand &amp;
+Prince (with stepsize control and dense output).</p>
+<p>Authors:</p>
+<blockquote>
+<div><p>E. Hairer and G. Wanner
+Universite de Geneve, Dept. de Mathematiques
+CH-1211 Geneve 24, Switzerland
+e-mail:  <a class="reference external" href="mailto:ernst&#46;hairer&#37;&#52;&#48;math&#46;unige&#46;ch">ernst<span>&#46;</span>hairer<span>&#64;</span>math<span>&#46;</span>unige<span>&#46;</span>ch</a>, <a class="reference external" href="mailto:gerhard&#46;wanner&#37;&#52;&#48;math&#46;unige&#46;ch">gerhard<span>&#46;</span>wanner<span>&#64;</span>math<span>&#46;</span>unige<span>&#46;</span>ch</a></p>
+</div></blockquote>
+<p>This code is described in <a class="reference internal" href="#rcd9e153b6bcf-hnw93" id="id1">[HNW93]</a>.</p>
+<p>This integrator accepts the following parameters in set_integrator()
+method of the ode class:</p>
+<ul class="simple">
+<li><p>atol : float or sequence
+absolute tolerance for solution</p></li>
+<li><p>rtol : float or sequence
+relative tolerance for solution</p></li>
+<li><p>nsteps : int
+Maximum number of (internally defined) steps allowed during one
+call to the solver.</p></li>
+<li><p>first_step : float</p></li>
+<li><p>max_step : float</p></li>
+<li><p>safety : float
+Safety factor on new step selection (default 0.9)</p></li>
+<li><p>ifactor : float</p></li>
+<li><p>dfactor : float
+Maximum factor to increase/decrease step size by in one step</p></li>
+<li><p>beta : float
+Beta parameter for stabilised step size control.</p></li>
+<li><p>verbosity : int
+Switch for printing messages (&lt; 0 for no messages).</p></li>
+</ul>
+</div></blockquote>
+<p>“dop853”</p>
+<blockquote>
+<div><p>This is an explicit runge-kutta method of order 8(5,3) due to Dormand
+&amp; Prince (with stepsize control and dense output).</p>
+<p>Options and references the same as “dopri5”.</p>
+</div></blockquote>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="rcd9e153b6bcf-hnw93" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">HNW93</a><span class="fn-bracket">]</span></span>
+<p>E. Hairer, S.P. Norsett and G. Wanner, Solving Ordinary
+Differential Equations i. Nonstiff Problems. 2nd edition.
+Springer Series in Computational Mathematics,
+Springer-Verlag (1993)</p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="f400bbbc-8898-4a83-8271-6350dc4cbdbf">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('f400bbbc-8898-4a83-8271-6350dc4cbdbf','001b2b1c-a808-4e3b-9fd0-f462402955bf','a0b8147a-f4ad-435e-a5d7-77951c11c364','../../lite/tree/../notebooks/index.html?path=79501e92_129e_4c7f_a6b1_5c8f2c62a89f.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>A problem to integrate and the corresponding jacobian:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">ode</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y0</span><span class="p">,</span> <span class="n">t0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="n">j</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">arg1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">arg1</span><span class="o">*</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="n">arg1</span><span class="o">*</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">jac</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">arg1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">[[</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">arg1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">arg1</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]]]</span>
+</pre></div>
+</div>
+<p>The integration:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">ode</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">jac</span><span class="p">)</span><span class="o">.</span><span class="n">set_integrator</span><span class="p">(</span><span class="s1">&#39;zvode&#39;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bdf&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">set_initial_value</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">t0</span><span class="p">)</span><span class="o">.</span><span class="n">set_f_params</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span><span class="o">.</span><span class="n">set_jac_params</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t1</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dt</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">while</span> <span class="n">r</span><span class="o">.</span><span class="n">successful</span><span class="p">()</span> <span class="ow">and</span> <span class="n">r</span><span class="o">.</span><span class="n">t</span> <span class="o">&lt;</span> <span class="n">t1</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">t</span><span class="o">+</span><span class="n">dt</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">t</span><span class="o">+</span><span class="n">dt</span><span class="p">))</span>
+<span class="go">1 [-0.71038232+0.23749653j  0.40000271+0.j        ]</span>
+<span class="go">2.0 [0.19098503-0.52359246j 0.22222356+0.j        ]</span>
+<span class="go">3.0 [0.47153208+0.52701229j 0.15384681+0.j        ]</span>
+<span class="go">4.0 [-0.61905937+0.30726255j  0.11764744+0.j        ]</span>
+<span class="go">5.0 [0.02340997-0.61418799j 0.09523835+0.j        ]</span>
+<span class="go">6.0 [0.58643071+0.339819j 0.08000018+0.j      ]</span>
+<span class="go">7.0 [-0.52070105+0.44525141j  0.06896565+0.j        ]</span>
+<span class="go">8.0 [-0.15986733-0.61234476j  0.06060616+0.j        ]</span>
+<span class="go">9.0 [0.64850462+0.15048982j 0.05405414+0.j        ]</span>
+<span class="go">10.0 [-0.38404699+0.56382299j  0.04878055+0.j        ]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div id="a0b8147a-f4ad-435e-a5d7-77951c11c364" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('f400bbbc-8898-4a83-8271-6350dc4cbdbf','a0b8147a-f4ad-435e-a5d7-77951c11c364')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('f400bbbc-8898-4a83-8271-6350dc4cbdbf','a0b8147a-f4ad-435e-a5d7-77951c11c364')">Open In Tab</button></div><div id="001b2b1c-a808-4e3b-9fd0-f462402955bf" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.integrate.odeint.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">odeint</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.integrate.ode.get_return_code.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">get_return_code</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.integrate.ode"><code class="docutils literal notranslate"><span class="pre">ode</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

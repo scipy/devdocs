@@ -1,0 +1,774 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>hessian &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.differentiate.hessian';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Discrete Fourier transforms (scipy.fft)" href="../fft.html" />
+    <link rel="prev" title="jacobian" href="scipy.differentiate.jacobian.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../differentiate.html" class="nav-link">Finite Difference Differentiation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.differentiate</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">hessian</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.differentiate.</div>
+<div class="empty"></div><section id="hessian">
+<h1>hessian<a class="headerlink" href="#hessian" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.differentiate.hessian">
+<span class="sig-prename descclassname"><span class="pre">scipy.differentiate.</span></span><span class="sig-name descname"><span class="pre">hessian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerances</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/differentiate/_differentiate.py#L913-L1100"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.differentiate.hessian" title="Link to this definition">#</a></dt>
+<dd><p>Evaluate the Hessian of a function numerically.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>f</strong><span class="classifier">callable</span></dt><dd><p>The function whose Hessian is desired. The signature must be:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">(</span><span class="n">xi</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span>
+</pre></div>
+</div>
+<p>where each element of <code class="docutils literal notranslate"><span class="pre">xi</span></code> is a finite real. If the function to be
+differentiated accepts additional arguments, wrap it (e.g. using
+<a class="reference external" href="https://docs.python.org/3/library/functools.html#functools.partial" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">functools.partial</span></code></a> or <code class="docutils literal notranslate"><span class="pre">lambda</span></code>) and pass the wrapped callable
+into <a class="reference internal" href="#scipy.differentiate.hessian" title="scipy.differentiate.hessian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian</span></code></a>. <em class="xref py py-obj">f</em> must not mutate the array <code class="docutils literal notranslate"><span class="pre">xi</span></code>. See Notes
+regarding vectorization and the dimensionality of the input and output.</p>
+</dd>
+<dt><strong>x</strong><span class="classifier">float array_like</span></dt><dd><p>Points at which to evaluate the Hessian. Must have at least one dimension.
+See Notes regarding the dimensionality and vectorization.</p>
+</dd>
+<dt><strong>tolerances</strong><span class="classifier">dictionary of floats, optional</span></dt><dd><p>Absolute and relative tolerances. Valid keys of the dictionary are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">atol</span></code> - absolute tolerance on the derivative</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rtol</span></code> - relative tolerance on the derivative</p></li>
+</ul>
+<p>Iteration will stop when <code class="docutils literal notranslate"><span class="pre">res.error</span> <span class="pre">&lt;</span> <span class="pre">atol</span> <span class="pre">+</span> <span class="pre">rtol</span> <span class="pre">*</span> <span class="pre">abs(res.df)</span></code>. The default
+<em class="xref py py-obj">atol</em> is the smallest normal number of the appropriate dtype, and
+the default <em class="xref py py-obj">rtol</em> is the square root of the precision of the
+appropriate dtype.</p>
+</dd>
+<dt><strong>order</strong><span class="classifier">int, default: 8</span></dt><dd><p>The (positive integer) order of the finite difference formula to be
+used. Odd integers will be rounded up to the next even integer.</p>
+</dd>
+<dt><strong>initial_step</strong><span class="classifier">float, default: 0.5</span></dt><dd><p>The (absolute) initial step size for the finite difference derivative
+approximation.</p>
+</dd>
+<dt><strong>step_factor</strong><span class="classifier">float, default: 2.0</span></dt><dd><p>The factor by which the step size is <em>reduced</em> in each iteration; i.e.
+the step size in iteration 1 is <code class="docutils literal notranslate"><span class="pre">initial_step/step_factor</span></code>. If
+<code class="docutils literal notranslate"><span class="pre">step_factor</span> <span class="pre">&lt;</span> <span class="pre">1</span></code>, subsequent steps will be greater than the initial
+step; this may be useful if steps smaller than some threshold are
+undesirable (e.g. due to subtractive cancellation error).</p>
+</dd>
+<dt><strong>maxiter</strong><span class="classifier">int, default: 10</span></dt><dd><p>The maximum number of iterations of the algorithm to perform. See
+Notes.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>res</strong><span class="classifier">_RichResult</span></dt><dd><p>An object similar to an instance of <a class="reference internal" href="scipy.optimize.OptimizeResult.html#scipy.optimize.OptimizeResult" title="scipy.optimize.OptimizeResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.OptimizeResult</span></code></a> with the
+following attributes. The descriptions are written as though the values will
+be scalars; however, if <em class="xref py py-obj">f</em> returns an array, the outputs will be
+arrays of the same shape.</p>
+<dl class="simple">
+<dt>success<span class="classifier">bool array</span></dt><dd><p><code class="docutils literal notranslate"><span class="pre">True</span></code> where the algorithm terminated successfully (status <code class="docutils literal notranslate"><span class="pre">0</span></code>);
+<code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+<dt>status<span class="classifier">int array</span></dt><dd><p>An integer representing the exit status of the algorithm.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code> : The algorithm converged to the specified tolerances.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-1</span></code> : The error estimate increased, so iteration was terminated.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-2</span></code> : The maximum number of iterations was reached.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-3</span></code> : A non-finite value was encountered.</p></li>
+</ul>
+</dd>
+<dt>ddf<span class="classifier">float array</span></dt><dd><p>The Hessian of <em class="xref py py-obj">f</em> at <em class="xref py py-obj">x</em>, if the algorithm terminated
+successfully.</p>
+</dd>
+<dt>error<span class="classifier">float array</span></dt><dd><p>An estimate of the error: the magnitude of the difference between
+the current estimate of the Hessian and the estimate in the
+previous iteration.</p>
+</dd>
+<dt>nfev<span class="classifier">int array</span></dt><dd><p>The number of points at which <em class="xref py py-obj">f</em> was evaluated.</p>
+</dd>
+</dl>
+<p>Each element of an attribute is associated with the corresponding
+element of <em class="xref py py-obj">ddf</em>. For instance, element <code class="docutils literal notranslate"><span class="pre">[i,</span> <span class="pre">j]</span></code> of <em class="xref py py-obj">nfev</em> is the
+number of points at which <em class="xref py py-obj">f</em> was evaluated for the sake of
+computing element <code class="docutils literal notranslate"><span class="pre">[i,</span> <span class="pre">j]</span></code> of <em class="xref py py-obj">ddf</em>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="scipy.differentiate.derivative.html#scipy.differentiate.derivative" title="scipy.differentiate.derivative"><code class="xref py py-obj docutils literal notranslate"><span class="pre">derivative</span></code></a>, <a class="reference internal" href="scipy.differentiate.jacobian.html#scipy.differentiate.jacobian" title="scipy.differentiate.jacobian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jacobian</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>Suppose we wish to evaluate the Hessian of a function
+<span class="math notranslate nohighlight">\(f: \mathbf{R}^m \rightarrow \mathbf{R}\)</span>, and we assign to variable
+<code class="docutils literal notranslate"><span class="pre">m</span></code> the positive integer value of <span class="math notranslate nohighlight">\(m\)</span>. If we wish to evaluate
+the Hessian at a single point, then:</p>
+<ul class="simple">
+<li><p>argument <em class="xref py py-obj">x</em> must be an array of shape <code class="docutils literal notranslate"><span class="pre">(m,)</span></code></p></li>
+<li><p>argument <em class="xref py py-obj">f</em> must be vectorized to accept an array of shape
+<code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">...)</span></code>. The first axis represents the <span class="math notranslate nohighlight">\(m\)</span> inputs of
+<span class="math notranslate nohighlight">\(f\)</span>; the remaining axes indicated by ellipses are for evaluating
+the function at several abscissae in a single call.</p></li>
+<li><p>argument <em class="xref py py-obj">f</em> must return an array of shape <code class="docutils literal notranslate"><span class="pre">(...)</span></code>.</p></li>
+<li><p>attribute <code class="docutils literal notranslate"><span class="pre">dff</span></code> of the result object will be an array of shape <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">m)</span></code>,
+the Hessian.</p></li>
+</ul>
+<p>This function is also vectorized in the sense that the Hessian can be
+evaluated at <code class="docutils literal notranslate"><span class="pre">k</span></code> points in a single call. In this case, <em class="xref py py-obj">x</em> would be an
+array of shape <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">k)</span></code>, <em class="xref py py-obj">f</em> would accept an array of shape
+<code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">...)</span></code> and return an array of shape <code class="docutils literal notranslate"><span class="pre">(...)</span></code>, and the <code class="docutils literal notranslate"><span class="pre">ddf</span></code>
+attribute of the result would have shape <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">m,</span> <span class="pre">k)</span></code>. Note that the
+axis associated with the <code class="docutils literal notranslate"><span class="pre">k</span></code> points is included within the axes
+denoted by <code class="docutils literal notranslate"><span class="pre">(...)</span></code>.</p>
+<p>Currently, <a class="reference internal" href="#scipy.differentiate.hessian" title="scipy.differentiate.hessian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian</span></code></a> is implemented by nesting calls to <a class="reference internal" href="scipy.differentiate.jacobian.html#scipy.differentiate.jacobian" title="scipy.differentiate.jacobian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jacobian</span></code></a>.
+All options passed to <a class="reference internal" href="#scipy.differentiate.hessian" title="scipy.differentiate.hessian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian</span></code></a> are used for both the inner and outer
+calls with one exception: the <em class="xref py py-obj">rtol</em> used in the inner <a class="reference internal" href="scipy.differentiate.jacobian.html#scipy.differentiate.jacobian" title="scipy.differentiate.jacobian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jacobian</span></code></a> call
+is tightened by a factor of 100 with the expectation that the inner
+error can be ignored. A consequence is that <em class="xref py py-obj">rtol</em> should not be set
+less than 100 times the precision of the dtype of <em class="xref py py-obj">x</em>; a warning is
+emitted otherwise.</p>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r5041c5b27141-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>Hessian matrix, <em>Wikipedia</em>,
+<a class="reference external" href="https://en.wikipedia.org/wiki/Hessian_matrix">https://en.wikipedia.org/wiki/Hessian_matrix</a></p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="700e762c-203a-4a81-9627-73dc76302b6e">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('700e762c-203a-4a81-9627-73dc76302b6e','a6a52b73-a35c-4304-9439-92955e04391e','9b97fd4f-86b2-441d-901f-8a0fd3d7eb49','../../lite/tree/../notebooks/index.html?path=153f3708_6c67_4bb2_b8a5_f34737da02ec.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>The Rosenbrock function maps from <span class="math notranslate nohighlight">\(\mathbf{R}^m \rightarrow \mathbf{R}\)</span>;
+the SciPy implementation <a class="reference internal" href="scipy.optimize.rosen.html#scipy.optimize.rosen" title="scipy.optimize.rosen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.rosen</span></code></a> is vectorized to accept an
+array of shape <code class="docutils literal notranslate"><span class="pre">(m,</span> <span class="pre">...)</span></code> and return an array of shape <code class="docutils literal notranslate"><span class="pre">...</span></code>. Suppose we
+wish to evaluate the Hessian at <code class="docutils literal notranslate"><span class="pre">[0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5]</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.differentiate</span> <span class="kn">import</span> <span class="n">hessian</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">rosen</span><span class="p">,</span> <span class="n">rosen_hess</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">hessian</span><span class="p">(</span><span class="n">rosen</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ref</span> <span class="o">=</span> <span class="n">rosen_hess</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># reference value of the Hessian</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">ddf</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="#scipy.differentiate.hessian" title="scipy.differentiate.hessian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hessian</span></code></a> is vectorized to evaluate the Hessian at multiple points
+in a single call.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="n">m</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">hessian</span><span class="p">(</span><span class="n">rosen</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ref</span> <span class="o">=</span> <span class="p">[</span><span class="n">rosen_hess</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span> <span class="k">for</span> <span class="n">xi</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">T</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">ddf</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div id="9b97fd4f-86b2-441d-901f-8a0fd3d7eb49" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('700e762c-203a-4a81-9627-73dc76302b6e','9b97fd4f-86b2-441d-901f-8a0fd3d7eb49')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('700e762c-203a-4a81-9627-73dc76302b6e','9b97fd4f-86b2-441d-901f-8a0fd3d7eb49')">Open In Tab</button></div><div id="a6a52b73-a35c-4304-9439-92955e04391e" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.differentiate.jacobian.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">jacobian</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../fft.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Discrete Fourier transforms (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.fft</span></code>)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.differentiate.hessian"><code class="docutils literal notranslate"><span class="pre">hessian</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

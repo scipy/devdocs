@@ -1,0 +1,925 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>basinhopping &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.optimize.basinhopping';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="brute" href="scipy.optimize.brute.html" />
+    <link rel="prev" title="update" href="scipy.optimize.SR1.update.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../optimize.html" class="nav-link">Optimization and root finding (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">basinhopping</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.optimize.</div>
+<div class="empty"></div><section id="basinhopping">
+<h1>basinhopping<a class="headerlink" href="#basinhopping" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.optimize.basinhopping">
+<span class="sig-prename descclassname"><span class="pre">scipy.optimize.</span></span><span class="sig-name descname"><span class="pre">basinhopping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">niter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimizer_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">take_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accept_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">niter_success</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_accept_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepwise_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/optimize/_basinhopping.py#L361-L752"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.optimize.basinhopping" title="Link to this definition">#</a></dt>
+<dd><p>Find the global minimum of a function using the basin-hopping algorithm.</p>
+<p>Basin-hopping is a two-phase method that combines a global stepping
+algorithm with local minimization at each step. Designed to mimic
+the natural process of energy minimization of clusters of atoms, it works
+well for similar problems with “funnel-like, but rugged” energy landscapes
+<a class="reference internal" href="#r7bc5d3316b4a-5" id="id1">[5]</a>.</p>
+<p>As the step-taking, step acceptance, and minimization methods are all
+customizable, this function can also be used to implement other two-phase
+methods.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>func</strong><span class="classifier">callable <code class="docutils literal notranslate"><span class="pre">f(x,</span> <span class="pre">*args)</span></code></span></dt><dd><p>Function to be optimized.  <code class="docutils literal notranslate"><span class="pre">args</span></code> can be passed as an optional item
+in the dict <em class="xref py py-obj">minimizer_kwargs</em></p>
+</dd>
+<dt><strong>x0</strong><span class="classifier">array_like</span></dt><dd><p>Initial guess.</p>
+</dd>
+<dt><strong>niter</strong><span class="classifier">integer, optional</span></dt><dd><p>The number of basin-hopping iterations. There will be a total of
+<code class="docutils literal notranslate"><span class="pre">niter</span> <span class="pre">+</span> <span class="pre">1</span></code> runs of the local minimizer.</p>
+</dd>
+<dt><strong>T</strong><span class="classifier">float, optional</span></dt><dd><p>The “temperature” parameter for the acceptance or rejection criterion.
+Higher “temperatures” mean that larger jumps in function value will be
+accepted.  For best results <em class="xref py py-obj">T</em> should be comparable to the
+separation (in function value) between local minima.</p>
+</dd>
+<dt><strong>stepsize</strong><span class="classifier">float, optional</span></dt><dd><p>Maximum step size for use in the random displacement.</p>
+</dd>
+<dt><strong>minimizer_kwargs</strong><span class="classifier">dict, optional</span></dt><dd><p>Extra keyword arguments to be passed to the local minimizer
+<a class="reference internal" href="scipy.optimize.minimize.html#scipy.optimize.minimize" title="scipy.optimize.minimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.minimize</span></code></a> Some important options could be:</p>
+<dl class="simple">
+<dt>method<span class="classifier">str</span></dt><dd><p>The minimization method (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;L-BFGS-B&quot;</span></code>)</p>
+</dd>
+<dt>args<span class="classifier">tuple</span></dt><dd><p>Extra arguments passed to the objective function (<em class="xref py py-obj">func</em>) and
+its derivatives (Jacobian, Hessian).</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>take_step</strong><span class="classifier">callable <code class="docutils literal notranslate"><span class="pre">take_step(x)</span></code>, optional</span></dt><dd><p>Replace the default step-taking routine with this routine. The default
+step-taking routine is a random displacement of the coordinates, but
+other step-taking algorithms may be better for some systems.
+<em class="xref py py-obj">take_step</em> can optionally have the attribute <code class="docutils literal notranslate"><span class="pre">take_step.stepsize</span></code>.
+If this attribute exists, then <a class="reference internal" href="#scipy.optimize.basinhopping" title="scipy.optimize.basinhopping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basinhopping</span></code></a> will adjust
+<code class="docutils literal notranslate"><span class="pre">take_step.stepsize</span></code> in order to try to optimize the global minimum
+search.</p>
+</dd>
+<dt><strong>accept_test</strong><span class="classifier">callable, <code class="docutils literal notranslate"><span class="pre">accept_test(f_new=f_new,</span> <span class="pre">x_new=x_new,</span> <span class="pre">f_old=fold,</span> <span class="pre">x_old=x_old)</span></code>, optional</span></dt><dd><p>Define a test which will be used to judge whether to accept the
+step. This will be used in addition to the Metropolis test based on
+“temperature” <em class="xref py py-obj">T</em>. The acceptable return values are True,
+False, or <code class="docutils literal notranslate"><span class="pre">&quot;force</span> <span class="pre">accept&quot;</span></code>. If any of the tests return False
+then the step is rejected. If the latter, then this will override any
+other tests in order to accept the step. This can be used, for example,
+to forcefully escape from a local minimum that <a class="reference internal" href="#scipy.optimize.basinhopping" title="scipy.optimize.basinhopping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basinhopping</span></code></a> is
+trapped in.</p>
+</dd>
+<dt><strong>callback</strong><span class="classifier">callable, <code class="docutils literal notranslate"><span class="pre">callback(x,</span> <span class="pre">f,</span> <span class="pre">accept)</span></code>, optional</span></dt><dd><p>A callback function which will be called for all minima found. <code class="docutils literal notranslate"><span class="pre">x</span></code>
+and <code class="docutils literal notranslate"><span class="pre">f</span></code> are the coordinates and function value of the trial minimum,
+and <code class="docutils literal notranslate"><span class="pre">accept</span></code> is whether that minimum was accepted. This can
+be used, for example, to save the lowest N minima found. Also,
+<em class="xref py py-obj">callback</em> can be used to specify a user defined stop criterion by
+optionally returning True to stop the <a class="reference internal" href="#scipy.optimize.basinhopping" title="scipy.optimize.basinhopping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basinhopping</span></code></a> routine.</p>
+</dd>
+<dt><strong>interval</strong><span class="classifier">integer, optional</span></dt><dd><p>interval for how often to update the <em class="xref py py-obj">stepsize</em></p>
+</dd>
+<dt><strong>disp</strong><span class="classifier">bool, optional</span></dt><dd><p>Set to True to print status messages</p>
+</dd>
+<dt><strong>niter_success</strong><span class="classifier">integer, optional</span></dt><dd><p>Stop the run if the global minimum candidate remains the same for this
+number of iterations.</p>
+</dd>
+<dt><strong>seed</strong><span class="classifier">{None, int, <a class="reference external" href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a>}, optional</span></dt><dd><p>If <em class="xref py py-obj">seed</em> is None (or <em class="xref py py-obj">np.random</em>), the <a class="reference external" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a>
+singleton is used.
+If <em class="xref py py-obj">seed</em> is an int, a new <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance is used,
+seeded with <em class="xref py py-obj">seed</em>.
+If <em class="xref py py-obj">seed</em> is already a <code class="docutils literal notranslate"><span class="pre">Generator</span></code> or <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance then
+that instance is used.
+Specify <em class="xref py py-obj">seed</em> for repeatable minimizations. The random numbers
+generated with this seed only affect the default Metropolis
+<em class="xref py py-obj">accept_test</em> and the default <em class="xref py py-obj">take_step</em>. If you supply your own
+<em class="xref py py-obj">take_step</em> and <em class="xref py py-obj">accept_test</em>, and these functions use random
+number generation, then those functions are responsible for the state
+of their random number generator.</p>
+</dd>
+<dt><strong>target_accept_rate</strong><span class="classifier">float, optional</span></dt><dd><p>The target acceptance rate that is used to adjust the <em class="xref py py-obj">stepsize</em>.
+If the current acceptance rate is greater than the target,
+then the <em class="xref py py-obj">stepsize</em> is increased. Otherwise, it is decreased.
+Range is (0, 1). Default is 0.5.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.8.0.</span></p>
+</div>
+</dd>
+<dt><strong>stepwise_factor</strong><span class="classifier">float, optional</span></dt><dd><p>The <em class="xref py py-obj">stepsize</em> is multiplied or divided by this stepwise factor upon
+each update. Range is (0, 1). Default is 0.9.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.8.0.</span></p>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>res</strong><span class="classifier">OptimizeResult</span></dt><dd><p>The optimization result represented as a <a class="reference internal" href="scipy.optimize.OptimizeResult.html#scipy.optimize.OptimizeResult" title="scipy.optimize.OptimizeResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptimizeResult</span></code></a> object.
+Important attributes are: <code class="docutils literal notranslate"><span class="pre">x</span></code> the solution array, <code class="docutils literal notranslate"><span class="pre">fun</span></code> the value
+of the function at the solution, and <code class="docutils literal notranslate"><span class="pre">message</span></code> which describes the
+cause of the termination. The <code class="docutils literal notranslate"><span class="pre">OptimizeResult</span></code> object returned by the
+selected minimizer at the lowest minimum is also contained within this
+object and can be accessed through the <code class="docutils literal notranslate"><span class="pre">lowest_optimization_result</span></code>
+attribute.  See <a class="reference internal" href="scipy.optimize.OptimizeResult.html#scipy.optimize.OptimizeResult" title="scipy.optimize.OptimizeResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptimizeResult</span></code></a> for a description of other attributes.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="scipy.optimize.minimize.html#scipy.optimize.minimize" title="scipy.optimize.minimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minimize</span></code></a></dt><dd><p>The local minimization function called once for each basinhopping step. <em class="xref py py-obj">minimizer_kwargs</em> is passed to this routine.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>Basin-hopping is a stochastic algorithm which attempts to find the global
+minimum of a smooth scalar function of one or more variables <a class="reference internal" href="#r7bc5d3316b4a-1" id="id2">[1]</a> <a class="reference internal" href="#r7bc5d3316b4a-2" id="id3">[2]</a> <a class="reference internal" href="#r7bc5d3316b4a-3" id="id4">[3]</a>
+<a class="reference internal" href="#r7bc5d3316b4a-4" id="id5">[4]</a>. The algorithm in its current form was described by David Wales and
+Jonathan Doye <a class="reference internal" href="#r7bc5d3316b4a-2" id="id6">[2]</a> <a class="reference external" href="http://www-wales.ch.cam.ac.uk/">http://www-wales.ch.cam.ac.uk/</a>.</p>
+<p>The algorithm is iterative with each cycle composed of the following
+features</p>
+<ol class="arabic simple">
+<li><p>random perturbation of the coordinates</p></li>
+<li><p>local minimization</p></li>
+<li><p>accept or reject the new coordinates based on the minimized function
+value</p></li>
+</ol>
+<p>The acceptance test used here is the Metropolis criterion of standard Monte
+Carlo algorithms, although there are many other possibilities <a class="reference internal" href="#r7bc5d3316b4a-3" id="id7">[3]</a>.</p>
+<p>This global minimization method has been shown to be extremely efficient
+for a wide variety of problems in physics and chemistry. It is
+particularly useful when the function has many minima separated by large
+barriers. See the <a class="reference external" href="https://www-wales.ch.cam.ac.uk/CCD.html">Cambridge Cluster Database</a> for databases of molecular
+systems that have been optimized primarily using basin-hopping. This
+database includes minimization problems exceeding 300 degrees of freedom.</p>
+<p>See the free software program <a class="reference external" href="https://www-wales.ch.cam.ac.uk/GMIN">GMIN</a>
+for a Fortran implementation of basin-hopping. This implementation has many
+variations of the procedure described above, including more
+advanced step taking algorithms and alternate acceptance criterion.</p>
+<p>For stochastic global optimization there is no way to determine if the true
+global minimum has actually been found. Instead, as a consistency check,
+the algorithm can be run from a number of different random starting points
+to ensure the lowest minimum found in each example has converged to the
+global minimum. For this reason, <a class="reference internal" href="#scipy.optimize.basinhopping" title="scipy.optimize.basinhopping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basinhopping</span></code></a> will by default simply
+run for the number of iterations <em class="xref py py-obj">niter</em> and return the lowest minimum
+found. It is left to the user to ensure that this is in fact the global
+minimum.</p>
+<p>Choosing <em class="xref py py-obj">stepsize</em>:  This is a crucial parameter in <a class="reference internal" href="#scipy.optimize.basinhopping" title="scipy.optimize.basinhopping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basinhopping</span></code></a> and
+depends on the problem being solved. The step is chosen uniformly in the
+region from x0-stepsize to x0+stepsize, in each dimension. Ideally, it
+should be comparable to the typical separation (in argument values) between
+local minima of the function being optimized. <a class="reference internal" href="#scipy.optimize.basinhopping" title="scipy.optimize.basinhopping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basinhopping</span></code></a> will, by
+default, adjust <em class="xref py py-obj">stepsize</em> to find an optimal value, but this may take
+many iterations. You will get quicker results if you set a sensible
+initial value for <code class="docutils literal notranslate"><span class="pre">stepsize</span></code>.</p>
+<p>Choosing <em class="xref py py-obj">T</em>: The parameter <em class="xref py py-obj">T</em> is the “temperature” used in the
+Metropolis criterion. Basinhopping steps are always accepted if
+<code class="docutils literal notranslate"><span class="pre">func(xnew)</span> <span class="pre">&lt;</span> <span class="pre">func(xold)</span></code>. Otherwise, they are accepted with
+probability:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">exp</span><span class="p">(</span> <span class="o">-</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">xnew</span><span class="p">)</span> <span class="o">-</span> <span class="n">func</span><span class="p">(</span><span class="n">xold</span><span class="p">))</span> <span class="o">/</span> <span class="n">T</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>So, for best results, <em class="xref py py-obj">T</em> should to be comparable to the typical
+difference (in function values) between local minima. (The height of
+“walls” between local minima is irrelevant.)</p>
+<p>If <em class="xref py py-obj">T</em> is 0, the algorithm becomes Monotonic Basin-Hopping, in which all
+steps that increase energy are rejected.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 0.12.0.</span></p>
+</div>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r7bc5d3316b4a-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
+<p>Wales, David J. 2003, Energy Landscapes, Cambridge University Press,
+Cambridge, UK.</p>
+</div>
+<div class="citation" id="r7bc5d3316b4a-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id6">2</a>)</span>
+<p>Wales, D J, and Doye J P K, Global Optimization by Basin-Hopping and
+the Lowest Energy Structures of Lennard-Jones Clusters Containing up to
+110 Atoms.  Journal of Physical Chemistry A, 1997, 101, 5111.</p>
+</div>
+<div class="citation" id="r7bc5d3316b4a-3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id4">1</a>,<a role="doc-backlink" href="#id7">2</a>)</span>
+<p>Li, Z. and Scheraga, H. A., Monte Carlo-minimization approach to the
+multiple-minima problem in protein folding, Proc. Natl. Acad. Sci. USA,
+1987, 84, 6611.</p>
+</div>
+<div class="citation" id="r7bc5d3316b4a-4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">4</a><span class="fn-bracket">]</span></span>
+<p>Wales, D. J. and Scheraga, H. A., Global optimization of clusters,
+crystals, and biomolecules, Science, 1999, 285, 1368.</p>
+</div>
+<div class="citation" id="r7bc5d3316b4a-5" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">5</a><span class="fn-bracket">]</span></span>
+<p>Olson, B., Hashmi, I., Molloy, K., and Shehu1, A., Basin Hopping as
+a General and Versatile Optimization Framework for the Characterization
+of Biological Macromolecules, Advances in Artificial Intelligence,
+Volume 2012 (2012), Article ID 674832, <a class="reference external" href="https://doi.org/10.1155/2012/674832">DOI:10.1155/2012/674832</a></p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="c7bb9f15-5f65-428b-ad4d-99c8138a44bf">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('c7bb9f15-5f65-428b-ad4d-99c8138a44bf','5b6fc37c-eb10-4545-8ab5-71e2618e1a21','07598d12-fb76-4d48-86ef-98c59aaf9363','../../lite/tree/../notebooks/index.html?path=c8c58332_b61b_4e96_b051_3174d0b8c010.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>The following example is a 1-D minimization problem, with many
+local minima superimposed on a parabola.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">basinhopping</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">14.5</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="mf">0.3</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mf">0.2</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Basinhopping, internally, uses a local minimization algorithm. We will use
+the parameter <em class="xref py py-obj">minimizer_kwargs</em> to tell basinhopping which algorithm to
+use and how to set up that minimizer. This parameter will be passed to
+<a class="reference internal" href="scipy.optimize.minimize.html#scipy.optimize.minimize" title="scipy.optimize.minimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.minimize</span></code></a>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">minimizer_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;BFGS&quot;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ret</span> <span class="o">=</span> <span class="n">basinhopping</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">minimizer_kwargs</span><span class="o">=</span><span class="n">minimizer_kwargs</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">niter</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># the global minimum is:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ret</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">ret</span><span class="o">.</span><span class="n">fun</span>
+<span class="go">-0.1951, -1.0009</span>
+</pre></div>
+</div>
+<p>Next consider a 2-D minimization problem. Also, this time, we
+will use gradient information to significantly speed up the search.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">func2d</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">14.5</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.3</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.2</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span>
+<span class="gp">... </span>                                                           <span class="mf">0.2</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="n">df</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">df</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">14.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">14.5</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.3</span><span class="p">)</span> <span class="o">+</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.2</span>
+<span class="gp">... </span>    <span class="n">df</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.2</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">f</span><span class="p">,</span> <span class="n">df</span>
+</pre></div>
+</div>
+<p>We’ll also use a different local minimization algorithm. Also, we must tell
+the minimizer that our function returns both energy and gradient (Jacobian).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">minimizer_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;method&quot;</span><span class="p">:</span><span class="s2">&quot;L-BFGS-B&quot;</span><span class="p">,</span> <span class="s2">&quot;jac&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ret</span> <span class="o">=</span> <span class="n">basinhopping</span><span class="p">(</span><span class="n">func2d</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">minimizer_kwargs</span><span class="o">=</span><span class="n">minimizer_kwargs</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">niter</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;global minimum: x = [</span><span class="si">%.4f</span><span class="s2">, </span><span class="si">%.4f</span><span class="s2">], f(x) = </span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ret</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>                                                          <span class="n">ret</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>                                                          <span class="n">ret</span><span class="o">.</span><span class="n">fun</span><span class="p">))</span>
+<span class="go">global minimum: x = [-0.1951, -0.1000], f(x) = -1.0109</span>
+</pre></div>
+</div>
+<p>Here is an example using a custom step-taking routine. Imagine you want
+the first coordinate to take larger steps than the rest of the coordinates.
+This can be implemented like so:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyTakeStep</span><span class="p">:</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stepsize</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<span class="gp">... </span>       <span class="bp">self</span><span class="o">.</span><span class="n">stepsize</span> <span class="o">=</span> <span class="n">stepsize</span>
+<span class="gp">... </span>       <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>       <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stepsize</span>
+<span class="gp">... </span>       <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mf">2.</span><span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="mf">2.</span><span class="o">*</span><span class="n">s</span><span class="p">)</span>
+<span class="gp">... </span>       <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="n">s</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="gp">... </span>       <span class="k">return</span> <span class="n">x</span>
+</pre></div>
+</div>
+<p>Since <code class="docutils literal notranslate"><span class="pre">MyTakeStep.stepsize</span></code> exists basinhopping will adjust the magnitude
+of <em class="xref py py-obj">stepsize</em> to optimize the search. We’ll use the same 2-D function as
+before</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mytakestep</span> <span class="o">=</span> <span class="n">MyTakeStep</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ret</span> <span class="o">=</span> <span class="n">basinhopping</span><span class="p">(</span><span class="n">func2d</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">minimizer_kwargs</span><span class="o">=</span><span class="n">minimizer_kwargs</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">niter</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">take_step</span><span class="o">=</span><span class="n">mytakestep</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;global minimum: x = [</span><span class="si">%.4f</span><span class="s2">, </span><span class="si">%.4f</span><span class="s2">], f(x) = </span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ret</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>                                                          <span class="n">ret</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+<span class="gp">... </span>                                                          <span class="n">ret</span><span class="o">.</span><span class="n">fun</span><span class="p">))</span>
+<span class="go">global minimum: x = [-0.1951, -0.1000], f(x) = -1.0109</span>
+</pre></div>
+</div>
+<p>Now, let’s do an example using a custom callback function which prints the
+value of every minimum found</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">print_fun</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">accepted</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;at minimum </span><span class="si">%.4f</span><span class="s2"> accepted </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">accepted</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>We’ll run it for only 10 basinhopping steps this time.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ret</span> <span class="o">=</span> <span class="n">basinhopping</span><span class="p">(</span><span class="n">func2d</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">minimizer_kwargs</span><span class="o">=</span><span class="n">minimizer_kwargs</span><span class="p">,</span>
+<span class="gp">... </span>                   <span class="n">niter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">print_fun</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="go">at minimum 0.4159 accepted 1</span>
+<span class="go">at minimum -0.4317 accepted 1</span>
+<span class="go">at minimum -1.0109 accepted 1</span>
+<span class="go">at minimum -0.9073 accepted 1</span>
+<span class="go">at minimum -0.4317 accepted 0</span>
+<span class="go">at minimum -0.1021 accepted 1</span>
+<span class="go">at minimum -0.7425 accepted 1</span>
+<span class="go">at minimum -0.9073 accepted 1</span>
+<span class="go">at minimum -0.4317 accepted 0</span>
+<span class="go">at minimum -0.7425 accepted 1</span>
+<span class="go">at minimum -0.9073 accepted 1</span>
+</pre></div>
+</div>
+<p>The minimum at -1.0109 is actually the global minimum, found already on the
+8th iteration.</p>
+</div>
+</div>
+<div id="07598d12-fb76-4d48-86ef-98c59aaf9363" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('c7bb9f15-5f65-428b-ad4d-99c8138a44bf','07598d12-fb76-4d48-86ef-98c59aaf9363')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('c7bb9f15-5f65-428b-ad4d-99c8138a44bf','07598d12-fb76-4d48-86ef-98c59aaf9363')">Open In Tab</button></div><div id="5b6fc37c-eb10-4545-8ab5-71e2618e1a21" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.optimize.SR1.update.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">update</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.optimize.brute.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">brute</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.optimize.basinhopping"><code class="docutils literal notranslate"><span class="pre">basinhopping</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

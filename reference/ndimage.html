@@ -1,0 +1,876 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Multidimensional image processing (scipy.ndimage) &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/ndimage';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="convolve" href="generated/scipy.ndimage.convolve.html" />
+    <link rel="prev" title="electrocardiogram" href="generated/scipy.misc.electrocardiogram.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">scipy.misc</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">SciPy API</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Multidimensional image processing (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.ndimage</span></code>)</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="multidimensional-image-processing-scipy-ndimage">
+<span id="module-scipy.ndimage"></span><h1>Multidimensional image processing (<a class="reference internal" href="#module-scipy.ndimage" title="scipy.ndimage"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.ndimage</span></code></a>)<a class="headerlink" href="#multidimensional-image-processing-scipy-ndimage" title="Link to this heading">#</a></h1>
+<p>This package contains various functions for multidimensional image
+processing.</p>
+<section id="filters">
+<h2>Filters<a class="headerlink" href="#filters" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.convolve.html#scipy.ndimage.convolve" title="scipy.ndimage.convolve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convolve</span></code></a>(input, weights[, output, mode, ...])</p></td>
+<td><p>Multidimensional convolution.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.convolve1d.html#scipy.ndimage.convolve1d" title="scipy.ndimage.convolve1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convolve1d</span></code></a>(input, weights[, axis, output, ...])</p></td>
+<td><p>Calculate a 1-D convolution along the given axis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.correlate.html#scipy.ndimage.correlate" title="scipy.ndimage.correlate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correlate</span></code></a>(input, weights[, output, mode, ...])</p></td>
+<td><p>Multidimensional correlation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.correlate1d.html#scipy.ndimage.correlate1d" title="scipy.ndimage.correlate1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correlate1d</span></code></a>(input, weights[, axis, output, ...])</p></td>
+<td><p>Calculate a 1-D correlation along the given axis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.gaussian_filter.html#scipy.ndimage.gaussian_filter" title="scipy.ndimage.gaussian_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gaussian_filter</span></code></a>(input, sigma[, order, ...])</p></td>
+<td><p>Multidimensional Gaussian filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.gaussian_filter1d.html#scipy.ndimage.gaussian_filter1d" title="scipy.ndimage.gaussian_filter1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gaussian_filter1d</span></code></a>(input, sigma[, axis, ...])</p></td>
+<td><p>1-D Gaussian filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.gaussian_gradient_magnitude.html#scipy.ndimage.gaussian_gradient_magnitude" title="scipy.ndimage.gaussian_gradient_magnitude"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gaussian_gradient_magnitude</span></code></a>(input, sigma[, ...])</p></td>
+<td><p>Multidimensional gradient magnitude using Gaussian derivatives.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.gaussian_laplace.html#scipy.ndimage.gaussian_laplace" title="scipy.ndimage.gaussian_laplace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gaussian_laplace</span></code></a>(input, sigma[, output, ...])</p></td>
+<td><p>Multidimensional Laplace filter using Gaussian second derivatives.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.generic_filter.html#scipy.ndimage.generic_filter" title="scipy.ndimage.generic_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generic_filter</span></code></a>(input, function[, size, ...])</p></td>
+<td><p>Calculate a multidimensional filter using the given function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.generic_filter1d.html#scipy.ndimage.generic_filter1d" title="scipy.ndimage.generic_filter1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generic_filter1d</span></code></a>(input, function, filter_size)</p></td>
+<td><p>Calculate a 1-D filter along the given axis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.generic_gradient_magnitude.html#scipy.ndimage.generic_gradient_magnitude" title="scipy.ndimage.generic_gradient_magnitude"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generic_gradient_magnitude</span></code></a>(input, derivative)</p></td>
+<td><p>Gradient magnitude using a provided gradient function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.generic_laplace.html#scipy.ndimage.generic_laplace" title="scipy.ndimage.generic_laplace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generic_laplace</span></code></a>(input, derivative2[, ...])</p></td>
+<td><p>N-D Laplace filter using a provided second derivative function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.laplace.html#scipy.ndimage.laplace" title="scipy.ndimage.laplace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">laplace</span></code></a>(input[, output, mode, cval, axes])</p></td>
+<td><p>N-D Laplace filter based on approximate second derivatives.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.maximum_filter.html#scipy.ndimage.maximum_filter" title="scipy.ndimage.maximum_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">maximum_filter</span></code></a>(input[, size, footprint, ...])</p></td>
+<td><p>Calculate a multidimensional maximum filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.maximum_filter1d.html#scipy.ndimage.maximum_filter1d" title="scipy.ndimage.maximum_filter1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">maximum_filter1d</span></code></a>(input, size[, axis, ...])</p></td>
+<td><p>Calculate a 1-D maximum filter along the given axis.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.median_filter.html#scipy.ndimage.median_filter" title="scipy.ndimage.median_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">median_filter</span></code></a>(input[, size, footprint, ...])</p></td>
+<td><p>Calculate a multidimensional median filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.minimum_filter.html#scipy.ndimage.minimum_filter" title="scipy.ndimage.minimum_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minimum_filter</span></code></a>(input[, size, footprint, ...])</p></td>
+<td><p>Calculate a multidimensional minimum filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.minimum_filter1d.html#scipy.ndimage.minimum_filter1d" title="scipy.ndimage.minimum_filter1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minimum_filter1d</span></code></a>(input, size[, axis, ...])</p></td>
+<td><p>Calculate a 1-D minimum filter along the given axis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.percentile_filter.html#scipy.ndimage.percentile_filter" title="scipy.ndimage.percentile_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">percentile_filter</span></code></a>(input, percentile[, size, ...])</p></td>
+<td><p>Calculate a multidimensional percentile filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.prewitt.html#scipy.ndimage.prewitt" title="scipy.ndimage.prewitt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prewitt</span></code></a>(input[, axis, output, mode, cval])</p></td>
+<td><p>Calculate a Prewitt filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.rank_filter.html#scipy.ndimage.rank_filter" title="scipy.ndimage.rank_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rank_filter</span></code></a>(input, rank[, size, footprint, ...])</p></td>
+<td><p>Calculate a multidimensional rank filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.sobel.html#scipy.ndimage.sobel" title="scipy.ndimage.sobel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sobel</span></code></a>(input[, axis, output, mode, cval])</p></td>
+<td><p>Calculate a Sobel filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.uniform_filter.html#scipy.ndimage.uniform_filter" title="scipy.ndimage.uniform_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uniform_filter</span></code></a>(input[, size, output, mode, ...])</p></td>
+<td><p>Multidimensional uniform filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.uniform_filter1d.html#scipy.ndimage.uniform_filter1d" title="scipy.ndimage.uniform_filter1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uniform_filter1d</span></code></a>(input, size[, axis, ...])</p></td>
+<td><p>Calculate a 1-D uniform filter along the given axis.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="fourier-filters">
+<h2>Fourier filters<a class="headerlink" href="#fourier-filters" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.fourier_ellipsoid.html#scipy.ndimage.fourier_ellipsoid" title="scipy.ndimage.fourier_ellipsoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fourier_ellipsoid</span></code></a>(input, size[, n, axis, output])</p></td>
+<td><p>Multidimensional ellipsoid Fourier filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.fourier_gaussian.html#scipy.ndimage.fourier_gaussian" title="scipy.ndimage.fourier_gaussian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fourier_gaussian</span></code></a>(input, sigma[, n, axis, output])</p></td>
+<td><p>Multidimensional Gaussian fourier filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.fourier_shift.html#scipy.ndimage.fourier_shift" title="scipy.ndimage.fourier_shift"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fourier_shift</span></code></a>(input, shift[, n, axis, output])</p></td>
+<td><p>Multidimensional Fourier shift filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.fourier_uniform.html#scipy.ndimage.fourier_uniform" title="scipy.ndimage.fourier_uniform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fourier_uniform</span></code></a>(input, size[, n, axis, output])</p></td>
+<td><p>Multidimensional uniform fourier filter.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="interpolation">
+<h2>Interpolation<a class="headerlink" href="#interpolation" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.affine_transform.html#scipy.ndimage.affine_transform" title="scipy.ndimage.affine_transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">affine_transform</span></code></a>(input, matrix[, offset, ...])</p></td>
+<td><p>Apply an affine transformation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.geometric_transform.html#scipy.ndimage.geometric_transform" title="scipy.ndimage.geometric_transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">geometric_transform</span></code></a>(input, mapping[, ...])</p></td>
+<td><p>Apply an arbitrary geometric transform.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.map_coordinates.html#scipy.ndimage.map_coordinates" title="scipy.ndimage.map_coordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map_coordinates</span></code></a>(input, coordinates[, ...])</p></td>
+<td><p>Map the input array to new coordinates by interpolation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.rotate.html#scipy.ndimage.rotate" title="scipy.ndimage.rotate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate</span></code></a>(input, angle[, axes, reshape, ...])</p></td>
+<td><p>Rotate an array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.shift.html#scipy.ndimage.shift" title="scipy.ndimage.shift"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shift</span></code></a>(input, shift[, output, order, mode, ...])</p></td>
+<td><p>Shift an array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.spline_filter.html#scipy.ndimage.spline_filter" title="scipy.ndimage.spline_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spline_filter</span></code></a>(input[, order, output, mode])</p></td>
+<td><p>Multidimensional spline filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.spline_filter1d.html#scipy.ndimage.spline_filter1d" title="scipy.ndimage.spline_filter1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spline_filter1d</span></code></a>(input[, order, axis, ...])</p></td>
+<td><p>Calculate a 1-D spline filter along the given axis.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.zoom.html#scipy.ndimage.zoom" title="scipy.ndimage.zoom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zoom</span></code></a>(input, zoom[, output, order, mode, ...])</p></td>
+<td><p>Zoom an array.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="measurements">
+<h2>Measurements<a class="headerlink" href="#measurements" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.center_of_mass.html#scipy.ndimage.center_of_mass" title="scipy.ndimage.center_of_mass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">center_of_mass</span></code></a>(input[, labels, index])</p></td>
+<td><p>Calculate the center of mass of the values of an array at labels.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.extrema.html#scipy.ndimage.extrema" title="scipy.ndimage.extrema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extrema</span></code></a>(input[, labels, index])</p></td>
+<td><p>Calculate the minimums and maximums of the values of an array at labels, along with their positions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.find_objects.html#scipy.ndimage.find_objects" title="scipy.ndimage.find_objects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_objects</span></code></a>(input[, max_label])</p></td>
+<td><p>Find objects in a labeled array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.histogram.html#scipy.ndimage.histogram" title="scipy.ndimage.histogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">histogram</span></code></a>(input, min, max, bins[, labels, index])</p></td>
+<td><p>Calculate the histogram of the values of an array, optionally at labels.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.label.html#scipy.ndimage.label" title="scipy.ndimage.label"><code class="xref py py-obj docutils literal notranslate"><span class="pre">label</span></code></a>(input[, structure, output])</p></td>
+<td><p>Label features in an array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.labeled_comprehension.html#scipy.ndimage.labeled_comprehension" title="scipy.ndimage.labeled_comprehension"><code class="xref py py-obj docutils literal notranslate"><span class="pre">labeled_comprehension</span></code></a>(input, labels, index, ...)</p></td>
+<td><p>Roughly equivalent to [func(input[labels == i]) for i in index].</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.maximum.html#scipy.ndimage.maximum" title="scipy.ndimage.maximum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">maximum</span></code></a>(input[, labels, index])</p></td>
+<td><p>Calculate the maximum of the values of an array over labeled regions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.maximum_position.html#scipy.ndimage.maximum_position" title="scipy.ndimage.maximum_position"><code class="xref py py-obj docutils literal notranslate"><span class="pre">maximum_position</span></code></a>(input[, labels, index])</p></td>
+<td><p>Find the positions of the maximums of the values of an array at labels.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.mean.html#scipy.ndimage.mean" title="scipy.ndimage.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean</span></code></a>(input[, labels, index])</p></td>
+<td><p>Calculate the mean of the values of an array at labels.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.median.html#scipy.ndimage.median" title="scipy.ndimage.median"><code class="xref py py-obj docutils literal notranslate"><span class="pre">median</span></code></a>(input[, labels, index])</p></td>
+<td><p>Calculate the median of the values of an array over labeled regions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.minimum.html#scipy.ndimage.minimum" title="scipy.ndimage.minimum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minimum</span></code></a>(input[, labels, index])</p></td>
+<td><p>Calculate the minimum of the values of an array over labeled regions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.minimum_position.html#scipy.ndimage.minimum_position" title="scipy.ndimage.minimum_position"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minimum_position</span></code></a>(input[, labels, index])</p></td>
+<td><p>Find the positions of the minimums of the values of an array at labels.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.standard_deviation.html#scipy.ndimage.standard_deviation" title="scipy.ndimage.standard_deviation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">standard_deviation</span></code></a>(input[, labels, index])</p></td>
+<td><p>Calculate the standard deviation of the values of an N-D image array, optionally at specified sub-regions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.sum_labels.html#scipy.ndimage.sum_labels" title="scipy.ndimage.sum_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sum_labels</span></code></a>(input[, labels, index])</p></td>
+<td><p>Calculate the sum of the values of the array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.value_indices.html#scipy.ndimage.value_indices" title="scipy.ndimage.value_indices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">value_indices</span></code></a>(arr, *[, ignore_value])</p></td>
+<td><p>Find indices of each distinct value in given array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.variance.html#scipy.ndimage.variance" title="scipy.ndimage.variance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variance</span></code></a>(input[, labels, index])</p></td>
+<td><p>Calculate the variance of the values of an N-D image array, optionally at specified sub-regions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.watershed_ift.html#scipy.ndimage.watershed_ift" title="scipy.ndimage.watershed_ift"><code class="xref py py-obj docutils literal notranslate"><span class="pre">watershed_ift</span></code></a>(input, markers[, structure, ...])</p></td>
+<td><p>Apply watershed from markers using image foresting transform algorithm.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="morphology">
+<h2>Morphology<a class="headerlink" href="#morphology" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.binary_closing.html#scipy.ndimage.binary_closing" title="scipy.ndimage.binary_closing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">binary_closing</span></code></a>(input[, structure, ...])</p></td>
+<td><p>Multidimensional binary closing with the given structuring element.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.binary_dilation.html#scipy.ndimage.binary_dilation" title="scipy.ndimage.binary_dilation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">binary_dilation</span></code></a>(input[, structure, ...])</p></td>
+<td><p>Multidimensional binary dilation with the given structuring element.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.binary_erosion.html#scipy.ndimage.binary_erosion" title="scipy.ndimage.binary_erosion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">binary_erosion</span></code></a>(input[, structure, ...])</p></td>
+<td><p>Multidimensional binary erosion with a given structuring element.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.binary_fill_holes.html#scipy.ndimage.binary_fill_holes" title="scipy.ndimage.binary_fill_holes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">binary_fill_holes</span></code></a>(input[, structure, ...])</p></td>
+<td><p>Fill the holes in binary objects.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.binary_hit_or_miss.html#scipy.ndimage.binary_hit_or_miss" title="scipy.ndimage.binary_hit_or_miss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">binary_hit_or_miss</span></code></a>(input[, structure1, ...])</p></td>
+<td><p>Multidimensional binary hit-or-miss transform.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.binary_opening.html#scipy.ndimage.binary_opening" title="scipy.ndimage.binary_opening"><code class="xref py py-obj docutils literal notranslate"><span class="pre">binary_opening</span></code></a>(input[, structure, ...])</p></td>
+<td><p>Multidimensional binary opening with the given structuring element.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.binary_propagation.html#scipy.ndimage.binary_propagation" title="scipy.ndimage.binary_propagation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">binary_propagation</span></code></a>(input[, structure, mask, ...])</p></td>
+<td><p>Multidimensional binary propagation with the given structuring element.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.black_tophat.html#scipy.ndimage.black_tophat" title="scipy.ndimage.black_tophat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">black_tophat</span></code></a>(input[, size, footprint, ...])</p></td>
+<td><p>Multidimensional black tophat filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.distance_transform_bf.html#scipy.ndimage.distance_transform_bf" title="scipy.ndimage.distance_transform_bf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">distance_transform_bf</span></code></a>(input[, metric, ...])</p></td>
+<td><p>Distance transform function by a brute force algorithm.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.distance_transform_cdt.html#scipy.ndimage.distance_transform_cdt" title="scipy.ndimage.distance_transform_cdt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">distance_transform_cdt</span></code></a>(input[, metric, ...])</p></td>
+<td><p>Distance transform for chamfer type of transforms.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.distance_transform_edt.html#scipy.ndimage.distance_transform_edt" title="scipy.ndimage.distance_transform_edt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">distance_transform_edt</span></code></a>(input[, sampling, ...])</p></td>
+<td><p>Exact Euclidean distance transform.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.generate_binary_structure.html#scipy.ndimage.generate_binary_structure" title="scipy.ndimage.generate_binary_structure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_binary_structure</span></code></a>(rank, connectivity)</p></td>
+<td><p>Generate a binary structure for binary morphological operations.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.grey_closing.html#scipy.ndimage.grey_closing" title="scipy.ndimage.grey_closing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grey_closing</span></code></a>(input[, size, footprint, ...])</p></td>
+<td><p>Multidimensional grayscale closing.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.grey_dilation.html#scipy.ndimage.grey_dilation" title="scipy.ndimage.grey_dilation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grey_dilation</span></code></a>(input[, size, footprint, ...])</p></td>
+<td><p>Calculate a greyscale dilation, using either a structuring element, or a footprint corresponding to a flat structuring element.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.grey_erosion.html#scipy.ndimage.grey_erosion" title="scipy.ndimage.grey_erosion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grey_erosion</span></code></a>(input[, size, footprint, ...])</p></td>
+<td><p>Calculate a greyscale erosion, using either a structuring element, or a footprint corresponding to a flat structuring element.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.grey_opening.html#scipy.ndimage.grey_opening" title="scipy.ndimage.grey_opening"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grey_opening</span></code></a>(input[, size, footprint, ...])</p></td>
+<td><p>Multidimensional grayscale opening.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.iterate_structure.html#scipy.ndimage.iterate_structure" title="scipy.ndimage.iterate_structure"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iterate_structure</span></code></a>(structure, iterations[, ...])</p></td>
+<td><p>Iterate a structure by dilating it with itself.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.morphological_gradient.html#scipy.ndimage.morphological_gradient" title="scipy.ndimage.morphological_gradient"><code class="xref py py-obj docutils literal notranslate"><span class="pre">morphological_gradient</span></code></a>(input[, size, ...])</p></td>
+<td><p>Multidimensional morphological gradient.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.ndimage.morphological_laplace.html#scipy.ndimage.morphological_laplace" title="scipy.ndimage.morphological_laplace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">morphological_laplace</span></code></a>(input[, size, ...])</p></td>
+<td><p>Multidimensional morphological laplace.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.ndimage.white_tophat.html#scipy.ndimage.white_tophat" title="scipy.ndimage.white_tophat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">white_tophat</span></code></a>(input[, size, footprint, ...])</p></td>
+<td><p>Multidimensional white tophat filter.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="generated/scipy.misc.electrocardiogram.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">electrocardiogram</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="generated/scipy.ndimage.convolve.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">convolve</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filters">Filters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fourier-filters">Fourier filters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpolation">Interpolation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#measurements">Measurements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#morphology">Morphology</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

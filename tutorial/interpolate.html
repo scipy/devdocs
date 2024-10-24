@@ -1,0 +1,758 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Interpolation (scipy.interpolate) &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorial/interpolate';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="1-D interpolation" href="interpolate/1D.html" />
+    <link rel="prev" title="Optimization (scipy.optimize)" href="optimize.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="special.html">Special functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.special</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integrate.html">Integration (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.integrate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.html">Optimization (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/1D.html">1-D interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/splines_and_polynomials.html">Piecewise polynomials and splines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/smoothing_splines.html">Smoothing splines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/ND_regular_grid.html">Multivariate data interpolation on a regular grid  (<code class="xref py py-class docutils literal notranslate"><span class="pre">RegularGridInterpolator</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/ND_unstructured.html">Scattered data interpolation (<code class="xref py py-func docutils literal notranslate"><span class="pre">griddata</span></code>)</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="interpolate/extrapolation_examples.html">Extrapolation tips and tricks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/interp_transition_guide.html">Interpolate transition guide</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="fft.html">Fourier Transforms (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.fft</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signal.html">Signal Processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">Linear Algebra (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse.html">Sparse Arrays (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arpack.html">Sparse eigenvalue problems with ARPACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csgraph.html">Compressed Sparse Graph Routines (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.csgraph</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial.html">Spatial data structures and algorithms (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stats.html">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ndimage.html">Multidimensional image processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">File IO (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.io</span></code>)</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">SciPy User Guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="interpolation-scipy-interpolate">
+<h1>Interpolation (<a class="reference internal" href="../reference/interpolate.html#module-scipy.interpolate" title="scipy.interpolate"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code></a>)<a class="headerlink" href="#interpolation-scipy-interpolate" title="Link to this heading">#</a></h1>
+<p>There are several general facilities available in SciPy for interpolation and
+smoothing for data in 1, 2, and higher dimensions. The choice of a specific
+interpolation routine depends on the data: whether it is one-dimensional,
+is given on a structured grid, or is unstructured. One other factor is the
+desired smoothness of the interpolator. In short, routines recommended <em>for
+interpolation</em> can be summarized as follows:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p><strong>kind</strong></p></th>
+<th class="head"><p><strong>routine</strong></p></th>
+<th class="head"><p><strong>continuity</strong></p></th>
+<th class="head"><p><strong>comment</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td rowspan="5"><p>1D</p></td>
+<td><p>linear</p></td>
+<td><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.interp.html#numpy.interp" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.interp</span></code></a></p></td>
+<td><p>piecewise continuous</p></td>
+<td><p>comes from numpy</p></td>
+</tr>
+<tr class="row-odd"><td><p>cubic spline</p></td>
+<td><p><a class="reference internal" href="../reference/generated/scipy.interpolate.CubicSpline.html#scipy.interpolate.CubicSpline" title="scipy.interpolate.CubicSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CubicSpline</span></code></a></p></td>
+<td><p>2nd derivative</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>monotone cubic spline</p></td>
+<td><p><a class="reference internal" href="../reference/generated/scipy.interpolate.PchipInterpolator.html#scipy.interpolate.PchipInterpolator" title="scipy.interpolate.PchipInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PchipInterpolator</span></code></a></p></td>
+<td><p>1st derivative</p></td>
+<td><p>non-overshooting</p></td>
+</tr>
+<tr class="row-odd"><td><p>non-cubic spline</p></td>
+<td><p><a class="reference internal" href="../reference/generated/scipy.interpolate.make_interp_spline.html#scipy.interpolate.make_interp_spline" title="scipy.interpolate.make_interp_spline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_interp_spline</span></code></a></p></td>
+<td><p>(k-1)th derivative</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">k=3</span></code> is equivalent to <a class="reference internal" href="../reference/generated/scipy.interpolate.CubicSpline.html#scipy.interpolate.CubicSpline" title="scipy.interpolate.CubicSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CubicSpline</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p>nearest</p></td>
+<td><p><a class="reference internal" href="../reference/generated/scipy.interpolate.interp1d.html#scipy.interpolate.interp1d" title="scipy.interpolate.interp1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interp1d</span></code></a></p></td>
+<td></td>
+<td><p>kind=’nearest’, ‘previous’, ‘next’</p></td>
+</tr>
+<tr class="row-odd"><td><p>N-D curve</p></td>
+<td><p>nearest, linear, spline</p></td>
+<td><p><a class="reference internal" href="../reference/generated/scipy.interpolate.make_interp_spline.html#scipy.interpolate.make_interp_spline" title="scipy.interpolate.make_interp_spline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_interp_spline</span></code></a></p></td>
+<td><p>(k-1)th derivative</p></td>
+<td><p>use N-dim <em class="xref py py-obj">y</em> array</p></td>
+</tr>
+<tr class="row-even"><td rowspan="4"><p>N-D regular
+(<em>rectilinear</em>)
+grid</p></td>
+<td><p>nearest</p></td>
+<td rowspan="4"><p><a class="reference internal" href="../reference/generated/scipy.interpolate.RegularGridInterpolator.html#scipy.interpolate.RegularGridInterpolator" title="scipy.interpolate.RegularGridInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RegularGridInterpolator</span></code></a></p></td>
+<td rowspan="2"></td>
+<td><p>method=’nearest’</p></td>
+</tr>
+<tr class="row-odd"><td><p>linear</p></td>
+<td><p>method=’linear’</p></td>
+</tr>
+<tr class="row-even"><td><p>splines</p></td>
+<td><p>2nd derivatives</p></td>
+<td><p>method=’cubic’, ‘quintic’</p></td>
+</tr>
+<tr class="row-odd"><td><p>monotone splines</p></td>
+<td><p>1st derivatives</p></td>
+<td><p>method=’pchip’</p></td>
+</tr>
+<tr class="row-even"><td rowspan="4"><p>N-D scattered</p></td>
+<td><p>nearest</p></td>
+<td><p><a class="reference internal" href="../reference/generated/scipy.interpolate.NearestNDInterpolator.html#scipy.interpolate.NearestNDInterpolator" title="scipy.interpolate.NearestNDInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NearestNDInterpolator</span></code></a></p></td>
+<td rowspan="2"></td>
+<td rowspan="3"><p>alias: <a class="reference internal" href="../reference/generated/scipy.interpolate.griddata.html#scipy.interpolate.griddata" title="scipy.interpolate.griddata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">griddata</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>linear</p></td>
+<td><p><a class="reference internal" href="../reference/generated/scipy.interpolate.LinearNDInterpolator.html#scipy.interpolate.LinearNDInterpolator" title="scipy.interpolate.LinearNDInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearNDInterpolator</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p>cubic (2D only)</p></td>
+<td><p><a class="reference internal" href="../reference/generated/scipy.interpolate.CloughTocher2DInterpolator.html#scipy.interpolate.CloughTocher2DInterpolator" title="scipy.interpolate.CloughTocher2DInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CloughTocher2DInterpolator</span></code></a></p></td>
+<td><p>1st derivatives</p></td>
+</tr>
+<tr class="row-odd"><td><p>radial basis function</p></td>
+<td><p><a class="reference internal" href="../reference/generated/scipy.interpolate.RBFInterpolator.html#scipy.interpolate.RBFInterpolator" title="scipy.interpolate.RBFInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RBFInterpolator</span></code></a></p></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For data smoothing, <a class="reference internal" href="interpolate/smoothing_splines.html#tutorial-interpolate-fitpack"><span class="std std-ref">functions are provided</span></a>
+for 1- and 2-D data using cubic splines, based on the FORTRAN library FITPACK.</p>
+<p>Additionally, routines are provided for interpolation / smoothing using
+<a class="reference internal" href="interpolate/ND_unstructured.html#tutorial-interpolate-rbf"><span class="std std-ref">radial basis functions</span></a> with several kernels.</p>
+<p>Further details are given in the links below.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="interpolate/1D.html">1-D interpolation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/1D.html#piecewise-linear-interpolation">Piecewise linear interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/1D.html#cubic-splines">Cubic splines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/1D.html#monotone-interpolants">Monotone interpolants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/1D.html#interpolation-with-b-splines">Interpolation with B-splines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="interpolate/1D.html#non-cubic-splines">Non-cubic splines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/1D.html#parametric-spline-curves">Parametric spline curves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/1D.html#legacy-interface-for-1-d-interpolation-interp1d">Legacy interface for 1-D interpolation (<code class="xref py py-class docutils literal notranslate"><span class="pre">interp1d</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/1D.html#missing-data">Missing data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate/splines_and_polynomials.html">Piecewise polynomials and splines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/splines_and_polynomials.html#manipulating-ppoly-objects">Manipulating <code class="xref py py-obj docutils literal notranslate"><span class="pre">PPoly</span></code> objects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/splines_and_polynomials.html#b-splines-knots-and-coefficients">B-splines: knots and coefficients</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="interpolate/splines_and_polynomials.html#b-spline-basis-elements">B-spline basis elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interpolate/splines_and_polynomials.html#design-matrices-in-the-b-spline-basis">Design matrices in the B-spline basis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate/smoothing_splines.html">Smoothing splines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/smoothing_splines.html#spline-smoothing-in-1-d">Spline smoothing in 1-D</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="interpolate/smoothing_splines.html#procedural-splrep">Procedural (<code class="xref py py-obj docutils literal notranslate"><span class="pre">splrep</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interpolate/smoothing_splines.html#object-oriented-univariatespline">Object-oriented (<code class="xref py py-class docutils literal notranslate"><span class="pre">UnivariateSpline</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/smoothing_splines.html#d-smoothing-splines">2-D smoothing splines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="interpolate/smoothing_splines.html#bivariate-spline-fitting-of-scattered-data">Bivariate spline fitting of scattered data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interpolate/smoothing_splines.html#bivariate-spline-fitting-of-data-on-a-grid">Bivariate spline fitting of data on a grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interpolate/smoothing_splines.html#bivariate-spline-fitting-of-data-in-spherical-coordinates">Bivariate spline fitting of data in spherical coordinates</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate/ND_regular_grid.html">Multivariate data interpolation on a regular grid  (<code class="xref py py-class docutils literal notranslate"><span class="pre">RegularGridInterpolator</span></code>)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/ND_regular_grid.html#uniformly-spaced-data">Uniformly spaced data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate/ND_unstructured.html">Scattered data interpolation (<code class="xref py py-func docutils literal notranslate"><span class="pre">griddata</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate/ND_unstructured.html#using-radial-basis-functions-for-smoothing-interpolation">Using radial basis functions for smoothing/interpolation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/ND_unstructured.html#d-example">1-D Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/ND_unstructured.html#id1">2-D Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate/extrapolation_examples.html">Extrapolation tips and tricks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/extrapolation_examples.html#interp1d-replicate-numpy-interp-left-and-right-fill-values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">interp1d</span></code> : replicate <code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.interp</span></code> left and right fill values</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/extrapolation_examples.html#cubicspline-extend-the-boundary-conditions">CubicSpline extend the boundary conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/extrapolation_examples.html#manually-implement-the-asymptotics">Manually implement the asymptotics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="interpolate/extrapolation_examples.html#the-setup">The setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interpolate/extrapolation_examples.html#use-the-known-asymptotics">Use the known asymptotics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/extrapolation_examples.html#extrapolation-in-d-1">Extrapolation in <code class="docutils literal notranslate"><span class="pre">D</span> <span class="pre">&gt;</span> <span class="pre">1</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate/interp_transition_guide.html">Interpolate transition guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/interp_transition_guide.html#how-to-transition-away-from-using-interp2d">1. How to transition away from using  <code class="docutils literal notranslate"><span class="pre">interp2d</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="interpolate/interp_transition_guide.html#interp2d-on-a-regular-grid">1.1 <code class="docutils literal notranslate"><span class="pre">interp2d</span></code> on a regular grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interpolate/interp_transition_guide.html#interp2d-with-full-coordinates-of-points-scattered-interpolation">1.2. <code class="docutils literal notranslate"><span class="pre">interp2d</span></code> with full coordinates of points (scattered interpolation)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/interp_transition_guide.html#alternative-to-interp2d-regular-grid">2. Alternative to <code class="docutils literal notranslate"><span class="pre">interp2d</span></code>: regular grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interpolate/interp_transition_guide.html#scattered-2d-linear-interpolation-prefer-linearndinterpolator-to-smoothbivariatespline-or-bisplrep">3. Scattered 2D linear interpolation: prefer <code class="docutils literal notranslate"><span class="pre">LinearNDInterpolator</span></code> to <code class="docutils literal notranslate"><span class="pre">SmoothBivariateSpline</span></code>  or <code class="docutils literal notranslate"><span class="pre">bisplrep</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="optimize.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Optimization (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="interpolate/1D.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">1-D interpolation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

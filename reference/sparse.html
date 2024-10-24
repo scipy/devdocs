@@ -1,0 +1,1001 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Sparse arrays (scipy.sparse) &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/sparse';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Compressed sparse graph routines (scipy.sparse.csgraph)" href="sparse.csgraph.html" />
+    <link rel="prev" title="czt_points" href="generated/scipy.signal.czt_points.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signal.html">scipy.signal</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">SciPy API</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Sparse arrays (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="sparse-arrays-scipy-sparse">
+<span id="module-scipy.sparse"></span><h1>Sparse arrays (<a class="reference internal" href="#module-scipy.sparse" title="scipy.sparse"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.sparse</span></code></a>)<a class="headerlink" href="#sparse-arrays-scipy-sparse" title="Link to this heading">#</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p>SciPy 2-D sparse array package for numeric data.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This package is switching to an array interface, compatible with
+NumPy arrays, from the older matrix interface.  We recommend that
+you use the array objects (<a class="reference internal" href="generated/scipy.sparse.bsr_array.html#scipy.sparse.bsr_array" title="scipy.sparse.bsr_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bsr_array</span></code></a>, <a class="reference internal" href="generated/scipy.sparse.coo_array.html#scipy.sparse.coo_array" title="scipy.sparse.coo_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">coo_array</span></code></a>, etc.) for
+all new work.</p>
+<p>When using the array interface, please note that:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">*</span> <span class="pre">y</span></code> no longer performs matrix multiplication, but
+element-wise multiplication (just like with NumPy arrays).  To
+make code work with both arrays and matrices, use <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">&#64;</span> <span class="pre">y</span></code> for
+matrix multiplication.</p></li>
+<li><p>Operations such as <code class="docutils literal notranslate"><span class="pre">sum</span></code>, that used to produce dense matrices, now
+produce arrays, whose multiplication behavior differs similarly.</p></li>
+<li><p>Sparse arrays use array style <em>slicing</em> operations, returning scalars,
+1D, or 2D sparse arrays. If you need 2D results, use an appropriate index.
+E.g. <code class="docutils literal notranslate"><span class="pre">A[:,</span> <span class="pre">i,</span> <span class="pre">None]</span></code> or <code class="docutils literal notranslate"><span class="pre">A[:,</span> <span class="pre">[i]]</span></code>.</p></li>
+</ul>
+<p>The construction utilities (<a class="reference internal" href="generated/scipy.sparse.eye.html#scipy.sparse.eye" title="scipy.sparse.eye"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eye</span></code></a>, <a class="reference internal" href="generated/scipy.sparse.kron.html#scipy.sparse.kron" title="scipy.sparse.kron"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kron</span></code></a>, <a class="reference internal" href="generated/scipy.sparse.random.html#scipy.sparse.random" title="scipy.sparse.random"><code class="xref py py-obj docutils literal notranslate"><span class="pre">random</span></code></a>, <a class="reference internal" href="generated/scipy.sparse.diags.html#scipy.sparse.diags" title="scipy.sparse.diags"><code class="xref py py-obj docutils literal notranslate"><span class="pre">diags</span></code></a>, etc.)
+have appropriate replacements (see <a class="reference internal" href="#sparse-construction-functions"><span class="std std-ref">Building sparse arrays</span></a>).</p>
+<p>For more information see
+<a class="reference internal" href="sparse.migration_to_sparray.html#migration-to-sparray"><span class="std std-ref">Migration from spmatrix to sparray</span></a>.</p>
+</div>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="sparse.csgraph.html#module-scipy.sparse.csgraph" title="scipy.sparse.csgraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">csgraph</span></code></a></p></td>
+<td><p>Compressed sparse graph routines (scipy.sparse.csgraph)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="sparse.linalg.html#module-scipy.sparse.linalg" title="scipy.sparse.linalg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linalg</span></code></a></p></td>
+<td><p>Sparse linear algebra (scipy.sparse.linalg)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="sparse-array-classes">
+<h2>Sparse array classes<a class="headerlink" href="#sparse-array-classes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.bsr_array.html#scipy.sparse.bsr_array" title="scipy.sparse.bsr_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bsr_array</span></code></a>(arg1[, shape, dtype, copy, ...])</p></td>
+<td><p>Block Sparse Row format sparse array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.coo_array.html#scipy.sparse.coo_array" title="scipy.sparse.coo_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">coo_array</span></code></a>(arg1[, shape, dtype, copy, maxprint])</p></td>
+<td><p>A sparse array in COOrdinate format.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.csc_array.html#scipy.sparse.csc_array" title="scipy.sparse.csc_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">csc_array</span></code></a>(arg1[, shape, dtype, copy, maxprint])</p></td>
+<td><p>Compressed Sparse Column array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.csr_array.html#scipy.sparse.csr_array" title="scipy.sparse.csr_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">csr_array</span></code></a>(arg1[, shape, dtype, copy, maxprint])</p></td>
+<td><p>Compressed Sparse Row array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.dia_array.html#scipy.sparse.dia_array" title="scipy.sparse.dia_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dia_array</span></code></a>(arg1[, shape, dtype, copy, maxprint])</p></td>
+<td><p>Sparse array with DIAgonal storage.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.dok_array.html#scipy.sparse.dok_array" title="scipy.sparse.dok_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dok_array</span></code></a>(arg1[, shape, dtype, copy, maxprint])</p></td>
+<td><p>Dictionary Of Keys based sparse array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.lil_array.html#scipy.sparse.lil_array" title="scipy.sparse.lil_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lil_array</span></code></a>(arg1[, shape, dtype, copy, maxprint])</p></td>
+<td><p>Row-based LIst of Lists sparse array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.sparray.html#scipy.sparse.sparray" title="scipy.sparse.sparray"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparray</span></code></a>()</p></td>
+<td><p>This class provides a base class for all sparse arrays.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="building-sparse-arrays">
+<span id="sparse-construction-functions"></span><h3>Building sparse arrays<a class="headerlink" href="#building-sparse-arrays" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.diags_array.html#scipy.sparse.diags_array" title="scipy.sparse.diags_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">diags_array</span></code></a>(diagonals, /, *[, offsets, ...])</p></td>
+<td><p>Construct a sparse array from diagonals.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.eye_array.html#scipy.sparse.eye_array" title="scipy.sparse.eye_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eye_array</span></code></a>(m[, n, k, dtype, format])</p></td>
+<td><p>Identity matrix in sparse array format</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.random_array.html#scipy.sparse.random_array" title="scipy.sparse.random_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">random_array</span></code></a>(shape, *[, density, format, ...])</p></td>
+<td><p>Return a sparse array of uniformly random numbers in [0, 1)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.block_array.html#scipy.sparse.block_array" title="scipy.sparse.block_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">block_array</span></code></a>(blocks, *[, format, dtype])</p></td>
+<td><p>Build a sparse array from sparse sub-blocks</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="combining-arrays">
+<span id="id1"></span><h3>Combining arrays<a class="headerlink" href="#combining-arrays" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.kron.html#scipy.sparse.kron" title="scipy.sparse.kron"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kron</span></code></a>(A, B[, format])</p></td>
+<td><p>kronecker product of sparse matrices A and B</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.kronsum.html#scipy.sparse.kronsum" title="scipy.sparse.kronsum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kronsum</span></code></a>(A, B[, format])</p></td>
+<td><p>kronecker sum of square sparse matrices A and B</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.block_diag.html#scipy.sparse.block_diag" title="scipy.sparse.block_diag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">block_diag</span></code></a>(mats[, format, dtype])</p></td>
+<td><p>Build a block diagonal sparse matrix or array from provided matrices.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.tril.html#scipy.sparse.tril" title="scipy.sparse.tril"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tril</span></code></a>(A[, k, format])</p></td>
+<td><p>Return the lower triangular portion of a sparse array or matrix</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.triu.html#scipy.sparse.triu" title="scipy.sparse.triu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">triu</span></code></a>(A[, k, format])</p></td>
+<td><p>Return the upper triangular portion of a sparse array or matrix</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.hstack.html#scipy.sparse.hstack" title="scipy.sparse.hstack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hstack</span></code></a>(blocks[, format, dtype])</p></td>
+<td><p>Stack sparse matrices horizontally (column wise)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.vstack.html#scipy.sparse.vstack" title="scipy.sparse.vstack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vstack</span></code></a>(blocks[, format, dtype])</p></td>
+<td><p>Stack sparse arrays vertically (row wise)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="sparse-tools">
+<h3>Sparse tools<a class="headerlink" href="#sparse-tools" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.save_npz.html#scipy.sparse.save_npz" title="scipy.sparse.save_npz"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_npz</span></code></a>(file, matrix[, compressed])</p></td>
+<td><p>Save a sparse matrix or array to a file using <code class="docutils literal notranslate"><span class="pre">.npz</span></code> format.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.load_npz.html#scipy.sparse.load_npz" title="scipy.sparse.load_npz"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_npz</span></code></a>(file)</p></td>
+<td><p>Load a sparse array/matrix from a file using <code class="docutils literal notranslate"><span class="pre">.npz</span></code> format.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.find.html#scipy.sparse.find" title="scipy.sparse.find"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find</span></code></a>(A)</p></td>
+<td><p>Return the indices and values of the nonzero elements of a matrix</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="identifying-sparse-arrays">
+<h3>Identifying sparse arrays<a class="headerlink" href="#identifying-sparse-arrays" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.issparse.html#scipy.sparse.issparse" title="scipy.sparse.issparse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">issparse</span></code></a>(x)</p></td>
+<td><p>Is <em class="xref py py-obj">x</em> of a sparse array or sparse matrix type?</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="sparse-matrix-classes">
+<h2>Sparse matrix classes<a class="headerlink" href="#sparse-matrix-classes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.bsr_matrix.html#scipy.sparse.bsr_matrix" title="scipy.sparse.bsr_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bsr_matrix</span></code></a>(arg1[, shape, dtype, copy, ...])</p></td>
+<td><p>Block Sparse Row format sparse matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.coo_matrix.html#scipy.sparse.coo_matrix" title="scipy.sparse.coo_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">coo_matrix</span></code></a>(arg1[, shape, dtype, copy, maxprint])</p></td>
+<td><p>A sparse matrix in COOrdinate format.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.csc_matrix.html#scipy.sparse.csc_matrix" title="scipy.sparse.csc_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">csc_matrix</span></code></a>(arg1[, shape, dtype, copy, maxprint])</p></td>
+<td><p>Compressed Sparse Column matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix" title="scipy.sparse.csr_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">csr_matrix</span></code></a>(arg1[, shape, dtype, copy, maxprint])</p></td>
+<td><p>Compressed Sparse Row matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.dia_matrix.html#scipy.sparse.dia_matrix" title="scipy.sparse.dia_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dia_matrix</span></code></a>(arg1[, shape, dtype, copy, maxprint])</p></td>
+<td><p>Sparse matrix with DIAgonal storage.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.dok_matrix.html#scipy.sparse.dok_matrix" title="scipy.sparse.dok_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dok_matrix</span></code></a>(arg1[, shape, dtype, copy, maxprint])</p></td>
+<td><p>Dictionary Of Keys based sparse matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.lil_matrix.html#scipy.sparse.lil_matrix" title="scipy.sparse.lil_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lil_matrix</span></code></a>(arg1[, shape, dtype, copy, maxprint])</p></td>
+<td><p>Row-based LIst of Lists sparse matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.spmatrix.html#scipy.sparse.spmatrix" title="scipy.sparse.spmatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spmatrix</span></code></a>()</p></td>
+<td><p>This class provides a base class for all sparse matrix classes.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="building-sparse-matrices">
+<h3>Building sparse matrices<a class="headerlink" href="#building-sparse-matrices" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.eye.html#scipy.sparse.eye" title="scipy.sparse.eye"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eye</span></code></a>(m[, n, k, dtype, format])</p></td>
+<td><p>Sparse matrix with ones on diagonal</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.identity.html#scipy.sparse.identity" title="scipy.sparse.identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">identity</span></code></a>(n[, dtype, format])</p></td>
+<td><p>Identity matrix in sparse format</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.diags.html#scipy.sparse.diags" title="scipy.sparse.diags"><code class="xref py py-obj docutils literal notranslate"><span class="pre">diags</span></code></a>(diagonals[, offsets, shape, format, dtype])</p></td>
+<td><p>Construct a sparse matrix from diagonals.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.spdiags.html#scipy.sparse.spdiags" title="scipy.sparse.spdiags"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spdiags</span></code></a>(data, diags[, m, n, format])</p></td>
+<td><p>Return a sparse matrix from diagonals.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.bmat.html#scipy.sparse.bmat" title="scipy.sparse.bmat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bmat</span></code></a>(blocks[, format, dtype])</p></td>
+<td><p>Build a sparse array or matrix from sparse sub-blocks</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.random.html#scipy.sparse.random" title="scipy.sparse.random"><code class="xref py py-obj docutils literal notranslate"><span class="pre">random</span></code></a>(m, n[, density, format, dtype, ...])</p></td>
+<td><p>Generate a sparse matrix of the given shape and density with randomly distributed values.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.rand.html#scipy.sparse.rand" title="scipy.sparse.rand"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rand</span></code></a>(m, n[, density, format, dtype, ...])</p></td>
+<td><p>Generate a sparse matrix of the given shape and density with uniformly distributed values.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Combining matrices use the same functions as for</strong> <a class="reference internal" href="#combining-arrays"><span class="std std-ref">Combining arrays</span></a>.</p>
+</section>
+<section id="identifying-sparse-matrices">
+<h3>Identifying sparse matrices<a class="headerlink" href="#identifying-sparse-matrices" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.issparse.html#scipy.sparse.issparse" title="scipy.sparse.issparse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">issparse</span></code></a>(x)</p></td>
+<td><p>Is <em class="xref py py-obj">x</em> of a sparse array or sparse matrix type?</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.isspmatrix.html#scipy.sparse.isspmatrix" title="scipy.sparse.isspmatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isspmatrix</span></code></a>(x)</p></td>
+<td><p>Is <em class="xref py py-obj">x</em> of a sparse matrix type?</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.isspmatrix_csc.html#scipy.sparse.isspmatrix_csc" title="scipy.sparse.isspmatrix_csc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isspmatrix_csc</span></code></a>(x)</p></td>
+<td><p>Is <em class="xref py py-obj">x</em> of csc_matrix type?</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.isspmatrix_csr.html#scipy.sparse.isspmatrix_csr" title="scipy.sparse.isspmatrix_csr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isspmatrix_csr</span></code></a>(x)</p></td>
+<td><p>Is <em class="xref py py-obj">x</em> of csr_matrix type?</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.isspmatrix_bsr.html#scipy.sparse.isspmatrix_bsr" title="scipy.sparse.isspmatrix_bsr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isspmatrix_bsr</span></code></a>(x)</p></td>
+<td><p>Is <em class="xref py py-obj">x</em> of a bsr_matrix type?</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.isspmatrix_lil.html#scipy.sparse.isspmatrix_lil" title="scipy.sparse.isspmatrix_lil"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isspmatrix_lil</span></code></a>(x)</p></td>
+<td><p>Is <em class="xref py py-obj">x</em> of lil_matrix type?</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.isspmatrix_dok.html#scipy.sparse.isspmatrix_dok" title="scipy.sparse.isspmatrix_dok"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isspmatrix_dok</span></code></a>(x)</p></td>
+<td><p>Is <em class="xref py py-obj">x</em> of dok_array type?</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.isspmatrix_coo.html#scipy.sparse.isspmatrix_coo" title="scipy.sparse.isspmatrix_coo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isspmatrix_coo</span></code></a>(x)</p></td>
+<td><p>Is <em class="xref py py-obj">x</em> of coo_matrix type?</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.isspmatrix_dia.html#scipy.sparse.isspmatrix_dia" title="scipy.sparse.isspmatrix_dia"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isspmatrix_dia</span></code></a>(x)</p></td>
+<td><p>Is <em class="xref py py-obj">x</em> of dia_matrix type?</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="warnings">
+<h2>Warnings<a class="headerlink" href="#warnings" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.sparse.SparseEfficiencyWarning.html#scipy.sparse.SparseEfficiencyWarning" title="scipy.sparse.SparseEfficiencyWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SparseEfficiencyWarning</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.sparse.SparseWarning.html#scipy.sparse.SparseWarning" title="scipy.sparse.SparseWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SparseWarning</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="usage-information">
+<h2>Usage information<a class="headerlink" href="#usage-information" title="Link to this heading">#</a></h2>
+<p>There are seven available sparse array types:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>csc_array: Compressed Sparse Column format</p></li>
+<li><p>csr_array: Compressed Sparse Row format</p></li>
+<li><p>bsr_array: Block Sparse Row format</p></li>
+<li><p>lil_array: List of Lists format</p></li>
+<li><p>dok_array: Dictionary of Keys format</p></li>
+<li><p>coo_array: COOrdinate format (aka IJV, triplet format)</p></li>
+<li><p>dia_array: DIAgonal format</p></li>
+</ol>
+</div></blockquote>
+<p>To construct an array efficiently, use any of <a class="reference internal" href="generated/scipy.sparse.coo_array.html#scipy.sparse.coo_array" title="scipy.sparse.coo_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">coo_array</span></code></a>,
+<a class="reference internal" href="generated/scipy.sparse.dok_array.html#scipy.sparse.dok_array" title="scipy.sparse.dok_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dok_array</span></code></a> or <a class="reference internal" href="generated/scipy.sparse.lil_array.html#scipy.sparse.lil_array" title="scipy.sparse.lil_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lil_array</span></code></a>. <a class="reference internal" href="generated/scipy.sparse.dok_array.html#scipy.sparse.dok_array" title="scipy.sparse.dok_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dok_array</span></code></a> and <a class="reference internal" href="generated/scipy.sparse.lil_array.html#scipy.sparse.lil_array" title="scipy.sparse.lil_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lil_array</span></code></a>
+support basic slicing and fancy indexing with a similar syntax
+to NumPy arrays. The COO format does not support indexing (yet)
+but can also be used to efficiently construct arrays using coord
+and value info.</p>
+<p>Despite their similarity to NumPy arrays, it is <strong>strongly discouraged</strong>
+to use NumPy functions directly on these arrays because NumPy typically
+treats them as generic Python objects rather than arrays, leading to
+unexpected (and incorrect) results. If you do want to apply a NumPy
+function to these arrays, first check if SciPy has its own implementation
+for the given sparse array class, or <strong>convert the sparse array to
+a NumPy array</strong> (e.g., using the <em class="xref py py-obj">toarray</em> method of the class)
+before applying the method.</p>
+<p>All conversions among the CSR, CSC, and COO formats are efficient,
+linear-time operations.</p>
+<p>To perform manipulations such as multiplication or inversion, first
+convert the array to either CSC or CSR format. The <a class="reference internal" href="generated/scipy.sparse.lil_array.html#scipy.sparse.lil_array" title="scipy.sparse.lil_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lil_array</span></code></a>
+format is row-based, so conversion to CSR is efficient, whereas
+conversion to CSC is less so.</p>
+<section id="matrix-vector-product">
+<h3>Matrix vector product<a class="headerlink" href="#matrix-vector-product" title="Link to this heading">#</a></h3>
+<p>To do a vector product between a 2D sparse array and a vector use
+the matmul operator (i.e., <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>) which performs a dot product (like the
+<code class="docutils literal notranslate"><span class="pre">dot</span></code> method):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_array</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">csr_array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">@</span> <span class="n">v</span>
+<span class="go">array([ 1, -3, -1], dtype=int64)</span>
+</pre></div>
+</div>
+<p>The CSR format is especially suitable for fast matrix vector products.</p>
+</section>
+<section id="example-1">
+<h3>Example 1<a class="headerlink" href="#example-1" title="Link to this heading">#</a></h3>
+<p>Construct a 1000x1000 <a class="reference internal" href="generated/scipy.sparse.lil_array.html#scipy.sparse.lil_array" title="scipy.sparse.lil_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lil_array</span></code></a> and add some values to it:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">lil_array</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">spsolve</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">solve</span><span class="p">,</span> <span class="n">norm</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">rand</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">lil_array</span><span class="p">((</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="mi">100</span><span class="p">]</span> <span class="o">=</span> <span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span><span class="o">.</span><span class="n">setdiag</span><span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Now convert it to CSR format and solve A x = b for x:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">rand</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">spsolve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Convert it to a dense array and solve, and check that the result
+is the same:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x_</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">toarray</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we can compute norm of the error with:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">err</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">x_</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">err</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>It should be small :)</p>
+</section>
+<section id="example-2">
+<h3>Example 2<a class="headerlink" href="#example-2" title="Link to this heading">#</a></h3>
+<p>Construct an array in COO format:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">I</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">J</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">V</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">9</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">A</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">coo_array</span><span class="p">((</span><span class="n">V</span><span class="p">,(</span><span class="n">I</span><span class="p">,</span><span class="n">J</span><span class="p">)),</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Notice that the indices do not need to be sorted.</p>
+<p>Duplicate (i,j) entries are summed when converting to CSR or CSC.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">I</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">J</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">V</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">B</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">coo_array</span><span class="p">((</span><span class="n">V</span><span class="p">,(</span><span class="n">I</span><span class="p">,</span><span class="n">J</span><span class="p">)),</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This is useful for constructing finite-element stiffness and mass matrices.</p>
+</section>
+<section id="further-details">
+<h3>Further details<a class="headerlink" href="#further-details" title="Link to this heading">#</a></h3>
+<p>CSR column indices are not necessarily sorted. Likewise for CSC row
+indices. Use the <code class="docutils literal notranslate"><span class="pre">.sorted_indices()</span></code> and <code class="docutils literal notranslate"><span class="pre">.sort_indices()</span></code> methods when
+sorted indices are required (e.g., when passing data to other libraries).</p>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="generated/scipy.signal.czt_points.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">czt_points</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="sparse.csgraph.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Compressed sparse graph routines (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.sparse.csgraph</span></code>)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-array-classes">Sparse array classes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-sparse-arrays">Building sparse arrays</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#combining-arrays">Combining arrays</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-tools">Sparse tools</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#identifying-sparse-arrays">Identifying sparse arrays</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-matrix-classes">Sparse matrix classes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#building-sparse-matrices">Building sparse matrices</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#identifying-sparse-matrices">Identifying sparse matrices</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#warnings">Warnings</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-information">Usage information</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matrix-vector-product">Matrix vector product</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-1">Example 1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-2">Example 2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#further-details">Further details</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

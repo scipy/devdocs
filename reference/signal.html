@@ -1,0 +1,1210 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Signal processing (scipy.signal) &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/signal';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="convolve" href="generated/scipy.signal.convolve.html" />
+    <link rel="prev" title="diagbroyden" href="generated/scipy.optimize.diagbroyden.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">SciPy API</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Signal processing (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.signal</span></code>)</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="signal-processing-scipy-signal">
+<span id="module-scipy.signal"></span><h1>Signal processing (<a class="reference internal" href="#module-scipy.signal" title="scipy.signal"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.signal</span></code></a>)<a class="headerlink" href="#signal-processing-scipy-signal" title="Link to this heading">#</a></h1>
+<section id="convolution">
+<h2>Convolution<a class="headerlink" href="#convolution" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.convolve.html#scipy.signal.convolve" title="scipy.signal.convolve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convolve</span></code></a>(in1, in2[, mode, method])</p></td>
+<td><p>Convolve two N-dimensional arrays.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.correlate.html#scipy.signal.correlate" title="scipy.signal.correlate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correlate</span></code></a>(in1, in2[, mode, method])</p></td>
+<td><p>Cross-correlate two N-dimensional arrays.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.fftconvolve.html#scipy.signal.fftconvolve" title="scipy.signal.fftconvolve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fftconvolve</span></code></a>(in1, in2[, mode, axes])</p></td>
+<td><p>Convolve two N-dimensional arrays using FFT.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.oaconvolve.html#scipy.signal.oaconvolve" title="scipy.signal.oaconvolve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">oaconvolve</span></code></a>(in1, in2[, mode, axes])</p></td>
+<td><p>Convolve two N-dimensional arrays using the overlap-add method.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.convolve2d.html#scipy.signal.convolve2d" title="scipy.signal.convolve2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convolve2d</span></code></a>(in1, in2[, mode, boundary, fillvalue])</p></td>
+<td><p>Convolve two 2-dimensional arrays.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.correlate2d.html#scipy.signal.correlate2d" title="scipy.signal.correlate2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correlate2d</span></code></a>(in1, in2[, mode, boundary, ...])</p></td>
+<td><p>Cross-correlate two 2-dimensional arrays.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.sepfir2d.html#scipy.signal.sepfir2d" title="scipy.signal.sepfir2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sepfir2d</span></code></a>(input, hrow, hcol)</p></td>
+<td><p>Convolve with a 2-D separable FIR filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.choose_conv_method.html#scipy.signal.choose_conv_method" title="scipy.signal.choose_conv_method"><code class="xref py py-obj docutils literal notranslate"><span class="pre">choose_conv_method</span></code></a>(in1, in2[, mode, measure])</p></td>
+<td><p>Find the fastest convolution/correlation method.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.correlation_lags.html#scipy.signal.correlation_lags" title="scipy.signal.correlation_lags"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correlation_lags</span></code></a>(in1_len, in2_len[, mode])</p></td>
+<td><p>Calculates the lag / displacement indices array for 1D cross-correlation.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="b-splines">
+<h2>B-splines<a class="headerlink" href="#b-splines" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.gauss_spline.html#scipy.signal.gauss_spline" title="scipy.signal.gauss_spline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gauss_spline</span></code></a>(x, n)</p></td>
+<td><p>Gaussian approximation to B-spline basis function of order n.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.cspline1d.html#scipy.signal.cspline1d" title="scipy.signal.cspline1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspline1d</span></code></a>(signal[, lamb])</p></td>
+<td><p>Compute cubic spline coefficients for rank-1 array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.qspline1d.html#scipy.signal.qspline1d" title="scipy.signal.qspline1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">qspline1d</span></code></a>(signal[, lamb])</p></td>
+<td><p>Compute quadratic spline coefficients for rank-1 array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.cspline2d.html#scipy.signal.cspline2d" title="scipy.signal.cspline2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspline2d</span></code></a>(signal[, lamb, precision])</p></td>
+<td><p>Coefficients for 2-D cubic (3rd order) B-spline.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.qspline2d.html#scipy.signal.qspline2d" title="scipy.signal.qspline2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">qspline2d</span></code></a>(signal[, lamb, precision])</p></td>
+<td><p>Coefficients for 2-D quadratic (2nd order) B-spline.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.cspline1d_eval.html#scipy.signal.cspline1d_eval" title="scipy.signal.cspline1d_eval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cspline1d_eval</span></code></a>(cj, newx[, dx, x0])</p></td>
+<td><p>Evaluate a cubic spline at the new set of points.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.qspline1d_eval.html#scipy.signal.qspline1d_eval" title="scipy.signal.qspline1d_eval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">qspline1d_eval</span></code></a>(cj, newx[, dx, x0])</p></td>
+<td><p>Evaluate a quadratic spline at the new set of points.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.spline_filter.html#scipy.signal.spline_filter" title="scipy.signal.spline_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spline_filter</span></code></a>(Iin[, lmbda])</p></td>
+<td><p>Smoothing spline (cubic) filtering of a rank-2 array.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="filtering">
+<h2>Filtering<a class="headerlink" href="#filtering" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.order_filter.html#scipy.signal.order_filter" title="scipy.signal.order_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">order_filter</span></code></a>(a, domain, rank)</p></td>
+<td><p>Perform an order filter on an N-D array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.medfilt.html#scipy.signal.medfilt" title="scipy.signal.medfilt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">medfilt</span></code></a>(volume[, kernel_size])</p></td>
+<td><p>Perform a median filter on an N-dimensional array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.medfilt2d.html#scipy.signal.medfilt2d" title="scipy.signal.medfilt2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">medfilt2d</span></code></a>(input[, kernel_size])</p></td>
+<td><p>Median filter a 2-dimensional array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.wiener.html#scipy.signal.wiener" title="scipy.signal.wiener"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wiener</span></code></a>(im[, mysize, noise])</p></td>
+<td><p>Perform a Wiener filter on an N-dimensional array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.symiirorder1.html#scipy.signal.symiirorder1" title="scipy.signal.symiirorder1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">symiirorder1</span></code></a>(signal, c0, z1[, precision])</p></td>
+<td><p>Implement a smoothing IIR filter with mirror-symmetric boundary conditions using a cascade of first-order sections.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.symiirorder2.html#scipy.signal.symiirorder2" title="scipy.signal.symiirorder2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">symiirorder2</span></code></a>(input, r, omega[, precision])</p></td>
+<td><p>Implement a smoothing IIR filter with mirror-symmetric boundary conditions using a cascade of second-order sections.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.lfilter.html#scipy.signal.lfilter" title="scipy.signal.lfilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lfilter</span></code></a>(b, a, x[, axis, zi])</p></td>
+<td><p>Filter data along one-dimension with an IIR or FIR filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.lfiltic.html#scipy.signal.lfiltic" title="scipy.signal.lfiltic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lfiltic</span></code></a>(b, a, y[, x])</p></td>
+<td><p>Construct initial conditions for lfilter given input and output vectors.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.lfilter_zi.html#scipy.signal.lfilter_zi" title="scipy.signal.lfilter_zi"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lfilter_zi</span></code></a>(b, a)</p></td>
+<td><p>Construct initial conditions for lfilter for step response steady-state.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.filtfilt.html#scipy.signal.filtfilt" title="scipy.signal.filtfilt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filtfilt</span></code></a>(b, a, x[, axis, padtype, padlen, ...])</p></td>
+<td><p>Apply a digital filter forward and backward to a signal.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.savgol_filter.html#scipy.signal.savgol_filter" title="scipy.signal.savgol_filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">savgol_filter</span></code></a>(x, window_length, polyorder[, ...])</p></td>
+<td><p>Apply a Savitzky-Golay filter to an array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.deconvolve.html#scipy.signal.deconvolve" title="scipy.signal.deconvolve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deconvolve</span></code></a>(signal, divisor)</p></td>
+<td><p>Deconvolves <code class="docutils literal notranslate"><span class="pre">divisor</span></code> out of <code class="docutils literal notranslate"><span class="pre">signal</span></code> using inverse filtering.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.sosfilt.html#scipy.signal.sosfilt" title="scipy.signal.sosfilt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sosfilt</span></code></a>(sos, x[, axis, zi])</p></td>
+<td><p>Filter data along one dimension using cascaded second-order sections.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.sosfilt_zi.html#scipy.signal.sosfilt_zi" title="scipy.signal.sosfilt_zi"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sosfilt_zi</span></code></a>(sos)</p></td>
+<td><p>Construct initial conditions for sosfilt for step response steady-state.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.sosfiltfilt.html#scipy.signal.sosfiltfilt" title="scipy.signal.sosfiltfilt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sosfiltfilt</span></code></a>(sos, x[, axis, padtype, padlen])</p></td>
+<td><p>A forward-backward digital filter using cascaded second-order sections.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.hilbert.html#scipy.signal.hilbert" title="scipy.signal.hilbert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hilbert</span></code></a>(x[, N, axis])</p></td>
+<td><p>Compute the analytic signal, using the Hilbert transform.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.hilbert2.html#scipy.signal.hilbert2" title="scipy.signal.hilbert2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hilbert2</span></code></a>(x[, N])</p></td>
+<td><p>Compute the '2-D' analytic signal of <em class="xref py py-obj">x</em></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.decimate.html#scipy.signal.decimate" title="scipy.signal.decimate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decimate</span></code></a>(x, q[, n, ftype, axis, zero_phase])</p></td>
+<td><p>Downsample the signal after applying an anti-aliasing filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.detrend.html#scipy.signal.detrend" title="scipy.signal.detrend"><code class="xref py py-obj docutils literal notranslate"><span class="pre">detrend</span></code></a>(data[, axis, type, bp, overwrite_data])</p></td>
+<td><p>Remove linear or constant trend along axis from data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.resample.html#scipy.signal.resample" title="scipy.signal.resample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resample</span></code></a>(x, num[, t, axis, window, domain])</p></td>
+<td><p>Resample <em class="xref py py-obj">x</em> to <em class="xref py py-obj">num</em> samples using Fourier method along the given axis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.resample_poly.html#scipy.signal.resample_poly" title="scipy.signal.resample_poly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resample_poly</span></code></a>(x, up, down[, axis, window, ...])</p></td>
+<td><p>Resample <em class="xref py py-obj">x</em> along the given axis using polyphase filtering.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.upfirdn.html#scipy.signal.upfirdn" title="scipy.signal.upfirdn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upfirdn</span></code></a>(h, x[, up, down, axis, mode, cval])</p></td>
+<td><p>Upsample, FIR filter, and downsample.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="filter-design">
+<h2>Filter design<a class="headerlink" href="#filter-design" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.bilinear.html#scipy.signal.bilinear" title="scipy.signal.bilinear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bilinear</span></code></a>(b, a[, fs])</p></td>
+<td><p>Return a digital IIR filter from an analog one using a bilinear transform.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.bilinear_zpk.html#scipy.signal.bilinear_zpk" title="scipy.signal.bilinear_zpk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bilinear_zpk</span></code></a>(z, p, k, fs)</p></td>
+<td><p>Return a digital IIR filter from an analog one using a bilinear transform.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.findfreqs.html#scipy.signal.findfreqs" title="scipy.signal.findfreqs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">findfreqs</span></code></a>(num, den, N[, kind])</p></td>
+<td><p>Find array of frequencies for computing the response of an analog filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.firls.html#scipy.signal.firls" title="scipy.signal.firls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">firls</span></code></a>(numtaps, bands, desired, *[, weight, fs])</p></td>
+<td><p>FIR filter design using least-squares error minimization.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.firwin.html#scipy.signal.firwin" title="scipy.signal.firwin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">firwin</span></code></a>(numtaps, cutoff, *[, width, window, ...])</p></td>
+<td><p>FIR filter design using the window method.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.firwin2.html#scipy.signal.firwin2" title="scipy.signal.firwin2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">firwin2</span></code></a>(numtaps, freq, gain, *[, nfreqs, ...])</p></td>
+<td><p>FIR filter design using the window method.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.freqs.html#scipy.signal.freqs" title="scipy.signal.freqs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">freqs</span></code></a>(b, a[, worN, plot])</p></td>
+<td><p>Compute frequency response of analog filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.freqs_zpk.html#scipy.signal.freqs_zpk" title="scipy.signal.freqs_zpk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">freqs_zpk</span></code></a>(z, p, k[, worN])</p></td>
+<td><p>Compute frequency response of analog filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.freqz.html#scipy.signal.freqz" title="scipy.signal.freqz"><code class="xref py py-obj docutils literal notranslate"><span class="pre">freqz</span></code></a>(b[, a, worN, whole, plot, fs, ...])</p></td>
+<td><p>Compute the frequency response of a digital filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.freqz_sos.html#scipy.signal.freqz_sos" title="scipy.signal.freqz_sos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">freqz_sos</span></code></a>(sos[, worN, whole, fs])</p></td>
+<td><p>Compute the frequency response of a digital filter in SOS format.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.freqz_zpk.html#scipy.signal.freqz_zpk" title="scipy.signal.freqz_zpk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">freqz_zpk</span></code></a>(z, p, k[, worN, whole, fs])</p></td>
+<td><p>Compute the frequency response of a digital filter in ZPK form.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.gammatone.html#scipy.signal.gammatone" title="scipy.signal.gammatone"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gammatone</span></code></a>(freq, ftype[, order, numtaps, fs])</p></td>
+<td><p>Gammatone filter design.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.group_delay.html#scipy.signal.group_delay" title="scipy.signal.group_delay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">group_delay</span></code></a>(system[, w, whole, fs])</p></td>
+<td><p>Compute the group delay of a digital filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.iirdesign.html#scipy.signal.iirdesign" title="scipy.signal.iirdesign"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iirdesign</span></code></a>(wp, ws, gpass, gstop[, analog, ...])</p></td>
+<td><p>Complete IIR digital and analog filter design.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.iirfilter.html#scipy.signal.iirfilter" title="scipy.signal.iirfilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iirfilter</span></code></a>(N, Wn[, rp, rs, btype, analog, ...])</p></td>
+<td><p>IIR digital and analog filter design given order and critical points.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.kaiser_atten.html#scipy.signal.kaiser_atten" title="scipy.signal.kaiser_atten"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kaiser_atten</span></code></a>(numtaps, width)</p></td>
+<td><p>Compute the attenuation of a Kaiser FIR filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.kaiser_beta.html#scipy.signal.kaiser_beta" title="scipy.signal.kaiser_beta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kaiser_beta</span></code></a>(a)</p></td>
+<td><p>Compute the Kaiser parameter <em class="xref py py-obj">beta</em>, given the attenuation <em class="xref py py-obj">a</em>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.kaiserord.html#scipy.signal.kaiserord" title="scipy.signal.kaiserord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kaiserord</span></code></a>(ripple, width)</p></td>
+<td><p>Determine the filter window parameters for the Kaiser window method.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.minimum_phase.html#scipy.signal.minimum_phase" title="scipy.signal.minimum_phase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minimum_phase</span></code></a>(h[, method, n_fft, half])</p></td>
+<td><p>Convert a linear-phase FIR filter to minimum phase</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.savgol_coeffs.html#scipy.signal.savgol_coeffs" title="scipy.signal.savgol_coeffs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">savgol_coeffs</span></code></a>(window_length, polyorder[, ...])</p></td>
+<td><p>Compute the coefficients for a 1-D Savitzky-Golay FIR filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.remez.html#scipy.signal.remez" title="scipy.signal.remez"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remez</span></code></a>(numtaps, bands, desired, *[, weight, ...])</p></td>
+<td><p>Calculate the minimax optimal filter using the Remez exchange algorithm.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.unique_roots.html#scipy.signal.unique_roots" title="scipy.signal.unique_roots"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unique_roots</span></code></a>(p[, tol, rtype])</p></td>
+<td><p>Determine unique roots and their multiplicities from a list of roots.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.residue.html#scipy.signal.residue" title="scipy.signal.residue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">residue</span></code></a>(b, a[, tol, rtype])</p></td>
+<td><p>Compute partial-fraction expansion of b(s) / a(s).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.residuez.html#scipy.signal.residuez" title="scipy.signal.residuez"><code class="xref py py-obj docutils literal notranslate"><span class="pre">residuez</span></code></a>(b, a[, tol, rtype])</p></td>
+<td><p>Compute partial-fraction expansion of b(z) / a(z).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.invres.html#scipy.signal.invres" title="scipy.signal.invres"><code class="xref py py-obj docutils literal notranslate"><span class="pre">invres</span></code></a>(r, p, k[, tol, rtype])</p></td>
+<td><p>Compute b(s) and a(s) from partial fraction expansion.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.invresz.html#scipy.signal.invresz" title="scipy.signal.invresz"><code class="xref py py-obj docutils literal notranslate"><span class="pre">invresz</span></code></a>(r, p, k[, tol, rtype])</p></td>
+<td><p>Compute b(z) and a(z) from partial fraction expansion.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.BadCoefficients.html#scipy.signal.BadCoefficients" title="scipy.signal.BadCoefficients"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BadCoefficients</span></code></a></p></td>
+<td><p>Warning about badly conditioned filter coefficients</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Lower-level filter design functions:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.abcd_normalize.html#scipy.signal.abcd_normalize" title="scipy.signal.abcd_normalize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abcd_normalize</span></code></a>([A, B, C, D])</p></td>
+<td><p>Check state-space matrices and ensure they are 2-D.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.band_stop_obj.html#scipy.signal.band_stop_obj" title="scipy.signal.band_stop_obj"><code class="xref py py-obj docutils literal notranslate"><span class="pre">band_stop_obj</span></code></a>(wp, ind, passb, stopb, gpass, ...)</p></td>
+<td><p>Band Stop Objective Function for order minimization.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.besselap.html#scipy.signal.besselap" title="scipy.signal.besselap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">besselap</span></code></a>(N[, norm])</p></td>
+<td><p>Return (z,p,k) for analog prototype of an Nth-order Bessel filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.buttap.html#scipy.signal.buttap" title="scipy.signal.buttap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">buttap</span></code></a>(N)</p></td>
+<td><p>Return (z,p,k) for analog prototype of Nth-order Butterworth filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.cheb1ap.html#scipy.signal.cheb1ap" title="scipy.signal.cheb1ap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cheb1ap</span></code></a>(N, rp)</p></td>
+<td><p>Return (z,p,k) for Nth-order Chebyshev type I analog lowpass filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.cheb2ap.html#scipy.signal.cheb2ap" title="scipy.signal.cheb2ap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cheb2ap</span></code></a>(N, rs)</p></td>
+<td><p>Return (z,p,k) for Nth-order Chebyshev type II analog lowpass filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.ellipap.html#scipy.signal.ellipap" title="scipy.signal.ellipap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ellipap</span></code></a>(N, rp, rs)</p></td>
+<td><p>Return (z,p,k) of Nth-order elliptic analog lowpass filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.lp2bp.html#scipy.signal.lp2bp" title="scipy.signal.lp2bp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lp2bp</span></code></a>(b, a[, wo, bw])</p></td>
+<td><p>Transform a lowpass filter prototype to a bandpass filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.lp2bp_zpk.html#scipy.signal.lp2bp_zpk" title="scipy.signal.lp2bp_zpk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lp2bp_zpk</span></code></a>(z, p, k[, wo, bw])</p></td>
+<td><p>Transform a lowpass filter prototype to a bandpass filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.lp2bs.html#scipy.signal.lp2bs" title="scipy.signal.lp2bs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lp2bs</span></code></a>(b, a[, wo, bw])</p></td>
+<td><p>Transform a lowpass filter prototype to a bandstop filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.lp2bs_zpk.html#scipy.signal.lp2bs_zpk" title="scipy.signal.lp2bs_zpk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lp2bs_zpk</span></code></a>(z, p, k[, wo, bw])</p></td>
+<td><p>Transform a lowpass filter prototype to a bandstop filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.lp2hp.html#scipy.signal.lp2hp" title="scipy.signal.lp2hp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lp2hp</span></code></a>(b, a[, wo])</p></td>
+<td><p>Transform a lowpass filter prototype to a highpass filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.lp2hp_zpk.html#scipy.signal.lp2hp_zpk" title="scipy.signal.lp2hp_zpk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lp2hp_zpk</span></code></a>(z, p, k[, wo])</p></td>
+<td><p>Transform a lowpass filter prototype to a highpass filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.lp2lp.html#scipy.signal.lp2lp" title="scipy.signal.lp2lp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lp2lp</span></code></a>(b, a[, wo])</p></td>
+<td><p>Transform a lowpass filter prototype to a different frequency.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.lp2lp_zpk.html#scipy.signal.lp2lp_zpk" title="scipy.signal.lp2lp_zpk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lp2lp_zpk</span></code></a>(z, p, k[, wo])</p></td>
+<td><p>Transform a lowpass filter prototype to a different frequency.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.normalize.html#scipy.signal.normalize" title="scipy.signal.normalize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize</span></code></a>(b, a)</p></td>
+<td><p>Normalize numerator/denominator of a continuous-time transfer function.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="matlab-style-iir-filter-design">
+<h2>Matlab-style IIR filter design<a class="headerlink" href="#matlab-style-iir-filter-design" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.butter.html#scipy.signal.butter" title="scipy.signal.butter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">butter</span></code></a>(N, Wn[, btype, analog, output, fs])</p></td>
+<td><p>Butterworth digital and analog filter design.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.buttord.html#scipy.signal.buttord" title="scipy.signal.buttord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">buttord</span></code></a>(wp, ws, gpass, gstop[, analog, fs])</p></td>
+<td><p>Butterworth filter order selection.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.cheby1.html#scipy.signal.cheby1" title="scipy.signal.cheby1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cheby1</span></code></a>(N, rp, Wn[, btype, analog, output, fs])</p></td>
+<td><p>Chebyshev type I digital and analog filter design.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.cheb1ord.html#scipy.signal.cheb1ord" title="scipy.signal.cheb1ord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cheb1ord</span></code></a>(wp, ws, gpass, gstop[, analog, fs])</p></td>
+<td><p>Chebyshev type I filter order selection.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.cheby2.html#scipy.signal.cheby2" title="scipy.signal.cheby2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cheby2</span></code></a>(N, rs, Wn[, btype, analog, output, fs])</p></td>
+<td><p>Chebyshev type II digital and analog filter design.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.cheb2ord.html#scipy.signal.cheb2ord" title="scipy.signal.cheb2ord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cheb2ord</span></code></a>(wp, ws, gpass, gstop[, analog, fs])</p></td>
+<td><p>Chebyshev type II filter order selection.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.ellip.html#scipy.signal.ellip" title="scipy.signal.ellip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ellip</span></code></a>(N, rp, rs, Wn[, btype, analog, output, fs])</p></td>
+<td><p>Elliptic (Cauer) digital and analog filter design.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.ellipord.html#scipy.signal.ellipord" title="scipy.signal.ellipord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ellipord</span></code></a>(wp, ws, gpass, gstop[, analog, fs])</p></td>
+<td><p>Elliptic (Cauer) filter order selection.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.bessel.html#scipy.signal.bessel" title="scipy.signal.bessel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bessel</span></code></a>(N, Wn[, btype, analog, output, norm, fs])</p></td>
+<td><p>Bessel/Thomson digital and analog filter design.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.iirnotch.html#scipy.signal.iirnotch" title="scipy.signal.iirnotch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iirnotch</span></code></a>(w0, Q[, fs])</p></td>
+<td><p>Design second-order IIR notch digital filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.iirpeak.html#scipy.signal.iirpeak" title="scipy.signal.iirpeak"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iirpeak</span></code></a>(w0, Q[, fs])</p></td>
+<td><p>Design second-order IIR peak (resonant) digital filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.iircomb.html#scipy.signal.iircomb" title="scipy.signal.iircomb"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iircomb</span></code></a>(w0, Q[, ftype, fs, pass_zero])</p></td>
+<td><p>Design IIR notching or peaking digital comb filter.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="continuous-time-linear-systems">
+<h2>Continuous-time linear systems<a class="headerlink" href="#continuous-time-linear-systems" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.lti.html#scipy.signal.lti" title="scipy.signal.lti"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lti</span></code></a>(*system)</p></td>
+<td><p>Continuous-time linear time invariant system base class.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.StateSpace.html#scipy.signal.StateSpace" title="scipy.signal.StateSpace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StateSpace</span></code></a>(*system, **kwargs)</p></td>
+<td><p>Linear Time Invariant system in state-space form.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.TransferFunction.html#scipy.signal.TransferFunction" title="scipy.signal.TransferFunction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TransferFunction</span></code></a>(*system, **kwargs)</p></td>
+<td><p>Linear Time Invariant system class in transfer function form.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.ZerosPolesGain.html#scipy.signal.ZerosPolesGain" title="scipy.signal.ZerosPolesGain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ZerosPolesGain</span></code></a>(*system, **kwargs)</p></td>
+<td><p>Linear Time Invariant system class in zeros, poles, gain form.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.lsim.html#scipy.signal.lsim" title="scipy.signal.lsim"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lsim</span></code></a>(system, U, T[, X0, interp])</p></td>
+<td><p>Simulate output of a continuous-time linear system.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.impulse.html#scipy.signal.impulse" title="scipy.signal.impulse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">impulse</span></code></a>(system[, X0, T, N])</p></td>
+<td><p>Impulse response of continuous-time system.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.step.html#scipy.signal.step" title="scipy.signal.step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">step</span></code></a>(system[, X0, T, N])</p></td>
+<td><p>Step response of continuous-time system.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.freqresp.html#scipy.signal.freqresp" title="scipy.signal.freqresp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">freqresp</span></code></a>(system[, w, n])</p></td>
+<td><p>Calculate the frequency response of a continuous-time system.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.bode.html#scipy.signal.bode" title="scipy.signal.bode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bode</span></code></a>(system[, w, n])</p></td>
+<td><p>Calculate Bode magnitude and phase data of a continuous-time system.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="discrete-time-linear-systems">
+<h2>Discrete-time linear systems<a class="headerlink" href="#discrete-time-linear-systems" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.dlti.html#scipy.signal.dlti" title="scipy.signal.dlti"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dlti</span></code></a>(*system, **kwargs)</p></td>
+<td><p>Discrete-time linear time invariant system base class.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.StateSpace.html#scipy.signal.StateSpace" title="scipy.signal.StateSpace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StateSpace</span></code></a>(*system, **kwargs)</p></td>
+<td><p>Linear Time Invariant system in state-space form.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.TransferFunction.html#scipy.signal.TransferFunction" title="scipy.signal.TransferFunction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TransferFunction</span></code></a>(*system, **kwargs)</p></td>
+<td><p>Linear Time Invariant system class in transfer function form.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.ZerosPolesGain.html#scipy.signal.ZerosPolesGain" title="scipy.signal.ZerosPolesGain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ZerosPolesGain</span></code></a>(*system, **kwargs)</p></td>
+<td><p>Linear Time Invariant system class in zeros, poles, gain form.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.dlsim.html#scipy.signal.dlsim" title="scipy.signal.dlsim"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dlsim</span></code></a>(system, u[, t, x0])</p></td>
+<td><p>Simulate output of a discrete-time linear system.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.dimpulse.html#scipy.signal.dimpulse" title="scipy.signal.dimpulse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dimpulse</span></code></a>(system[, x0, t, n])</p></td>
+<td><p>Impulse response of discrete-time system.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.dstep.html#scipy.signal.dstep" title="scipy.signal.dstep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dstep</span></code></a>(system[, x0, t, n])</p></td>
+<td><p>Step response of discrete-time system.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.dfreqresp.html#scipy.signal.dfreqresp" title="scipy.signal.dfreqresp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dfreqresp</span></code></a>(system[, w, n, whole])</p></td>
+<td><p>Calculate the frequency response of a discrete-time system.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.dbode.html#scipy.signal.dbode" title="scipy.signal.dbode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dbode</span></code></a>(system[, w, n])</p></td>
+<td><p>Calculate Bode magnitude and phase data of a discrete-time system.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="lti-representations">
+<h2>LTI representations<a class="headerlink" href="#lti-representations" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.tf2zpk.html#scipy.signal.tf2zpk" title="scipy.signal.tf2zpk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tf2zpk</span></code></a>(b, a)</p></td>
+<td><p>Return zero, pole, gain (z, p, k) representation from a numerator, denominator representation of a linear filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.tf2sos.html#scipy.signal.tf2sos" title="scipy.signal.tf2sos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tf2sos</span></code></a>(b, a[, pairing, analog])</p></td>
+<td><p>Return second-order sections from transfer function representation</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.tf2ss.html#scipy.signal.tf2ss" title="scipy.signal.tf2ss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tf2ss</span></code></a>(num, den)</p></td>
+<td><p>Transfer function to state-space representation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.zpk2tf.html#scipy.signal.zpk2tf" title="scipy.signal.zpk2tf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zpk2tf</span></code></a>(z, p, k)</p></td>
+<td><p>Return polynomial transfer function representation from zeros and poles</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.zpk2sos.html#scipy.signal.zpk2sos" title="scipy.signal.zpk2sos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zpk2sos</span></code></a>(z, p, k[, pairing, analog])</p></td>
+<td><p>Return second-order sections from zeros, poles, and gain of a system</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.zpk2ss.html#scipy.signal.zpk2ss" title="scipy.signal.zpk2ss"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zpk2ss</span></code></a>(z, p, k)</p></td>
+<td><p>Zero-pole-gain representation to state-space representation</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.ss2tf.html#scipy.signal.ss2tf" title="scipy.signal.ss2tf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ss2tf</span></code></a>(A, B, C, D[, input])</p></td>
+<td><p>State-space to transfer function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.ss2zpk.html#scipy.signal.ss2zpk" title="scipy.signal.ss2zpk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ss2zpk</span></code></a>(A, B, C, D[, input])</p></td>
+<td><p>State-space representation to zero-pole-gain representation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.sos2zpk.html#scipy.signal.sos2zpk" title="scipy.signal.sos2zpk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sos2zpk</span></code></a>(sos)</p></td>
+<td><p>Return zeros, poles, and gain of a series of second-order sections</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.sos2tf.html#scipy.signal.sos2tf" title="scipy.signal.sos2tf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sos2tf</span></code></a>(sos)</p></td>
+<td><p>Return a single transfer function from a series of second-order sections</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.cont2discrete.html#scipy.signal.cont2discrete" title="scipy.signal.cont2discrete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cont2discrete</span></code></a>(system, dt[, method, alpha])</p></td>
+<td><p>Transform a continuous to a discrete state-space system.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.place_poles.html#scipy.signal.place_poles" title="scipy.signal.place_poles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">place_poles</span></code></a>(A, B, poles[, method, rtol, maxiter])</p></td>
+<td><p>Compute K such that eigenvalues (A - dot(B, K))=poles.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="waveforms">
+<h2>Waveforms<a class="headerlink" href="#waveforms" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.chirp.html#scipy.signal.chirp" title="scipy.signal.chirp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chirp</span></code></a>(t, f0, t1, f1[, method, phi, vertex_zero])</p></td>
+<td><p>Frequency-swept cosine generator.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.gausspulse.html#scipy.signal.gausspulse" title="scipy.signal.gausspulse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gausspulse</span></code></a>(t[, fc, bw, bwr, tpr, retquad, ...])</p></td>
+<td><p>Return a Gaussian modulated sinusoid:</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.max_len_seq.html#scipy.signal.max_len_seq" title="scipy.signal.max_len_seq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">max_len_seq</span></code></a>(nbits[, state, length, taps])</p></td>
+<td><p>Maximum length sequence (MLS) generator.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.sawtooth.html#scipy.signal.sawtooth" title="scipy.signal.sawtooth"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sawtooth</span></code></a>(t[, width])</p></td>
+<td><p>Return a periodic sawtooth or triangle waveform.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.square.html#scipy.signal.square" title="scipy.signal.square"><code class="xref py py-obj docutils literal notranslate"><span class="pre">square</span></code></a>(t[, duty])</p></td>
+<td><p>Return a periodic square-wave waveform.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.sweep_poly.html#scipy.signal.sweep_poly" title="scipy.signal.sweep_poly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sweep_poly</span></code></a>(t, poly[, phi])</p></td>
+<td><p>Frequency-swept cosine generator, with a time-dependent frequency.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.unit_impulse.html#scipy.signal.unit_impulse" title="scipy.signal.unit_impulse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unit_impulse</span></code></a>(shape[, idx, dtype])</p></td>
+<td><p>Unit impulse signal (discrete delta function) or unit basis vector.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="window-functions">
+<h2>Window functions<a class="headerlink" href="#window-functions" title="Link to this heading">#</a></h2>
+<p>For window functions, see the <a class="reference internal" href="signal.windows.html#module-scipy.signal.windows" title="scipy.signal.windows"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal.windows</span></code></a> namespace.</p>
+<p>In the <a class="reference internal" href="#module-scipy.signal" title="scipy.signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code></a> namespace, there is a convenience function to
+obtain these windows by name:</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.get_window.html#scipy.signal.get_window" title="scipy.signal.get_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_window</span></code></a>(window, Nx[, fftbins])</p></td>
+<td><p>Return a window of a given length and type.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="peak-finding">
+<h2>Peak finding<a class="headerlink" href="#peak-finding" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.argrelmin.html#scipy.signal.argrelmin" title="scipy.signal.argrelmin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">argrelmin</span></code></a>(data[, axis, order, mode])</p></td>
+<td><p>Calculate the relative minima of <em class="xref py py-obj">data</em>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.argrelmax.html#scipy.signal.argrelmax" title="scipy.signal.argrelmax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">argrelmax</span></code></a>(data[, axis, order, mode])</p></td>
+<td><p>Calculate the relative maxima of <em class="xref py py-obj">data</em>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.argrelextrema.html#scipy.signal.argrelextrema" title="scipy.signal.argrelextrema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">argrelextrema</span></code></a>(data, comparator[, axis, ...])</p></td>
+<td><p>Calculate the relative extrema of <em class="xref py py-obj">data</em>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.find_peaks.html#scipy.signal.find_peaks" title="scipy.signal.find_peaks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_peaks</span></code></a>(x[, height, threshold, distance, ...])</p></td>
+<td><p>Find peaks inside a signal based on peak properties.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.find_peaks_cwt.html#scipy.signal.find_peaks_cwt" title="scipy.signal.find_peaks_cwt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_peaks_cwt</span></code></a>(vector, widths[, wavelet, ...])</p></td>
+<td><p>Find peaks in a 1-D array with wavelet transformation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.peak_prominences.html#scipy.signal.peak_prominences" title="scipy.signal.peak_prominences"><code class="xref py py-obj docutils literal notranslate"><span class="pre">peak_prominences</span></code></a>(x, peaks[, wlen])</p></td>
+<td><p>Calculate the prominence of each peak in a signal.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.peak_widths.html#scipy.signal.peak_widths" title="scipy.signal.peak_widths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">peak_widths</span></code></a>(x, peaks[, rel_height, ...])</p></td>
+<td><p>Calculate the width of each peak in a signal.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="spectral-analysis">
+<h2>Spectral analysis<a class="headerlink" href="#spectral-analysis" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.periodogram.html#scipy.signal.periodogram" title="scipy.signal.periodogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">periodogram</span></code></a>(x[, fs, window, nfft, detrend, ...])</p></td>
+<td><p>Estimate power spectral density using a periodogram.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.welch.html#scipy.signal.welch" title="scipy.signal.welch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">welch</span></code></a>(x[, fs, window, nperseg, noverlap, ...])</p></td>
+<td><p>Estimate power spectral density using Welch's method.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.csd.html#scipy.signal.csd" title="scipy.signal.csd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">csd</span></code></a>(x, y[, fs, window, nperseg, noverlap, ...])</p></td>
+<td><p>Estimate the cross power spectral density, Pxy, using Welch's method.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.coherence.html#scipy.signal.coherence" title="scipy.signal.coherence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">coherence</span></code></a>(x, y[, fs, window, nperseg, ...])</p></td>
+<td><p>Estimate the magnitude squared coherence estimate, Cxy, of discrete-time signals X and Y using Welch's method.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.spectrogram.html#scipy.signal.spectrogram" title="scipy.signal.spectrogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">spectrogram</span></code></a>(x[, fs, window, nperseg, ...])</p></td>
+<td><p>Compute a spectrogram with consecutive Fourier transforms (legacy function).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.lombscargle.html#scipy.signal.lombscargle" title="scipy.signal.lombscargle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lombscargle</span></code></a>(x, y, freqs[, precenter, ...])</p></td>
+<td><p>Compute the generalized Lomb-Scargle periodogram.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.vectorstrength.html#scipy.signal.vectorstrength" title="scipy.signal.vectorstrength"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vectorstrength</span></code></a>(events, period)</p></td>
+<td><p>Determine the vector strength of the events corresponding to the given period.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.ShortTimeFFT.html#scipy.signal.ShortTimeFFT" title="scipy.signal.ShortTimeFFT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ShortTimeFFT</span></code></a>(win, hop, fs, *[, fft_mode, ...])</p></td>
+<td><p>Provide a parametrized discrete Short-time Fourier transform (stft) and its inverse (istft).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.stft.html#scipy.signal.stft" title="scipy.signal.stft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stft</span></code></a>(x[, fs, window, nperseg, noverlap, ...])</p></td>
+<td><p>Compute the Short Time Fourier Transform (legacy function).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.istft.html#scipy.signal.istft" title="scipy.signal.istft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">istft</span></code></a>(Zxx[, fs, window, nperseg, noverlap, ...])</p></td>
+<td><p>Perform the inverse Short Time Fourier transform (legacy function).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.check_COLA.html#scipy.signal.check_COLA" title="scipy.signal.check_COLA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_COLA</span></code></a>(window, nperseg, noverlap[, tol])</p></td>
+<td><p>Check whether the Constant OverLap Add (COLA) constraint is met.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.check_NOLA.html#scipy.signal.check_NOLA" title="scipy.signal.check_NOLA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_NOLA</span></code></a>(window, nperseg, noverlap[, tol])</p></td>
+<td><p>Check whether the Nonzero Overlap Add (NOLA) constraint is met.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="chirp-z-transform-and-zoom-fft">
+<h2>Chirp Z-transform and Zoom FFT<a class="headerlink" href="#chirp-z-transform-and-zoom-fft" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/czt-function.html#scipy.signal.czt" title="scipy.signal.czt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">czt</span></code></a>(x[, m, w, a, axis])</p></td>
+<td><p>Compute the frequency response around a spiral in the Z plane.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.zoom_fft.html#scipy.signal.zoom_fft" title="scipy.signal.zoom_fft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zoom_fft</span></code></a>(x, fn[, m, fs, endpoint, axis])</p></td>
+<td><p>Compute the DFT of <em class="xref py py-obj">x</em> only for frequencies in range <em class="xref py py-obj">fn</em>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.CZT.html#scipy.signal.CZT" title="scipy.signal.CZT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CZT</span></code></a>(n[, m, w, a])</p></td>
+<td><p>Create a callable chirp z-transform function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.signal.ZoomFFT.html#scipy.signal.ZoomFFT" title="scipy.signal.ZoomFFT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ZoomFFT</span></code></a>(n, fn[, m, fs, endpoint])</p></td>
+<td><p>Create a callable zoom FFT transform function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.signal.czt_points.html#scipy.signal.czt_points" title="scipy.signal.czt_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">czt_points</span></code></a>(m[, w, a])</p></td>
+<td><p>Return the points at which the chirp z-transform is computed.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The functions are simpler to use than the classes, but are less efficient when
+using the same transform on many arrays of the same length, since they
+repeatedly generate the same chirp signal with every call.  In these cases,
+use the classes to create a reusable function instead.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="generated/scipy.optimize.diagbroyden.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">diagbroyden</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="generated/scipy.signal.convolve.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">convolve</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#convolution">Convolution</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#b-splines">B-splines</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filtering">Filtering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filter-design">Filter design</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matlab-style-iir-filter-design">Matlab-style IIR filter design</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#continuous-time-linear-systems">Continuous-time linear systems</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-time-linear-systems">Discrete-time linear systems</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lti-representations">LTI representations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#waveforms">Waveforms</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#window-functions">Window functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#peak-finding">Peak finding</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spectral-analysis">Spectral analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chirp-z-transform-and-zoom-fft">Chirp Z-transform and Zoom FFT</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

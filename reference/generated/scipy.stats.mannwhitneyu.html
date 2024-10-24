@@ -1,0 +1,873 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>mannwhitneyu &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.stats.mannwhitneyu';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="bws_test" href="scipy.stats.bws_test.html" />
+    <link rel="prev" title="ttest_ind" href="scipy.stats.ttest_ind.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../stats.html" class="nav-link">Statistical functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">mannwhitneyu</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.stats.</div>
+<div class="empty"></div><section id="mannwhitneyu">
+<h1>mannwhitneyu<a class="headerlink" href="#mannwhitneyu" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.stats.mannwhitneyu">
+<span class="sig-prename descclassname"><span class="pre">scipy.stats.</span></span><span class="sig-name descname"><span class="pre">mannwhitneyu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_continuity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'two-sided'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nan_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'propagate'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keepdims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/stats/_mannwhitneyu.py#L223-L486"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.stats.mannwhitneyu" title="Link to this definition">#</a></dt>
+<dd><p>Perform the Mann-Whitney U rank test on two independent samples.</p>
+<p>The Mann-Whitney U test is a nonparametric test of the null hypothesis
+that the distribution underlying sample <em class="xref py py-obj">x</em> is the same as the
+distribution underlying sample <em class="xref py py-obj">y</em>. It is often used as a test of
+difference in location between distributions.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>x, y</strong><span class="classifier">array-like</span></dt><dd><p>N-d arrays of samples. The arrays must be broadcastable except along
+the dimension given by <em class="xref py py-obj">axis</em>.</p>
+</dd>
+<dt><strong>use_continuity</strong><span class="classifier">bool, optional</span></dt><dd><p>Whether a continuity correction (1/2) should be applied.
+Default is True when <em class="xref py py-obj">method</em> is <code class="docutils literal notranslate"><span class="pre">'asymptotic'</span></code>; has no effect
+otherwise.</p>
+</dd>
+<dt><strong>alternative</strong><span class="classifier">{‘two-sided’, ‘less’, ‘greater’}, optional</span></dt><dd><p>Defines the alternative hypothesis. Default is ‘two-sided’.
+Let <em>SX(u)</em> and <em>SY(u)</em> be the survival functions of the
+distributions underlying <em class="xref py py-obj">x</em> and <em class="xref py py-obj">y</em>, respectively. Then the following
+alternative hypotheses are available:</p>
+<ul class="simple">
+<li><p>‘two-sided’: the distributions are not equal, i.e. <em>SX(u) ≠ SY(u)</em> for
+at least one <em>u</em>.</p></li>
+<li><p>‘less’: the distribution underlying <em class="xref py py-obj">x</em> is stochastically less
+than the distribution underlying <em class="xref py py-obj">y</em>, i.e. <em>SX(u) &lt; SY(u)</em> for all <em>u</em>.</p></li>
+<li><p>‘greater’: the distribution underlying <em class="xref py py-obj">x</em> is stochastically greater
+than the distribution underlying <em class="xref py py-obj">y</em>, i.e. <em>SX(u) &gt; SY(u)</em> for all <em>u</em>.</p></li>
+</ul>
+<p>Under a more restrictive set of assumptions, the alternative hypotheses
+can be expressed in terms of the locations of the distributions;
+see <a class="reference internal" href="#r31b0b1c0fec3-5" id="id1">[5]</a> section 5.1.</p>
+</dd>
+<dt><strong>axis</strong><span class="classifier">int or None, default: 0</span></dt><dd><p>If an int, the axis of the input along which to compute the statistic.
+The statistic of each axis-slice (e.g. row) of the input will appear in a
+corresponding element of the output.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the input will be raveled before computing the statistic.</p>
+</dd>
+<dt><strong>method</strong><span class="classifier">{‘auto’, ‘asymptotic’, ‘exact’} or <a class="reference internal" href="scipy.stats.PermutationMethod.html#scipy.stats.PermutationMethod" title="scipy.stats.PermutationMethod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PermutationMethod</span></code></a> instance, optional</span></dt><dd><p>Selects the method used to calculate the <em>p</em>-value.
+Default is ‘auto’. The following options are available.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">'asymptotic'</span></code>: compares the standardized test statistic
+against the normal distribution, correcting for ties.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'exact'</span></code>: computes the exact <em>p</em>-value by comparing the observed
+<span class="math notranslate nohighlight">\(U\)</span> statistic against the exact distribution of the <span class="math notranslate nohighlight">\(U\)</span>
+statistic under the null hypothesis. No correction is made for ties.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'auto'</span></code>: chooses <code class="docutils literal notranslate"><span class="pre">'exact'</span></code> when the size of one of the samples
+is less than or equal to 8 and there are no ties;
+chooses <code class="docutils literal notranslate"><span class="pre">'asymptotic'</span></code> otherwise.</p></li>
+<li><p><a class="reference internal" href="scipy.stats.PermutationMethod.html#scipy.stats.PermutationMethod" title="scipy.stats.PermutationMethod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PermutationMethod</span></code></a> instance. In this case, the p-value
+is computed using <a class="reference internal" href="scipy.stats.permutation_test.html#scipy.stats.permutation_test" title="scipy.stats.permutation_test"><code class="xref py py-obj docutils literal notranslate"><span class="pre">permutation_test</span></code></a> with the provided
+configuration options and other appropriate settings.</p></li>
+</ul>
+</dd>
+<dt><strong>nan_policy</strong><span class="classifier">{‘propagate’, ‘omit’, ‘raise’}</span></dt><dd><p>Defines how to handle input NaNs.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">propagate</span></code>: if a NaN is present in the axis slice (e.g. row) along
+which the  statistic is computed, the corresponding entry of the output
+will be NaN.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">omit</span></code>: NaNs will be omitted when performing the calculation.
+If insufficient data remains in the axis slice along which the
+statistic is computed, the corresponding entry of the output will be
+NaN.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">raise</span></code>: if a NaN is present, a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> will be raised.</p></li>
+</ul>
+</dd>
+<dt><strong>keepdims</strong><span class="classifier">bool, default: False</span></dt><dd><p>If this is set to True, the axes which are reduced are left
+in the result as dimensions with size one. With this option,
+the result will broadcast correctly against the input array.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>res</strong><span class="classifier">MannwhitneyuResult</span></dt><dd><p>An object containing attributes:</p>
+<dl class="simple">
+<dt>statistic<span class="classifier">float</span></dt><dd><p>The Mann-Whitney U statistic corresponding with sample <em class="xref py py-obj">x</em>. See
+Notes for the test statistic corresponding with sample <em class="xref py py-obj">y</em>.</p>
+</dd>
+<dt>pvalue<span class="classifier">float</span></dt><dd><p>The associated <em>p</em>-value for the chosen <em class="xref py py-obj">alternative</em>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="scipy.stats.wilcoxon.html#scipy.stats.wilcoxon" title="scipy.stats.wilcoxon"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.wilcoxon</span></code></a>, <a class="reference internal" href="scipy.stats.ranksums.html#scipy.stats.ranksums" title="scipy.stats.ranksums"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.ranksums</span></code></a>, <a class="reference internal" href="scipy.stats.ttest_ind.html#scipy.stats.ttest_ind" title="scipy.stats.ttest_ind"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.ttest_ind</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">U1</span></code> is the statistic corresponding with sample <em class="xref py py-obj">x</em>, then the
+statistic corresponding with sample <em class="xref py py-obj">y</em> is
+<code class="docutils literal notranslate"><span class="pre">U2</span> <span class="pre">=</span> <span class="pre">x.shape[axis]</span> <span class="pre">*</span> <span class="pre">y.shape[axis]</span> <span class="pre">-</span> <span class="pre">U1</span></code>.</p>
+<p><a class="reference internal" href="#scipy.stats.mannwhitneyu" title="scipy.stats.mannwhitneyu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mannwhitneyu</span></code></a> is for independent samples. For related / paired samples,
+consider <a class="reference internal" href="scipy.stats.wilcoxon.html#scipy.stats.wilcoxon" title="scipy.stats.wilcoxon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.wilcoxon</span></code></a>.</p>
+<p><em class="xref py py-obj">method</em> <code class="docutils literal notranslate"><span class="pre">'exact'</span></code> is recommended when there are no ties and when either
+sample size is less than 8 <a class="reference internal" href="#r31b0b1c0fec3-1" id="id2">[1]</a>. The implementation follows the algorithm
+reported in <a class="reference internal" href="#r31b0b1c0fec3-3" id="id3">[3]</a>.
+Note that the exact method is <em>not</em> corrected for ties, but
+<a class="reference internal" href="#scipy.stats.mannwhitneyu" title="scipy.stats.mannwhitneyu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mannwhitneyu</span></code></a> will not raise errors or warnings if there are ties in the
+data. If there are ties and either samples is small (fewer than ~10
+observations), consider passing an instance of <a class="reference internal" href="scipy.stats.PermutationMethod.html#scipy.stats.PermutationMethod" title="scipy.stats.PermutationMethod"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PermutationMethod</span></code></a>
+as the <em class="xref py py-obj">method</em> to perform a permutation test.</p>
+<p>The Mann-Whitney U test is a non-parametric version of the t-test for
+independent samples. When the means of samples from the populations
+are normally distributed, consider <a class="reference internal" href="scipy.stats.ttest_ind.html#scipy.stats.ttest_ind" title="scipy.stats.ttest_ind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.ttest_ind</span></code></a>.</p>
+<p>Beginning in SciPy 1.9, <code class="docutils literal notranslate"><span class="pre">np.matrix</span></code> inputs (not recommended for new
+code) are converted to <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> before the calculation is performed. In
+this case, the output will be a scalar or <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> of appropriate shape
+rather than a 2D <code class="docutils literal notranslate"><span class="pre">np.matrix</span></code>. Similarly, while masked elements of masked
+arrays are ignored, the output will be a scalar or <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> rather than a
+masked array with <code class="docutils literal notranslate"><span class="pre">mask=False</span></code>.</p>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r31b0b1c0fec3-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
+<p>H.B. Mann and D.R. Whitney, “On a test of whether one of two random
+variables is stochastically larger than the other”, The Annals of
+Mathematical Statistics, Vol. 18, pp. 50-60, 1947.</p>
+</div>
+<div class="citation" id="r31b0b1c0fec3-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<p>Mann-Whitney U Test, Wikipedia,
+<a class="reference external" href="http://en.wikipedia.org/wiki/Mann-Whitney_U_test">http://en.wikipedia.org/wiki/Mann-Whitney_U_test</a></p>
+</div>
+<div class="citation" id="r31b0b1c0fec3-3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p>Andreas Löffler,
+“Über eine Partition der nat. Zahlen und ihr Anwendung beim U-Test”,
+Wiss. Z. Univ. Halle, XXXII’83 pp. 87-89.</p>
+</div>
+<div class="citation" id="r31b0b1c0fec3-4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id9">1</a>,<a role="doc-backlink" href="#id10">2</a>,<a role="doc-backlink" href="#id11">3</a>,<a role="doc-backlink" href="#id12">4</a>,<a role="doc-backlink" href="#id13">5</a>,<a role="doc-backlink" href="#id14">6</a>,<a role="doc-backlink" href="#id15">7</a>)</span>
+<p>Rosie Shier, “Statistics: 2.3 The Mann-Whitney U Test”, Mathematics
+Learning Support Centre, 2004.</p>
+</div>
+<div class="citation" id="r31b0b1c0fec3-5" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">5</a><span class="fn-bracket">]</span></span>
+<p>Michael P. Fay and Michael A. Proschan. “Wilcoxon-Mann-Whitney
+or t-test? On assumptions for hypothesis tests and multiple interpretations of decision rules.” Statistics surveys, Vol. 4, pp.
+1-39, 2010. <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2857732/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2857732/</a></p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="cf9dd2ef-f0af-4e1a-a053-69aabc489d5f">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('cf9dd2ef-f0af-4e1a-a053-69aabc489d5f','f26d77b2-67ad-4ff6-b6b0-f7e345b5f88b','bf1dcfdc-7c1e-4bab-875f-3f6be2696df4','../../lite/tree/../notebooks/index.html?path=024ba8e0_b1c0_455f_8c74_ffab09e2c13d.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>We follow the example from <a class="reference internal" href="#r31b0b1c0fec3-4" id="id9">[4]</a>: nine randomly sampled young adults were
+diagnosed with type II diabetes at the ages below.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">males</span> <span class="o">=</span> <span class="p">[</span><span class="mi">19</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">24</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">females</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>We use the Mann-Whitney U test to assess whether there is a statistically
+significant difference in the diagnosis age of males and females.
+The null hypothesis is that the distribution of male diagnosis ages is
+the same as the distribution of female diagnosis ages. We decide
+that a confidence level of 95% is required to reject the null hypothesis
+in favor of the alternative that the distributions are different.
+Since the number of samples is very small and there are no ties in the
+data, we can compare the observed test statistic against the <em>exact</em>
+distribution of the test statistic under the null hypothesis.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">mannwhitneyu</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">U1</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">mannwhitneyu</span><span class="p">(</span><span class="n">males</span><span class="p">,</span> <span class="n">females</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;exact&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">U1</span><span class="p">)</span>
+<span class="go">17.0</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="#scipy.stats.mannwhitneyu" title="scipy.stats.mannwhitneyu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mannwhitneyu</span></code></a> always reports the statistic associated with the first
+sample, which, in this case, is males. This agrees with <span class="math notranslate nohighlight">\(U_M = 17\)</span>
+reported in <a class="reference internal" href="#r31b0b1c0fec3-4" id="id10">[4]</a>. The statistic associated with the second statistic
+can be calculated:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">males</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">females</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">U2</span> <span class="o">=</span> <span class="n">nx</span><span class="o">*</span><span class="n">ny</span> <span class="o">-</span> <span class="n">U1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">U2</span><span class="p">)</span>
+<span class="go">3.0</span>
+</pre></div>
+</div>
+<p>This agrees with <span class="math notranslate nohighlight">\(U_F = 3\)</span> reported in <a class="reference internal" href="#r31b0b1c0fec3-4" id="id11">[4]</a>. The two-sided
+<em>p</em>-value can be calculated from either statistic, and the value produced
+by <a class="reference internal" href="#scipy.stats.mannwhitneyu" title="scipy.stats.mannwhitneyu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mannwhitneyu</span></code></a> agrees with <span class="math notranslate nohighlight">\(p = 0.11\)</span> reported in <a class="reference internal" href="#r31b0b1c0fec3-4" id="id12">[4]</a>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">0.1111111111111111</span>
+</pre></div>
+</div>
+<p>The exact distribution of the test statistic is asymptotically normal, so
+the example continues by comparing the exact <em>p</em>-value against the
+<em>p</em>-value produced using the normal approximation.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">pnorm</span> <span class="o">=</span> <span class="n">mannwhitneyu</span><span class="p">(</span><span class="n">males</span><span class="p">,</span> <span class="n">females</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;asymptotic&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">pnorm</span><span class="p">)</span>
+<span class="go">0.11134688653314041</span>
+</pre></div>
+</div>
+<p>Here <a class="reference internal" href="#scipy.stats.mannwhitneyu" title="scipy.stats.mannwhitneyu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mannwhitneyu</span></code></a>’s reported <em>p</em>-value appears to conflict with the
+value <span class="math notranslate nohighlight">\(p = 0.09\)</span> given in <a class="reference internal" href="#r31b0b1c0fec3-4" id="id13">[4]</a>. The reason is that <a class="reference internal" href="#r31b0b1c0fec3-4" id="id14">[4]</a>
+does not apply the continuity correction performed by <a class="reference internal" href="#scipy.stats.mannwhitneyu" title="scipy.stats.mannwhitneyu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mannwhitneyu</span></code></a>;
+<a class="reference internal" href="#scipy.stats.mannwhitneyu" title="scipy.stats.mannwhitneyu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mannwhitneyu</span></code></a> reduces the distance between the test statistic and the
+mean <span class="math notranslate nohighlight">\(\mu = n_x n_y / 2\)</span> by 0.5 to correct for the fact that the
+discrete statistic is being compared against a continuous distribution.
+Here, the <span class="math notranslate nohighlight">\(U\)</span> statistic used is less than the mean, so we reduce
+the distance by adding 0.5 in the numerator.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">U</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">U1</span><span class="p">,</span> <span class="n">U2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">N</span> <span class="o">=</span> <span class="n">nx</span> <span class="o">+</span> <span class="n">ny</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">U</span> <span class="o">-</span> <span class="n">nx</span><span class="o">*</span><span class="n">ny</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">nx</span><span class="o">*</span><span class="n">ny</span> <span class="o">*</span> <span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">/</span> <span class="mi">12</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>  <span class="c1"># use CDF to get p-value from smaller statistic</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="go">0.11134688653314041</span>
+</pre></div>
+</div>
+<p>If desired, we can disable the continuity correction to get a result
+that agrees with that reported in <a class="reference internal" href="#r31b0b1c0fec3-4" id="id15">[4]</a>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">pnorm</span> <span class="o">=</span> <span class="n">mannwhitneyu</span><span class="p">(</span><span class="n">males</span><span class="p">,</span> <span class="n">females</span><span class="p">,</span> <span class="n">use_continuity</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span>                        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;asymptotic&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">pnorm</span><span class="p">)</span>
+<span class="go">0.0864107329737</span>
+</pre></div>
+</div>
+<p>Regardless of whether we perform an exact or asymptotic test, the
+probability of the test statistic being as extreme or more extreme by
+chance exceeds 5%, so we do not consider the results statistically
+significant.</p>
+<p>Suppose that, before seeing the data, we had hypothesized that females
+would tend to be diagnosed at a younger age than males.
+In that case, it would be natural to provide the female ages as the
+first input, and we would have performed a one-sided test using
+<code class="docutils literal notranslate"><span class="pre">alternative</span> <span class="pre">=</span> <span class="pre">'less'</span></code>: females are diagnosed at an age that is
+stochastically less than that of males.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">mannwhitneyu</span><span class="p">(</span><span class="n">females</span><span class="p">,</span> <span class="n">males</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;less&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;exact&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="go">MannwhitneyuResult(statistic=3.0, pvalue=0.05555555555555555)</span>
+</pre></div>
+</div>
+<p>Again, the probability of getting a sufficiently low value of the
+test statistic by chance under the null hypothesis is greater than 5%,
+so we do not reject the null hypothesis in favor of our alternative.</p>
+<p>If it is reasonable to assume that the means of samples from the
+populations are normally distributed, we could have used a t-test to
+perform the analysis.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">females</span><span class="p">,</span> <span class="n">males</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s2">&quot;less&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="go">TtestResult(statistic=-2.239334696520584,</span>
+<span class="go">            pvalue=0.030068441095757924,</span>
+<span class="go">            df=7.0)</span>
+</pre></div>
+</div>
+<p>Under this assumption, the <em>p</em>-value would be low enough to reject the
+null hypothesis in favor of the alternative.</p>
+</div>
+</div>
+<div id="bf1dcfdc-7c1e-4bab-875f-3f6be2696df4" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('cf9dd2ef-f0af-4e1a-a053-69aabc489d5f','bf1dcfdc-7c1e-4bab-875f-3f6be2696df4')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('cf9dd2ef-f0af-4e1a-a053-69aabc489d5f','bf1dcfdc-7c1e-4bab-875f-3f6be2696df4')">Open In Tab</button></div><div id="f26d77b2-67ad-4ff6-b6b0-f7e345b5f88b" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.stats.ttest_ind.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">ttest_ind</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.stats.bws_test.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">bws_test</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.stats.mannwhitneyu"><code class="docutils literal notranslate"><span class="pre">mannwhitneyu</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

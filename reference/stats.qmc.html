@@ -1,0 +1,941 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Quasi-Monte Carlo submodule (scipy.stats.qmc) &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/stats.qmc';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="QMCEngine" href="generated/scipy.stats.qmc.QMCEngine.html" />
+    <link rel="prev" title="logentropy" href="generated/scipy.stats.Normal.logentropy.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="special.html">scipy.special</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="stats.html" class="nav-link">Statistical functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Quasi-Monte Carlo submodule (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.stats.qmc</span></code>)</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="quasi-monte-carlo-submodule-scipy-stats-qmc">
+<span id="module-scipy.stats.qmc"></span><h1>Quasi-Monte Carlo submodule (<a class="reference internal" href="#module-scipy.stats.qmc" title="scipy.stats.qmc"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.stats.qmc</span></code></a>)<a class="headerlink" href="#quasi-monte-carlo-submodule-scipy-stats-qmc" title="Link to this heading">#</a></h1>
+<p>This module provides Quasi-Monte Carlo generators and associated helper
+functions.</p>
+<section id="quasi-monte-carlo">
+<h2>Quasi-Monte Carlo<a class="headerlink" href="#quasi-monte-carlo" title="Link to this heading">#</a></h2>
+<section id="engines">
+<h3>Engines<a class="headerlink" href="#engines" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.qmc.QMCEngine.html#scipy.stats.qmc.QMCEngine" title="scipy.stats.qmc.QMCEngine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">QMCEngine</span></code></a>(d, *[, optimization, seed])</p></td>
+<td><p>A generic Quasi-Monte Carlo sampler class meant for subclassing.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.qmc.Sobol.html#scipy.stats.qmc.Sobol" title="scipy.stats.qmc.Sobol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sobol</span></code></a>(d, *[, scramble, bits, seed, optimization])</p></td>
+<td><p>Engine for generating (scrambled) Sobol' sequences.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.qmc.Halton.html#scipy.stats.qmc.Halton" title="scipy.stats.qmc.Halton"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Halton</span></code></a>(d, *[, scramble, optimization, seed])</p></td>
+<td><p>Halton sequence.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.qmc.LatinHypercube.html#scipy.stats.qmc.LatinHypercube" title="scipy.stats.qmc.LatinHypercube"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LatinHypercube</span></code></a>(d, *[, scramble, strength, ...])</p></td>
+<td><p>Latin hypercube sampling (LHS).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.qmc.PoissonDisk.html#scipy.stats.qmc.PoissonDisk" title="scipy.stats.qmc.PoissonDisk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PoissonDisk</span></code></a>(d, *[, radius, hypersphere, ...])</p></td>
+<td><p>Poisson disk sampling.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.qmc.MultinomialQMC.html#scipy.stats.qmc.MultinomialQMC" title="scipy.stats.qmc.MultinomialQMC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultinomialQMC</span></code></a>(pvals, n_trials, *[, engine, ...])</p></td>
+<td><p>QMC sampling from a multinomial distribution.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.qmc.MultivariateNormalQMC.html#scipy.stats.qmc.MultivariateNormalQMC" title="scipy.stats.qmc.MultivariateNormalQMC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultivariateNormalQMC</span></code></a>(mean[, cov, cov_root, ...])</p></td>
+<td><p>QMC sampling from a multivariate Normal <span class="math notranslate nohighlight">\(N(\mu, \Sigma)\)</span>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="helpers">
+<h3>Helpers<a class="headerlink" href="#helpers" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.qmc.discrepancy.html#scipy.stats.qmc.discrepancy" title="scipy.stats.qmc.discrepancy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">discrepancy</span></code></a>(sample, *[, iterative, method, ...])</p></td>
+<td><p>Discrepancy of a given sample.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.qmc.geometric_discrepancy.html#scipy.stats.qmc.geometric_discrepancy" title="scipy.stats.qmc.geometric_discrepancy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">geometric_discrepancy</span></code></a>(sample[, method, metric])</p></td>
+<td><p>Discrepancy of a given sample based on its geometric properties.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.stats.qmc.update_discrepancy.html#scipy.stats.qmc.update_discrepancy" title="scipy.stats.qmc.update_discrepancy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_discrepancy</span></code></a>(x_new, sample, initial_disc)</p></td>
+<td><p>Update the centered discrepancy with a new sample.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.stats.qmc.scale.html#scipy.stats.qmc.scale" title="scipy.stats.qmc.scale"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale</span></code></a>(sample, l_bounds, u_bounds, *[, reverse])</p></td>
+<td><p>Sample scaling from unit hypercube to different bounds.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="introduction-to-quasi-monte-carlo">
+<h2>Introduction to Quasi-Monte Carlo<a class="headerlink" href="#introduction-to-quasi-monte-carlo" title="Link to this heading">#</a></h2>
+<p>Quasi-Monte Carlo (QMC) methods <a class="reference internal" href="#rbfd6def8ed08-1" id="id1">[1]</a>, <a class="reference internal" href="#rbfd6def8ed08-2" id="id2">[2]</a>, <a class="reference internal" href="#rbfd6def8ed08-3" id="id3">[3]</a> provide an
+<span class="math notranslate nohighlight">\(n \times d\)</span> array of numbers in <span class="math notranslate nohighlight">\([0,1]\)</span>. They can be used in
+place of <span class="math notranslate nohighlight">\(n\)</span> points from the <span class="math notranslate nohighlight">\(U[0,1]^{d}\)</span> distribution. Compared to
+random points, QMC points are designed to have fewer gaps and clumps. This is
+quantified by discrepancy measures <a class="reference internal" href="#rbfd6def8ed08-4" id="id4">[4]</a>. From the Koksma-Hlawka
+inequality <a class="reference internal" href="#rbfd6def8ed08-5" id="id5">[5]</a> we know that low discrepancy reduces a bound on
+integration error. Averaging a function <span class="math notranslate nohighlight">\(f\)</span> over <span class="math notranslate nohighlight">\(n\)</span> QMC points
+can achieve an integration error close to <span class="math notranslate nohighlight">\(O(n^{-1})\)</span> for well
+behaved functions <a class="reference internal" href="#rbfd6def8ed08-2" id="id6">[2]</a>.</p>
+<p>Most QMC constructions are designed for special values of <span class="math notranslate nohighlight">\(n\)</span>
+such as powers of 2 or large primes. Changing the sample
+size by even one can degrade their performance, even their
+rate of convergence <a class="reference internal" href="#rbfd6def8ed08-6" id="id7">[6]</a>. For instance <span class="math notranslate nohighlight">\(n=100\)</span> points may give less
+accuracy than <span class="math notranslate nohighlight">\(n=64\)</span> if the method was designed for <span class="math notranslate nohighlight">\(n=2^m\)</span>.</p>
+<p>Some QMC constructions are extensible in <span class="math notranslate nohighlight">\(n\)</span>: we can find
+another special sample size <span class="math notranslate nohighlight">\(n' &gt; n\)</span> and often an infinite
+sequence of increasing special sample sizes. Some QMC
+constructions are extensible in <span class="math notranslate nohighlight">\(d\)</span>: we can increase the dimension,
+possibly to some upper bound, and typically without requiring
+special values of <span class="math notranslate nohighlight">\(d\)</span>. Some QMC methods are extensible in
+both <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(d\)</span>.</p>
+<p>QMC points are deterministic. That makes it hard to estimate the accuracy of
+integrals estimated by averages over QMC points. Randomized QMC (RQMC) <a class="reference internal" href="#rbfd6def8ed08-7" id="id8">[7]</a>
+points are constructed so that each point is individually <span class="math notranslate nohighlight">\(U[0,1]^{d}\)</span>
+while collectively the <span class="math notranslate nohighlight">\(n\)</span> points retain their low discrepancy.
+One can make <span class="math notranslate nohighlight">\(R\)</span> independent replications of RQMC points to
+see how stable a computation is. From <span class="math notranslate nohighlight">\(R\)</span> independent values,
+a t-test (or bootstrap t-test <a class="reference internal" href="#rbfd6def8ed08-8" id="id9">[8]</a>) then gives approximate confidence
+intervals on the mean value. Some RQMC methods produce a
+root mean squared error that is actually <span class="math notranslate nohighlight">\(o(1/n)\)</span> and smaller than
+the rate seen in unrandomized QMC. An intuitive explanation is
+that the error is a sum of many small ones and random errors
+cancel in a way that deterministic ones do not. RQMC also
+has advantages on integrands that are singular or, for other
+reasons, fail to be Riemann integrable.</p>
+<p>(R)QMC cannot beat Bahkvalov’s curse of dimension (see <a class="reference internal" href="#rbfd6def8ed08-9" id="id10">[9]</a>). For
+any random or deterministic method, there are worst case functions
+that will give it poor performance in high dimensions. A worst
+case function for QMC might be 0 at all n points but very
+large elsewhere. Worst case analyses get very pessimistic
+in high dimensions. (R)QMC can bring a great improvement over
+MC when the functions on which it is used are not worst case.
+For instance (R)QMC can be especially effective on integrands
+that are well approximated by sums of functions of
+some small number of their input variables at a time <a class="reference internal" href="#rbfd6def8ed08-10" id="id11">[10]</a>, <a class="reference internal" href="#rbfd6def8ed08-11" id="id12">[11]</a>.
+That property is often a surprising finding about those functions.</p>
+<p>Also, to see an improvement over IID MC, (R)QMC requires a bit of smoothness of
+the integrand, roughly the mixed first order derivative in each direction,
+<span class="math notranslate nohighlight">\(\partial^d f/\partial x_1 \cdots \partial x_d\)</span>, must be integral.
+For instance, a function that is 1 inside the hypersphere and 0 outside of it
+has infinite variation in the sense of Hardy and Krause for any dimension
+<span class="math notranslate nohighlight">\(d = 2\)</span>.</p>
+<p>Scrambled nets are a kind of RQMC that have some valuable robustness
+properties <a class="reference internal" href="#rbfd6def8ed08-12" id="id13">[12]</a>. If the integrand is square integrable, they give variance
+<span class="math notranslate nohighlight">\(var_{SNET} = o(1/n)\)</span>. There is a finite upper bound on
+<span class="math notranslate nohighlight">\(var_{SNET} / var_{MC}\)</span> that holds simultaneously for every square
+integrable integrand. Scrambled nets satisfy a strong law of large numbers
+for <span class="math notranslate nohighlight">\(f\)</span> in <span class="math notranslate nohighlight">\(L^p\)</span> when <span class="math notranslate nohighlight">\(p&gt;1\)</span>. In some
+special cases there is a central limit theorem <a class="reference internal" href="#rbfd6def8ed08-13" id="id14">[13]</a>. For smooth enough
+integrands they can achieve RMSE nearly <span class="math notranslate nohighlight">\(O(n^{-3})\)</span>. See <a class="reference internal" href="#rbfd6def8ed08-12" id="id15">[12]</a>
+for references about these properties.</p>
+<p>The main kinds of QMC methods are lattice rules <a class="reference internal" href="#rbfd6def8ed08-14" id="id16">[14]</a> and digital
+nets and sequences <a class="reference internal" href="#rbfd6def8ed08-2" id="id17">[2]</a>, <a class="reference internal" href="#rbfd6def8ed08-15" id="id18">[15]</a>. The theories meet up in polynomial
+lattice rules <a class="reference internal" href="#rbfd6def8ed08-16" id="id19">[16]</a> which can produce digital nets. Lattice rules
+require some form of search for good constructions. For digital
+nets there are widely used default constructions.</p>
+<p>The most widely used QMC methods are Sobol’ sequences <a class="reference internal" href="#rbfd6def8ed08-17" id="id20">[17]</a>.
+These are digital nets. They are extensible in both <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(d\)</span>.
+They can be scrambled. The special sample sizes are powers
+of 2. Another popular method are Halton sequences <a class="reference internal" href="#rbfd6def8ed08-18" id="id21">[18]</a>.
+The constructions resemble those of digital nets. The earlier
+dimensions have much better equidistribution properties than
+later ones. There are essentially no special sample sizes.
+They are not thought to be as accurate as Sobol’ sequences.
+They can be scrambled. The nets of Faure <a class="reference internal" href="#rbfd6def8ed08-19" id="id22">[19]</a> are also widely
+used. All dimensions are equally good, but the special sample
+sizes grow rapidly with dimension <span class="math notranslate nohighlight">\(d\)</span>. They can be scrambled.
+The nets of Niederreiter and Xing <a class="reference internal" href="#rbfd6def8ed08-20" id="id23">[20]</a> have the best asymptotic
+properties but have not shown good empirical performance <a class="reference internal" href="#rbfd6def8ed08-21" id="id24">[21]</a>.</p>
+<p>Higher order digital nets are formed by a digit interleaving process
+in the digits of the constructed points. They can achieve higher
+levels of asymptotic accuracy given higher smoothness conditions on <span class="math notranslate nohighlight">\(f\)</span>
+and they can be scrambled <a class="reference internal" href="#rbfd6def8ed08-22" id="id25">[22]</a>. There is little or no empirical work
+showing the improved rate to be attained.</p>
+<p>Using QMC is like using the entire period of a small random
+number generator. The constructions are similar and so
+therefore are the computational costs <a class="reference internal" href="#rbfd6def8ed08-23" id="id26">[23]</a>.</p>
+<p>(R)QMC is sometimes improved by passing the points through
+a baker’s transformation (tent function) prior to using them.
+That function has the form <span class="math notranslate nohighlight">\(1-2|x-1/2|\)</span>. As <span class="math notranslate nohighlight">\(x\)</span> goes from 0 to
+1, this function goes from 0 to 1 and then back. It is very
+useful to produce a periodic function for lattice rules <a class="reference internal" href="#rbfd6def8ed08-14" id="id27">[14]</a>,
+and sometimes it improves the convergence rate <a class="reference internal" href="#rbfd6def8ed08-24" id="id28">[24]</a>.</p>
+<p>It is not straightforward to apply QMC methods to Markov
+chain Monte Carlo (MCMC).  We can think of MCMC as using
+<span class="math notranslate nohighlight">\(n=1\)</span> point in <span class="math notranslate nohighlight">\([0,1]^{d}\)</span> for very large <span class="math notranslate nohighlight">\(d\)</span>, with
+ergodic results corresponding to <span class="math notranslate nohighlight">\(d \to \infty\)</span>. One proposal is
+in <a class="reference internal" href="#rbfd6def8ed08-25" id="id29">[25]</a> and under strong conditions an improved rate of convergence
+has been shown <a class="reference internal" href="#rbfd6def8ed08-26" id="id30">[26]</a>.</p>
+<p>Returning to Sobol’ points: there are many versions depending
+on what are called direction numbers. Those are the result of
+searches and are tabulated. A very widely used set of direction
+numbers come from <a class="reference internal" href="#rbfd6def8ed08-27" id="id31">[27]</a>. It is extensible in dimension up to
+<span class="math notranslate nohighlight">\(d=21201\)</span>.</p>
+<section id="references">
+<h3>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h3>
+<div role="list" class="citation-list">
+<div class="citation" id="rbfd6def8ed08-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Owen, Art B. “Monte Carlo Book: the Quasi-Monte Carlo parts.” 2019.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id6">2</a>,<a role="doc-backlink" href="#id17">3</a>)</span>
+<p>Niederreiter, Harald. “Random number generation and quasi-Monte Carlo
+methods.” Society for Industrial and Applied Mathematics, 1992.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p>Dick, Josef, Frances Y. Kuo, and Ian H. Sloan. “High-dimensional
+integration: the quasi-Monte Carlo way.” Acta Numerica no. 22: 133, 2013.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
+<p>Aho, A. V., C. Aistleitner, T. Anderson, K. Appel, V. Arnol’d, N.
+Aronszajn, D. Asotsky et al. “W. Chen et al.(eds.), “A Panorama of
+Discrepancy Theory”, Sringer International Publishing,
+Switzerland: 679, 2014.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-5" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">5</a><span class="fn-bracket">]</span></span>
+<p>Hickernell, Fred J. “Koksma-Hlawka Inequality.” Wiley StatsRef:
+Statistics Reference Online, 2014.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-6" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">6</a><span class="fn-bracket">]</span></span>
+<p>Owen, Art B. “On dropping the first Sobol’ point.” <a class="reference external" href="https://arxiv.org/abs/2008.08051">arXiv:2008.08051</a>,
+2020.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-7" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">7</a><span class="fn-bracket">]</span></span>
+<p>L’Ecuyer, Pierre, and Christiane Lemieux. “Recent advances in randomized
+quasi-Monte Carlo methods.” In Modeling uncertainty, pp. 419-474. Springer,
+New York, NY, 2002.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-8" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">8</a><span class="fn-bracket">]</span></span>
+<p>DiCiccio, Thomas J., and Bradley Efron. “Bootstrap confidence
+intervals.” Statistical science: 189-212, 1996.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-9" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">9</a><span class="fn-bracket">]</span></span>
+<p>Dimov, Ivan T. “Monte Carlo methods for applied scientists.” World
+Scientific, 2008.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-10" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">10</a><span class="fn-bracket">]</span></span>
+<p>Caflisch, Russel E., William J. Morokoff, and Art B. Owen. “Valuation
+of mortgage backed securities using Brownian bridges to reduce effective
+dimension.” Journal of Computational Finance: no. 1 27-46, 1997.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-11" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">11</a><span class="fn-bracket">]</span></span>
+<p>Sloan, Ian H., and Henryk Wozniakowski. “When are quasi-Monte Carlo
+algorithms efficient for high dimensional integrals?.” Journal of Complexity
+14, no. 1 (1998): 1-33.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-12" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id13">1</a>,<a role="doc-backlink" href="#id15">2</a>)</span>
+<p>Owen, Art B., and Daniel Rudolf, “A strong law of large numbers for
+scrambled net integration.” SIAM Review, to appear.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-13" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">13</a><span class="fn-bracket">]</span></span>
+<p>Loh, Wei-Liem. “On the asymptotic distribution of scrambled net
+quadrature.” The Annals of Statistics 31, no. 4: 1282-1324, 2003.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-14" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id16">1</a>,<a role="doc-backlink" href="#id27">2</a>)</span>
+<p>Sloan, Ian H. and S. Joe. “Lattice methods for multiple integration.”
+Oxford University Press, 1994.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-15" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id18">15</a><span class="fn-bracket">]</span></span>
+<p>Dick, Josef, and Friedrich Pillichshammer. “Digital nets and sequences:
+discrepancy theory and quasi-Monte Carlo integration.” Cambridge University
+Press, 2010.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-16" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id19">16</a><span class="fn-bracket">]</span></span>
+<p>Dick, Josef, F. Kuo, Friedrich Pillichshammer, and I. Sloan.
+“Construction algorithms for polynomial lattice rules for multivariate
+integration.” Mathematics of computation 74, no. 252: 1895-1921, 2005.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-17" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id20">17</a><span class="fn-bracket">]</span></span>
+<p>Sobol’, Il’ya Meerovich. “On the distribution of points in a cube and
+the approximate evaluation of integrals.” Zhurnal Vychislitel’noi Matematiki
+i Matematicheskoi Fiziki 7, no. 4: 784-802, 1967.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-18" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id21">18</a><span class="fn-bracket">]</span></span>
+<p>Halton, John H. “On the efficiency of certain quasi-random sequences of
+points in evaluating multi-dimensional integrals.” Numerische Mathematik 2,
+no. 1: 84-90, 1960.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-19" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id22">19</a><span class="fn-bracket">]</span></span>
+<p>Faure, Henri. “Discrepance de suites associees a un systeme de
+numeration (en dimension s).” Acta arithmetica 41, no. 4: 337-351, 1982.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-20" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id23">20</a><span class="fn-bracket">]</span></span>
+<p>Niederreiter, Harold, and Chaoping Xing. “Low-discrepancy sequences and
+global function fields with many rational places.” Finite Fields and their
+applications 2, no. 3: 241-273, 1996.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-21" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id24">21</a><span class="fn-bracket">]</span></span>
+<p>Hong, Hee Sun, and Fred J. Hickernell. “Algorithm 823: Implementing
+scrambled digital sequences.” ACM Transactions on Mathematical Software
+(TOMS) 29, no. 2: 95-109, 2003.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-22" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id25">22</a><span class="fn-bracket">]</span></span>
+<p>Dick, Josef. “Higher order scrambled digital nets achieve the optimal
+rate of the root mean square error for smooth integrands.” The Annals of
+Statistics 39, no. 3: 1372-1398, 2011.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-23" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id26">23</a><span class="fn-bracket">]</span></span>
+<p>Niederreiter, Harald. “Multidimensional numerical integration using
+pseudorandom numbers.” In Stochastic Programming 84 Part I, pp. 17-38.
+Springer, Berlin, Heidelberg, 1986.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-24" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id28">24</a><span class="fn-bracket">]</span></span>
+<p>Hickernell, Fred J. “Obtaining O (N-2+e) Convergence for Lattice
+Quadrature Rules.” In Monte Carlo and Quasi-Monte Carlo Methods 2000,
+pp. 274-289. Springer, Berlin, Heidelberg, 2002.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-25" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id29">25</a><span class="fn-bracket">]</span></span>
+<p>Owen, Art B., and Seth D. Tribble. “A quasi-Monte Carlo Metropolis
+algorithm.” Proceedings of the National Academy of Sciences 102,
+no. 25: 8844-8849, 2005.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-26" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id30">26</a><span class="fn-bracket">]</span></span>
+<p>Chen, Su. “Consistency and convergence rate of Markov chain quasi Monte
+Carlo with examples.” PhD diss., Stanford University, 2011.</p>
+</div>
+<div class="citation" id="rbfd6def8ed08-27" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id31">27</a><span class="fn-bracket">]</span></span>
+<p>Joe, Stephen, and Frances Y. Kuo. “Constructing Sobol sequences with
+better two-dimensional projections.” SIAM Journal on Scientific Computing
+30, no. 5: 2635-2654, 2008.</p>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="generated/scipy.stats.Normal.logentropy.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">logentropy</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="generated/scipy.stats.qmc.QMCEngine.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">QMCEngine</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quasi-monte-carlo">Quasi-Monte Carlo</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#engines">Engines</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#helpers">Helpers</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction-to-quasi-monte-carlo">Introduction to Quasi-Monte Carlo</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

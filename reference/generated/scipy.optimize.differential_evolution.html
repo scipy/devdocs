@@ -1,0 +1,1083 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>differential_evolution &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.optimize.differential_evolution';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="shgo" href="scipy.optimize.shgo.html" />
+    <link rel="prev" title="brute" href="scipy.optimize.brute.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../optimize.html" class="nav-link">Optimization and root finding (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">differential_evolution</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.optimize.</div>
+<div class="empty"></div><section id="differential-evolution">
+<h1>differential_evolution<a class="headerlink" href="#differential-evolution" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.optimize.differential_evolution">
+<span class="sig-prename descclassname"><span class="pre">scipy.optimize.</span></span><span class="sig-name descname"><span class="pre">differential_evolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'best1bin'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">popsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0.5,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recombination</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polish</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'latinhypercube'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updating</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'immediate'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constraints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integrality</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectorized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/optimize/_differentialevolution.py#L23-L505"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.optimize.differential_evolution" title="Link to this definition">#</a></dt>
+<dd><p>Finds the global minimum of a multivariate function.</p>
+<p>The differential evolution method <a class="reference internal" href="#r108fc14fa019-1" id="id1">[1]</a> is stochastic in nature. It does
+not use gradient methods to find the minimum, and can search large areas
+of candidate space, but often requires larger numbers of function
+evaluations than conventional gradient-based techniques.</p>
+<p>The algorithm is due to Storn and Price <a class="reference internal" href="#r108fc14fa019-2" id="id2">[2]</a>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>func</strong><span class="classifier">callable</span></dt><dd><p>The objective function to be minimized. Must be in the form
+<code class="docutils literal notranslate"><span class="pre">f(x,</span> <span class="pre">*args)</span></code>, where <code class="docutils literal notranslate"><span class="pre">x</span></code> is the argument in the form of a 1-D array
+and <code class="docutils literal notranslate"><span class="pre">args</span></code> is a tuple of any additional fixed parameters needed to
+completely specify the function. The number of parameters, N, is equal
+to <code class="docutils literal notranslate"><span class="pre">len(x)</span></code>.</p>
+</dd>
+<dt><strong>bounds</strong><span class="classifier">sequence or <a class="reference internal" href="scipy.optimize.Bounds.html#scipy.optimize.Bounds" title="scipy.optimize.Bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bounds</span></code></a></span></dt><dd><p>Bounds for variables. There are two ways to specify the bounds:</p>
+<ol class="arabic simple">
+<li><p>Instance of <a class="reference internal" href="scipy.optimize.Bounds.html#scipy.optimize.Bounds" title="scipy.optimize.Bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bounds</span></code></a> class.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code> pairs for each element in <code class="docutils literal notranslate"><span class="pre">x</span></code>, defining the
+finite lower and upper bounds for the optimizing argument of
+<em class="xref py py-obj">func</em>.</p></li>
+</ol>
+<p>The total number of bounds is used to determine the number of
+parameters, N. If there are parameters whose bounds are equal the total
+number of free parameters is <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">-</span> <span class="pre">N_equal</span></code>.</p>
+</dd>
+<dt><strong>args</strong><span class="classifier">tuple, optional</span></dt><dd><p>Any additional fixed parameters needed to
+completely specify the objective function.</p>
+</dd>
+<dt><strong>strategy</strong><span class="classifier">{str, callable}, optional</span></dt><dd><p>The differential evolution strategy to use. Should be one of:</p>
+<ul class="simple">
+<li><p>‘best1bin’</p></li>
+<li><p>‘best1exp’</p></li>
+<li><p>‘rand1bin’</p></li>
+<li><p>‘rand1exp’</p></li>
+<li><p>‘rand2bin’</p></li>
+<li><p>‘rand2exp’</p></li>
+<li><p>‘randtobest1bin’</p></li>
+<li><p>‘randtobest1exp’</p></li>
+<li><p>‘currenttobest1bin’</p></li>
+<li><p>‘currenttobest1exp’</p></li>
+<li><p>‘best2exp’</p></li>
+<li><p>‘best2bin’</p></li>
+</ul>
+<p>The default is ‘best1bin’. Strategies that may be implemented are
+outlined in ‘Notes’.
+Alternatively the differential evolution strategy can be customized by
+providing a callable that constructs a trial vector. The callable must
+have the form <code class="docutils literal notranslate"><span class="pre">strategy(candidate:</span> <span class="pre">int,</span> <span class="pre">population:</span> <span class="pre">np.ndarray,</span> <span class="pre">rng=None)</span></code>,
+where <code class="docutils literal notranslate"><span class="pre">candidate</span></code> is an integer specifying which entry of the
+population is being evolved, <code class="docutils literal notranslate"><span class="pre">population</span></code> is an array of shape
+<code class="docutils literal notranslate"><span class="pre">(S,</span> <span class="pre">N)</span></code> containing all the population members (where S is the
+total population size), and <code class="docutils literal notranslate"><span class="pre">rng</span></code> is the random number generator
+being used within the solver.
+<code class="docutils literal notranslate"><span class="pre">candidate</span></code> will be in the range <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">S)</span></code>.
+<code class="docutils literal notranslate"><span class="pre">strategy</span></code> must return a trial vector with shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code>. The
+fitness of this trial vector is compared against the fitness of
+<code class="docutils literal notranslate"><span class="pre">population[candidate]</span></code>.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 1.12.0: </span>Customization of evolution strategy via a callable.</p>
+</div>
+</dd>
+<dt><strong>maxiter</strong><span class="classifier">int, optional</span></dt><dd><p>The maximum number of generations over which the entire population is
+evolved. The maximum number of function evaluations (with no polishing)
+is: <code class="docutils literal notranslate"><span class="pre">(maxiter</span> <span class="pre">+</span> <span class="pre">1)</span> <span class="pre">*</span> <span class="pre">popsize</span> <span class="pre">*</span> <span class="pre">(N</span> <span class="pre">-</span> <span class="pre">N_equal)</span></code></p>
+</dd>
+<dt><strong>popsize</strong><span class="classifier">int, optional</span></dt><dd><p>A multiplier for setting the total population size. The population has
+<code class="docutils literal notranslate"><span class="pre">popsize</span> <span class="pre">*</span> <span class="pre">(N</span> <span class="pre">-</span> <span class="pre">N_equal)</span></code> individuals. This keyword is overridden if
+an initial population is supplied via the <em class="xref py py-obj">init</em> keyword. When using
+<code class="docutils literal notranslate"><span class="pre">init='sobol'</span></code> the population size is calculated as the next power
+of 2 after <code class="docutils literal notranslate"><span class="pre">popsize</span> <span class="pre">*</span> <span class="pre">(N</span> <span class="pre">-</span> <span class="pre">N_equal)</span></code>.</p>
+</dd>
+<dt><strong>tol</strong><span class="classifier">float, optional</span></dt><dd><p>Relative tolerance for convergence, the solving stops when
+<code class="docutils literal notranslate"><span class="pre">np.std(population_energies)</span> <span class="pre">&lt;=</span> <span class="pre">atol</span> <span class="pre">+</span> <span class="pre">tol</span> <span class="pre">*</span> <span class="pre">np.abs(np.mean(population_energies))</span></code>,
+where and <em class="xref py py-obj">atol</em> and <em class="xref py py-obj">tol</em> are the absolute and relative tolerance
+respectively.</p>
+</dd>
+<dt><strong>mutation</strong><span class="classifier">float or tuple(float, float), optional</span></dt><dd><p>The mutation constant. In the literature this is also known as
+differential weight, being denoted by <span class="math notranslate nohighlight">\(F\)</span>.
+If specified as a float it should be in the range [0, 2).
+If specified as a tuple <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code> dithering is employed. Dithering
+randomly changes the mutation constant on a generation by generation
+basis. The mutation constant for that generation is taken from
+<code class="docutils literal notranslate"><span class="pre">U[min,</span> <span class="pre">max)</span></code>. Dithering can help speed convergence significantly.
+Increasing the mutation constant increases the search radius, but will
+slow down convergence.</p>
+</dd>
+<dt><strong>recombination</strong><span class="classifier">float, optional</span></dt><dd><p>The recombination constant, should be in the range [0, 1]. In the
+literature this is also known as the crossover probability, being
+denoted by CR. Increasing this value allows a larger number of mutants
+to progress into the next generation, but at the risk of population
+stability.</p>
+</dd>
+<dt><strong>seed</strong><span class="classifier">{None, int, <a class="reference external" href="https://numpy.org/doc/stable/reference/random/generator.html#numpy.random.Generator" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a>}, optional</span></dt><dd><p>If <em class="xref py py-obj">seed</em> is None (or <em class="xref py py-obj">np.random</em>), the <a class="reference external" href="https://numpy.org/doc/stable/reference/random/legacy.html#numpy.random.RandomState" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code></a>
+singleton is used.
+If <em class="xref py py-obj">seed</em> is an int, a new <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance is used,
+seeded with <em class="xref py py-obj">seed</em>.
+If <em class="xref py py-obj">seed</em> is already a <code class="docutils literal notranslate"><span class="pre">Generator</span></code> or <code class="docutils literal notranslate"><span class="pre">RandomState</span></code> instance then
+that instance is used.
+Specify <em class="xref py py-obj">seed</em> for repeatable minimizations.</p>
+</dd>
+<dt><strong>disp</strong><span class="classifier">bool, optional</span></dt><dd><p>Prints the evaluated <em class="xref py py-obj">func</em> at every iteration.</p>
+</dd>
+<dt><strong>callback</strong><span class="classifier">callable, optional</span></dt><dd><p>A callable called after each iteration. Has the signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">callback</span><span class="p">(</span><span class="n">intermediate_result</span><span class="p">:</span> <span class="n">OptimizeResult</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">intermediate_result</span></code> is a keyword parameter containing an
+<a class="reference internal" href="scipy.optimize.OptimizeResult.html#scipy.optimize.OptimizeResult" title="scipy.optimize.OptimizeResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptimizeResult</span></code></a> with attributes <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">fun</span></code>, the best solution
+found so far and the objective function. Note that the name
+of the parameter must be <code class="docutils literal notranslate"><span class="pre">intermediate_result</span></code> for the callback
+to be passed an <a class="reference internal" href="scipy.optimize.OptimizeResult.html#scipy.optimize.OptimizeResult" title="scipy.optimize.OptimizeResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptimizeResult</span></code></a>.</p>
+<p>The callback also supports a signature like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">callback</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">convergence</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="n">val</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">val</span></code> represents the fractional value of the population convergence.
+When <code class="docutils literal notranslate"><span class="pre">val</span></code> is greater than <code class="docutils literal notranslate"><span class="pre">1.0</span></code>, the function halts.</p>
+<p>Introspection is used to determine which of the signatures is invoked.</p>
+<p>Global minimization will halt if the callback raises <code class="docutils literal notranslate"><span class="pre">StopIteration</span></code>
+or returns <code class="docutils literal notranslate"><span class="pre">True</span></code>; any polishing is still carried out.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 1.12.0: </span>callback accepts the <code class="docutils literal notranslate"><span class="pre">intermediate_result</span></code> keyword.</p>
+</div>
+</dd>
+<dt><strong>polish</strong><span class="classifier">bool, optional</span></dt><dd><p>If True (default), then <a class="reference internal" href="scipy.optimize.minimize.html#scipy.optimize.minimize" title="scipy.optimize.minimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.minimize</span></code></a> with the <em class="xref py py-obj">L-BFGS-B</em>
+method is used to polish the best population member at the end, which
+can improve the minimization slightly. If a constrained problem is
+being studied then the <em class="xref py py-obj">trust-constr</em> method is used instead. For large
+problems with many constraints, polishing can take a long time due to
+the Jacobian computations.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 1.15.0: </span>If <em class="xref py py-obj">workers</em> is specified then the map-like callable that wraps
+<em class="xref py py-obj">func</em> is supplied to <a class="reference internal" href="scipy.optimize.minimize.html#scipy.optimize.minimize" title="scipy.optimize.minimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minimize</span></code></a> instead of it using <em class="xref py py-obj">func</em>
+directly. This allows the caller to control how and where the
+invocations actually run.</p>
+</div>
+</dd>
+<dt><strong>init</strong><span class="classifier">str or array-like, optional</span></dt><dd><p>Specify which type of population initialization is performed. Should be
+one of:</p>
+<ul class="simple">
+<li><p>‘latinhypercube’</p></li>
+<li><p>‘sobol’</p></li>
+<li><p>‘halton’</p></li>
+<li><p>‘random’</p></li>
+<li><p>array specifying the initial population. The array should have
+shape <code class="docutils literal notranslate"><span class="pre">(S,</span> <span class="pre">N)</span></code>, where S is the total population size and N is
+the number of parameters.</p></li>
+</ul>
+<p><em class="xref py py-obj">init</em> is clipped to <em class="xref py py-obj">bounds</em> before use.</p>
+<p>The default is ‘latinhypercube’. Latin Hypercube sampling tries to
+maximize coverage of the available parameter space.</p>
+<p>‘sobol’ and ‘halton’ are superior alternatives and maximize even more
+the parameter space. ‘sobol’ will enforce an initial population
+size which is calculated as the next power of 2 after
+<code class="docutils literal notranslate"><span class="pre">popsize</span> <span class="pre">*</span> <span class="pre">(N</span> <span class="pre">-</span> <span class="pre">N_equal)</span></code>. ‘halton’ has no requirements but is a bit
+less efficient. See <a class="reference internal" href="../stats.qmc.html#module-scipy.stats.qmc" title="scipy.stats.qmc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.qmc</span></code></a> for more details.</p>
+<p>‘random’ initializes the population randomly - this has the drawback
+that clustering can occur, preventing the whole of parameter space
+being covered. Use of an array to specify a population could be used,
+for example, to create a tight bunch of initial guesses in an location
+where the solution is known to exist, thereby reducing time for
+convergence.</p>
+</dd>
+<dt><strong>atol</strong><span class="classifier">float, optional</span></dt><dd><p>Absolute tolerance for convergence, the solving stops when
+<code class="docutils literal notranslate"><span class="pre">np.std(pop)</span> <span class="pre">&lt;=</span> <span class="pre">atol</span> <span class="pre">+</span> <span class="pre">tol</span> <span class="pre">*</span> <span class="pre">np.abs(np.mean(population_energies))</span></code>,
+where and <em class="xref py py-obj">atol</em> and <em class="xref py py-obj">tol</em> are the absolute and relative tolerance
+respectively.</p>
+</dd>
+<dt><strong>updating</strong><span class="classifier">{‘immediate’, ‘deferred’}, optional</span></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">'immediate'</span></code>, the best solution vector is continuously updated
+within a single generation <a class="reference internal" href="#r108fc14fa019-4" id="id3">[4]</a>. This can lead to faster convergence as
+trial vectors can take advantage of continuous improvements in the best
+solution.
+With <code class="docutils literal notranslate"><span class="pre">'deferred'</span></code>, the best solution vector is updated once per
+generation. Only <code class="docutils literal notranslate"><span class="pre">'deferred'</span></code> is compatible with parallelization or
+vectorization, and the <em class="xref py py-obj">workers</em> and <em class="xref py py-obj">vectorized</em> keywords can
+over-ride this option.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.2.0.</span></p>
+</div>
+</dd>
+<dt><strong>workers</strong><span class="classifier">int or map-like callable, optional</span></dt><dd><p>If <em class="xref py py-obj">workers</em> is an int the population is subdivided into <em class="xref py py-obj">workers</em>
+sections and evaluated in parallel
+(uses <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#module-multiprocessing" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">multiprocessing.Pool</span></code></a>).
+Supply -1 to use all available CPU cores.
+Alternatively supply a map-like callable, such as
+<em class="xref py py-obj">multiprocessing.Pool.map</em> for evaluating the population in parallel.
+This evaluation is carried out as <code class="docutils literal notranslate"><span class="pre">workers(func,</span> <span class="pre">iterable)</span></code>.
+This option will override the <em class="xref py py-obj">updating</em> keyword to
+<code class="docutils literal notranslate"><span class="pre">updating='deferred'</span></code> if <code class="docutils literal notranslate"><span class="pre">workers</span> <span class="pre">!=</span> <span class="pre">1</span></code>.
+This option overrides the <em class="xref py py-obj">vectorized</em> keyword if <code class="docutils literal notranslate"><span class="pre">workers</span> <span class="pre">!=</span> <span class="pre">1</span></code>.
+Requires that <em class="xref py py-obj">func</em> be pickleable.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.2.0.</span></p>
+</div>
+</dd>
+<dt><strong>constraints</strong><span class="classifier">{NonLinearConstraint, LinearConstraint, Bounds}</span></dt><dd><p>Constraints on the solver, over and above those applied by the <em class="xref py py-obj">bounds</em>
+kwd. Uses the approach by Lampinen <a class="reference internal" href="#r108fc14fa019-5" id="id4">[5]</a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.4.0.</span></p>
+</div>
+</dd>
+<dt><strong>x0</strong><span class="classifier">None or array-like, optional</span></dt><dd><p>Provides an initial guess to the minimization. Once the population has
+been initialized this vector replaces the first (best) member. This
+replacement is done even if <em class="xref py py-obj">init</em> is given an initial population.
+<code class="docutils literal notranslate"><span class="pre">x0.shape</span> <span class="pre">==</span> <span class="pre">(N,)</span></code>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.7.0.</span></p>
+</div>
+</dd>
+<dt><strong>integrality</strong><span class="classifier">1-D array, optional</span></dt><dd><p>For each decision variable, a boolean value indicating whether the
+decision variable is constrained to integer values. The array is
+broadcast to <code class="docutils literal notranslate"><span class="pre">(N,)</span></code>.
+If any decision variables are constrained to be integral, they will not
+be changed during polishing.
+Only integer values lying between the lower and upper bounds are used.
+If there are no integer values lying between the bounds then a
+<em class="xref py py-obj">ValueError</em> is raised.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.9.0.</span></p>
+</div>
+</dd>
+<dt><strong>vectorized</strong><span class="classifier">bool, optional</span></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">vectorized</span> <span class="pre">is</span> <span class="pre">True</span></code>, <em class="xref py py-obj">func</em> is sent an <em class="xref py py-obj">x</em> array with
+<code class="docutils literal notranslate"><span class="pre">x.shape</span> <span class="pre">==</span> <span class="pre">(N,</span> <span class="pre">S)</span></code>, and is expected to return an array of shape
+<code class="docutils literal notranslate"><span class="pre">(S,)</span></code>, where <em class="xref py py-obj">S</em> is the number of solution vectors to be calculated.
+If constraints are applied, each of the functions used to construct
+a <em class="xref py py-obj">Constraint</em> object should accept an <em class="xref py py-obj">x</em> array with
+<code class="docutils literal notranslate"><span class="pre">x.shape</span> <span class="pre">==</span> <span class="pre">(N,</span> <span class="pre">S)</span></code>, and return an array of shape <code class="docutils literal notranslate"><span class="pre">(M,</span> <span class="pre">S)</span></code>, where
+<em class="xref py py-obj">M</em> is the number of constraint components.
+This option is an alternative to the parallelization offered by
+<em class="xref py py-obj">workers</em>, and may help in optimization speed by reducing interpreter
+overhead from multiple function calls. This keyword is ignored if
+<code class="docutils literal notranslate"><span class="pre">workers</span> <span class="pre">!=</span> <span class="pre">1</span></code>.
+This option will override the <em class="xref py py-obj">updating</em> keyword to
+<code class="docutils literal notranslate"><span class="pre">updating='deferred'</span></code>.
+See the notes section for further discussion on when to use
+<code class="docutils literal notranslate"><span class="pre">'vectorized'</span></code>, and when to use <code class="docutils literal notranslate"><span class="pre">'workers'</span></code>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.9.0.</span></p>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>res</strong><span class="classifier">OptimizeResult</span></dt><dd><p>The optimization result represented as a <a class="reference internal" href="scipy.optimize.OptimizeResult.html#scipy.optimize.OptimizeResult" title="scipy.optimize.OptimizeResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptimizeResult</span></code></a> object.
+Important attributes are: <code class="docutils literal notranslate"><span class="pre">x</span></code> the solution array, <code class="docutils literal notranslate"><span class="pre">success</span></code> a
+Boolean flag indicating if the optimizer exited successfully,
+<code class="docutils literal notranslate"><span class="pre">message</span></code> which describes the cause of the termination,
+<code class="docutils literal notranslate"><span class="pre">population</span></code> the solution vectors present in the population, and
+<code class="docutils literal notranslate"><span class="pre">population_energies</span></code> the value of the objective function for each
+entry in <code class="docutils literal notranslate"><span class="pre">population</span></code>.
+See <a class="reference internal" href="scipy.optimize.OptimizeResult.html#scipy.optimize.OptimizeResult" title="scipy.optimize.OptimizeResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OptimizeResult</span></code></a> for a description of other attributes. If <em class="xref py py-obj">polish</em>
+was employed, and a lower minimum was obtained by the polishing, then
+OptimizeResult also contains the <code class="docutils literal notranslate"><span class="pre">jac</span></code> attribute.
+If the eventual solution does not satisfy the applied constraints
+<code class="docutils literal notranslate"><span class="pre">success</span></code> will be <em class="xref py py-obj">False</em>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Differential evolution is a stochastic population based method that is
+useful for global optimization problems. At each pass through the
+population the algorithm mutates each candidate solution by mixing with
+other candidate solutions to create a trial candidate. There are several
+strategies <a class="reference internal" href="#r108fc14fa019-3" id="id5">[3]</a> for creating trial candidates, which suit some problems
+more than others. The ‘best1bin’ strategy is a good starting point for
+many systems. In this strategy two members of the population are randomly
+chosen. Their difference is used to mutate the best member (the ‘best’ in
+‘best1bin’), <span class="math notranslate nohighlight">\(x_0\)</span>, so far:</p>
+<div class="math notranslate nohighlight">
+\[b' = x_0 + F \cdot (x_{r_0} - x_{r_1})\]</div>
+<p>where <span class="math notranslate nohighlight">\(F\)</span> is the <em class="xref py py-obj">mutation</em> parameter.
+A trial vector is then constructed. Starting with a randomly chosen ith
+parameter the trial is sequentially filled (in modulo) with parameters
+from <code class="docutils literal notranslate"><span class="pre">b'</span></code> or the original candidate. The choice of whether to use <code class="docutils literal notranslate"><span class="pre">b'</span></code>
+or the original candidate is made with a binomial distribution (the ‘bin’
+in ‘best1bin’) - a random number in [0, 1) is generated. If this number is
+less than the <em class="xref py py-obj">recombination</em> constant then the parameter is loaded from
+<code class="docutils literal notranslate"><span class="pre">b'</span></code>, otherwise it is loaded from the original candidate. The final
+parameter is always loaded from <code class="docutils literal notranslate"><span class="pre">b'</span></code>. Once the trial candidate is built
+its fitness is assessed. If the trial is better than the original candidate
+then it takes its place. If it is also better than the best overall
+candidate it also replaces that.</p>
+<p>The other strategies available are outlined in Qiang and
+Mitchell (2014) <a class="reference internal" href="#r108fc14fa019-3" id="id6">[3]</a>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rand1</span></code> : <span class="math notranslate nohighlight">\(b' = x_{r_0} + F \cdot (x_{r_1} - x_{r_2})\)</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rand2</span></code> : <span class="math notranslate nohighlight">\(b' = x_{r_0} + F \cdot (x_{r_1} + x_{r_2} - x_{r_3} - x_{r_4})\)</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">best1</span></code> : <span class="math notranslate nohighlight">\(b' = x_0 + F \cdot (x_{r_0} - x_{r_1})\)</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">best2</span></code> : <span class="math notranslate nohighlight">\(b' = x_0 + F \cdot (x_{r_0} + x_{r_1} - x_{r_2} - x_{r_3})\)</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">currenttobest1</span></code> : <span class="math notranslate nohighlight">\(b' = x_i + F \cdot (x_0 - x_i + x_{r_0} - x_{r_1})\)</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">randtobest1</span></code> : <span class="math notranslate nohighlight">\(b' = x_{r_0} + F \cdot (x_0 - x_{r_0} + x_{r_1} - x_{r_2})\)</span></p></li>
+</ul>
+<p>where the integers <span class="math notranslate nohighlight">\(r_0, r_1, r_2, r_3, r_4\)</span> are chosen randomly
+from the interval [0, NP) with <em class="xref py py-obj">NP</em> being the total population size and
+the original candidate having index <em class="xref py py-obj">i</em>. The user can fully customize the
+generation of the trial candidates by supplying a callable to <code class="docutils literal notranslate"><span class="pre">strategy</span></code>.</p>
+<p>To improve your chances of finding a global minimum use higher <em class="xref py py-obj">popsize</em>
+values, with higher <em class="xref py py-obj">mutation</em> and (dithering), but lower <em class="xref py py-obj">recombination</em>
+values. This has the effect of widening the search radius, but slowing
+convergence.</p>
+<p>By default the best solution vector is updated continuously within a single
+iteration (<code class="docutils literal notranslate"><span class="pre">updating='immediate'</span></code>). This is a modification <a class="reference internal" href="#r108fc14fa019-4" id="id7">[4]</a> of the
+original differential evolution algorithm which can lead to faster
+convergence as trial vectors can immediately benefit from improved
+solutions. To use the original Storn and Price behaviour, updating the best
+solution once per iteration, set <code class="docutils literal notranslate"><span class="pre">updating='deferred'</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">'deferred'</span></code> approach is compatible with both parallelization and
+vectorization (<code class="docutils literal notranslate"><span class="pre">'workers'</span></code> and <code class="docutils literal notranslate"><span class="pre">'vectorized'</span></code> keywords). These may
+improve minimization speed by using computer resources more efficiently.
+The <code class="docutils literal notranslate"><span class="pre">'workers'</span></code> distribute calculations over multiple processors. By
+default the Python <a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#module-multiprocessing" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">multiprocessing</span></code></a> module is used, but other approaches
+are also possible, such as the Message Passing Interface (MPI) used on
+clusters <a class="reference internal" href="#r108fc14fa019-6" id="id8">[6]</a> <a class="reference internal" href="#r108fc14fa019-7" id="id9">[7]</a>. The overhead from these approaches (creating new
+Processes, etc) may be significant, meaning that computational speed
+doesn’t necessarily scale with the number of processors used.
+Parallelization is best suited to computationally expensive objective
+functions. If the objective function is less expensive, then
+<code class="docutils literal notranslate"><span class="pre">'vectorized'</span></code> may aid by only calling the objective function once per
+iteration, rather than multiple times for all the population members; the
+interpreter overhead is reduced.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 0.15.0.</span></p>
+</div>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r108fc14fa019-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Differential evolution, Wikipedia,
+<a class="reference external" href="http://en.wikipedia.org/wiki/Differential_evolution">http://en.wikipedia.org/wiki/Differential_evolution</a></p>
+</div>
+<div class="citation" id="r108fc14fa019-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Storn, R and Price, K, Differential Evolution - a Simple and
+Efficient Heuristic for Global Optimization over Continuous Spaces,
+Journal of Global Optimization, 1997, 11, 341 - 359.</p>
+</div>
+<div class="citation" id="r108fc14fa019-3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id5">1</a>,<a role="doc-backlink" href="#id6">2</a>)</span>
+<p>Qiang, J., Mitchell, C., A Unified Differential Evolution Algorithm
+for Global Optimization, 2014, <a class="reference external" href="https://www.osti.gov/servlets/purl/1163659">https://www.osti.gov/servlets/purl/1163659</a></p>
+</div>
+<div class="citation" id="r108fc14fa019-4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id7">2</a>)</span>
+<p>Wormington, M., Panaccione, C., Matney, K. M., Bowen, D. K., -
+Characterization of structures from X-ray scattering data using
+genetic algorithms, Phil. Trans. R. Soc. Lond. A, 1999, 357,
+2827-2848</p>
+</div>
+<div class="citation" id="r108fc14fa019-5" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">5</a><span class="fn-bracket">]</span></span>
+<p>Lampinen, J., A constraint handling approach for the differential
+evolution algorithm. Proceedings of the 2002 Congress on
+Evolutionary Computation. CEC’02 (Cat. No. 02TH8600). Vol. 2. IEEE,
+2002.</p>
+</div>
+<div class="citation" id="r108fc14fa019-6" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">6</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://mpi4py.readthedocs.io/en/stable/">https://mpi4py.readthedocs.io/en/stable/</a></p>
+</div>
+<div class="citation" id="r108fc14fa019-7" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">7</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://schwimmbad.readthedocs.io/en/latest/">https://schwimmbad.readthedocs.io/en/latest/</a></p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="efb6172a-698b-4651-914b-30bb1899d5a4">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('efb6172a-698b-4651-914b-30bb1899d5a4','c0198694-69f5-4684-92c2-664500c2b6f3','aaa844ac-8479-4baa-b6bc-830fe38ad87f','../../lite/tree/../notebooks/index.html?path=11e2f56c_ca2a_4867_bb87_1aba5d82b1ff.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>Let us consider the problem of minimizing the Rosenbrock function. This
+function is implemented in <a class="reference internal" href="scipy.optimize.rosen.html#scipy.optimize.rosen" title="scipy.optimize.rosen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rosen</span></code></a> in <a class="reference internal" href="../optimize.html#module-scipy.optimize" title="scipy.optimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize</span></code></a>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">rosen</span><span class="p">,</span> <span class="n">differential_evolution</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">differential_evolution</span><span class="p">(</span><span class="n">rosen</span><span class="p">,</span> <span class="n">bounds</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">fun</span>
+<span class="go">(array([1., 1., 1., 1., 1.]), 1.9216496320061384e-19)</span>
+</pre></div>
+</div>
+<p>Now repeat, but with parallelization.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">differential_evolution</span><span class="p">(</span><span class="n">rosen</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">updating</span><span class="o">=</span><span class="s1">&#39;deferred&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                                <span class="n">workers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">fun</span>
+<span class="go">(array([1., 1., 1., 1., 1.]), 1.9216496320061384e-19)</span>
+</pre></div>
+</div>
+<p>Let’s do a constrained minimization.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">LinearConstraint</span><span class="p">,</span> <span class="n">Bounds</span>
+</pre></div>
+</div>
+<p>We add the constraint that the sum of <code class="docutils literal notranslate"><span class="pre">x[0]</span></code> and <code class="docutils literal notranslate"><span class="pre">x[1]</span></code> must be less
+than or equal to 1.9.  This is a linear constraint, which may be written
+<code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">&#64;</span> <span class="pre">x</span> <span class="pre">&lt;=</span> <span class="pre">1.9</span></code>, where <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">=</span> <span class="pre">array([[1,</span> <span class="pre">1]])</span></code>.  This can be encoded as
+a <a class="reference internal" href="scipy.optimize.LinearConstraint.html#scipy.optimize.LinearConstraint" title="scipy.optimize.LinearConstraint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LinearConstraint</span></code></a> instance:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lc</span> <span class="o">=</span> <span class="n">LinearConstraint</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="mf">1.9</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Specify limits using a <a class="reference internal" href="scipy.optimize.Bounds.html#scipy.optimize.Bounds" title="scipy.optimize.Bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bounds</span></code></a> object.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bounds</span> <span class="o">=</span> <span class="n">Bounds</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">differential_evolution</span><span class="p">(</span><span class="n">rosen</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="n">lc</span><span class="p">,</span>
+<span class="gp">... </span>                                <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">fun</span>
+<span class="go">(array([0.96632622, 0.93367155]), 0.0011352416852625719)</span>
+</pre></div>
+</div>
+<p>Next find the minimum of the Ackley function
+(<a class="reference external" href="https://en.wikipedia.org/wiki/Test_functions_for_optimization">https://en.wikipedia.org/wiki/Test_functions_for_optimization</a>).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">ackley</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">arg1</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">... </span>    <span class="n">arg2</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="o">-</span><span class="mf">20.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">arg1</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">arg2</span><span class="p">)</span> <span class="o">+</span> <span class="mf">20.</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">e</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bounds</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">differential_evolution</span><span class="p">(</span><span class="n">ackley</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">fun</span>
+<span class="go">(array([0., 0.]), 4.440892098500626e-16)</span>
+</pre></div>
+</div>
+<p>The Ackley function is written in a vectorized manner, so the
+<code class="docutils literal notranslate"><span class="pre">'vectorized'</span></code> keyword can be employed. Note the reduced number of
+function evaluations.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">differential_evolution</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">ackley</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">vectorized</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">updating</span><span class="o">=</span><span class="s1">&#39;deferred&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">fun</span>
+<span class="go">(array([0., 0.]), 4.440892098500626e-16)</span>
+</pre></div>
+</div>
+<p>The following custom strategy function mimics ‘best1bin’:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">custom_strategy_fn</span><span class="p">(</span><span class="n">candidate</span><span class="p">,</span> <span class="n">population</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">parameter_count</span> <span class="o">=</span> <span class="n">population</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">mutation</span><span class="p">,</span> <span class="n">recombination</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.9</span>
+<span class="gp">... </span>    <span class="n">trial</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">population</span><span class="p">[</span><span class="n">candidate</span><span class="p">])</span>
+<span class="gp">... </span>    <span class="n">fill_point</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">parameter_count</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="n">pool</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">population</span><span class="p">))</span>
+<span class="gp">... </span>    <span class="n">rng</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">pool</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="c1"># two unique random numbers that aren&#39;t the same, and</span>
+<span class="gp">... </span>    <span class="c1"># aren&#39;t equal to candidate.</span>
+<span class="gp">... </span>    <span class="n">idxs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">... </span>    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">idxs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">pool</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="n">idx</span> <span class="o">=</span> <span class="n">pool</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">... </span>        <span class="n">pool</span> <span class="o">=</span> <span class="n">pool</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+<span class="gp">... </span>        <span class="k">if</span> <span class="n">idx</span> <span class="o">!=</span> <span class="n">candidate</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="n">idxs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="n">r0</span><span class="p">,</span> <span class="n">r1</span> <span class="o">=</span> <span class="n">idxs</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="n">bprime</span> <span class="o">=</span> <span class="p">(</span><span class="n">population</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">mutation</span> <span class="o">*</span>
+<span class="gp">... </span>              <span class="p">(</span><span class="n">population</span><span class="p">[</span><span class="n">r0</span><span class="p">]</span> <span class="o">-</span> <span class="n">population</span><span class="p">[</span><span class="n">r1</span><span class="p">]))</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="n">crossovers</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">parameter_count</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">crossovers</span> <span class="o">=</span> <span class="n">crossovers</span> <span class="o">&lt;</span> <span class="n">recombination</span>
+<span class="gp">... </span>    <span class="n">crossovers</span><span class="p">[</span><span class="n">fill_point</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">... </span>    <span class="n">trial</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">crossovers</span><span class="p">,</span> <span class="n">bprime</span><span class="p">,</span> <span class="n">trial</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">trial</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div id="aaa844ac-8479-4baa-b6bc-830fe38ad87f" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('efb6172a-698b-4651-914b-30bb1899d5a4','aaa844ac-8479-4baa-b6bc-830fe38ad87f')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('efb6172a-698b-4651-914b-30bb1899d5a4','aaa844ac-8479-4baa-b6bc-830fe38ad87f')">Open In Tab</button></div><div id="c0198694-69f5-4684-92c2-664500c2b6f3" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.optimize.brute.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">brute</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.optimize.shgo.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">shgo</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.optimize.differential_evolution"><code class="docutils literal notranslate"><span class="pre">differential_evolution</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

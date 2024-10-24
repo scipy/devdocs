@@ -1,0 +1,1097 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Low-level BLAS functions (scipy.linalg.blas) &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/linalg.blas';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="get_blas_funcs" href="generated/scipy.linalg.blas.get_blas_funcs.html" />
+    <link rel="prev" title="Linear algebra (scipy.linalg)" href="linalg.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">scipy.io</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="linalg.html" class="nav-link">Linear algebra (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.linalg</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Low-level BLAS functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.linalg.blas</span></code>)</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="low-level-blas-functions-scipy-linalg-blas">
+<span id="module-scipy.linalg.blas"></span><h1>Low-level BLAS functions (<a class="reference internal" href="#module-scipy.linalg.blas" title="scipy.linalg.blas"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.linalg.blas</span></code></a>)<a class="headerlink" href="#low-level-blas-functions-scipy-linalg-blas" title="Link to this heading">#</a></h1>
+<p>This module contains low-level functions from the BLAS library.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 0.12.0.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The common <code class="docutils literal notranslate"><span class="pre">overwrite_&lt;&gt;</span></code> option in many routines, allows the
+input arrays to be overwritten to avoid extra memory allocation.
+However this requires the array to satisfy two conditions
+which are memory order and the data type to match exactly the
+order and the type expected by the routine.</p>
+<p>As an example, if you pass a double precision float array to any
+<code class="docutils literal notranslate"><span class="pre">S....</span></code> routine which expects single precision arguments, f2py
+will create an intermediate array to match the argument types and
+overwriting will be performed on that intermediate array.</p>
+<p>Similarly, if a C-contiguous array is passed, f2py will pass a
+FORTRAN-contiguous array internally. Please make sure that these
+details are satisfied. More information can be found in the f2py
+documentation.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>These functions do little to no error checking.
+It is possible to cause crashes by mis-using them,
+so prefer using the higher-level routines in <a class="reference internal" href="linalg.html#module-scipy.linalg" title="scipy.linalg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code></a>.</p>
+</div>
+<section id="finding-functions">
+<h2>Finding functions<a class="headerlink" href="#finding-functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.get_blas_funcs.html#scipy.linalg.blas.get_blas_funcs" title="scipy.linalg.blas.get_blas_funcs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_blas_funcs</span></code></a>(names[, arrays, dtype, ilp64])</p></td>
+<td><p>Return available BLAS function objects from names.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.find_best_blas_type.html#scipy.linalg.blas.find_best_blas_type" title="scipy.linalg.blas.find_best_blas_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_best_blas_type</span></code></a>([arrays, dtype])</p></td>
+<td><p>Find best-matching BLAS/LAPACK type.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="blas-level-1-functions">
+<h2>BLAS Level 1 functions<a class="headerlink" href="#blas-level-1-functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.caxpy.html#scipy.linalg.blas.caxpy" title="scipy.linalg.blas.caxpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">caxpy</span></code></a>(x,y,[n,a,offx,incx,offy,incy])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">caxpy</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ccopy.html#scipy.linalg.blas.ccopy" title="scipy.linalg.blas.ccopy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ccopy</span></code></a>(x,y,[n,offx,incx,offy,incy])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ccopy</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.cdotc.html#scipy.linalg.blas.cdotc" title="scipy.linalg.blas.cdotc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cdotc</span></code></a>(x,y,[n,offx,incx,offy,incy])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">cdotc</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.cdotu.html#scipy.linalg.blas.cdotu" title="scipy.linalg.blas.cdotu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cdotu</span></code></a>(x,y,[n,offx,incx,offy,incy])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">cdotu</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.crotg.html#scipy.linalg.blas.crotg" title="scipy.linalg.blas.crotg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">crotg</span></code></a>(a, b)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">crotg</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.cscal.html#scipy.linalg.blas.cscal" title="scipy.linalg.blas.cscal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cscal</span></code></a>(a,x,[n,offx,incx])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">cscal</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.csrot.html#scipy.linalg.blas.csrot" title="scipy.linalg.blas.csrot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">csrot</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">csrot</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.csscal.html#scipy.linalg.blas.csscal" title="scipy.linalg.blas.csscal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">csscal</span></code></a>(a,x,[n,offx,incx,overwrite_x])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">csscal</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.cswap.html#scipy.linalg.blas.cswap" title="scipy.linalg.blas.cswap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cswap</span></code></a>(x,y,[n,offx,incx,offy,incy])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">cswap</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dasum.html#scipy.linalg.blas.dasum" title="scipy.linalg.blas.dasum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dasum</span></code></a>(x,[n,offx,incx])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dasum</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.daxpy.html#scipy.linalg.blas.daxpy" title="scipy.linalg.blas.daxpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">daxpy</span></code></a>(x,y,[n,a,offx,incx,offy,incy])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">daxpy</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dcopy.html#scipy.linalg.blas.dcopy" title="scipy.linalg.blas.dcopy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dcopy</span></code></a>(x,y,[n,offx,incx,offy,incy])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dcopy</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ddot.html#scipy.linalg.blas.ddot" title="scipy.linalg.blas.ddot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ddot</span></code></a>(x,y,[n,offx,incx,offy,incy])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ddot</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dnrm2.html#scipy.linalg.blas.dnrm2" title="scipy.linalg.blas.dnrm2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dnrm2</span></code></a>(x,[n,offx,incx])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dnrm2</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.drot.html#scipy.linalg.blas.drot" title="scipy.linalg.blas.drot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">drot</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">drot</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.drotg.html#scipy.linalg.blas.drotg" title="scipy.linalg.blas.drotg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">drotg</span></code></a>(a, b)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">drotg</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.drotm.html#scipy.linalg.blas.drotm" title="scipy.linalg.blas.drotm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">drotm</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">drotm</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.drotmg.html#scipy.linalg.blas.drotmg" title="scipy.linalg.blas.drotmg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">drotmg</span></code></a>(d1, d2, x1, y1)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">drotmg</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dscal.html#scipy.linalg.blas.dscal" title="scipy.linalg.blas.dscal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dscal</span></code></a>(a,x,[n,offx,incx])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dscal</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dswap.html#scipy.linalg.blas.dswap" title="scipy.linalg.blas.dswap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dswap</span></code></a>(x,y,[n,offx,incx,offy,incy])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dswap</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dzasum.html#scipy.linalg.blas.dzasum" title="scipy.linalg.blas.dzasum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dzasum</span></code></a>(x,[n,offx,incx])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dzasum</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dznrm2.html#scipy.linalg.blas.dznrm2" title="scipy.linalg.blas.dznrm2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dznrm2</span></code></a>(x,[n,offx,incx])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dznrm2</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.icamax.html#scipy.linalg.blas.icamax" title="scipy.linalg.blas.icamax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">icamax</span></code></a>(x,[n,offx,incx])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">icamax</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.idamax.html#scipy.linalg.blas.idamax" title="scipy.linalg.blas.idamax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">idamax</span></code></a>(x,[n,offx,incx])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">idamax</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.isamax.html#scipy.linalg.blas.isamax" title="scipy.linalg.blas.isamax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isamax</span></code></a>(x,[n,offx,incx])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">isamax</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.izamax.html#scipy.linalg.blas.izamax" title="scipy.linalg.blas.izamax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">izamax</span></code></a>(x,[n,offx,incx])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">izamax</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.sasum.html#scipy.linalg.blas.sasum" title="scipy.linalg.blas.sasum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sasum</span></code></a>(x,[n,offx,incx])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">sasum</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.saxpy.html#scipy.linalg.blas.saxpy" title="scipy.linalg.blas.saxpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">saxpy</span></code></a>(x,y,[n,a,offx,incx,offy,incy])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">saxpy</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.scasum.html#scipy.linalg.blas.scasum" title="scipy.linalg.blas.scasum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scasum</span></code></a>(x,[n,offx,incx])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">scasum</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.scnrm2.html#scipy.linalg.blas.scnrm2" title="scipy.linalg.blas.scnrm2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scnrm2</span></code></a>(x,[n,offx,incx])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">scnrm2</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.scopy.html#scipy.linalg.blas.scopy" title="scipy.linalg.blas.scopy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scopy</span></code></a>(x,y,[n,offx,incx,offy,incy])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">scopy</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.sdot.html#scipy.linalg.blas.sdot" title="scipy.linalg.blas.sdot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sdot</span></code></a>(x,y,[n,offx,incx,offy,incy])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">sdot</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.snrm2.html#scipy.linalg.blas.snrm2" title="scipy.linalg.blas.snrm2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">snrm2</span></code></a>(x,[n,offx,incx])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">snrm2</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.srot.html#scipy.linalg.blas.srot" title="scipy.linalg.blas.srot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">srot</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">srot</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.srotg.html#scipy.linalg.blas.srotg" title="scipy.linalg.blas.srotg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">srotg</span></code></a>(a, b)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">srotg</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.srotm.html#scipy.linalg.blas.srotm" title="scipy.linalg.blas.srotm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">srotm</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">srotm</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.srotmg.html#scipy.linalg.blas.srotmg" title="scipy.linalg.blas.srotmg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">srotmg</span></code></a>(d1, d2, x1, y1)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">srotmg</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.sscal.html#scipy.linalg.blas.sscal" title="scipy.linalg.blas.sscal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sscal</span></code></a>(a,x,[n,offx,incx])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">sscal</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.sswap.html#scipy.linalg.blas.sswap" title="scipy.linalg.blas.sswap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sswap</span></code></a>(x,y,[n,offx,incx,offy,incy])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">sswap</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zaxpy.html#scipy.linalg.blas.zaxpy" title="scipy.linalg.blas.zaxpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zaxpy</span></code></a>(x,y,[n,a,offx,incx,offy,incy])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zaxpy</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zcopy.html#scipy.linalg.blas.zcopy" title="scipy.linalg.blas.zcopy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zcopy</span></code></a>(x,y,[n,offx,incx,offy,incy])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zcopy</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zdotc.html#scipy.linalg.blas.zdotc" title="scipy.linalg.blas.zdotc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zdotc</span></code></a>(x,y,[n,offx,incx,offy,incy])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zdotc</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zdotu.html#scipy.linalg.blas.zdotu" title="scipy.linalg.blas.zdotu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zdotu</span></code></a>(x,y,[n,offx,incx,offy,incy])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zdotu</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zdrot.html#scipy.linalg.blas.zdrot" title="scipy.linalg.blas.zdrot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zdrot</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zdrot</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zdscal.html#scipy.linalg.blas.zdscal" title="scipy.linalg.blas.zdscal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zdscal</span></code></a>(a,x,[n,offx,incx,overwrite_x])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zdscal</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zrotg.html#scipy.linalg.blas.zrotg" title="scipy.linalg.blas.zrotg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zrotg</span></code></a>(a, b)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zrotg</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zscal.html#scipy.linalg.blas.zscal" title="scipy.linalg.blas.zscal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zscal</span></code></a>(a,x,[n,offx,incx])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zscal</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zswap.html#scipy.linalg.blas.zswap" title="scipy.linalg.blas.zswap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zswap</span></code></a>(x,y,[n,offx,incx,offy,incy])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zswap</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="blas-level-2-functions">
+<h2>BLAS Level 2 functions<a class="headerlink" href="#blas-level-2-functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.sgbmv.html#scipy.linalg.blas.sgbmv" title="scipy.linalg.blas.sgbmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sgbmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">sgbmv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.sgemv.html#scipy.linalg.blas.sgemv" title="scipy.linalg.blas.sgemv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sgemv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">sgemv</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.sger.html#scipy.linalg.blas.sger" title="scipy.linalg.blas.sger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sger</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">sger</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ssbmv.html#scipy.linalg.blas.ssbmv" title="scipy.linalg.blas.ssbmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssbmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ssbmv</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.sspr.html#scipy.linalg.blas.sspr" title="scipy.linalg.blas.sspr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sspr</span></code></a>(n,alpha,x,ap,[incx,offx,lower,overwrite_ap])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">sspr</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.sspr2.html#scipy.linalg.blas.sspr2" title="scipy.linalg.blas.sspr2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sspr2</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">sspr2</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ssymv.html#scipy.linalg.blas.ssymv" title="scipy.linalg.blas.ssymv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssymv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ssymv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ssyr.html#scipy.linalg.blas.ssyr" title="scipy.linalg.blas.ssyr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssyr</span></code></a>(alpha,x,[lower,incx,offx,n,a,overwrite_a])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ssyr</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ssyr2.html#scipy.linalg.blas.ssyr2" title="scipy.linalg.blas.ssyr2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssyr2</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ssyr2</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.stbmv.html#scipy.linalg.blas.stbmv" title="scipy.linalg.blas.stbmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stbmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">stbmv</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.stpsv.html#scipy.linalg.blas.stpsv" title="scipy.linalg.blas.stpsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stpsv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">stpsv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.strmv.html#scipy.linalg.blas.strmv" title="scipy.linalg.blas.strmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">strmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">strmv</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.strsv.html#scipy.linalg.blas.strsv" title="scipy.linalg.blas.strsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">strsv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">strsv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dgbmv.html#scipy.linalg.blas.dgbmv" title="scipy.linalg.blas.dgbmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dgbmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dgbmv</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dgemv.html#scipy.linalg.blas.dgemv" title="scipy.linalg.blas.dgemv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dgemv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dgemv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dger.html#scipy.linalg.blas.dger" title="scipy.linalg.blas.dger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dger</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dger</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dsbmv.html#scipy.linalg.blas.dsbmv" title="scipy.linalg.blas.dsbmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dsbmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dsbmv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dspr.html#scipy.linalg.blas.dspr" title="scipy.linalg.blas.dspr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dspr</span></code></a>(n,alpha,x,ap,[incx,offx,lower,overwrite_ap])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dspr</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dspr2.html#scipy.linalg.blas.dspr2" title="scipy.linalg.blas.dspr2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dspr2</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dspr2</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dsymv.html#scipy.linalg.blas.dsymv" title="scipy.linalg.blas.dsymv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dsymv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dsymv</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dsyr.html#scipy.linalg.blas.dsyr" title="scipy.linalg.blas.dsyr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dsyr</span></code></a>(alpha,x,[lower,incx,offx,n,a,overwrite_a])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dsyr</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dsyr2.html#scipy.linalg.blas.dsyr2" title="scipy.linalg.blas.dsyr2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dsyr2</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dsyr2</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dtbmv.html#scipy.linalg.blas.dtbmv" title="scipy.linalg.blas.dtbmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtbmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dtbmv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dtpsv.html#scipy.linalg.blas.dtpsv" title="scipy.linalg.blas.dtpsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtpsv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dtpsv</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dtrmv.html#scipy.linalg.blas.dtrmv" title="scipy.linalg.blas.dtrmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtrmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dtrmv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dtrsv.html#scipy.linalg.blas.dtrsv" title="scipy.linalg.blas.dtrsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtrsv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dtrsv</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.cgbmv.html#scipy.linalg.blas.cgbmv" title="scipy.linalg.blas.cgbmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cgbmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">cgbmv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.cgemv.html#scipy.linalg.blas.cgemv" title="scipy.linalg.blas.cgemv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cgemv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">cgemv</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.cgerc.html#scipy.linalg.blas.cgerc" title="scipy.linalg.blas.cgerc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cgerc</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">cgerc</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.cgeru.html#scipy.linalg.blas.cgeru" title="scipy.linalg.blas.cgeru"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cgeru</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">cgeru</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.chbmv.html#scipy.linalg.blas.chbmv" title="scipy.linalg.blas.chbmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chbmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">chbmv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.chemv.html#scipy.linalg.blas.chemv" title="scipy.linalg.blas.chemv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chemv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">chemv</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.cher.html#scipy.linalg.blas.cher" title="scipy.linalg.blas.cher"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cher</span></code></a>(alpha,x,[lower,incx,offx,n,a,overwrite_a])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">cher</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.cher2.html#scipy.linalg.blas.cher2" title="scipy.linalg.blas.cher2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cher2</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">cher2</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.chpmv.html#scipy.linalg.blas.chpmv" title="scipy.linalg.blas.chpmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chpmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">chpmv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.chpr.html#scipy.linalg.blas.chpr" title="scipy.linalg.blas.chpr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chpr</span></code></a>(n,alpha,x,ap,[incx,offx,lower,overwrite_ap])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">chpr</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.chpr2.html#scipy.linalg.blas.chpr2" title="scipy.linalg.blas.chpr2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chpr2</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">chpr2</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ctbmv.html#scipy.linalg.blas.ctbmv" title="scipy.linalg.blas.ctbmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctbmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ctbmv</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ctbsv.html#scipy.linalg.blas.ctbsv" title="scipy.linalg.blas.ctbsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctbsv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ctbsv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ctpmv.html#scipy.linalg.blas.ctpmv" title="scipy.linalg.blas.ctpmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctpmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ctpmv</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ctpsv.html#scipy.linalg.blas.ctpsv" title="scipy.linalg.blas.ctpsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctpsv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ctpsv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ctrmv.html#scipy.linalg.blas.ctrmv" title="scipy.linalg.blas.ctrmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctrmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ctrmv</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ctrsv.html#scipy.linalg.blas.ctrsv" title="scipy.linalg.blas.ctrsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctrsv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ctrsv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.csyr.html#scipy.linalg.blas.csyr" title="scipy.linalg.blas.csyr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">csyr</span></code></a>(alpha,x,[lower,incx,offx,n,a,overwrite_a])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">csyr</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zgbmv.html#scipy.linalg.blas.zgbmv" title="scipy.linalg.blas.zgbmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zgbmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zgbmv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zgemv.html#scipy.linalg.blas.zgemv" title="scipy.linalg.blas.zgemv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zgemv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zgemv</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zgerc.html#scipy.linalg.blas.zgerc" title="scipy.linalg.blas.zgerc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zgerc</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zgerc</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zgeru.html#scipy.linalg.blas.zgeru" title="scipy.linalg.blas.zgeru"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zgeru</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zgeru</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zhbmv.html#scipy.linalg.blas.zhbmv" title="scipy.linalg.blas.zhbmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zhbmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zhbmv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zhemv.html#scipy.linalg.blas.zhemv" title="scipy.linalg.blas.zhemv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zhemv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zhemv</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zher.html#scipy.linalg.blas.zher" title="scipy.linalg.blas.zher"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zher</span></code></a>(alpha,x,[lower,incx,offx,n,a,overwrite_a])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zher</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zher2.html#scipy.linalg.blas.zher2" title="scipy.linalg.blas.zher2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zher2</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zher2</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zhpmv.html#scipy.linalg.blas.zhpmv" title="scipy.linalg.blas.zhpmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zhpmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zhpmv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zhpr.html#scipy.linalg.blas.zhpr" title="scipy.linalg.blas.zhpr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zhpr</span></code></a>(n,alpha,x,ap,[incx,offx,lower,overwrite_ap])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zhpr</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zhpr2.html#scipy.linalg.blas.zhpr2" title="scipy.linalg.blas.zhpr2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zhpr2</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zhpr2</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ztbmv.html#scipy.linalg.blas.ztbmv" title="scipy.linalg.blas.ztbmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ztbmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ztbmv</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ztbsv.html#scipy.linalg.blas.ztbsv" title="scipy.linalg.blas.ztbsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ztbsv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ztbsv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ztpmv.html#scipy.linalg.blas.ztpmv" title="scipy.linalg.blas.ztpmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ztpmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ztpmv</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ztrmv.html#scipy.linalg.blas.ztrmv" title="scipy.linalg.blas.ztrmv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ztrmv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ztrmv</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ztrsv.html#scipy.linalg.blas.ztrsv" title="scipy.linalg.blas.ztrsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ztrsv</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ztrsv</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zsyr.html#scipy.linalg.blas.zsyr" title="scipy.linalg.blas.zsyr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zsyr</span></code></a>(alpha,x,[lower,incx,offx,n,a,overwrite_a])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zsyr</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="blas-level-3-functions">
+<h2>BLAS Level 3 functions<a class="headerlink" href="#blas-level-3-functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.sgemm.html#scipy.linalg.blas.sgemm" title="scipy.linalg.blas.sgemm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sgemm</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">sgemm</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ssymm.html#scipy.linalg.blas.ssymm" title="scipy.linalg.blas.ssymm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssymm</span></code></a>(alpha,a,b,[beta,c,side,lower,overwrite_c])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ssymm</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ssyr2k.html#scipy.linalg.blas.ssyr2k" title="scipy.linalg.blas.ssyr2k"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssyr2k</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ssyr2k</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ssyrk.html#scipy.linalg.blas.ssyrk" title="scipy.linalg.blas.ssyrk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ssyrk</span></code></a>(alpha,a,[beta,c,trans,lower,overwrite_c])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ssyrk</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.strmm.html#scipy.linalg.blas.strmm" title="scipy.linalg.blas.strmm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">strmm</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">strmm</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.strsm.html#scipy.linalg.blas.strsm" title="scipy.linalg.blas.strsm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">strsm</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">strsm</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dgemm.html#scipy.linalg.blas.dgemm" title="scipy.linalg.blas.dgemm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dgemm</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dgemm</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dsymm.html#scipy.linalg.blas.dsymm" title="scipy.linalg.blas.dsymm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dsymm</span></code></a>(alpha,a,b,[beta,c,side,lower,overwrite_c])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dsymm</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dsyr2k.html#scipy.linalg.blas.dsyr2k" title="scipy.linalg.blas.dsyr2k"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dsyr2k</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dsyr2k</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dsyrk.html#scipy.linalg.blas.dsyrk" title="scipy.linalg.blas.dsyrk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dsyrk</span></code></a>(alpha,a,[beta,c,trans,lower,overwrite_c])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dsyrk</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dtrmm.html#scipy.linalg.blas.dtrmm" title="scipy.linalg.blas.dtrmm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtrmm</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dtrmm</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.dtrsm.html#scipy.linalg.blas.dtrsm" title="scipy.linalg.blas.dtrsm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtrsm</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">dtrsm</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.cgemm.html#scipy.linalg.blas.cgemm" title="scipy.linalg.blas.cgemm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cgemm</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">cgemm</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.chemm.html#scipy.linalg.blas.chemm" title="scipy.linalg.blas.chemm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">chemm</span></code></a>(alpha,a,b,[beta,c,side,lower,overwrite_c])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">chemm</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.cher2k.html#scipy.linalg.blas.cher2k" title="scipy.linalg.blas.cher2k"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cher2k</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">cher2k</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.cherk.html#scipy.linalg.blas.cherk" title="scipy.linalg.blas.cherk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cherk</span></code></a>(alpha,a,[beta,c,trans,lower,overwrite_c])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">cherk</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.csymm.html#scipy.linalg.blas.csymm" title="scipy.linalg.blas.csymm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">csymm</span></code></a>(alpha,a,b,[beta,c,side,lower,overwrite_c])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">csymm</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.csyr2k.html#scipy.linalg.blas.csyr2k" title="scipy.linalg.blas.csyr2k"><code class="xref py py-obj docutils literal notranslate"><span class="pre">csyr2k</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">csyr2k</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.csyrk.html#scipy.linalg.blas.csyrk" title="scipy.linalg.blas.csyrk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">csyrk</span></code></a>(alpha,a,[beta,c,trans,lower,overwrite_c])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">csyrk</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ctrmm.html#scipy.linalg.blas.ctrmm" title="scipy.linalg.blas.ctrmm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctrmm</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ctrmm</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ctrsm.html#scipy.linalg.blas.ctrsm" title="scipy.linalg.blas.ctrsm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ctrsm</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ctrsm</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zgemm.html#scipy.linalg.blas.zgemm" title="scipy.linalg.blas.zgemm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zgemm</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zgemm</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zhemm.html#scipy.linalg.blas.zhemm" title="scipy.linalg.blas.zhemm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zhemm</span></code></a>(alpha,a,b,[beta,c,side,lower,overwrite_c])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zhemm</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zher2k.html#scipy.linalg.blas.zher2k" title="scipy.linalg.blas.zher2k"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zher2k</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zher2k</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zherk.html#scipy.linalg.blas.zherk" title="scipy.linalg.blas.zherk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zherk</span></code></a>(alpha,a,[beta,c,trans,lower,overwrite_c])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zherk</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zsymm.html#scipy.linalg.blas.zsymm" title="scipy.linalg.blas.zsymm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zsymm</span></code></a>(alpha,a,b,[beta,c,side,lower,overwrite_c])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zsymm</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zsyr2k.html#scipy.linalg.blas.zsyr2k" title="scipy.linalg.blas.zsyr2k"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zsyr2k</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zsyr2k</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.zsyrk.html#scipy.linalg.blas.zsyrk" title="scipy.linalg.blas.zsyrk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zsyrk</span></code></a>(alpha,a,[beta,c,trans,lower,overwrite_c])</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">zsyrk</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ztrmm.html#scipy.linalg.blas.ztrmm" title="scipy.linalg.blas.ztrmm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ztrmm</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ztrmm</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/scipy.linalg.blas.ztrsm.html#scipy.linalg.blas.ztrsm" title="scipy.linalg.blas.ztrsm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ztrsm</span></code></a>(...)</p></td>
+<td><p>Wrapper for <code class="docutils literal notranslate"><span class="pre">ztrsm</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="linalg.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Linear algebra (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.linalg</span></code>)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="generated/scipy.linalg.blas.get_blas_funcs.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">get_blas_funcs</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#finding-functions">Finding functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blas-level-1-functions">BLAS Level 1 functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blas-level-2-functions">BLAS Level 2 functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#blas-level-3-functions">BLAS Level 3 functions</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

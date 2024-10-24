@@ -1,0 +1,1230 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Smoothing splines &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorial/interpolate/smoothing_splines';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Multivariate data interpolation on a regular grid (RegularGridInterpolator)" href="ND_regular_grid.html" />
+    <link rel="prev" title="Piecewise polynomials and splines" href="splines_and_polynomials.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../special.html">Special functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.special</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">Integration (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.integrate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">Optimization (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../interpolate.html">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="1D.html">1-D interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="splines_and_polynomials.html">Piecewise polynomials and splines</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Smoothing splines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ND_regular_grid.html">Multivariate data interpolation on a regular grid  (<code class="xref py py-class docutils literal notranslate"><span class="pre">RegularGridInterpolator</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ND_unstructured.html">Scattered data interpolation (<code class="xref py py-func docutils literal notranslate"><span class="pre">griddata</span></code>)</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="extrapolation_examples.html">Extrapolation tips and tricks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interp_transition_guide.html">Interpolate transition guide</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">Fourier Transforms (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.fft</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">Signal Processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">Linear Algebra (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">Sparse Arrays (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arpack.html">Sparse eigenvalue problems with ARPACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csgraph.html">Compressed Sparse Graph Routines (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.csgraph</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">Spatial data structures and algorithms (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">Multidimensional image processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">File IO (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.io</span></code>)</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy User Guide</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../interpolate.html" class="nav-link">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Smoothing splines</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="smoothing-splines">
+<span id="tutorial-interpolate-fitpack"></span><h1>Smoothing splines<a class="headerlink" href="#smoothing-splines" title="Link to this heading">#</a></h1>
+<p>For the interpolation problem, the task is to construct a curve which passes
+through a given set of data points. This may be not appropriate if the data is
+noisy: we then want to construct a smooth curve, <code class="docutils literal notranslate"><span class="pre">g(x)</span></code>, which <em>approximates</em>
+the input data without passing through each point exactly.
+To this end, <a class="reference internal" href="../../reference/interpolate.html#module-scipy.interpolate" title="scipy.interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.interpolate</span></code></a> allows constructing <em>smoothing splines</em>, based
+on the Fortran library FITPACK by P. Dierckx.</p>
+<p>Specifically, given the data arrays <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> and the array of
+non-negative <em>weights</em>, <code class="docutils literal notranslate"><span class="pre">w</span></code>, we look for a spline function <code class="docutils literal notranslate"><span class="pre">g(x)</span></code> which
+satisfies</p>
+<div class="math notranslate nohighlight">
+\[\sum_j \left[ w_j (g(x_j) - y_j)\right]^2 \leqslant s\]</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">s</span></code> is the input parameter which controls the interplay between the
+smoothness of the resulting curve <code class="docutils literal notranslate"><span class="pre">g(x)</span></code> and the quality of the approximation
+of the data (i.e., the differences between <span class="math notranslate nohighlight">\(g(x_j)\)</span> and <span class="math notranslate nohighlight">\(y_j\)</span>).</p>
+<p>Note that the limit <code class="docutils literal notranslate"><span class="pre">s</span> <span class="pre">=</span> <span class="pre">0</span></code> corresponds to the interpolation problem where
+<span class="math notranslate nohighlight">\(g(x_j) = y_j\)</span>. Increasing <code class="docutils literal notranslate"><span class="pre">s</span></code> leads to smoother fits, and in the limit
+of a very large <code class="docutils literal notranslate"><span class="pre">s</span></code>, <span class="math notranslate nohighlight">\(g(x)\)</span> degenerates into a single best-fit polynomial.</p>
+<p>Finding a good value of the <code class="docutils literal notranslate"><span class="pre">s</span></code> parameter is a trial-and-error process. If
+the weights correspond to the inverse of standard deviations of the input data,
+the “good” value of <code class="docutils literal notranslate"><span class="pre">s</span></code> is expected to be somewhere between <span class="math notranslate nohighlight">\(m - \sqrt{2m}\)</span>
+and <span class="math notranslate nohighlight">\(m + \sqrt{2m}\)</span>, where <span class="math notranslate nohighlight">\(m\)</span> is the number of data points.
+If all weights equal unity, a reasonable choice might be around <span class="math notranslate nohighlight">\(s \sim m\,\sigma^2\)</span>,
+where <span class="math notranslate nohighlight">\(\sigma\)</span> is an estimate for the standard deviation of the data.</p>
+<p>Internally, the FITPACK library works by adding internal knots to the spline
+fit <code class="docutils literal notranslate"><span class="pre">g(x)</span></code>, so that <strong>the resulting knots do not necessarily coincide with the input data</strong>.</p>
+<section id="spline-smoothing-in-1-d">
+<h2>Spline smoothing in 1-D<a class="headerlink" href="#spline-smoothing-in-1-d" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../../reference/interpolate.html#module-scipy.interpolate" title="scipy.interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.interpolate</span></code></a> provides two interfaces for the FITPACK library, a functional
+interface and an object-oriented interface. While equivalent, these interfaces
+have different defaults. Below we discuss them in turn, starting from the
+functional interface — which we recommend for use in new code.</p>
+<section id="procedural-splrep">
+<span id="tutorial-interpolate-splxxx"></span><h3>Procedural (<a class="reference internal" href="../../reference/generated/scipy.interpolate.splrep.html#scipy.interpolate.splrep" title="scipy.interpolate.splrep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">splrep</span></code></a>)<a class="headerlink" href="#procedural-splrep" title="Link to this heading">#</a></h3>
+<p>Spline interpolation requires two essential steps: (1) a spline
+representation of the curve is computed, and (2) the spline is
+evaluated at the desired points. In order to find the spline
+representation, there are two different ways to represent a curve and
+obtain (smoothing) spline coefficients: directly and parametrically.
+The direct method finds the spline representation of a curve in a 2-D
+plane using the function <a class="reference internal" href="../../reference/generated/scipy.interpolate.splrep.html#scipy.interpolate.splrep" title="scipy.interpolate.splrep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">splrep</span></code></a>. The
+first two arguments are the only ones required, and these provide the
+<span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> components of the curve. The normal output is
+a 3-tuple, <span class="math notranslate nohighlight">\(\left(t,c,k\right)\)</span> , containing the knot-points,
+<span class="math notranslate nohighlight">\(t\)</span> , the coefficients <span class="math notranslate nohighlight">\(c\)</span> and the order <span class="math notranslate nohighlight">\(k\)</span> of the
+spline. The default spline order is cubic, but this can be changed
+with the input keyword, <em>k.</em></p>
+<p>The knot array defines the interpolation interval to be <code class="docutils literal notranslate"><span class="pre">t[k:-k]</span></code>, so that
+the first <span class="math notranslate nohighlight">\(k+1\)</span> and last <span class="math notranslate nohighlight">\(k+1\)</span> entries of the <code class="docutils literal notranslate"><span class="pre">t</span></code> array define
+<em>boundary knots</em>. The coefficients are a 1D array of length at least
+<code class="docutils literal notranslate"><span class="pre">len(t)</span> <span class="pre">-</span> <span class="pre">k</span> <span class="pre">-</span> <span class="pre">1</span></code>. Some routines pad this array to have <code class="docutils literal notranslate"><span class="pre">len(c)</span> <span class="pre">==</span> <span class="pre">len(t)</span></code>—
+these additional coefficients are ignored for the spline evaluation.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">tck</span></code>-tuple format is compatible with
+<a class="reference internal" href="splines_and_polynomials.html#tutorial-interpolate-bspl-basis"><span class="std std-ref">interpolating b-splines</span></a>: the output of
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.splrep.html#scipy.interpolate.splrep" title="scipy.interpolate.splrep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">splrep</span></code></a> can be wrapped into a <a class="reference internal" href="../../reference/generated/scipy.interpolate.BSpline.html#scipy.interpolate.BSpline" title="scipy.interpolate.BSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BSpline</span></code></a> object, e.g. <code class="docutils literal notranslate"><span class="pre">BSpline(*tck)</span></code>, and
+the evaluation/integration/root-finding routines described below
+can use <code class="docutils literal notranslate"><span class="pre">tck</span></code>-tuples and <a class="reference internal" href="../../reference/generated/scipy.interpolate.BSpline.html#scipy.interpolate.BSpline" title="scipy.interpolate.BSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BSpline</span></code></a> objects interchangeably.</p>
+<p>For curves in N-D space the function
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.splprep.html#scipy.interpolate.splprep" title="scipy.interpolate.splprep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">splprep</span></code></a> allows defining the curve
+parametrically. For this function only 1 input argument is
+required. This input is a list of <span class="math notranslate nohighlight">\(N\)</span> arrays representing the
+curve in N-D space. The length of each array is the
+number of curve points, and each array provides one component of the
+N-D data point. The parameter variable is given
+with the keyword argument, <code class="docutils literal notranslate"><span class="pre">u</span></code>, which defaults to an equally-spaced
+monotonic sequence between <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(1\)</span> (i.e., the <a class="reference internal" href="1D.html#tutorial-interpolate-parametric"><span class="std std-ref">uniform
+parametrization</span></a>).</p>
+<p>The output consists of two objects: a 3-tuple, <span class="math notranslate nohighlight">\(\left(t,c,k\right)\)</span>
+, containing the spline representation and the parameter variable
+<span class="math notranslate nohighlight">\(u.\)</span></p>
+<p>The coefficients are a list of <span class="math notranslate nohighlight">\(N\)</span> arrays, where each array corresponds to
+a dimension of the input data. Note that the knots, <code class="docutils literal notranslate"><span class="pre">t</span></code> correspond to the
+parametrization of the curve <code class="docutils literal notranslate"><span class="pre">u</span></code>.</p>
+<p>The keyword argument, <code class="docutils literal notranslate"><span class="pre">s</span></code> , is used to specify the amount of smoothing
+to perform during the spline fit. The default value of <span class="math notranslate nohighlight">\(s\)</span> is
+<span class="math notranslate nohighlight">\(s=m-\sqrt{2m}\)</span> where <span class="math notranslate nohighlight">\(m\)</span> is the number of data points
+being fit. Therefore, <strong>if no smoothing is desired a value of</strong>
+<span class="math notranslate nohighlight">\(\mathbf{s}=0\)</span> <strong>should be passed to the routines.</strong></p>
+<p>Once the spline representation of the data has been determined, it can be
+evaluated either using the <a class="reference internal" href="../../reference/generated/scipy.interpolate.splev.html#scipy.interpolate.splev" title="scipy.interpolate.splev"><code class="xref py py-obj docutils literal notranslate"><span class="pre">splev</span></code></a> function or by wrapping
+the <em class="xref py py-obj">tck</em> tuple into a <a class="reference internal" href="../../reference/generated/scipy.interpolate.BSpline.html#scipy.interpolate.BSpline" title="scipy.interpolate.BSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BSpline</span></code></a> object, as demonstrated below.</p>
+<p>We start by illustrating the effect of the <code class="docutils literal notranslate"><span class="pre">s</span></code> parameter on smoothing some
+synthetic noisy data</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">splrep</span><span class="p">,</span> <span class="n">BSpline</span>
+</pre></div>
+</div>
+<p>Generate some noisy data</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">16</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.4</span><span class="o">*</span><span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Construct two splines with different values of <code class="docutils literal notranslate"><span class="pre">s</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tck</span> <span class="o">=</span> <span class="n">splrep</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tck_s</span> <span class="o">=</span> <span class="n">splrep</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>And plot them</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xnew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">50</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">xnew</span><span class="p">),</span> <span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;sin(x)&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">BSpline</span><span class="p">(</span><span class="o">*</span><span class="n">tck</span><span class="p">)(</span><span class="n">xnew</span><span class="p">),</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;s=0&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">BSpline</span><span class="p">(</span><span class="o">*</span><span class="n">tck_s</span><span class="p">)(</span><span class="n">xnew</span><span class="p">),</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;s=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/smoothing_splines-1.png" class="plot-directive" src="../../_images/smoothing_splines-1.png" />
+</figure>
+<p>We see that the <code class="docutils literal notranslate"><span class="pre">s=0</span></code> curve follows the (random) fluctuations of the data points,
+while the <code class="docutils literal notranslate"><span class="pre">s</span> <span class="pre">&gt;</span> <span class="pre">0</span></code> curve is close to the underlying sine function.
+Also note that the extrapolated values vary wildly depending on the value of <code class="docutils literal notranslate"><span class="pre">s</span></code>.</p>
+<p>The default value of <code class="docutils literal notranslate"><span class="pre">s</span></code> depends on whether the weights are supplied or not,
+and also differs for <a class="reference internal" href="../../reference/generated/scipy.interpolate.splrep.html#scipy.interpolate.splrep" title="scipy.interpolate.splrep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">splrep</span></code></a> and <a class="reference internal" href="../../reference/generated/scipy.interpolate.splprep.html#scipy.interpolate.splprep" title="scipy.interpolate.splprep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">splprep</span></code></a>. Therefore, we recommend always
+providing the value of <code class="docutils literal notranslate"><span class="pre">s</span></code> explicitly.</p>
+<section id="manipulating-spline-objects-procedural-splxxx">
+<h4>Manipulating spline objects: procedural (<code class="docutils literal notranslate"><span class="pre">splXXX</span></code>)<a class="headerlink" href="#manipulating-spline-objects-procedural-splxxx" title="Link to this heading">#</a></h4>
+<p>Once the spline representation of the data has been determined,
+functions are available for evaluating the spline
+(<a class="reference internal" href="../../reference/generated/scipy.interpolate.splev.html#scipy.interpolate.splev" title="scipy.interpolate.splev"><code class="xref py py-func docutils literal notranslate"><span class="pre">splev</span></code></a>) and its derivatives
+(<a class="reference internal" href="../../reference/generated/scipy.interpolate.splev.html#scipy.interpolate.splev" title="scipy.interpolate.splev"><code class="xref py py-func docutils literal notranslate"><span class="pre">splev</span></code></a>, <a class="reference internal" href="../../reference/generated/scipy.interpolate.spalde.html#scipy.interpolate.spalde" title="scipy.interpolate.spalde"><code class="xref py py-func docutils literal notranslate"><span class="pre">spalde</span></code></a>) at any point
+and the integral of the spline between any two points (
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.splint.html#scipy.interpolate.splint" title="scipy.interpolate.splint"><code class="xref py py-func docutils literal notranslate"><span class="pre">splint</span></code></a>). In addition, for cubic splines ( <span class="math notranslate nohighlight">\(k=3\)</span>
+) with 8 or more knots, the roots of the spline can be estimated (
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.sproot.html#scipy.interpolate.sproot" title="scipy.interpolate.sproot"><code class="xref py py-func docutils literal notranslate"><span class="pre">sproot</span></code></a>). These functions are demonstrated in the
+example that follows.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">interpolate</span>
+</pre></div>
+</div>
+<p>Cubic spline</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">8</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tck</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">splrep</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xnew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">50</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ynew</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">splev</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">tck</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that the last line is equivalent to <code class="docutils literal notranslate"><span class="pre">BSpline(*tck)(xnew)</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">xnew</span><span class="p">,</span> <span class="n">ynew</span><span class="p">,</span> <span class="n">xnew</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">xnew</span><span class="p">),</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Linear&#39;</span><span class="p">,</span> <span class="s1">&#39;Cubic Spline&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">6.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Cubic-spline interpolation&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="&quot; &quot;" class="plot-directive" src="../../_images/smoothing_splines-2_00_00.png" />
+</figure>
+<p>Derivative of spline</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">yder</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">splev</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">tck</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>   <span class="c1"># or BSpline(*tck)(xnew, 1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">yder</span><span class="p">,</span> <span class="n">xnew</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">xnew</span><span class="p">),</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Cubic Spline&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">6.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Derivative estimation from spline&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="&quot; &quot;" class="plot-directive" src="../../_images/smoothing_splines-2_01_00.png" />
+</figure>
+<p>All derivatives of spline</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">yders</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">spalde</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">tck</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">yders</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+<span class="gp">... </span>   <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">yders</span><span class="p">],</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> derivative&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">6.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;All derivatives of a B-spline&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="&quot; &quot;" class="plot-directive" src="../../_images/smoothing_splines-2_02_00.png" />
+</figure>
+<p>Integral of spline</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">integ</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tck</span><span class="p">,</span> <span class="n">constant</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">)):</span>
+<span class="gp">... </span>        <span class="n">out</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">splint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">tck</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">out</span> <span class="o">+=</span> <span class="n">constant</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">yint</span> <span class="o">=</span> <span class="n">integ</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">tck</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">yint</span><span class="p">,</span> <span class="n">xnew</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">xnew</span><span class="p">),</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Cubic Spline&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">6.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Integral estimation from spline&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="&quot; &quot;" class="plot-directive" src="../../_images/smoothing_splines-2_03_00.png" />
+</figure>
+<p>Roots of spline</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">interpolate</span><span class="o">.</span><span class="n">sproot</span><span class="p">(</span><span class="n">tck</span><span class="p">)</span>
+<span class="go">array([3.1416])  # may vary</span>
+</pre></div>
+</div>
+<p>Notice that <a class="reference internal" href="../../reference/generated/scipy.interpolate.sproot.html#scipy.interpolate.sproot" title="scipy.interpolate.sproot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sproot</span></code></a> may fail to find an obvious solution at the edge of the
+approximation interval, <span class="math notranslate nohighlight">\(x = 0\)</span>. If we define the spline on a slightly
+larger interval, we recover both roots <span class="math notranslate nohighlight">\(x = 0\)</span> and <span class="math notranslate nohighlight">\(x = \pi\)</span>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">51</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tck</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">splrep</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">interpolate</span><span class="o">.</span><span class="n">sproot</span><span class="p">(</span><span class="n">tck</span><span class="p">)</span>
+<span class="go">array([0., 3.1416])</span>
+</pre></div>
+</div>
+<p>Parametric spline</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">.1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tck</span><span class="p">,</span> <span class="n">u</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">splprep</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">out</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">splev</span><span class="p">(</span><span class="n">unew</span><span class="p">,</span> <span class="n">tck</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">unew</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">unew</span><span class="p">),</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Linear&#39;</span><span class="p">,</span> <span class="s1">&#39;Cubic Spline&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Spline of parametrically-defined curve&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="&quot; &quot;" class="plot-directive" src="../../_images/smoothing_splines-2_04_00.png" />
+</figure>
+<p>Note that in the last example, <a class="reference internal" href="../../reference/generated/scipy.interpolate.splprep.html#scipy.interpolate.splprep" title="scipy.interpolate.splprep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">splprep</span></code></a> returns the spline coefficients as a
+list of arrays, where each array corresponds to a dimension of the input data.
+Thus to wrap its output to a <a class="reference internal" href="../../reference/generated/scipy.interpolate.BSpline.html#scipy.interpolate.BSpline" title="scipy.interpolate.BSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BSpline</span></code></a>, we need to transpose the coefficients
+(or use <code class="docutils literal notranslate"><span class="pre">BSpline(...,</span> <span class="pre">axis=1)</span></code>):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tt</span><span class="p">,</span> <span class="n">cc</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">tck</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bspl</span> <span class="o">=</span> <span class="n">BSpline</span><span class="p">(</span><span class="n">tt</span><span class="p">,</span> <span class="n">cc</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>    <span class="c1"># note the transpose</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xy</span> <span class="o">=</span> <span class="n">bspl</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span> <span class="o">=</span> <span class="n">xy</span><span class="o">.</span><span class="n">T</span>   <span class="c1"># transpose to unpack into a pair of arrays</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xx</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">yy</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="object-oriented-univariatespline">
+<h3>Object-oriented (<a class="reference internal" href="../../reference/generated/scipy.interpolate.UnivariateSpline.html#scipy.interpolate.UnivariateSpline" title="scipy.interpolate.UnivariateSpline"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnivariateSpline</span></code></a>)<a class="headerlink" href="#object-oriented-univariatespline" title="Link to this heading">#</a></h3>
+<p>The spline-fitting capabilities described above are also available via
+an objected-oriented interface.  The 1-D splines are
+objects of the <a class="reference internal" href="../../reference/generated/scipy.interpolate.UnivariateSpline.html#scipy.interpolate.UnivariateSpline" title="scipy.interpolate.UnivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnivariateSpline</span></code></a> class, and are created with the
+<span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> components of the curve provided as arguments
+to the constructor.  The class defines <a class="reference internal" href="../../reference/generated/scipy.interpolate.UnivariateSpline.__call__.html#scipy.interpolate.UnivariateSpline.__call__" title="scipy.interpolate.UnivariateSpline.__call__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__call__</span></code></a>, allowing the object
+to be called with the x-axis values, at which the spline should be
+evaluated, returning the interpolated y-values.  This is shown in
+the example below for the subclass <a class="reference internal" href="../../reference/generated/scipy.interpolate.InterpolatedUnivariateSpline.html#scipy.interpolate.InterpolatedUnivariateSpline" title="scipy.interpolate.InterpolatedUnivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InterpolatedUnivariateSpline</span></code></a>.
+The <a class="reference internal" href="../../reference/generated/scipy.interpolate.UnivariateSpline.integral.html#scipy.interpolate.UnivariateSpline.integral" title="scipy.interpolate.UnivariateSpline.integral"><code class="xref py py-meth docutils literal notranslate"><span class="pre">integral</span></code></a>,
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.UnivariateSpline.derivatives.html#scipy.interpolate.UnivariateSpline.derivatives" title="scipy.interpolate.UnivariateSpline.derivatives"><code class="xref py py-meth docutils literal notranslate"><span class="pre">derivatives</span></code></a>, and
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.UnivariateSpline.roots.html#scipy.interpolate.UnivariateSpline.roots" title="scipy.interpolate.UnivariateSpline.roots"><code class="xref py py-meth docutils literal notranslate"><span class="pre">roots</span></code></a> methods are also available
+on <a class="reference internal" href="../../reference/generated/scipy.interpolate.UnivariateSpline.html#scipy.interpolate.UnivariateSpline" title="scipy.interpolate.UnivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnivariateSpline</span></code></a> objects, allowing definite integrals,
+derivatives, and roots to be computed for the spline.</p>
+<p>The UnivariateSpline class can also be used to smooth data by
+providing a non-zero value of the smoothing parameter <em class="xref py py-obj">s</em>, with the
+same meaning as the <em class="xref py py-obj">s</em> keyword of the <a class="reference internal" href="../../reference/generated/scipy.interpolate.splrep.html#scipy.interpolate.splrep" title="scipy.interpolate.splrep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">splrep</span></code></a> function
+described above.  This results in a spline that has fewer knots
+than the number of data points, and hence is no longer strictly
+an interpolating spline, but rather a smoothing spline.  If this
+is not desired, the <a class="reference internal" href="../../reference/generated/scipy.interpolate.InterpolatedUnivariateSpline.html#scipy.interpolate.InterpolatedUnivariateSpline" title="scipy.interpolate.InterpolatedUnivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InterpolatedUnivariateSpline</span></code></a> class is available.
+It is a subclass of <a class="reference internal" href="../../reference/generated/scipy.interpolate.UnivariateSpline.html#scipy.interpolate.UnivariateSpline" title="scipy.interpolate.UnivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnivariateSpline</span></code></a> that always passes through all
+points (equivalent to forcing the smoothing parameter to 0). This
+class is demonstrated in the example below.</p>
+<p>The <a class="reference internal" href="../../reference/generated/scipy.interpolate.LSQUnivariateSpline.html#scipy.interpolate.LSQUnivariateSpline" title="scipy.interpolate.LSQUnivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LSQUnivariateSpline</span></code></a> class is the other subclass of <a class="reference internal" href="../../reference/generated/scipy.interpolate.UnivariateSpline.html#scipy.interpolate.UnivariateSpline" title="scipy.interpolate.UnivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnivariateSpline</span></code></a>.
+It allows the user to specify the number and location of internal
+knots explicitly with the parameter <em class="xref py py-obj">t</em>.  This allows for the creation
+of customized splines with non-linear spacing, to interpolate in
+some domains and smooth in others, or change the character of the
+spline.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">interpolate</span>
+</pre></div>
+</div>
+<p>InterpolatedUnivariateSpline</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">8</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">InterpolatedUnivariateSpline</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xnew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">50</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ynew</span> <span class="o">=</span> <span class="n">s</span><span class="p">(</span><span class="n">xnew</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">xnew</span><span class="p">,</span> <span class="n">ynew</span><span class="p">,</span> <span class="n">xnew</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">xnew</span><span class="p">),</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Linear&#39;</span><span class="p">,</span> <span class="s1">&#39;InterpolatedUnivariateSpline&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">6.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;InterpolatedUnivariateSpline&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="&quot; &quot;" class="plot-directive" src="../../_images/smoothing_splines-3_00_00.png" />
+</figure>
+<p>LSQUnivarateSpline with non-uniform knots</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="o">-</span><span class="mf">.1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="o">+</span><span class="mf">.1</span><span class="p">,</span> <span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="o">-</span><span class="mf">.1</span><span class="p">,</span> <span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="o">+</span><span class="mf">.1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">LSQUnivariateSpline</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ynew</span> <span class="o">=</span> <span class="n">s</span><span class="p">(</span><span class="n">xnew</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">xnew</span><span class="p">,</span> <span class="n">ynew</span><span class="p">,</span> <span class="n">xnew</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">xnew</span><span class="p">),</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;Linear&#39;</span><span class="p">,</span> <span class="s1">&#39;LSQUnivariateSpline&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">6.33</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Spline with Specified Interior Knots&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="&quot; &quot;" class="plot-directive" src="../../_images/smoothing_splines-3_01_00.png" />
+</figure>
+</section>
+</section>
+<section id="d-smoothing-splines">
+<span id="tutorial-interpolate-2d-spline"></span><h2>2-D smoothing splines<a class="headerlink" href="#d-smoothing-splines" title="Link to this heading">#</a></h2>
+<p>In addition to smoothing 1-D splines, the FITPACK library provides the means of
+fitting 2-D <em>surfaces</em> to two-dimensional data. The surfaces can be thought of
+as functions of two arguments, <span class="math notranslate nohighlight">\(z = g(x, y)\)</span>, constructed as tensor products
+of 1-D splines.</p>
+<p>Assuming that the data is held in three arrays, <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code>,
+there are two ways these data arrays can be interpreted. First—the <em>scattered</em>
+interpolation problem—the data is assumed to be paired, i.e. the pairs of
+values <code class="docutils literal notranslate"><span class="pre">x[i]</span></code> and <code class="docutils literal notranslate"><span class="pre">y[i]</span></code> represent the coordinates of the point <code class="docutils literal notranslate"><span class="pre">i</span></code>, which
+corresponds to <code class="docutils literal notranslate"><span class="pre">z[i]</span></code>.</p>
+<p>The surface <span class="math notranslate nohighlight">\(g(x, y)\)</span> is constructed to satisfy</p>
+<div class="math notranslate nohighlight">
+\[\sum_i \left[ w_i (g(x_i, y_i) - z_i)\right]^2 \leqslant s\]</div>
+<p>where <span class="math notranslate nohighlight">\(w_i\)</span> are non-negative weights, and <code class="docutils literal notranslate"><span class="pre">s</span></code> is the input parameter,
+known as the <em>smoothing factor</em>, which controls the interplay between smoothness
+of the resulting function <code class="docutils literal notranslate"><span class="pre">g(x,</span> <span class="pre">y)</span></code> and the quality of the approximation of
+the data (i.e., the differences between <span class="math notranslate nohighlight">\(g(x_i, y_i)\)</span> and <span class="math notranslate nohighlight">\(z_i\)</span>). The
+limit of <span class="math notranslate nohighlight">\(s = 0\)</span> formally corresponds to interpolation, where the surface
+passes through the input data, <span class="math notranslate nohighlight">\(g(x_i, y_i) = z_i\)</span>. See the note below however.</p>
+<p>The second case—the <em>rectangular grid</em> interpolation problem—is where the data
+points are assumed to be on a rectangular grid defined by all pairs of the
+elements of the <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> arrays. For this problem, the <code class="docutils literal notranslate"><span class="pre">z</span></code> array is
+assumed to be two-dimensional, and <code class="docutils literal notranslate"><span class="pre">z[i,</span> <span class="pre">j]</span></code> corresponds to <code class="docutils literal notranslate"><span class="pre">(x[i],</span> <span class="pre">y[j])</span></code>.
+The bivariate spline function <span class="math notranslate nohighlight">\(g(x, y)\)</span> is constructed to satisfy</p>
+<div class="math notranslate nohighlight">
+\[\sum_i \sum_j \left[ (g(x_i, y_j) - z_{i,j})\right]^2 \leqslant s\]</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">s</span></code> is the smoothing factor. Here the limit of <span class="math notranslate nohighlight">\(s=0\)</span> also
+formally corresponds to interpolation, <span class="math notranslate nohighlight">\(g(x_i, y_j) = z_{i, j}\)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Internally, the smoothing surface <span class="math notranslate nohighlight">\(g(x, y)\)</span> is constructed by placing
+spline knots into the bounding box defined by the data arrays. The knots are
+placed automatically via the FITPACK algorithm until the desired smoothness
+is reached.</p>
+<p><em>The knots may be placed away from the data points.</em></p>
+<p>While <span class="math notranslate nohighlight">\(s=0\)</span> formally corresponds to a bivariate spline interpolation,
+the FITPACK algorithm is not meant for interpolation, and may lead to
+unexpected results.</p>
+<p>For scattered data interpolation, prefer <a class="reference internal" href="../../reference/generated/scipy.interpolate.griddata.html#scipy.interpolate.griddata" title="scipy.interpolate.griddata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">griddata</span></code></a>; for data on a regular
+grid, prefer <a class="reference internal" href="../../reference/generated/scipy.interpolate.RegularGridInterpolator.html#scipy.interpolate.RegularGridInterpolator" title="scipy.interpolate.RegularGridInterpolator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RegularGridInterpolator</span></code></a>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the input data, <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>, is such that input dimensions
+have incommensurate units and differ by many orders of magnitude, the
+interpolant <span class="math notranslate nohighlight">\(g(x, y)\)</span> may have numerical artifacts. Consider
+rescaling the data before interpolation.</p>
+</div>
+<p>We now consider the two spline fitting problems in turn.</p>
+<section id="bivariate-spline-fitting-of-scattered-data">
+<h3>Bivariate spline fitting of scattered data<a class="headerlink" href="#bivariate-spline-fitting-of-scattered-data" title="Link to this heading">#</a></h3>
+<p>There are two interfaces for the underlying FITPACK library, a procedural
+one and an object-oriented interface.</p>
+<section id="procedural-interface-bisplrep">
+<h4>Procedural interface (<a class="reference internal" href="../../reference/generated/scipy.interpolate.bisplrep.html#scipy.interpolate.bisplrep" title="scipy.interpolate.bisplrep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bisplrep</span></code></a>)<a class="headerlink" href="#procedural-interface-bisplrep" title="Link to this heading">#</a></h4>
+<p>For (smooth) spline fitting to a 2-D surface, the function
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.bisplrep.html#scipy.interpolate.bisplrep" title="scipy.interpolate.bisplrep"><code class="xref py py-func docutils literal notranslate"><span class="pre">bisplrep</span></code></a> is available. This function takes as required inputs
+the <strong>1-D</strong> arrays <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, and <code class="docutils literal notranslate"><span class="pre">z</span></code>, which represent points on the
+surface <span class="math notranslate nohighlight">\(z=f(x, y).\)</span> The spline orders in <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> directions can
+be specified via the optional parameters <code class="docutils literal notranslate"><span class="pre">kx</span></code> and <code class="docutils literal notranslate"><span class="pre">ky</span></code>. The default is
+a bicubic spline, <code class="docutils literal notranslate"><span class="pre">kx=ky=3</span></code>.</p>
+<p>The output of <a class="reference internal" href="../../reference/generated/scipy.interpolate.bisplrep.html#scipy.interpolate.bisplrep" title="scipy.interpolate.bisplrep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bisplrep</span></code></a> is a list <code class="docutils literal notranslate"><span class="pre">[tx</span> <span class="pre">,ty,</span> <span class="pre">c,</span> <span class="pre">kx,</span> <span class="pre">ky]</span></code> whose entries represent
+respectively, the components of the knot positions, the coefficients
+of the spline, and the order of the spline in each coordinate. It is
+convenient to hold this list in a single object, <code class="docutils literal notranslate"><span class="pre">tck</span></code>, so that it can
+be passed easily to the function <a class="reference internal" href="../../reference/generated/scipy.interpolate.bisplev.html#scipy.interpolate.bisplev" title="scipy.interpolate.bisplev"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bisplev</span></code></a>. The
+keyword, <code class="docutils literal notranslate"><span class="pre">s</span></code> , can be used to change the amount of smoothing performed
+on the data while determining the appropriate spline. The recommended values
+for <span class="math notranslate nohighlight">\(s\)</span> depend on the weights <span class="math notranslate nohighlight">\(w_i\)</span>. If these are taken as <span class="math notranslate nohighlight">\(1/d_i\)</span>,
+with <span class="math notranslate nohighlight">\(d_i\)</span> an estimate of the standard deviation of <span class="math notranslate nohighlight">\(z_i\)</span>, a
+good value of <span class="math notranslate nohighlight">\(s\)</span> should be found in the range <span class="math notranslate nohighlight">\(m- \sqrt{2m}, m +
+\sqrt{2m}\)</span>, where where <span class="math notranslate nohighlight">\(m\)</span> is the number of data points in the <code class="docutils literal notranslate"><span class="pre">x</span></code>,
+<code class="docutils literal notranslate"><span class="pre">y</span></code>, and <code class="docutils literal notranslate"><span class="pre">z</span></code> vectors.</p>
+<p>The default value is <span class="math notranslate nohighlight">\(s=m-\sqrt{2m}\)</span>.  As a result, <strong>if no smoothing is
+desired, then ``s=0`` should be passed to `bisplrep`</strong>. (See however the note above).</p>
+<p>To evaluate the 2-D spline and its partial derivatives
+(up to the order of the spline), the function
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.bisplev.html#scipy.interpolate.bisplev" title="scipy.interpolate.bisplev"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bisplev</span></code></a> is required. This function takes as the
+first two arguments <strong>two 1-D arrays</strong> whose cross-product specifies
+the domain over which to evaluate the spline. The third argument is
+the <code class="docutils literal notranslate"><span class="pre">tck</span></code> list returned from <a class="reference internal" href="../../reference/generated/scipy.interpolate.bisplrep.html#scipy.interpolate.bisplrep" title="scipy.interpolate.bisplrep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bisplrep</span></code></a>. If desired,
+the fourth and fifth arguments provide the orders of the partial
+derivative in the <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(y\)</span> direction, respectively.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is important to note that 2-D interpolation should not
+be used to find the spline representation of images. The algorithm
+used is not amenable to large numbers of input points. <a class="reference internal" href="../../reference/signal.html#module-scipy.signal" title="scipy.signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code></a>
+and <a class="reference internal" href="../../reference/ndimage.html#module-scipy.ndimage" title="scipy.ndimage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code></a> contain more appropriate algorithms for finding
+the spline representation of an image.</p>
+</div>
+<p>The 2-D interpolation commands are intended for use when interpolating a 2-D
+function as shown in the example that follows. This
+example uses the <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.mgrid.html#numpy.mgrid" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mgrid</span></code></a> command in NumPy which is
+useful for defining a “mesh-grid” in many dimensions. (See also the
+<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ogrid.html#numpy.ogrid" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ogrid</span></code></a> command if the full-mesh is not
+needed). The number of output arguments and the number of dimensions
+of each argument is determined by the number of indexing objects
+passed in <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.mgrid.html#numpy.mgrid" title="(in NumPy v2.1)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mgrid</span></code></a>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">interpolate</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+<p>Define function over a sparse 20x20 grid</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x_edges</span><span class="p">,</span> <span class="n">y_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="mi">21</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="mi">21</span><span class="n">j</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">x_edges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">x_edges</span><span class="p">[:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">y_edges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">y_edges</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">6.0</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="o">*</span><span class="n">y</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lims</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;RdBu_r&#39;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">x_edges</span><span class="p">,</span> <span class="n">y_edges</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;flat&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">lims</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Sparsely sampled function.&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="&quot; &quot;" class="plot-directive" src="../../_images/smoothing_splines-4_00_00.png" />
+</figure>
+<p>Interpolate function over a new 70x70 grid</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">xnew_edges</span><span class="p">,</span> <span class="n">ynew_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="mi">71</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">:</span><span class="mi">71</span><span class="n">j</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xnew</span> <span class="o">=</span> <span class="n">xnew_edges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">xnew_edges</span><span class="p">[:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ynew</span> <span class="o">=</span> <span class="n">ynew_edges</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">ynew_edges</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tck</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">bisplrep</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">znew</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">bisplev</span><span class="p">(</span><span class="n">xnew</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">ynew</span><span class="p">[</span><span class="mi">0</span><span class="p">,:],</span> <span class="n">tck</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">xnew_edges</span><span class="p">,</span> <span class="n">ynew_edges</span><span class="p">,</span> <span class="n">znew</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;flat&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">lims</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Interpolated function.&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="&quot; &quot;" class="plot-directive" src="../../_images/smoothing_splines-4_01_00.png" />
+</figure>
+</section>
+<section id="object-oriented-interface-smoothbivariatespline">
+<h4>Object-oriented interface (<a class="reference internal" href="../../reference/generated/scipy.interpolate.SmoothBivariateSpline.html#scipy.interpolate.SmoothBivariateSpline" title="scipy.interpolate.SmoothBivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SmoothBivariateSpline</span></code></a>)<a class="headerlink" href="#object-oriented-interface-smoothbivariatespline" title="Link to this heading">#</a></h4>
+<p>The object-oriented interface for bivariate spline smoothing of scattered data,
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.SmoothBivariateSpline.html#scipy.interpolate.SmoothBivariateSpline" title="scipy.interpolate.SmoothBivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SmoothBivariateSpline</span></code></a> class, implements a subset of the functionality of the
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.bisplrep.html#scipy.interpolate.bisplrep" title="scipy.interpolate.bisplrep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bisplrep</span></code></a> / <a class="reference internal" href="../../reference/generated/scipy.interpolate.bisplev.html#scipy.interpolate.bisplev" title="scipy.interpolate.bisplev"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bisplev</span></code></a> pair, and has different defaults.</p>
+<p>It takes the elements of the weights array equal unity, <span class="math notranslate nohighlight">\(w_i = 1\)</span>
+and constructs the knot vectors automatically given the input value of the
+smoothing factor <em class="xref py py-obj">s</em>— the default value is <span class="math notranslate nohighlight">\(m\)</span>, the number of data points.</p>
+<p>The spline orders in the <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> directions are controlled by the optional
+parameters <code class="docutils literal notranslate"><span class="pre">kx</span></code> and <code class="docutils literal notranslate"><span class="pre">ky</span></code>, with the default of <code class="docutils literal notranslate"><span class="pre">kx=ky=3</span></code>.</p>
+<p>We illustrate the effect of the smoothing factor using the following example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">SmoothBivariateSpline</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="n">train_x</span> <span class="o">=</span> <span class="n">train_x</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">train_y</span> <span class="o">=</span> <span class="n">train_y</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">z_func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">y</span>
+
+<span class="n">train_z</span> <span class="o">=</span> <span class="n">z_func</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">)</span>
+<span class="n">interp_func</span> <span class="o">=</span> <span class="n">SmoothBivariateSpline</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">train_z</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">smth_func</span> <span class="o">=</span> <span class="n">SmoothBivariateSpline</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">train_z</span><span class="p">)</span>
+
+<span class="n">test_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">test_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+<span class="n">grid_x</span><span class="p">,</span> <span class="n">grid_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">test_x</span><span class="p">,</span> <span class="n">test_y</span><span class="p">)</span>
+
+<span class="n">interp_result</span> <span class="o">=</span> <span class="n">interp_func</span><span class="p">(</span><span class="n">test_x</span><span class="p">,</span> <span class="n">test_y</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">smth_result</span> <span class="o">=</span> <span class="n">smth_func</span><span class="p">(</span><span class="n">test_x</span><span class="p">,</span> <span class="n">test_y</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">perfect_result</span> <span class="o">=</span> <span class="n">z_func</span><span class="p">(</span><span class="n">grid_x</span><span class="p">,</span> <span class="n">grid_y</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">extent</span> <span class="o">=</span> <span class="p">[</span><span class="n">test_x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">test_x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">test_y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">test_y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+<span class="n">opts</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;nipy_spectral&#39;</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="n">extent</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">2.5</span><span class="p">)</span>
+
+<span class="n">im</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">perfect_result</span><span class="p">,</span> <span class="o">**</span><span class="n">opts</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="s1">&#39;w.&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Perfect result, sampled function&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">21</span><span class="p">)</span>
+
+<span class="n">im</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">smth_result</span><span class="p">,</span> <span class="o">**</span><span class="n">opts</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="s1">&#39;w.&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;s=default&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">21</span><span class="p">)</span>
+
+<span class="n">im</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">interp_result</span><span class="p">,</span> <span class="o">**</span><span class="n">opts</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;horizontal&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="s1">&#39;w.&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;s=0&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">21</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/smoothing_splines-5.png" class="plot-directive" src="../../_images/smoothing_splines-5.png" />
+</figure>
+<p>Here we take a known function (displayed at the leftmost panel), sample it on
+a mesh of points (shown by white dots), and construct the spline fit using the
+default smoothing (center panel) and forcing the interpolation (rightmost panel).</p>
+<p>Several features are clearly visible. First, the default value of <code class="docutils literal notranslate"><span class="pre">s</span></code> provides
+too much smoothing for this data; forcing the interpolation condition, <code class="docutils literal notranslate"><span class="pre">s</span> <span class="pre">=</span> <span class="pre">0</span></code>,
+allows to restore the underlying function to a reasonable accuracy. Second,
+outside of the interpolation range (i.e., the area covered by
+white dots) the result is extrapolated using a nearest-neighbor constant.
+Finally, we had to silence the warnings (which is a bad form, yes!).</p>
+<p>The warning here is emitted in the <code class="docutils literal notranslate"><span class="pre">s=0</span></code> case, and signals an internal difficulty
+FITPACK encountered when we forced the interpolation condition. If you see
+this warning in your code, consider switching to <a class="reference internal" href="../../reference/generated/scipy.interpolate.bisplrep.html#scipy.interpolate.bisplrep" title="scipy.interpolate.bisplrep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bisplrep</span></code></a> and increase its
+<code class="docutils literal notranslate"><span class="pre">nxest</span></code>, <code class="docutils literal notranslate"><span class="pre">nyest</span></code> parameters (see the <a class="reference internal" href="../../reference/generated/scipy.interpolate.bisplrep.html#scipy.interpolate.bisplrep" title="scipy.interpolate.bisplrep"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bisplrep</span></code></a> docstring for more details).</p>
+</section>
+</section>
+<section id="bivariate-spline-fitting-of-data-on-a-grid">
+<h3>Bivariate spline fitting of data on a grid<a class="headerlink" href="#bivariate-spline-fitting-of-data-on-a-grid" title="Link to this heading">#</a></h3>
+<p>For gridded 2D data, fitting a smoothing tensor product spline can be done
+using the <a class="reference internal" href="../../reference/generated/scipy.interpolate.RectBivariateSpline.html#scipy.interpolate.RectBivariateSpline" title="scipy.interpolate.RectBivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RectBivariateSpline</span></code></a> class. It has the interface similar to that of
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.SmoothBivariateSpline.html#scipy.interpolate.SmoothBivariateSpline" title="scipy.interpolate.SmoothBivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SmoothBivariateSpline</span></code></a>, the main difference is that the 1D input arrays <code class="docutils literal notranslate"><span class="pre">x</span></code>
+and <code class="docutils literal notranslate"><span class="pre">y</span></code> are understood as defining a 2D grid (as their outer product),
+and the <code class="docutils literal notranslate"><span class="pre">z</span></code> array is 2D with the shape of <code class="docutils literal notranslate"><span class="pre">len(x)</span></code> by  <code class="docutils literal notranslate"><span class="pre">len(y)</span></code>.</p>
+<p>The spline orders in the <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> directions are controlled by the optional
+parameters <code class="docutils literal notranslate"><span class="pre">kx</span></code> and <code class="docutils literal notranslate"><span class="pre">ky</span></code>, with the default of <code class="docutils literal notranslate"><span class="pre">kx=ky=3</span></code>, i.e. a bicubic
+spline.</p>
+<p>The default value of the smoothing factor is <code class="docutils literal notranslate"><span class="pre">s=0</span></code>. We nevertheless recommend
+to always specify <code class="docutils literal notranslate"><span class="pre">s</span></code> explicitly.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">RectBivariateSpline</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">5.01</span><span class="p">,</span> <span class="mf">5.01</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>        <span class="c1"># the grid is an outer product</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">5.01</span><span class="p">,</span> <span class="mf">7.51</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>        <span class="c1"># of x and y arrays</span>
+
+<span class="n">xx</span><span class="p">,</span> <span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">&#39;ij&#39;</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">xx</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">2.</span><span class="o">*</span><span class="n">yy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>            <span class="c1"># z array needs to be 2-D</span>
+
+<span class="n">func</span> <span class="o">=</span> <span class="n">RectBivariateSpline</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">xnew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">5.01</span><span class="p">,</span> <span class="mf">5.01</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
+<span class="n">ynew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">5.01</span><span class="p">,</span> <span class="mf">7.51</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">)</span>
+<span class="n">znew</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">ynew</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">znew</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/smoothing_splines-6.png" class="plot-directive" src="../../_images/smoothing_splines-6.png" />
+</figure>
+</section>
+<section id="bivariate-spline-fitting-of-data-in-spherical-coordinates">
+<h3>Bivariate spline fitting of data in spherical coordinates<a class="headerlink" href="#bivariate-spline-fitting-of-data-in-spherical-coordinates" title="Link to this heading">#</a></h3>
+<p>If your data is given in spherical coordinates, <span class="math notranslate nohighlight">\(r = r(\theta, \phi)\)</span>,
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.SmoothSphereBivariateSpline.html#scipy.interpolate.SmoothSphereBivariateSpline" title="scipy.interpolate.SmoothSphereBivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SmoothSphereBivariateSpline</span></code></a> and <a class="reference internal" href="../../reference/generated/scipy.interpolate.RectSphereBivariateSpline.html#scipy.interpolate.RectSphereBivariateSpline" title="scipy.interpolate.RectSphereBivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RectSphereBivariateSpline</span></code></a> provide convenient
+analogs of <a class="reference internal" href="../../reference/generated/scipy.interpolate.SmoothBivariateSpline.html#scipy.interpolate.SmoothBivariateSpline" title="scipy.interpolate.SmoothBivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SmoothBivariateSpline</span></code></a> and <a class="reference internal" href="../../reference/generated/scipy.interpolate.RectBivariateSpline.html#scipy.interpolate.RectBivariateSpline" title="scipy.interpolate.RectBivariateSpline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RectBivariateSpline</span></code></a>, respectively.</p>
+<p>These classes ensure the periodicity of the spline fits for
+<span class="math notranslate nohighlight">\(\theta \in [0, \pi]\)</span> and <span class="math notranslate nohighlight">\(\phi \in [0, 2\pi]\)</span>, and offer some
+control over the continuity at the poles. Refer to the docstrings of these
+classes for details.</p>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="splines_and_polynomials.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Piecewise polynomials and splines</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="ND_regular_grid.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Multivariate data interpolation on a regular grid  (<code class="xref py py-class docutils literal notranslate"><span class="pre">RegularGridInterpolator</span></code>)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spline-smoothing-in-1-d">Spline smoothing in 1-D</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#procedural-splrep">Procedural (<code class="xref py py-obj docutils literal notranslate"><span class="pre">splrep</span></code>)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#manipulating-spline-objects-procedural-splxxx">Manipulating spline objects: procedural (<code class="docutils literal notranslate"><span class="pre">splXXX</span></code>)</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#object-oriented-univariatespline">Object-oriented (<code class="xref py py-class docutils literal notranslate"><span class="pre">UnivariateSpline</span></code>)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#d-smoothing-splines">2-D smoothing splines</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bivariate-spline-fitting-of-scattered-data">Bivariate spline fitting of scattered data</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#procedural-interface-bisplrep">Procedural interface (<code class="xref py py-obj docutils literal notranslate"><span class="pre">bisplrep</span></code>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#object-oriented-interface-smoothbivariatespline">Object-oriented interface (<code class="xref py py-obj docutils literal notranslate"><span class="pre">SmoothBivariateSpline</span></code>)</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bivariate-spline-fitting-of-data-on-a-grid">Bivariate spline fitting of data on a grid</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bivariate-spline-fitting-of-data-in-spherical-coordinates">Bivariate spline fitting of data in spherical coordinates</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

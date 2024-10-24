@@ -1,0 +1,789 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>nsum &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.integrate.nsum';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="solve_ivp" href="scipy.integrate.solve_ivp.html" />
+    <link rel="prev" title="romb" href="scipy.integrate.romb.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../main_namespace.html">scipy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../misc.html">scipy.misc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../odr.html">scipy.odr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../integrate.html" class="nav-link">Integration and ODEs (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.integrate</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">nsum</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.integrate.</div>
+<div class="empty"></div><section id="nsum">
+<h1>nsum<a class="headerlink" href="#nsum" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.integrate.nsum">
+<span class="sig-prename descclassname"><span class="pre">scipy.integrate.</span></span><span class="sig-name descname"><span class="pre">nsum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxterms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1048576</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerances</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/integrate/_tanhsinh.py#L950-L1191"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.integrate.nsum" title="Link to this definition">#</a></dt>
+<dd><p>Evaluate a convergent, monotonically decreasing finite or infinite series.</p>
+<p>For finite <em class="xref py py-obj">b</em>, this evaluates:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">*</span><span class="n">step</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">n</span> <span class="pre">=</span> <span class="pre">int((b</span> <span class="pre">-</span> <span class="pre">a)</span> <span class="pre">/</span> <span class="pre">step)</span> <span class="pre">+</span> <span class="pre">1</span></code>, where <em class="xref py py-obj">f</em> is smooth, positive, and
+monotone decreasing. <em class="xref py py-obj">b</em> may be very large or infinite, in which case
+a partial sum is evaluated directly and the remainder is approximated using
+integration.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>f</strong><span class="classifier">callable</span></dt><dd><p>The function that evaluates terms to be summed. The signature must be:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span>
+</pre></div>
+</div>
+<p>where each element of <code class="docutils literal notranslate"><span class="pre">x</span></code> is a finite real and <code class="docutils literal notranslate"><span class="pre">args</span></code> is a tuple,
+which may contain an arbitrary number of arrays that are broadcastable
+with <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
+<p><em class="xref py py-obj">f</em> must be an elementwise function: each element <code class="docutils literal notranslate"><span class="pre">f(x)[i]</span></code>
+must equal <code class="docutils literal notranslate"><span class="pre">f(x[i])</span></code> for all indices <code class="docutils literal notranslate"><span class="pre">i</span></code>. It must not mutate the
+array <code class="docutils literal notranslate"><span class="pre">x</span></code> or the arrays in <code class="docutils literal notranslate"><span class="pre">args</span></code>, and it must return NaN where
+the argument is NaN.</p>
+<p><em class="xref py py-obj">f</em> must represent a smooth, positive, and monotone decreasing
+function of <em class="xref py py-obj">x</em> defined at <em>all reals</em> between <em class="xref py py-obj">a</em> and <em class="xref py py-obj">b</em>.          
+<a class="reference internal" href="#scipy.integrate.nsum" title="scipy.integrate.nsum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nsum</span></code></a> performs no checks to verify that these conditions
+are met and may return erroneous results if they are violated.</p>
+</dd>
+<dt><strong>a, b</strong><span class="classifier">float array_like</span></dt><dd><p>Real lower and upper limits of summed terms. Must be broadcastable.
+Each element of <em class="xref py py-obj">a</em> must be finite and less than the corresponding
+element in <em class="xref py py-obj">b</em>, but elements of <em class="xref py py-obj">b</em> may be infinite.</p>
+</dd>
+<dt><strong>step</strong><span class="classifier">float array_like</span></dt><dd><p>Finite, positive, real step between summed terms. Must be broadcastable
+with <em class="xref py py-obj">a</em> and <em class="xref py py-obj">b</em>. Note that the number of terms included in the sum will
+be <code class="docutils literal notranslate"><span class="pre">floor((b</span> <span class="pre">-</span> <span class="pre">a)</span> <span class="pre">/</span> <span class="pre">step)</span></code> + 1; adjust <em class="xref py py-obj">b</em> accordingly to ensure
+that <code class="docutils literal notranslate"><span class="pre">f(b)</span></code> is included if intended.</p>
+</dd>
+<dt><strong>args</strong><span class="classifier">tuple of array_like, optional</span></dt><dd><p>Additional positional arguments to be passed to <em class="xref py py-obj">f</em>. Must be arrays
+broadcastable with <em class="xref py py-obj">a</em>, <em class="xref py py-obj">b</em>, and <em class="xref py py-obj">step</em>. If the callable to be summed
+requires arguments that are not broadcastable with <em class="xref py py-obj">a</em>, <em class="xref py py-obj">b</em>, and <em class="xref py py-obj">step</em>,
+wrap that callable with <em class="xref py py-obj">f</em> such that <em class="xref py py-obj">f</em> accepts only <em class="xref py py-obj">x</em> and
+broadcastable <code class="docutils literal notranslate"><span class="pre">*args</span></code>. See Examples.</p>
+</dd>
+<dt><strong>log</strong><span class="classifier">bool, default: False</span></dt><dd><p>Setting to True indicates that <em class="xref py py-obj">f</em> returns the log of the terms
+and that <em class="xref py py-obj">atol</em> and <em class="xref py py-obj">rtol</em> are expressed as the logs of the absolute
+and relative errors. In this case, the result object will contain the
+log of the sum and error. This is useful for summands for which
+numerical underflow or overflow would lead to inaccuracies.</p>
+</dd>
+<dt><strong>maxterms</strong><span class="classifier">int, default: 2**20</span></dt><dd><p>The maximum number of terms to evaluate for direct summation. 
+Additional function evaluations may be performed for input
+validation and integral evaluation.</p>
+</dd>
+<dt><strong>atol, rtol</strong><span class="classifier">float, optional</span></dt><dd><p>Absolute termination tolerance (default: 0) and relative termination
+tolerance (default: <code class="docutils literal notranslate"><span class="pre">eps**0.5</span></code>, where <code class="docutils literal notranslate"><span class="pre">eps</span></code> is the precision of
+the result dtype), respectively. Must be non-negative
+and finite if <em class="xref py py-obj">log</em> is False, and must be expressed as the log of a
+non-negative and finite number if <em class="xref py py-obj">log</em> is True.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>res</strong><span class="classifier">_RichResult</span></dt><dd><p>An object similar to an instance of <a class="reference internal" href="scipy.optimize.OptimizeResult.html#scipy.optimize.OptimizeResult" title="scipy.optimize.OptimizeResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.OptimizeResult</span></code></a> with the
+attributes. (The descriptions are written as though the values will be
+scalars; however, if <em class="xref py py-obj">func</em> returns an array, the outputs will be
+arrays of the same shape.)</p>
+<dl class="simple">
+<dt>success<span class="classifier">bool</span></dt><dd><p><code class="docutils literal notranslate"><span class="pre">True</span></code> when the algorithm terminated successfully (status <code class="docutils literal notranslate"><span class="pre">0</span></code>);
+<code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+<dt>status<span class="classifier">int array</span></dt><dd><p>An integer representing the exit status of the algorithm.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code> : The algorithm converged to the specified tolerances.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-1</span></code> : Element(s) of <em class="xref py py-obj">a</em>, <em class="xref py py-obj">b</em>, or <em class="xref py py-obj">step</em> are invalid</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-2</span></code> : Numerical integration reached its iteration limit; 
+the sum may be divergent.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-3</span></code> : A non-finite value was encountered.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-4</span></code> : The magnitude of the last term of the partial sum exceeds
+the tolerances, so the error estimate exceeds the tolerances.
+Consider increasing <em class="xref py py-obj">maxterms</em> or loosening <em class="xref py py-obj">tolerances</em>.</p></li>
+</ul>
+</dd>
+<dt>sum<span class="classifier">float array</span></dt><dd><p>An estimate of the sum.</p>
+</dd>
+<dt>error<span class="classifier">float array</span></dt><dd><p>An estimate of the absolute error, assuming all terms are non-negative,
+the function is computed exactly, and direct summation is accurate to
+the precision of the result dtype.</p>
+</dd>
+<dt>nfev<span class="classifier">int array</span></dt><dd><p>The number of points at which <em class="xref py py-obj">func</em> was evaluated.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference external" href="https://mpmath.org/doc/current/calculus/sums_limits.html#mpmath.nsum" title="(in mpmath v1.3.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mpmath.nsum</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>The method implemented for infinite summation is related to the integral
+test for convergence of an infinite series: assuming <em class="xref py py-obj">step</em> size 1 for
+simplicity of exposition, the sum of a monotone decreasing function is bounded by</p>
+<div class="math notranslate nohighlight">
+\[\int_u^\infty f(x) dx \leq \sum_{k=u}^\infty f(k) \leq \int_u^\infty f(x) dx + f(u)\]</div>
+<p>Let <span class="math notranslate nohighlight">\(a\)</span> represent  <em class="xref py py-obj">a</em>, <span class="math notranslate nohighlight">\(n\)</span> represent <em class="xref py py-obj">maxterms</em>, <span class="math notranslate nohighlight">\(\epsilon_a\)</span>
+represent <em class="xref py py-obj">atol</em>, and <span class="math notranslate nohighlight">\(\epsilon_r\)</span> represent <em class="xref py py-obj">rtol</em>.
+The implementation first evaluates the integral <span class="math notranslate nohighlight">\(S_l=\int_a^\infty f(x) dx\)</span>
+as a lower bound of the infinite sum. Then, it seeks a value <span class="math notranslate nohighlight">\(c &gt; a\)</span> such
+that <span class="math notranslate nohighlight">\(f(c) &lt; \epsilon_a + S_l \epsilon_r\)</span>, if it exists; otherwise,
+let <span class="math notranslate nohighlight">\(c = a + n\)</span>. Then the infinite sum is approximated as</p>
+<div class="math notranslate nohighlight">
+\[\sum_{k=a}^{c-1} f(k) + \int_c^\infty f(x) dx + f(c)/2\]</div>
+<p>and the reported error is <span class="math notranslate nohighlight">\(f(c)/2\)</span> plus the error estimate of
+numerical integration. Note that the integral approximations may require
+evaluation of the function at points besides those that appear in the sum,
+so <em class="xref py py-obj">f</em> must be a continuous and monotonically decreasing function defined
+for all reals within the integration interval. However, due to the nature
+of the integral approximation, the shape of the function between points
+that appear in the sum has little effect. If there is not a natural
+extension of the function to all reals, consider using linear interpolation,
+which is easy to evaluate and preserves monotonicity.</p>
+<p>The approach described above is generalized for non-unit
+<em class="xref py py-obj">step</em> and finite <em class="xref py py-obj">b</em> that is too large for direct evaluation of the sum,
+i.e. <code class="docutils literal notranslate"><span class="pre">b</span> <span class="pre">-</span> <span class="pre">a</span> <span class="pre">+</span> <span class="pre">1</span> <span class="pre">&gt;</span> <span class="pre">maxterms</span></code>.</p>
+<p>Although the callable <em class="xref py py-obj">f</em> must be non-negative and monotonically decreasing,
+<a class="reference internal" href="#scipy.integrate.nsum" title="scipy.integrate.nsum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nsum</span></code></a> can be used to evaluate more general forms of series. For instance, to
+evaluate an alternating series, pass a callable that returns the difference
+between pairs of adjacent terms, and adjust <em class="xref py py-obj">step</em> accordingly. See Examples.</p>
+<p class="rubric">References</p>
+<p>[1] Wikipedia. “Integral test for convergence.”
+<a class="reference external" href="https://en.wikipedia.org/wiki/Integral_test_for_convergence">https://en.wikipedia.org/wiki/Integral_test_for_convergence</a></p>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="9add80b4-b4bf-42a1-b1f3-a3183e2fb53a">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('9add80b4-b4bf-42a1-b1f3-a3183e2fb53a','26142c66-4c29-45db-8a70-bfe1e82c12cf','0d26ef4b-f72a-4030-80d9-6b7c796308f2','../../lite/tree/../notebooks/index.html?path=7ad24329_afc9_4031_bb1d_070e117be1b1.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>Compute the infinite sum of the reciprocals of squared integers.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">nsum</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">nsum</span><span class="p">(</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="mi">1</span><span class="o">/</span><span class="n">k</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">maxterms</span><span class="o">=</span><span class="mf">1e3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="mi">6</span>  <span class="c1"># true value</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">error</span>  <span class="c1"># estimated error</span>
+<span class="go">4.990061275730517e-07</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">sum</span> <span class="o">-</span> <span class="n">ref</span><span class="p">)</span><span class="o">/</span><span class="n">ref</span>  <span class="c1"># true error</span>
+<span class="go">-1.0104163408712734e-10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">nfev</span>  <span class="c1"># number of points at which callable was evaluated</span>
+<span class="go">1209</span>
+</pre></div>
+</div>
+<p>Compute the infinite sums of the reciprocals of integers raised to powers <code class="docutils literal notranslate"><span class="pre">p</span></code>,
+where <code class="docutils literal notranslate"><span class="pre">p</span></code> is an array.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">special</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">nsum</span><span class="p">(</span><span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="mi">1</span><span class="o">/</span><span class="n">k</span><span class="o">**</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">maxterms</span><span class="o">=</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">p</span><span class="p">,))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ref</span> <span class="o">=</span> <span class="n">special</span><span class="o">.</span><span class="n">zeta</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">sum</span><span class="p">,</span> <span class="n">ref</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Evaluate the alternating harmonic series.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">nsum</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span><span class="o">/</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="o">.</span><span class="n">sum</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">sum</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># result, difference vs analytical sum</span>
+<span class="go">(0.6931471805598691, -7.616129948928574e-14)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div id="0d26ef4b-f72a-4030-80d9-6b7c796308f2" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('9add80b4-b4bf-42a1-b1f3-a3183e2fb53a','0d26ef4b-f72a-4030-80d9-6b7c796308f2')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('9add80b4-b4bf-42a1-b1f3-a3183e2fb53a','0d26ef4b-f72a-4030-80d9-6b7c796308f2')">Open In Tab</button></div><div id="26142c66-4c29-45db-8a70-bfe1e82c12cf" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.integrate.romb.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">romb</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.integrate.solve_ivp.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">solve_ivp</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.integrate.nsum"><code class="docutils literal notranslate"><span class="pre">nsum</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

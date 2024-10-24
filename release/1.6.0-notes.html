@@ -1,0 +1,1653 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>SciPy 1.6.0 Release Notes &#8212; SciPy v1.15.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=ca70e7f1" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/scipy.css?v=6dd54bfa" />
+    <link rel="stylesheet" type="text/css" href="../_static/try_examples.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../_static/documentation_options.js?v=3d29109c"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../_static/jupyterlite_sphinx.js?v=d6bdf5f8"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'release/1.6.0-notes';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.0';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner = false;
+        </script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SciPy 1.5.4 Release Notes" href="1.5.4-notes.html" />
+    <link rel="prev" title="SciPy 1.6.1 Release Notes" href="1.6.1-notes.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1.15.0.dev" />
+    <meta name="docbuild:last-update" content="Oct 24, 2024"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/SciPy_team" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="1.15.0-notes.html">SciPy 1.15.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.14.1-notes.html">SciPy 1.14.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.14.0-notes.html">SciPy 1.14.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.13.1-notes.html">SciPy 1.13.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.13.0-notes.html">SciPy 1.13.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.12.0-notes.html">SciPy 1.12.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.11.4-notes.html">SciPy 1.11.4 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.11.3-notes.html">SciPy 1.11.3 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.11.2-notes.html">SciPy 1.11.2 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.11.1-notes.html">SciPy 1.11.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.11.0-notes.html">SciPy 1.11.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.10.1-notes.html">SciPy 1.10.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.10.0-notes.html">SciPy 1.10.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.9.3-notes.html">SciPy 1.9.3 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.9.2-notes.html">SciPy 1.9.2 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.9.1-notes.html">SciPy 1.9.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.9.0-notes.html">SciPy 1.9.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.8.1-notes.html">SciPy 1.8.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.8.0-notes.html">SciPy 1.8.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.7.3-notes.html">SciPy 1.7.3 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.7.2-notes.html">SciPy 1.7.2 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.7.1-notes.html">SciPy 1.7.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.7.0-notes.html">SciPy 1.7.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.6.3-notes.html">SciPy 1.6.3 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.6.2-notes.html">SciPy 1.6.2 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.6.1-notes.html">SciPy 1.6.1 Release Notes</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">SciPy 1.6.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.5.4-notes.html">SciPy 1.5.4 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.5.3-notes.html">SciPy 1.5.3 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.5.2-notes.html">SciPy 1.5.2 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.5.1-notes.html">SciPy 1.5.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.5.0-notes.html">SciPy 1.5.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.4.1-notes.html">SciPy 1.4.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.4.0-notes.html">SciPy 1.4.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.3.3-notes.html">SciPy 1.3.3 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.3.2-notes.html">SciPy 1.3.2 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.3.1-notes.html">SciPy 1.3.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.3.0-notes.html">SciPy 1.3.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.2.3-notes.html">SciPy 1.2.3 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.2.2-notes.html">SciPy 1.2.2 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.2.1-notes.html">SciPy 1.2.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.2.0-notes.html">SciPy 1.2.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.1.0-notes.html">SciPy 1.1.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.0.1-notes.html">SciPy 1.0.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1.0.0-notes.html">SciPy 1.0.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.19.1-notes.html">SciPy 0.19.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.19.0-notes.html">SciPy 0.19.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.18.1-notes.html">SciPy 0.18.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.18.0-notes.html">SciPy 0.18.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.17.1-notes.html">SciPy 0.17.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.17.0-notes.html">SciPy 0.17.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.16.1-notes.html">SciPy 0.16.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.16.0-notes.html">SciPy 0.16.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.15.1-notes.html">SciPy 0.15.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.15.0-notes.html">SciPy 0.15.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.14.1-notes.html">SciPy 0.14.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.14.0-notes.html">SciPy 0.14.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.13.2-notes.html">SciPy 0.13.2 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.13.1-notes.html">SciPy 0.13.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.13.0-notes.html">SciPy 0.13.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.12.1-notes.html">SciPy 0.12.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.12.0-notes.html">SciPy 0.12.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.11.0-notes.html">SciPy 0.11.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.10.1-notes.html">SciPy 0.10.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.10.0-notes.html">SciPy 0.10.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.9.0-notes.html">SciPy 0.9.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.8.0-notes.html">SciPy 0.8.0 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.7.2-notes.html">SciPy 0.7.2 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.7.1-notes.html">SciPy 0.7.1 Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="0.7.0-notes.html">SciPy 0.7.0 Release Notes</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../release.html" class="nav-link">Release Notes</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">SciPy 1.6.0 Release Notes</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="scipy-1-6-0-release-notes">
+<h1><a class="toc-backref" href="#id2" role="doc-backlink">SciPy 1.6.0 Release Notes</a><a class="headerlink" href="#scipy-1-6-0-release-notes" title="Link to this heading">#</a></h1>
+<nav class="contents" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#scipy-1-6-0-release-notes" id="id2">SciPy 1.6.0 Release Notes</a></p>
+<ul>
+<li><p><a class="reference internal" href="#highlights-of-this-release" id="id3">Highlights of this release</a></p>
+<ul>
+<li><p><a class="reference internal" href="#new-features" id="id4">New features</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#scipy-special-improvements" id="id5"><a class="reference internal" href="../reference/special.html#module-scipy.special" title="scipy.special"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.special</span></code></a> improvements</a></p></li>
+<li><p><a class="reference internal" href="#scipy-odr-improvements" id="id6"><a class="reference internal" href="../reference/odr.html#module-scipy.odr" title="scipy.odr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.odr</span></code></a> improvements</a></p></li>
+<li><p><a class="reference internal" href="#scipy-integrate-improvements" id="id7"><a class="reference internal" href="../reference/integrate.html#module-scipy.integrate" title="scipy.integrate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.integrate</span></code></a> improvements</a></p></li>
+<li><p><a class="reference internal" href="#scipy-cluster-improvements" id="id8"><a class="reference internal" href="../reference/cluster.html#module-scipy.cluster" title="scipy.cluster"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.cluster</span></code></a> improvements</a></p></li>
+<li><p><a class="reference internal" href="#scipy-interpolate-improvements" id="id9"><a class="reference internal" href="../reference/interpolate.html#module-scipy.interpolate" title="scipy.interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.interpolate</span></code></a> improvements</a></p></li>
+<li><p><a class="reference internal" href="#scipy-io-improvements" id="id10"><a class="reference internal" href="../reference/io.html#module-scipy.io" title="scipy.io"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.io</span></code></a> improvements</a></p></li>
+<li><p><a class="reference internal" href="#scipy-linalg-improvements" id="id11"><a class="reference internal" href="../reference/linalg.html#module-scipy.linalg" title="scipy.linalg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code></a> improvements</a></p></li>
+<li><p><a class="reference internal" href="#scipy-ndimage-improvements" id="id12"><a class="reference internal" href="../reference/ndimage.html#module-scipy.ndimage" title="scipy.ndimage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code></a> improvements</a></p></li>
+<li><p><a class="reference internal" href="#scipy-optimize-improvements" id="id13"><a class="reference internal" href="../reference/optimize.html#module-scipy.optimize" title="scipy.optimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize</span></code></a> improvements</a></p></li>
+<li><p><a class="reference internal" href="#scipy-signal-improvements" id="id14"><a class="reference internal" href="../reference/signal.html#module-scipy.signal" title="scipy.signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code></a> improvements</a></p></li>
+<li><p><a class="reference internal" href="#scipy-sparse-improvements" id="id15"><a class="reference internal" href="../reference/sparse.html#module-scipy.sparse" title="scipy.sparse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse</span></code></a> improvements</a></p></li>
+<li><p><a class="reference internal" href="#scipy-sparse-linalg-improvements" id="id16"><a class="reference internal" href="../reference/sparse.linalg.html#module-scipy.sparse.linalg" title="scipy.sparse.linalg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.linalg</span></code></a> improvements</a></p></li>
+<li><p><a class="reference internal" href="#scipy-fft-improvements" id="id17"><a class="reference internal" href="../reference/fft.html#module-scipy.fft" title="scipy.fft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.fft</span></code></a> improvements</a></p></li>
+<li><p><a class="reference internal" href="#scipy-spatial-improvements" id="id18"><a class="reference internal" href="../reference/spatial.html#module-scipy.spatial" title="scipy.spatial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code></a> improvements</a></p></li>
+<li><p><a class="reference internal" href="#scipy-stats-improvements" id="id19"><a class="reference internal" href="../reference/stats.html#module-scipy.stats" title="scipy.stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code></a> improvements</a></p>
+<ul>
+<li><p><a class="reference internal" href="#deprecated-features" id="id20">Deprecated features</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#scipy-spatial-changes" id="id21"><a class="reference internal" href="../reference/spatial.html#module-scipy.spatial" title="scipy.spatial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code></a> changes</a></p>
+<ul>
+<li><p><a class="reference internal" href="#backwards-incompatible-changes" id="id22">Backwards incompatible changes</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#scipy-changes" id="id23"><a class="reference internal" href="../index.html#module-scipy" title="scipy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy</span></code></a> changes</a></p></li>
+<li><p><a class="reference internal" href="#scipy-interpolate-changes" id="id24"><a class="reference internal" href="../reference/interpolate.html#module-scipy.interpolate" title="scipy.interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.interpolate</span></code></a> changes</a></p></li>
+<li><p><a class="reference internal" href="#scipy-linalg-changes" id="id25"><a class="reference internal" href="../reference/linalg.html#module-scipy.linalg" title="scipy.linalg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code></a> changes</a></p></li>
+<li><p><a class="reference internal" href="#scipy-signal-changes" id="id26"><a class="reference internal" href="../reference/signal.html#module-scipy.signal" title="scipy.signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code></a> changes</a></p></li>
+<li><p><a class="reference internal" href="#id1" id="id27"><a class="reference internal" href="../reference/spatial.html#module-scipy.spatial" title="scipy.spatial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code></a> changes</a></p></li>
+<li><p><a class="reference internal" href="#scipy-stats-changes" id="id28"><a class="reference internal" href="../reference/stats.html#module-scipy.stats" title="scipy.stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code></a> changes</a></p>
+<ul>
+<li><p><a class="reference internal" href="#other-changes" id="id29">Other changes</a></p></li>
+<li><p><a class="reference internal" href="#authors" id="id30">Authors</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#issues-closed-for-1-6-0" id="id31">Issues closed for 1.6.0</a></p></li>
+<li><p><a class="reference internal" href="#pull-requests-for-1-6-0" id="id32">Pull requests for 1.6.0</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<p>SciPy 1.6.0 is the culmination of 6 months of hard work. It contains
+many new features, numerous bug-fixes, improved test coverage and better
+documentation. There have been a number of deprecations and API changes
+in this release, which are documented below. All users are encouraged to
+upgrade to this release, as there are a large number of bug-fixes and
+optimizations. Before upgrading, we recommend that users check that
+their own code does not use deprecated SciPy functionality (to do so,
+run your code with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-Wd</span></code> and check for <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code> s).
+Our development attention will now shift to bug-fix releases on the
+1.6.x branch, and on adding new features on the master branch.</p>
+<p>This release requires Python 3.7+ and NumPy 1.16.5 or greater.</p>
+<p>For running on PyPy, PyPy3 6.0+ is required.</p>
+<section id="highlights-of-this-release">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Highlights of this release</a><a class="headerlink" href="#highlights-of-this-release" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../reference/ndimage.html#module-scipy.ndimage" title="scipy.ndimage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code></a> improvements: Fixes and ehancements to boundary extension
+modes for interpolation functions. Support for complex-valued inputs in many
+filtering and interpolation functions. New <code class="docutils literal notranslate"><span class="pre">grid_mode</span></code> option for
+<a class="reference internal" href="../reference/generated/scipy.ndimage.zoom.html#scipy.ndimage.zoom" title="scipy.ndimage.zoom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage.zoom</span></code></a> to enable results consistent with scikit-image’s
+<code class="docutils literal notranslate"><span class="pre">rescale</span></code>.</p></li>
+<li><p><a class="reference internal" href="../reference/generated/scipy.optimize.linprog.html#scipy.optimize.linprog" title="scipy.optimize.linprog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.linprog</span></code></a> has fast, new methods for large, sparse problems
+from the <code class="docutils literal notranslate"><span class="pre">HiGHS</span></code> library.</p></li>
+<li><p><a class="reference internal" href="../reference/stats.html#module-scipy.stats" title="scipy.stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code></a> improvements including new distributions, a new test, and
+enhancements to existing distributions and tests</p></li>
+</ul>
+<section id="new-features">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">New features</a><a class="headerlink" href="#new-features" title="Link to this heading">#</a></h3>
+</section>
+</section>
+<section id="scipy-special-improvements">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink"><a class="reference internal" href="../reference/special.html#module-scipy.special" title="scipy.special"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.special</span></code></a> improvements</a><a class="headerlink" href="#scipy-special-improvements" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../reference/special.html#module-scipy.special" title="scipy.special"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.special</span></code></a> now has improved support for 64-bit <code class="docutils literal notranslate"><span class="pre">LAPACK</span></code> backend</p>
+</section>
+<section id="scipy-odr-improvements">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink"><a class="reference internal" href="../reference/odr.html#module-scipy.odr" title="scipy.odr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.odr</span></code></a> improvements</a><a class="headerlink" href="#scipy-odr-improvements" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../reference/odr.html#module-scipy.odr" title="scipy.odr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.odr</span></code></a> now has support for 64-bit integer <code class="docutils literal notranslate"><span class="pre">BLAS</span></code></p>
+<p><a class="reference internal" href="../reference/generated/scipy.odr.ODR.html#scipy.odr.ODR" title="scipy.odr.ODR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.odr.ODR</span></code></a> has gained an optional <code class="docutils literal notranslate"><span class="pre">overwrite</span></code> argument so that existing
+files may be overwritten.</p>
+</section>
+<section id="scipy-integrate-improvements">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink"><a class="reference internal" href="../reference/integrate.html#module-scipy.integrate" title="scipy.integrate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.integrate</span></code></a> improvements</a><a class="headerlink" href="#scipy-integrate-improvements" title="Link to this heading">#</a></h2>
+<p>Some renames of functions with poor names were done, with the old names
+retained without being in the reference guide for backwards compatibility
+reasons:
+- <code class="docutils literal notranslate"><span class="pre">integrate.simps</span></code> was renamed to <code class="docutils literal notranslate"><span class="pre">integrate.simpson</span></code>
+- <code class="docutils literal notranslate"><span class="pre">integrate.trapz</span></code> was renamed to <code class="docutils literal notranslate"><span class="pre">integrate.trapezoid</span></code>
+- <code class="docutils literal notranslate"><span class="pre">integrate.cumtrapz</span></code> was renamed to <code class="docutils literal notranslate"><span class="pre">integrate.cumulative_trapezoid</span></code></p>
+</section>
+<section id="scipy-cluster-improvements">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink"><a class="reference internal" href="../reference/cluster.html#module-scipy.cluster" title="scipy.cluster"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.cluster</span></code></a> improvements</a><a class="headerlink" href="#scipy-cluster-improvements" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../reference/generated/scipy.cluster.hierarchy.DisjointSet.html#scipy.cluster.hierarchy.DisjointSet" title="scipy.cluster.hierarchy.DisjointSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.cluster.hierarchy.DisjointSet</span></code></a> has been added for incremental
+connectivity queries.</p>
+<p><a class="reference internal" href="../reference/generated/scipy.cluster.hierarchy.dendrogram.html#scipy.cluster.hierarchy.dendrogram" title="scipy.cluster.hierarchy.dendrogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.cluster.hierarchy.dendrogram</span></code></a> return value now also includes leaf color
+information in <em class="xref py py-obj">leaves_color_list</em>.</p>
+</section>
+<section id="scipy-interpolate-improvements">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink"><a class="reference internal" href="../reference/interpolate.html#module-scipy.interpolate" title="scipy.interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.interpolate</span></code></a> improvements</a><a class="headerlink" href="#scipy-interpolate-improvements" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../reference/generated/scipy.interpolate.interp1d.html#scipy.interpolate.interp1d" title="scipy.interpolate.interp1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.interpolate.interp1d</span></code></a> has a new method <code class="docutils literal notranslate"><span class="pre">nearest-up</span></code>, similar to the
+existing method <code class="docutils literal notranslate"><span class="pre">nearest</span></code> but rounds half-integers up instead of down.</p>
+</section>
+<section id="scipy-io-improvements">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink"><a class="reference internal" href="../reference/io.html#module-scipy.io" title="scipy.io"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.io</span></code></a> improvements</a><a class="headerlink" href="#scipy-io-improvements" title="Link to this heading">#</a></h2>
+<p>Support has been added for reading arbitrary bit depth integer PCM WAV files
+from 1- to 32-bit, including the commonly-requested 24-bit depth.</p>
+</section>
+<section id="scipy-linalg-improvements">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink"><a class="reference internal" href="../reference/linalg.html#module-scipy.linalg" title="scipy.linalg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code></a> improvements</a><a class="headerlink" href="#scipy-linalg-improvements" title="Link to this heading">#</a></h2>
+<p>The new function <a class="reference internal" href="../reference/generated/scipy.linalg.matmul_toeplitz.html#scipy.linalg.matmul_toeplitz" title="scipy.linalg.matmul_toeplitz"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg.matmul_toeplitz</span></code></a> uses the FFT to compute the
+product of a Toeplitz matrix with another matrix.</p>
+<p><a class="reference internal" href="../reference/generated/scipy.linalg.sqrtm.html#scipy.linalg.sqrtm" title="scipy.linalg.sqrtm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg.sqrtm</span></code></a> and <a class="reference internal" href="../reference/generated/scipy.linalg.logm.html#scipy.linalg.logm" title="scipy.linalg.logm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg.logm</span></code></a> have performance improvements
+thanks to additional Cython code.</p>
+<p>Python <code class="docutils literal notranslate"><span class="pre">LAPACK</span></code> wrappers have been added for <code class="docutils literal notranslate"><span class="pre">pptrf</span></code>, <code class="docutils literal notranslate"><span class="pre">pptrs</span></code>, <code class="docutils literal notranslate"><span class="pre">ppsv</span></code>,
+<code class="docutils literal notranslate"><span class="pre">pptri</span></code>, and <code class="docutils literal notranslate"><span class="pre">ppcon</span></code>.</p>
+<p><a class="reference internal" href="../reference/generated/scipy.linalg.norm.html#scipy.linalg.norm" title="scipy.linalg.norm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg.norm</span></code></a> and the <code class="docutils literal notranslate"><span class="pre">svd</span></code> family of functions will now use 64-bit
+integer backends when available.</p>
+</section>
+<section id="scipy-ndimage-improvements">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink"><a class="reference internal" href="../reference/ndimage.html#module-scipy.ndimage" title="scipy.ndimage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code></a> improvements</a><a class="headerlink" href="#scipy-ndimage-improvements" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../reference/generated/scipy.ndimage.convolve.html#scipy.ndimage.convolve" title="scipy.ndimage.convolve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage.convolve</span></code></a>, <a class="reference internal" href="../reference/generated/scipy.ndimage.correlate.html#scipy.ndimage.correlate" title="scipy.ndimage.correlate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage.correlate</span></code></a> and their 1d counterparts
+now accept both complex-valued images and/or complex-valued filter kernels. All
+convolution-based filters also now accept complex-valued inputs
+(e.g. <code class="docutils literal notranslate"><span class="pre">gaussian_filter</span></code>, <code class="docutils literal notranslate"><span class="pre">uniform_filter</span></code>, etc.).</p>
+<p>Multiple fixes and enhancements to boundary handling were introduced to
+<a class="reference internal" href="../reference/ndimage.html#module-scipy.ndimage" title="scipy.ndimage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code></a> interpolation functions (i.e. <code class="docutils literal notranslate"><span class="pre">affine_transform</span></code>,
+<code class="docutils literal notranslate"><span class="pre">geometric_transform</span></code>, <code class="docutils literal notranslate"><span class="pre">map_coordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">rotate</span></code>, <code class="docutils literal notranslate"><span class="pre">shift</span></code>, <code class="docutils literal notranslate"><span class="pre">zoom</span></code>).</p>
+<p>A new boundary mode, <code class="docutils literal notranslate"><span class="pre">grid-wrap</span></code> was added which wraps images periodically,
+using a period equal to the shape of the input image grid. This is in contrast
+to the existing <code class="docutils literal notranslate"><span class="pre">wrap</span></code> mode which uses a period that is one sample smaller
+than the original signal extent along each dimension.</p>
+<p>A long-standing bug in the <code class="docutils literal notranslate"><span class="pre">reflect</span></code> boundary condition has been fixed and
+the mode <code class="docutils literal notranslate"><span class="pre">grid-mirror</span></code> was introduced as a synonym for <code class="docutils literal notranslate"><span class="pre">reflect</span></code>.</p>
+<p>A new boundary mode, <code class="docutils literal notranslate"><span class="pre">grid-constant</span></code> is now available. This is similar to
+the existing ndimage <code class="docutils literal notranslate"><span class="pre">constant</span></code> mode, but interpolation will still performed
+at coordinate values outside of the original image extent. This
+<code class="docutils literal notranslate"><span class="pre">grid-constant</span></code> mode is consistent with OpenCV’s <code class="docutils literal notranslate"><span class="pre">BORDER_CONSTANT</span></code> mode
+and scikit-image’s <code class="docutils literal notranslate"><span class="pre">constant</span></code> mode.</p>
+<p>Spline pre-filtering (used internally by <code class="docutils literal notranslate"><span class="pre">ndimage</span></code> interpolation functions
+when <code class="docutils literal notranslate"><span class="pre">order</span> <span class="pre">&gt;=</span> <span class="pre">2</span></code>), now supports all boundary modes rather than always
+defaulting to mirror boundary conditions. The standalone functions
+<code class="docutils literal notranslate"><span class="pre">spline_filter</span></code> and <code class="docutils literal notranslate"><span class="pre">spline_filter1d</span></code> have analytical boundary conditions
+that match modes <code class="docutils literal notranslate"><span class="pre">mirror</span></code>, <code class="docutils literal notranslate"><span class="pre">grid-wrap</span></code> and <code class="docutils literal notranslate"><span class="pre">reflect</span></code>.</p>
+<p><a class="reference internal" href="../reference/ndimage.html#module-scipy.ndimage" title="scipy.ndimage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code></a> interpolation functions now accept complex-valued inputs. In
+this case, the interpolation is applied independently to the real and
+imaginary components.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">ndimage</span></code> tutorials
+(<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/tutorial/ndimage.html">https://docs.scipy.org/doc/scipy/reference/tutorial/ndimage.html</a>) have been
+updated with new figures to better clarify the exact behavior of all of the
+interpolation boundary modes.</p>
+<p><a class="reference internal" href="../reference/generated/scipy.ndimage.zoom.html#scipy.ndimage.zoom" title="scipy.ndimage.zoom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage.zoom</span></code></a> now has a <code class="docutils literal notranslate"><span class="pre">grid_mode</span></code> option that changes the coordinate
+of the center of the first pixel along an axis from 0 to 0.5. This allows
+resizing in a manner that is consistent with the behavior of scikit-image’s
+<code class="docutils literal notranslate"><span class="pre">resize</span></code> and <code class="docutils literal notranslate"><span class="pre">rescale</span></code> functions (and OpenCV’s <code class="docutils literal notranslate"><span class="pre">cv2.resize</span></code>).</p>
+</section>
+<section id="scipy-optimize-improvements">
+<h2><a class="toc-backref" href="#id13" role="doc-backlink"><a class="reference internal" href="../reference/optimize.html#module-scipy.optimize" title="scipy.optimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize</span></code></a> improvements</a><a class="headerlink" href="#scipy-optimize-improvements" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../reference/generated/scipy.optimize.linprog.html#scipy.optimize.linprog" title="scipy.optimize.linprog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.linprog</span></code></a> has fast, new methods for large, sparse problems from
+the <code class="docutils literal notranslate"><span class="pre">HiGHS</span></code> C++ library. <code class="docutils literal notranslate"><span class="pre">method='highs-ds'</span></code> uses a high performance dual
+revised simplex implementation (HSOL), <code class="docutils literal notranslate"><span class="pre">method='highs-ipm'</span></code> uses an
+interior-point method with crossover, and <code class="docutils literal notranslate"><span class="pre">method='highs'</span></code> chooses between
+the two automatically. These methods are typically much faster and often exceed
+the accuracy of other <code class="docutils literal notranslate"><span class="pre">linprog</span></code> methods, so we recommend explicitly
+specifying one of these three method values when using <code class="docutils literal notranslate"><span class="pre">linprog</span></code>.</p>
+<p><a class="reference internal" href="../reference/generated/scipy.optimize.quadratic_assignment.html#scipy.optimize.quadratic_assignment" title="scipy.optimize.quadratic_assignment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.quadratic_assignment</span></code></a> has been added for approximate solution
+of the quadratic assignment problem.</p>
+<p><a class="reference internal" href="../reference/generated/scipy.optimize.linear_sum_assignment.html#scipy.optimize.linear_sum_assignment" title="scipy.optimize.linear_sum_assignment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.linear_sum_assignment</span></code></a> now has a substantially reduced overhead
+for small cost matrix sizes</p>
+<p><a class="reference internal" href="../reference/generated/scipy.optimize.least_squares.html#scipy.optimize.least_squares" title="scipy.optimize.least_squares"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.least_squares</span></code></a> has improved performance when the user provides
+the jacobian as a sparse jacobian already in <code class="docutils literal notranslate"><span class="pre">csr_matrix</span></code> format</p>
+<p><a class="reference internal" href="../reference/generated/scipy.optimize.linprog.html#scipy.optimize.linprog" title="scipy.optimize.linprog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.linprog</span></code></a> now has an <code class="docutils literal notranslate"><span class="pre">rr_method</span></code> argument for specification
+of the method used for redundancy handling, and a new method for this purpose
+is available based on the interpolative decomposition approach.</p>
+</section>
+<section id="scipy-signal-improvements">
+<h2><a class="toc-backref" href="#id14" role="doc-backlink"><a class="reference internal" href="../reference/signal.html#module-scipy.signal" title="scipy.signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code></a> improvements</a><a class="headerlink" href="#scipy-signal-improvements" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../reference/generated/scipy.signal.gammatone.html#scipy.signal.gammatone" title="scipy.signal.gammatone"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal.gammatone</span></code></a> has been added to design FIR or IIR filters that
+model the human auditory system.</p>
+<p><a class="reference internal" href="../reference/generated/scipy.signal.iircomb.html#scipy.signal.iircomb" title="scipy.signal.iircomb"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal.iircomb</span></code></a> has been added to design IIR peaking/notching comb
+filters that can boost/attenuate a frequency from a signal.</p>
+<p><a class="reference internal" href="../reference/generated/scipy.signal.sosfilt.html#scipy.signal.sosfilt" title="scipy.signal.sosfilt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal.sosfilt</span></code></a> performance has been improved to avoid some previously-
+observed slowdowns</p>
+<p><a class="reference internal" href="../reference/generated/scipy.signal.windows.taylor.html#scipy.signal.windows.taylor" title="scipy.signal.windows.taylor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal.windows.taylor</span></code></a> has been added–the Taylor window function is
+commonly used in radar digital signal processing</p>
+<p><a class="reference internal" href="../reference/generated/scipy.signal.gauss_spline.html#scipy.signal.gauss_spline" title="scipy.signal.gauss_spline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal.gauss_spline</span></code></a> now supports <code class="docutils literal notranslate"><span class="pre">list</span></code> type input for consistency
+with other related SciPy functions</p>
+<p><a class="reference internal" href="../reference/generated/scipy.signal.correlation_lags.html#scipy.signal.correlation_lags" title="scipy.signal.correlation_lags"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal.correlation_lags</span></code></a> has been added to allow calculation of the lag/
+displacement indices array for 1D cross-correlation.</p>
+</section>
+<section id="scipy-sparse-improvements">
+<h2><a class="toc-backref" href="#id15" role="doc-backlink"><a class="reference internal" href="../reference/sparse.html#module-scipy.sparse" title="scipy.sparse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse</span></code></a> improvements</a><a class="headerlink" href="#scipy-sparse-improvements" title="Link to this heading">#</a></h2>
+<p>A solver for the minimum weight full matching problem for bipartite graphs,
+also known as the linear assignment problem, has been added in
+<a class="reference internal" href="../reference/generated/scipy.sparse.csgraph.min_weight_full_bipartite_matching.html#scipy.sparse.csgraph.min_weight_full_bipartite_matching" title="scipy.sparse.csgraph.min_weight_full_bipartite_matching"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.csgraph.min_weight_full_bipartite_matching</span></code></a>. In particular, this
+provides functionality analogous to that of
+<a class="reference internal" href="../reference/generated/scipy.optimize.linear_sum_assignment.html#scipy.optimize.linear_sum_assignment" title="scipy.optimize.linear_sum_assignment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.linear_sum_assignment</span></code></a>, but with improved performance for sparse
+inputs, and the ability to handle inputs whose dense representations would not
+fit in memory.</p>
+<p>The time complexity of <a class="reference internal" href="../reference/generated/scipy.sparse.block_diag.html#scipy.sparse.block_diag" title="scipy.sparse.block_diag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.block_diag</span></code></a> has been improved dramatically
+from quadratic to linear.</p>
+</section>
+<section id="scipy-sparse-linalg-improvements">
+<h2><a class="toc-backref" href="#id16" role="doc-backlink"><a class="reference internal" href="../reference/sparse.linalg.html#module-scipy.sparse.linalg" title="scipy.sparse.linalg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.linalg</span></code></a> improvements</a><a class="headerlink" href="#scipy-sparse-linalg-improvements" title="Link to this heading">#</a></h2>
+<p>The vendored version of <code class="docutils literal notranslate"><span class="pre">SuperLU</span></code> has been updated</p>
+</section>
+<section id="scipy-fft-improvements">
+<h2><a class="toc-backref" href="#id17" role="doc-backlink"><a class="reference internal" href="../reference/fft.html#module-scipy.fft" title="scipy.fft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.fft</span></code></a> improvements</a><a class="headerlink" href="#scipy-fft-improvements" title="Link to this heading">#</a></h2>
+<p>The vendored <code class="docutils literal notranslate"><span class="pre">pocketfft</span></code> library now supports compiling with ARM neon vector
+extensions and has improved thread pool behavior.</p>
+</section>
+<section id="scipy-spatial-improvements">
+<h2><a class="toc-backref" href="#id18" role="doc-backlink"><a class="reference internal" href="../reference/spatial.html#module-scipy.spatial" title="scipy.spatial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code></a> improvements</a><a class="headerlink" href="#scipy-spatial-improvements" title="Link to this heading">#</a></h2>
+<p>The python implementation of <code class="docutils literal notranslate"><span class="pre">KDTree</span></code> has been dropped and <code class="docutils literal notranslate"><span class="pre">KDTree</span></code> is now
+implemented in terms of <code class="docutils literal notranslate"><span class="pre">cKDTree</span></code>. You can now expect <code class="docutils literal notranslate"><span class="pre">cKDTree</span></code>-like
+performance by default. This also means <code class="docutils literal notranslate"><span class="pre">sys.setrecursionlimit</span></code> no longer
+needs to be increased for querying large trees.</p>
+<p><code class="docutils literal notranslate"><span class="pre">transform.Rotation</span></code> has been updated with support for Modified Rodrigues
+Parameters alongside the existing rotation representations (PR gh-12667).</p>
+<p><a class="reference internal" href="../reference/generated/scipy.spatial.transform.Rotation.html#scipy.spatial.transform.Rotation" title="scipy.spatial.transform.Rotation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial.transform.Rotation</span></code></a> has been partially cythonized, with some
+performance improvements observed</p>
+<p><a class="reference internal" href="../reference/generated/scipy.spatial.distance.cdist.html#scipy.spatial.distance.cdist" title="scipy.spatial.distance.cdist"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial.distance.cdist</span></code></a> has improved performance with the <code class="docutils literal notranslate"><span class="pre">minkowski</span></code>
+metric, especially for p-norm values of 1 or 2.</p>
+</section>
+<section id="scipy-stats-improvements">
+<h2><a class="toc-backref" href="#id19" role="doc-backlink"><a class="reference internal" href="../reference/stats.html#module-scipy.stats" title="scipy.stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code></a> improvements</a><a class="headerlink" href="#scipy-stats-improvements" title="Link to this heading">#</a></h2>
+<p>New distributions have been added to <a class="reference internal" href="../reference/stats.html#module-scipy.stats" title="scipy.stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code></a>:</p>
+<ul class="simple">
+<li><p>The asymmetric Laplace continuous distribution has been added as
+<a class="reference internal" href="../reference/generated/scipy.stats.laplace_asymmetric.html#scipy.stats.laplace_asymmetric" title="scipy.stats.laplace_asymmetric"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.laplace_asymmetric</span></code></a>.</p></li>
+<li><p>The negative hypergeometric distribution has been added as <a class="reference internal" href="../reference/generated/scipy.stats.nhypergeom.html#scipy.stats.nhypergeom" title="scipy.stats.nhypergeom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.nhypergeom</span></code></a>.</p></li>
+<li><p>The multivariate t distribution has been added as <a class="reference internal" href="../reference/generated/scipy.stats.multivariate_t.html#scipy.stats.multivariate_t" title="scipy.stats.multivariate_t"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.multivariate_t</span></code></a>.</p></li>
+<li><p>The multivariate hypergeometric distribution has been added as <a class="reference internal" href="../reference/generated/scipy.stats.multivariate_hypergeom.html#scipy.stats.multivariate_hypergeom" title="scipy.stats.multivariate_hypergeom"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.multivariate_hypergeom</span></code></a>.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">fit</span></code> method has been overridden for several distributions (<code class="docutils literal notranslate"><span class="pre">laplace</span></code>,
+<code class="docutils literal notranslate"><span class="pre">pareto</span></code>, <code class="docutils literal notranslate"><span class="pre">rayleigh</span></code>, <code class="docutils literal notranslate"><span class="pre">invgauss</span></code>, <code class="docutils literal notranslate"><span class="pre">logistic</span></code>, <code class="docutils literal notranslate"><span class="pre">gumbel_l</span></code>,
+<code class="docutils literal notranslate"><span class="pre">gumbel_r</span></code>); they now use analytical, distribution-specific maximum
+likelihood estimation results for greater speed and accuracy than the generic
+(numerical optimization) implementation.</p>
+<p>The one-sample Cramér-von Mises test has been added as
+<a class="reference internal" href="../reference/generated/scipy.stats.cramervonmises.html#scipy.stats.cramervonmises" title="scipy.stats.cramervonmises"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.cramervonmises</span></code></a>.</p>
+<p>An option to compute one-sided p-values was added to <a class="reference internal" href="../reference/generated/scipy.stats.ttest_1samp.html#scipy.stats.ttest_1samp" title="scipy.stats.ttest_1samp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.ttest_1samp</span></code></a>,
+<a class="reference internal" href="../reference/generated/scipy.stats.ttest_ind_from_stats.html#scipy.stats.ttest_ind_from_stats" title="scipy.stats.ttest_ind_from_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.ttest_ind_from_stats</span></code></a>, <a class="reference internal" href="../reference/generated/scipy.stats.ttest_ind.html#scipy.stats.ttest_ind" title="scipy.stats.ttest_ind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.ttest_ind</span></code></a> and
+<a class="reference internal" href="../reference/generated/scipy.stats.ttest_rel.html#scipy.stats.ttest_rel" title="scipy.stats.ttest_rel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.ttest_rel</span></code></a>.</p>
+<p>The function <a class="reference internal" href="../reference/generated/scipy.stats.kendalltau.html#scipy.stats.kendalltau" title="scipy.stats.kendalltau"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.kendalltau</span></code></a> now has an option to compute Kendall’s
+tau-c (also known as Stuart’s tau-c), and support has been added for exact
+p-value calculations for sample sizes <code class="docutils literal notranslate"><span class="pre">&gt;</span> <span class="pre">171</span></code>.</p>
+<p><em class="xref py py-obj">stats.trapz</em> was renamed to <em class="xref py py-obj">stats.trapezoid</em>, with the former name retained
+as an alias for backwards compatibility reasons.</p>
+<p>The function <a class="reference internal" href="../reference/generated/scipy.stats.linregress.html#scipy.stats.linregress" title="scipy.stats.linregress"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.linregress</span></code></a> now includes the standard error of the
+intercept in its return value.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">_logpdf</span></code>, <code class="docutils literal notranslate"><span class="pre">_sf</span></code>, and <code class="docutils literal notranslate"><span class="pre">_isf</span></code> methods have been added to
+<a class="reference internal" href="../reference/generated/scipy.stats.nakagami.html#scipy.stats.nakagami" title="scipy.stats.nakagami"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.nakagami</span></code></a>; <code class="docutils literal notranslate"><span class="pre">_sf</span></code> and <code class="docutils literal notranslate"><span class="pre">_isf</span></code> methods also added to
+<a class="reference internal" href="../reference/generated/scipy.stats.gumbel_r.html#scipy.stats.gumbel_r" title="scipy.stats.gumbel_r"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.gumbel_r</span></code></a></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">sf</span></code> method has been added to <a class="reference internal" href="../reference/generated/scipy.stats.levy.html#scipy.stats.levy" title="scipy.stats.levy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.levy</span></code></a> and <a class="reference internal" href="../reference/generated/scipy.stats.levy_l.html#scipy.stats.levy_l" title="scipy.stats.levy_l"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.levy_l</span></code></a>
+for improved precision.</p>
+<p><a class="reference internal" href="../reference/generated/scipy.stats.binned_statistic_dd.html#scipy.stats.binned_statistic_dd" title="scipy.stats.binned_statistic_dd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.binned_statistic_dd</span></code></a> performance improvements for the following
+computed statistics: <code class="docutils literal notranslate"><span class="pre">max</span></code>, <code class="docutils literal notranslate"><span class="pre">min</span></code>, <code class="docutils literal notranslate"><span class="pre">median</span></code>, and <code class="docutils literal notranslate"><span class="pre">std</span></code>.</p>
+<p>We gratefully acknowledge the Chan-Zuckerberg Initiative Essential Open Source
+Software for Science program for supporting many of these improvements to
+<a class="reference internal" href="../reference/stats.html#module-scipy.stats" title="scipy.stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code></a>.</p>
+<section id="deprecated-features">
+<h3><a class="toc-backref" href="#id20" role="doc-backlink">Deprecated features</a><a class="headerlink" href="#deprecated-features" title="Link to this heading">#</a></h3>
+</section>
+</section>
+<section id="scipy-spatial-changes">
+<h2><a class="toc-backref" href="#id21" role="doc-backlink"><a class="reference internal" href="../reference/spatial.html#module-scipy.spatial" title="scipy.spatial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code></a> changes</a><a class="headerlink" href="#scipy-spatial-changes" title="Link to this heading">#</a></h2>
+<p>Calling <code class="docutils literal notranslate"><span class="pre">KDTree.query</span></code> with <code class="docutils literal notranslate"><span class="pre">k=None</span></code> to find all neighbours is deprecated.
+Use <code class="docutils literal notranslate"><span class="pre">KDTree.query_ball_point</span></code> instead.</p>
+<p><code class="docutils literal notranslate"><span class="pre">distance.wminkowski</span></code> was deprecated; use <code class="docutils literal notranslate"><span class="pre">distance.minkowski</span></code> and supply
+weights with the <code class="docutils literal notranslate"><span class="pre">w</span></code> keyword instead.</p>
+<section id="backwards-incompatible-changes">
+<h3><a class="toc-backref" href="#id22" role="doc-backlink">Backwards incompatible changes</a><a class="headerlink" href="#backwards-incompatible-changes" title="Link to this heading">#</a></h3>
+</section>
+</section>
+<section id="scipy-changes">
+<h2><a class="toc-backref" href="#id23" role="doc-backlink"><a class="reference internal" href="../index.html#module-scipy" title="scipy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy</span></code></a> changes</a><a class="headerlink" href="#scipy-changes" title="Link to this heading">#</a></h2>
+<p>Using <a class="reference internal" href="../reference/fft.html#module-scipy.fft" title="scipy.fft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.fft</span></code></a> as a function aliasing <code class="docutils literal notranslate"><span class="pre">numpy.fft.fft</span></code> was removed after
+being deprecated in SciPy <code class="docutils literal notranslate"><span class="pre">1.4.0</span></code>. As a result, the <a class="reference internal" href="../reference/fft.html#module-scipy.fft" title="scipy.fft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.fft</span></code></a> submodule
+must be explicitly imported now, in line with other SciPy subpackages.</p>
+</section>
+<section id="scipy-interpolate-changes">
+<h2><a class="toc-backref" href="#id24" role="doc-backlink"><a class="reference internal" href="../reference/interpolate.html#module-scipy.interpolate" title="scipy.interpolate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.interpolate</span></code></a> changes</a><a class="headerlink" href="#scipy-interpolate-changes" title="Link to this heading">#</a></h2>
+</section>
+<section id="scipy-linalg-changes">
+<h2><a class="toc-backref" href="#id25" role="doc-backlink"><a class="reference internal" href="../reference/linalg.html#module-scipy.linalg" title="scipy.linalg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code></a> changes</a><a class="headerlink" href="#scipy-linalg-changes" title="Link to this heading">#</a></h2>
+</section>
+<section id="scipy-signal-changes">
+<h2><a class="toc-backref" href="#id26" role="doc-backlink"><a class="reference internal" href="../reference/signal.html#module-scipy.signal" title="scipy.signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code></a> changes</a><a class="headerlink" href="#scipy-signal-changes" title="Link to this heading">#</a></h2>
+<p>The output of <code class="docutils literal notranslate"><span class="pre">decimate</span></code>, <code class="docutils literal notranslate"><span class="pre">lfilter_zi</span></code>, <code class="docutils literal notranslate"><span class="pre">lfiltic</span></code>, <code class="docutils literal notranslate"><span class="pre">sos2tf</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">sosfilt_zi</span></code> have been changed to match <code class="docutils literal notranslate"><span class="pre">numpy.result_type</span></code> of their inputs.</p>
+<p>The window function <code class="docutils literal notranslate"><span class="pre">slepian</span></code> was removed. It had been deprecated since SciPy
+<code class="docutils literal notranslate"><span class="pre">1.1</span></code>.</p>
+</section>
+<section id="id1">
+<h2><a class="toc-backref" href="#id27" role="doc-backlink"><a class="reference internal" href="../reference/spatial.html#module-scipy.spatial" title="scipy.spatial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code></a> changes</a><a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">cKDTree.query</span></code> now returns 64-bit rather than 32-bit integers on Windows,
+making behaviour consistent between platforms (PR gh-12673).</p>
+</section>
+<section id="scipy-stats-changes">
+<h2><a class="toc-backref" href="#id28" role="doc-backlink"><a class="reference internal" href="../reference/stats.html#module-scipy.stats" title="scipy.stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code></a> changes</a><a class="headerlink" href="#scipy-stats-changes" title="Link to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">frechet_l</span></code> and <code class="docutils literal notranslate"><span class="pre">frechet_r</span></code> distributions were removed. They were
+deprecated since SciPy <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+<section id="other-changes">
+<h3><a class="toc-backref" href="#id29" role="doc-backlink">Other changes</a><a class="headerlink" href="#other-changes" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">setup_requires</span></code> was removed from <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>. This means that users
+invoking <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code> without having numpy already installed
+will now get an error, rather than having numpy installed for them via
+<code class="docutils literal notranslate"><span class="pre">easy_install</span></code>. This install method was always fragile and problematic, users
+are encouraged to use <code class="docutils literal notranslate"><span class="pre">pip</span></code> when installing from source.</p>
+<ul class="simple">
+<li><p>Fixed a bug in <a class="reference internal" href="../reference/generated/scipy.optimize.dual_annealing.html#scipy.optimize.dual_annealing" title="scipy.optimize.dual_annealing"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.dual_annealing</span></code></a> <code class="docutils literal notranslate"><span class="pre">accept_reject</span></code> calculation
+that caused uphill jumps to be accepted less frequently.</p></li>
+<li><p>The time required for (un)pickling of <a class="reference internal" href="../reference/generated/scipy.stats.rv_continuous.html#scipy.stats.rv_continuous" title="scipy.stats.rv_continuous"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.rv_continuous</span></code></a>,
+<a class="reference internal" href="../reference/generated/scipy.stats.rv_discrete.html#scipy.stats.rv_discrete" title="scipy.stats.rv_discrete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.rv_discrete</span></code></a>, and <em class="xref py py-obj">scipy.stats.rv_frozen</em> has been significantly
+reduced (gh12550). Inheriting subclasses should note that <code class="docutils literal notranslate"><span class="pre">__setstate__</span></code> no
+longer calls <code class="docutils literal notranslate"><span class="pre">__init__</span></code> upon unpickling.</p></li>
+</ul>
+</section>
+<section id="authors">
+<h3><a class="toc-backref" href="#id30" role="doc-backlink">Authors</a><a class="headerlink" href="#authors" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>&#64;endolith</p></li>
+<li><p>&#64;vkk800</p></li>
+<li><p>aditya +</p></li>
+<li><p>George Bateman +</p></li>
+<li><p>Christoph Baumgarten</p></li>
+<li><p>Peter Bell</p></li>
+<li><p>Tobias Biester +</p></li>
+<li><p>Keaton J. Burns +</p></li>
+<li><p>Evgeni Burovski</p></li>
+<li><p>Rüdiger Busche +</p></li>
+<li><p>Matthias Bussonnier</p></li>
+<li><p>Dominic C +</p></li>
+<li><p>Corallus Caninus +</p></li>
+<li><p>CJ Carey</p></li>
+<li><p>Thomas A Caswell</p></li>
+<li><p>chapochn +</p></li>
+<li><p>Lucía Cheung</p></li>
+<li><p>Zach Colbert +</p></li>
+<li><p>Coloquinte +</p></li>
+<li><p>Yannick Copin +</p></li>
+<li><p>Devin Crowley +</p></li>
+<li><p>Terry Davis +</p></li>
+<li><p>Michaël Defferrard +</p></li>
+<li><p>devonwp +</p></li>
+<li><p>Didier +</p></li>
+<li><p>divenex +</p></li>
+<li><p>Thomas Duvernay +</p></li>
+<li><p>Eoghan O’Connell +</p></li>
+<li><p>Gökçen Eraslan</p></li>
+<li><p>Kristian Eschenburg +</p></li>
+<li><p>Ralf Gommers</p></li>
+<li><p>Thomas Grainger +</p></li>
+<li><p>GreatV +</p></li>
+<li><p>Gregory Gundersen +</p></li>
+<li><p>h-vetinari +</p></li>
+<li><p>Matt Haberland</p></li>
+<li><p>Mark Harfouche +</p></li>
+<li><p>He He +</p></li>
+<li><p>Alex Henrie</p></li>
+<li><p>Chun-Ming Huang +</p></li>
+<li><p>Martin James McHugh III +</p></li>
+<li><p>Alex Izvorski +</p></li>
+<li><p>Joey +</p></li>
+<li><p>ST John +</p></li>
+<li><p>Jonas Jonker +</p></li>
+<li><p>Julius Bier Kirkegaard</p></li>
+<li><p>Marcin Konowalczyk +</p></li>
+<li><p>Konrad0</p></li>
+<li><p>Sam Van Kooten +</p></li>
+<li><p>Sergey Koposov +</p></li>
+<li><p>Peter Mahler Larsen</p></li>
+<li><p>Eric Larson</p></li>
+<li><p>Antony Lee</p></li>
+<li><p>Gregory R. Lee</p></li>
+<li><p>Loïc Estève</p></li>
+<li><p>Jean-Luc Margot +</p></li>
+<li><p>MarkusKoebis +</p></li>
+<li><p>Nikolay Mayorov</p></li>
+<li><ol class="upperalpha simple" start="7">
+<li><ol class="upperalpha simple" start="4">
+<li><p>McBain</p></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><p>Andrew McCluskey +</p></li>
+<li><p>Nicholas McKibben</p></li>
+<li><p>Sturla Molden</p></li>
+<li><p>Denali Molitor +</p></li>
+<li><p>Eric Moore</p></li>
+<li><p>Shashaank N +</p></li>
+<li><p>Prashanth Nadukandi +</p></li>
+<li><p>nbelakovski +</p></li>
+<li><p>Andrew Nelson</p></li>
+<li><p>Nick +</p></li>
+<li><p>Nikola Forró +</p></li>
+<li><p>odidev</p></li>
+<li><p>ofirr +</p></li>
+<li><p>Sambit Panda</p></li>
+<li><p>Dima Pasechnik</p></li>
+<li><p>Tirth Patel +</p></li>
+<li><p>Matti Picus</p></li>
+<li><p>Paweł Redzyński +</p></li>
+<li><p>Vladimir Philipenko +</p></li>
+<li><p>Philipp Thölke +</p></li>
+<li><p>Ilhan Polat</p></li>
+<li><p>Eugene Prilepin +</p></li>
+<li><p>Vladyslav Rachek</p></li>
+<li><p>Ram Rachum +</p></li>
+<li><p>Tyler Reddy</p></li>
+<li><p>Martin Reinecke +</p></li>
+<li><p>Simon Segerblom Rex +</p></li>
+<li><p>Lucas Roberts</p></li>
+<li><p>Benjamin Rowell +</p></li>
+<li><p>Eli Rykoff +</p></li>
+<li><p>Atsushi Sakai</p></li>
+<li><p>Moritz Schulte +</p></li>
+<li><p>Daniel B. Smith</p></li>
+<li><p>Steve Smith +</p></li>
+<li><p>Jan Soedingrekso +</p></li>
+<li><p>Victor Stinner +</p></li>
+<li><p>Jose Storopoli +</p></li>
+<li><p>Diana Sukhoverkhova +</p></li>
+<li><p>Søren Fuglede Jørgensen</p></li>
+<li><p>taoky +</p></li>
+<li><p>Mike Taves +</p></li>
+<li><p>Ian Thomas +</p></li>
+<li><p>Will Tirone +</p></li>
+<li><p>Frank Torres +</p></li>
+<li><p>Seth Troisi</p></li>
+<li><p>Ronald van Elburg +</p></li>
+<li><p>Hugo van Kemenade</p></li>
+<li><p>Paul van Mulbregt</p></li>
+<li><p>Saul Ivan Rivas Vega +</p></li>
+<li><p>Pauli Virtanen</p></li>
+<li><p>Jan Vleeshouwers</p></li>
+<li><p>Samuel Wallan</p></li>
+<li><p>Warren Weckesser</p></li>
+<li><p>Ben West +</p></li>
+<li><p>Eric Wieser</p></li>
+<li><p>WillTirone +</p></li>
+<li><p>Levi John Wolf +</p></li>
+<li><p>Zhiqing Xiao</p></li>
+<li><p>Rory Yorke +</p></li>
+<li><p>Yun Wang (Maigo) +</p></li>
+<li><p>Egor Zemlyanoy +</p></li>
+<li><p>ZhihuiChen0903 +</p></li>
+<li><p>Jacob Zhong +</p></li>
+</ul>
+<p>A total of 122 people contributed to this release.
+People with a “+” by their names contributed a patch for the first time.
+This list of names is automatically generated, and may not be fully complete.</p>
+</section>
+</section>
+<section id="issues-closed-for-1-6-0">
+<h2><a class="toc-backref" href="#id31" role="doc-backlink">Issues closed for 1.6.0</a><a class="headerlink" href="#issues-closed-for-1-6-0" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/1323">#1323</a>: ndimage.shift destroys data from edges (Trac #796)</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/1892">#1892</a>: using rptfile= with an existing file causes a Fortran runtime…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/1903">#1903</a>: ndimage.rotate misses some values (Trac #1378)</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/1930">#1930</a>: scipy.io.wavfile should be able to read 24 bit signed wave (Trac…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/3158">#3158</a>: Odd casting behaviour of signal.filtfilt</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/3203">#3203</a>: interpolation.zoom incorrect output for certain cases</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/3645">#3645</a>: BUG: stats: mstats.pearsonr calculation is wrong if the masks…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/3665">#3665</a>: Return Bunch objects from stats functions</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/4922">#4922</a>: unexpected zero output values from zoom</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/5202">#5202</a>: BUG: stats: Spurious warnings from the pdf method of several…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/5223">#5223</a>: Zoom does not return the same values when resizing a sub-array…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/5396">#5396</a>: scipy.spatial.distance.pdist documention bug</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/5489">#5489</a>: ValueError: failed to create intent(cache|hide)|optional array–…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/6096">#6096</a>: loadmat drops dtype of empty arrays when squeeze_me=True</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/6713">#6713</a>: sicpy.ndimage.zoom returns artefacts and boundaries in some cases</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/7125">#7125</a>: Impossible to know number of dimensions in c function used by…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/7324">#7324</a>: scipy.ndimage.zoom bad interpolation when downsampling (zoom…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/8131">#8131</a>: BUG: geometric_transform wrap mode possible bug</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/8163">#8163</a>: LSMR fails on some random values when providing an x0</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/8210">#8210</a>: Why should I choose order &gt; 1 for scipy.ndimage.zoom?</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/8465">#8465</a>: Unexpected behavior with reflect mode of ndimage.rotate</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/8776">#8776</a>: cdist behavior with Minkowsky and np.inf</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/9168">#9168</a>: documentation of pearson3 in scipy.stats unclear</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/9223">#9223</a>: Faster implementation of scipy.sparse.block_diag</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/9476">#9476</a>: Invalid index in signal.medfilt2d’s QUICK_SELECT</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/9857">#9857</a>: scipy.odr.Output.sd_beta is not standard error</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/9865">#9865</a>: Strange behavior of `ndimage.shift` and `ndimage.affine_transform`</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/10042">#10042</a>: Consider support for multivariate student-t distribution?</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/10134">#10134</a>: gausshyper distribution accepts invalid parameters</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/10179">#10179</a>: str+bytes concatenation error in test_lapack.py</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/10216">#10216</a>: cKDTree.query_ball_point speed regression</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/10463">#10463</a>: ENH: vectorize scipy.fft for more CPU architectures</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/10593">#10593</a>: Rename `sum` ndimage function</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/10595">#10595</a>: scipy.stats.ttest_1samp should support alternative hypothesis</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/10610">#10610</a>: ndimage.interpolation.spline_filter1d default value of mode</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/10620">#10620</a>: ndimage.interpolation.zoom() option to work like skimage.transform.resize()</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/10711">#10711</a>: Array Shapes Not Aligned Bug in scipy.optimize._lsq.lsq_linear.py</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/10782">#10782</a>: BUG: optimize: methods unknown to `scipy.optimize.show_options`</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/10892">#10892</a>: Possible typo in an equation of optimize/dual_annealing</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/11020">#11020</a>: signal.fftconvolve return a tuple including lag information</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/11093">#11093</a>: scipy.interpolate.interp1d can not handle datetime64</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/11170">#11170</a>: Use manylinux2014 to get aarch64/ppc64le support</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/11186">#11186</a>: BUG: stats: pearson3 CDF and SF functions incorrect when skew…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/11366">#11366</a>: DeprecationWarning due to invalid escape sequences</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/11403">#11403</a>: Optimize raises “ValueError: `x0` violates bound constraints”…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/11558">#11558</a>: ENH: IIR comb filter</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/11559">#11559</a>: BUG: iirdesign doesn’t fail for frequencies above Nyquist</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/11567">#11567</a>: scipy.signal.iirdesign doesn’t check consistency of wp and ws…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/11654">#11654</a>: ENH: Add Negative Hypergeometric Distribution</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/11720">#11720</a>: BUG: stats: wrong shape from median_absolute_deviation for arrays…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/11746">#11746</a>: BUG: stats: pearson3 returns size 1 arrays where other distributions…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/11756">#11756</a>: Improve and fix *Spline docstrings and code</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/11758">#11758</a>: BUG: of scipy.interpolate.CubicSpline when `bc_type’ is set…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/11925">#11925</a>: MAINT: remove character encoding check in CI?</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/11963">#11963</a>: Test failures - TestLinprogIPSparseCholmod</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12102">#12102</a>: incorrect first moment of non central t-distribution</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12113">#12113</a>: scipy.stats.poisson docs for rate = 0</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12152">#12152</a>: ENH: signal.gauss_spline should accept a list</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12157">#12157</a>: BUG: Iteration index initialisation is wrong in scipy.optimize.linesearch.scalar_search_wolfe2</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12162">#12162</a>: Storing Rotation object in NumPy array returns an array with…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12176">#12176</a>: cannot modify the slice of an array returned by `wavfile.read`</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12190">#12190</a>: retrieve leave colors from dendrogram</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12196">#12196</a>: PERF: scipy.linalg.pinv is very slow compared to numpy.linalg.pinv</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12222">#12222</a>: Interpolating categorical data (interp1d)</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12231">#12231</a>: Is the p-value of the Kruskal-Wallis test two-sided?</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12249">#12249</a>: ENH: least_squares: should not re-instanciate csr_matrix if already…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12264">#12264</a>: DOC: optimize: linprog method-specific function signature</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12290">#12290</a>: DOC: Convex Hull areas are actually perimeters for 2-dimensional…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12308">#12308</a>: integrate.solve_ivp with DOP853 method fails when yDot = 0</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12326">#12326</a>: BUG: stats.exponnorm.pdf returns 0 for small K</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12337">#12337</a>: scipy.sparse.linalg.eigsh documentation is misleading</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12339">#12339</a>: scipy.io.wavfile.write documentation has wrong example</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12340">#12340</a>: sparse.lil_matrix.tocsr() fails silently on matrices with nzn…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12350">#12350</a>: Create a 2-parameter version of the gamma distribution</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12369">#12369</a>: scipy.signal.correlate has an error in the documentation, examples…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12373">#12373</a>: interp1d returns incorrect values for step functions</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12378">#12378</a>: interpolate.NearestNDInterpolator.__call__ &amp; LinearNDInterpolator.__call__…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12411">#12411</a>: scipy.stats.spearmanr mishandles nan variables with “propogate”</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12413">#12413</a>: DOC: Remove the “Basic functions” section from the SciPy tutorial.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12415">#12415</a>: scipy.stats.dirichlet documentation issue</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12419">#12419</a>: least_squares ValueError with ‘lm’ method - regression from 1.4.1…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12431">#12431</a>: Request for Python wrapper for LAPACK’s ?pptrf (Cholesky factorization…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12458">#12458</a>: spearmanr with entire NaN columns produces errors</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12477">#12477</a>: WIP: Addition of MLE for stats.invgauss/wald</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12483">#12483</a>: reading .wav fails when the file is too big on python 3.6.0</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12490">#12490</a>: BUG: stats: logistic and genlogistic logpdf overflow for large…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12499">#12499</a>: LinearNDInterpolator raises ValueError when value array has writeable=False…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12523">#12523</a>: Wrong key in __odrpack.c</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12547">#12547</a>: typo in scipy/cluster/_hierarchy.pyx</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12549">#12549</a>: DOC: least_squares return type is poorly formatted.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12578">#12578</a>: TST: test_bounds_infeasible_2 failing on wheels repo cron jobs</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12585">#12585</a>: ENH: Add Multivariate Hypergeometric Distribution</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12604">#12604</a>: unintuitive conversion in `scipy.constants.lambda2nu`</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12606">#12606</a>: DOC: Invalid syntax in example.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12665">#12665</a>: List of possible bugs found by automated code analysis</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12696">#12696</a>: scipy.optimize.fminbound, numpy depreciation warning Creating…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12699">#12699</a>: TestProjections.test_iterative_refinements_dense failure</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12701">#12701</a>: TestDifferentialEvolutionSolver::test_L4 failing</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12719">#12719</a>: Misleading scipy.signal.get_window() docstring with ‘exponential’…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12740">#12740</a>: circstd doesn’t handle R = hypot(S, C) &gt; 1</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12749">#12749</a>: ENH: interp1d Matlab compatibility</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12773">#12773</a>: Meta-issue: ndimage spline boundary handling (NumFOCUS proposal)</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12813">#12813</a>: optimize.root(method=”krylov”) fails if options[“tol_norm”] expects…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12815">#12815</a>: stats.zscore inconsistent behavior when all values are the same</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12840">#12840</a>: scipy.signal.windows.dpss docstring typo</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12874">#12874</a>: Rotation.random vs stats.special_ortho_group</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12881">#12881</a>: FFT - documentation - examples - linspace construction</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12904">#12904</a>: BUG: parsing in loadarff()</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12917">#12917</a>: GitHub Actions nightly build triggered on forks</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12919">#12919</a>: BUG: numerical precision, use gammaln in nct.mean</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12924">#12924</a>: Rename Sample Based Integration Methods to Comply with Code of…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12940">#12940</a>: Should the minimum numpy for AIX be bumped to 1.16.5</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12951">#12951</a>: A possible typo in scipy.stats.weightedtau</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12952">#12952</a>: [Documentation question] Would it be more precise to specify…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12970">#12970</a>: Documentation presents second order sections as the correct choice…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12982">#12982</a>: Calculate standard error of the intercept in linregress</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12985">#12985</a>: Possible wrong link in scipy.stats.wilcoxon doc</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/12991">#12991</a>: least_squares broken with float32</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/13001">#13001</a>: `OptimizeResult.message` from `L-BFGS-B` is a bytes, not…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/13030">#13030</a>: BUG: lint_diff.py still fails for backport PRs</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/13077">#13077</a>: CI: codecov proper patch diffs</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/13085">#13085</a>: Build failing on main branch after HiGHS solver merge</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/13088">#13088</a>: BLD, BUG: wheel builds failure with HiGHS/optimize</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/13099">#13099</a>: Wrong output format for empty sparse results of kron</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/13108">#13108</a>: TST, CI: GitHub Actions MacOS Failures</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/13111">#13111</a>: BUG, DOC: refguide check is failing</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/13127">#13127</a>: ODR output file writing broken in conda env with system compilers</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/13134">#13134</a>: FromTravis migration tracker</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/13140">#13140</a>: BUG: signal: `ss2tf` incorrectly truncates output to integers.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/13179">#13179</a>: CI: lint is failing because of output to stderr</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/13182">#13182</a>: Key appears twice in `test_optimize.test_show_options`</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/13191">#13191</a>: `scipy.linalg.lapack.dgesjv` overwrites original arrays if…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/13207">#13207</a>: TST: Erratic test failure in test_cossin_separate</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/13221">#13221</a>: BUG: pavement.py glitch</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/13239">#13239</a>: Segmentation fault with `eigh(…, driver=”evx”)` for 10x10…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/issues/13248">#13248</a>: ndimage: improper cval handling for complex-valued inputs</p></li>
+</ul>
+</section>
+<section id="pull-requests-for-1-6-0">
+<h2><a class="toc-backref" href="#id32" role="doc-backlink">Pull requests for 1.6.0</a><a class="headerlink" href="#pull-requests-for-1-6-0" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/8032">#8032</a>: ENH: Add in taylor window common in Radar processing</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/8779">#8779</a>: CI: Run benchmarks</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/9361">#9361</a>: ENH: Add Kendall’s tau-a and tau-c variants to scipy.stats.kendalltau()</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/11068">#11068</a>: ENH: Adds correlation_lags function to scipy.signal</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/11119">#11119</a>: ENH: add Cramer-von-Mises (one-sample) test to scipy.stats</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/11249">#11249</a>: ENH: optimize: interpolative decomposition redundancy removal…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/11346">#11346</a>: ENH: add fast toeplitz matrix multiplication using FFT</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/11413">#11413</a>: ENH: Multivariate t-distribution (stale)</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/11563">#11563</a>: ENH: exact p-value in stats.kendalltau() for sample sizes &gt; 171</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/11691">#11691</a>: ENH: add a stack of reversal functions to linprog</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12043">#12043</a>: ENH: optimize: add HiGHS methods to linprog - continued</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12061">#12061</a>: Check parameter consistensy in signal.iirdesign</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12067">#12067</a>: MAINT: Cleanup OLDAPI in ndimage/src/_ctest.c</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12069">#12069</a>: DOC: Add developer guidelines for implementing the nan_policy…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12077">#12077</a>: MAINT: malloc return value checks for cython</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12080">#12080</a>: MAINT: Remove suppress_warnings</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12085">#12085</a>: ENH: special: support ILP64 Lapack</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12086">#12086</a>: MAINT: Cleanup PyMODINIT_FUNC used during 2to3</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12097">#12097</a>: ENH: stats: override stats.rayleigh.fit with analytical MLE</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12112">#12112</a>: DOC: Improve integrate.nquad docstring</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12125">#12125</a>: TST: Add a test for stats.gmean with negative input</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12139">#12139</a>: TST: Reduce flakiness in lsmr test</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12142">#12142</a>: DOC: add a note in poisson distribution when mu=0 and k=0 in…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12144">#12144</a>: DOC: Update ndimage.morphology.distance_transform*</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12154">#12154</a>: ENH: scipy.signal: allow lists in gauss_spline</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12170">#12170</a>: ENH: scipy.stats: add negative hypergeometric distribution</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12177">#12177</a>: MAINT: Correctly add input line to ValueError</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12183">#12183</a>: ENH: Use fromfile where possible</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12186">#12186</a>: MAINT: generalize tests in SphericalVoronoi</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12198">#12198</a>: TST: Fix str + bytes error</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12199">#12199</a>: ENH: match np.result_type behaviour in some scipy.signal functions</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12200">#12200</a>: ENH: add FIR and IIR gammatone filters to scipy.signal</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12204">#12204</a>: ENH: Add overwrite argument for odr.ODR() and its test.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12206">#12206</a>: MAINT:lstsq: Switch to tranposed problem if the array is tall</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12208">#12208</a>: wavfile bugfixes and maintenance</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12214">#12214</a>: DOC: fix docstring of “sd_beta” of odr.Output.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12234">#12234</a>: MAINT: prevent divide by zero warnings in scipy.optimize BFGS…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12235">#12235</a>: REL: set version to 1.6.0.dev0</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12237">#12237</a>: BUG: Fix exit condition for QUICK_SELECT pivot</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12242">#12242</a>: ENH: Rename ndimage.sum to ndimage.sum_labels (keep sum as alias)</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12243">#12243</a>: EHN: Update SuperLU</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12244">#12244</a>: MAINT: stats: avoid spurious warnings in ncx2.pdf</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12245">#12245</a>: DOC: Fixed incorrect default for mode in scipy.ndimage.spline_filter1d</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12248">#12248</a>: MAINT: clean up pavement.py</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12250">#12250</a>: ENH: Replaced csr_matrix() by tocsr() and complemented docstring</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12253">#12253</a>: TST, CI: turn on codecov patch diffs</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12259">#12259</a>: MAINT: Remove duplicated test for import cycles</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12263">#12263</a>: ENH: Rename LocalSearchWrapper bounds</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12265">#12265</a>: BUG optimize: Accept np.matrix in lsq_linear</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12266">#12266</a>: BUG: Fix paren error in dual annealing accept_reject calculation</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12269">#12269</a>: MAINT: Included mismatched shapes in error messages.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12279">#12279</a>: MAINT: `__array__` and array protocols cannot be used in sparse.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12281">#12281</a>: DOC: update wheel DL docs</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12283">#12283</a>: ENH: odr: ILP64 Blas support in ODR</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12284">#12284</a>: ENH: linalg: support for ILP64 BLAS/LAPACK in f2py wrappers</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12286">#12286</a>: ENH: Cythonize scipy.spatial.transform.Rotation</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12287">#12287</a>: ENH: Read arbitrary bit depth (including 24-bit) WAVs</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12292">#12292</a>: BLD: fix musl compilation</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12293">#12293</a>: MAINT: Fix a DeprecationWarning in validate_runtests_log.py.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12296">#12296</a>: DOC: Clarify area/volume in scipy.spatial.ConvexHull docstrings</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12302">#12302</a>: CI: Run travis builds on master to keep cache up to date</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12305">#12305</a>: TST: Cleanup print statements in tests</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12323">#12323</a>: ENH: Add a Bunch-like class to use as a backwards compatible…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12324">#12324</a>: BUG: io: Fix an error that occurs when attempting to raise a…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12327">#12327</a>: DOC: clarify docstrings of `query_ball_tree` and `query_pairs`</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12334">#12334</a>: PERF: Improve cKDTree.query_ball_point constant time cython overhead</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12338">#12338</a>: DOC: improve consistency and clarity of docs in linalg and sparse/linalg</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12341">#12341</a>: DOC: add Examples for KDTree query_ball_tree and query_pairs</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12343">#12343</a>: DOC: add examples for special.eval_legendre()</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12349">#12349</a>: BUG: avoid overflow in sum() for 32-bit systems</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12351">#12351</a>: DOC: Fix example wavfile to be 16bit</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12352">#12352</a>: [BUG] Consider 0/0 division in DOP853 error estimation</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12353">#12353</a>: Fix exception causes in vq.py</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12354">#12354</a>: MAINT: Cleanup unneeded void* cast in setlist.pxd</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12355">#12355</a>: TST: Remove hack for old win-amd64 bug</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12356">#12356</a>: ENH: Faster implementation of scipy.sparse.block_diag (#9411…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12357">#12357</a>: MAINT,TST: update and run scipy/special/utils/convert.py</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12358">#12358</a>: TST: Check mstat.skewtest pvalue</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12359">#12359</a>: TST: Sparse matrix test with int64 indptr and indices</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12363">#12363</a>: DOC: ref. in CloughTocher2DInterpolator</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12364">#12364</a>: DOC: `sparse_distance_matrix` and `count_neighbors` examples</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12371">#12371</a>: MAINT, CI: bump to latest stable OpenBLAS</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12372">#12372</a>: MAINT: Minor cleanup of (c)KDTree tests</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12374">#12374</a>: DEP: Deprecate `distance.wminkowski`</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12375">#12375</a>: ENH: Add fast path for minkowski distance with p=1,2 and support…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12376">#12376</a>: Fix exception causes in most of the codebase</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12377">#12377</a>: DOC: Quick fix - adds newline to correlation_lags docstring Examples…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12381">#12381</a>: BENCH: remove obsolete goal_time param</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12382">#12382</a>: ENH: Replace KDTree with a thin wrapper over cKDTree</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12385">#12385</a>: DOC: improve docstrings of interpolate.NearestNDInterpolator.__call__…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12387">#12387</a>: DOC/STY: add example to scipy.signal.correlate</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12393">#12393</a>: CI: Replace the existing check for non-ASCII characters with…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12394">#12394</a>: CI: arm64 numpy now available</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12395">#12395</a>: ENH: improve stats.binned_statistic_dd performance</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12396">#12396</a>: DOC, MAINT: forward port 1.5.0 relnotes</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12398">#12398</a>: API: Disable len() and indexing of Rotation instances with single…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12399">#12399</a>: MAINT: Replace some Unicode dash-like chars with an ASCII hyphen.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12402">#12402</a>: update .mailmap</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12404">#12404</a>: MAINT: io: Change the encoding comment of test_mio.py to utf-8.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12416">#12416</a>: CI: cache mingw, azure pipelines</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12427">#12427</a>: BUG: logic error in loop unrolling (cKDTree)</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12432">#12432</a>: DOC: Remove the “Basic functions” section from the SciPy tutorial.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12434">#12434</a>: ENH:linalg: Add LAPACK wrappers pptrf/pptrs/ppsv/pptri/ppcon</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12435">#12435</a>: DOC: fix simplex math for scipy.stats.dirichlet documentation</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12439">#12439</a>: DOC: add API methods summary for NdPPoly</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12443">#12443</a>: BUG: stats: Improve calculation of exponnorm.pdf</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12448">#12448</a>: DOC: stats: Add “Examples” to the ansari docstring.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12450">#12450</a>: ENH: add `leaves_color_list` for cluster.dendrogram dictionary.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12451">#12451</a>: MAINT: remove “blacklist” terminology from code base</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12452">#12452</a>: DOC: clarify the meaning of whitening for cluster.vq.whiten()</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12455">#12455</a>: MAINT: clearer error message in setup.py</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12457">#12457</a>: ENH: stats: override stats.pareto.fit with analytical MLE</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12460">#12460</a>: check if column in spearman rho is entirely NaN or Inf</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12463">#12463</a>: DOC: improve and clean up *Spline docstrings in fitpack2.py</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12474">#12474</a>: ENH: linalg: speedup _sqrtm_triu by moving tight loop to Cython</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12476">#12476</a>: ENH: add IIR comb filter to scipy.signal</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12484">#12484</a>: Fix documentation for minimize</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12486">#12486</a>: DOC: add a note in poisson distribution when mu=0 and k=0 in…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12491">#12491</a>: MAINT: forward port 1.5.1 release notes</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12508">#12508</a>: Fix exception causes all over the codebase</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12514">#12514</a>: ENH: stats: override stats.invgauss.fit with analytical MLE</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12519">#12519</a>: PERF: Avoid np.zeros when custom initialization is needed anyway</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12520">#12520</a>: DOC: Minor RST section renaming.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12521">#12521</a>: MAINT: Remove unused imports</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12522">#12522</a>: PERF: Get rid of unnececssary allocation in VarReader5.cread_fieldnames</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12524">#12524</a>: DOC: special: Set Axes3D rect to avoid clipping labels in plot.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12525">#12525</a>: Fix large sparse nnz</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12526">#12526</a>: DOC: Remove double section and too long header underline.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12527">#12527</a>: Improve error message for wrong interpolation type</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12530">#12530</a>: Move redundant logic outside loop for conditional speedup in…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12532">#12532</a>: ENH: Add norm={“forward”, “backward”} to `scipy.fft`</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12535">#12535</a>: MAINT: Avoid sphinx deprecated aliases for SeeAlso and Only</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12540">#12540</a>: BUG: fix odr.output.work_ind key bug and add its test.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12541">#12541</a>: ENH: add solver for minimum weight full bipartite matching</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12550">#12550</a>: PERF: pickling speed of rv*</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12551">#12551</a>: DOC: fix typo in cluster/_hierarchy.pyx</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12552">#12552</a>: CI: Cleanup travis pip installs</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12556">#12556</a>: BUG: Fix problem with Scipy.integrate.solve_bvp for big problems</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12557">#12557</a>: MAINT: Use extern templates to improve sparsetools compile time</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12558">#12558</a>: MAINT: Remove hack to allow scipy.fft to act like a function</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12563">#12563</a>: MAINT: Remove unused mu0 in special/orthogonal.py</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12564">#12564</a>: DOC: fix return type docstring for least_squares</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12565">#12565</a>: DOC: stats: respond to query about Kruskal-Wallis test being…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12566">#12566</a>: BUG: Interpolate: use stable sort</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12568">#12568</a>: Updated documentation for as_quat</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12571">#12571</a>: DEP: remove deprecated slepian window</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12573">#12573</a>: DEP: remove `frechet_l` and `frechet_r`</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12575">#12575</a>: BUG: stats: fix multinomial.pmf NaNs when params sum &gt; 1</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12576">#12576</a>: MAINT: remove warning from LSQSphereBivariateSpline</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12582">#12582</a>: ENH: Multivariate t-distribution</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12587">#12587</a>: ENH: speed up rvs of gengamma in scipy.stats</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12588">#12588</a>: DOC: add Examples add see also sections for LinearNDInterpolator,…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12597">#12597</a>: ENH: Add single-sided p-values to t-tests</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12599">#12599</a>: Small update to scipy FFT tutorial</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12600">#12600</a>: ENH: disjoint set data structure</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12602">#12602</a>: BUG: add const for Read-only views in interpnd.pyx</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12605">#12605</a>: BUG: correct `np.asanyarray` use in `scipy.constants.lambda2nu`</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12610">#12610</a>: MAINT: forward port 1.5.2 release notes</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12612">#12612</a>: MAINT: stats: Use explicit keyword parameters instead of `**kwds`.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12616">#12616</a>: DOC: make explicit docstring that interpolate.interp1d only accepts…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12618">#12618</a>: DOC: Minor doc formatting.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12640">#12640</a>: MAINT: stats: fix issues with scipy.stats.pearson3 docs, moment,…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12647">#12647</a>: TST: Add Boost ellipr[cdfgj]_data test data</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12648">#12648</a>: DOC: Update special/utils/README with instructions</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12649">#12649</a>: DOC: simplified pip quickstart guide</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12650">#12650</a>: DOC: stats: Fix boxcox docstring: lambda can be negative.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12655">#12655</a>: DOC: update Steering Council members listed in governance docs</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12659">#12659</a>: rv_sample expect bug</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12663">#12663</a>: DOC: optimize: try to fix linprog method-specific documentation</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12664">#12664</a>: BUG: stats: Fix logpdf with large negative values for logistic…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12666">#12666</a>: MAINT: Fixes from static analysis</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12667">#12667</a>: ENH: Adding Modified Rodrigues Parameters to the Rotation class</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12670">#12670</a>: DOC: Update documentation for Gamma distribution</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12673">#12673</a>: API: Unconditionally return np.intp from cKDTree.query</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12677">#12677</a>: MAINT: Add Autogenerated notice to ufuncs.pyi</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12682">#12682</a>: MAINT: Remove _util._valarray</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12688">#12688</a>: MAINT: add f2py-generated scipy.integrate files to .gitignore</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12689">#12689</a>: BENCH: simplify benchmark setup, remove benchmarks/run.py</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12694">#12694</a>: scipy/stats: Add laplace_asymmetric continuous distribution</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12695">#12695</a>: DOC: update Ubuntu quickstart; conda compilers now work!</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12698">#12698</a>: MAINT: Replace np.max with np.maximum</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12700">#12700</a>: TST: bump test precision for constrained trustregion test</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12702">#12702</a>: TST: bump test tolerance for `DifferentialEvolutionSolver.test_L4`</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12703">#12703</a>: BUG: Improve input validation for sepfir2d</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12708">#12708</a>: MAINT: fix a typo in scipy.sparse</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12709">#12709</a>: BUG: bvls can fail catastrophically to converge</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12711">#12711</a>: MAINT: Use platform.python_implementation to determine IS_PYPY</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12713">#12713</a>: TST: Fix flaky test_lgmres</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12716">#12716</a>: DOC: add examples and tutorial links for interpolate functions…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12717">#12717</a>: DOC: Fix Issue #5396</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12725">#12725</a>: ENH: Support complex-valued images and kernels for many ndimage…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12729">#12729</a>: DEP: remove setup_requires</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12732">#12732</a>: BENCH: skip benchmarks instead of hiding them when SCIPY_XSLOW=0</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12734">#12734</a>: CI: Don’t ignore line-length in the lint_diff check.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12736">#12736</a>: DOC: Fix signal.windows.get_window() ‘exponential’ docstring</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12737">#12737</a>: ENH: stats: override stats.gumbel_r.fit and stats.gumbel_l.fit…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12738">#12738</a>: ENH: stats: override stats.logistic.fit with system of equations…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12743">#12743</a>: BUG: Avoid negative variances in circular statistics</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12744">#12744</a>: Prevent build error on GNU/Hurd</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12746">#12746</a>: TST: parameterize the test cases in test_ndimage.py</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12752">#12752</a>: DOC: Add examples for some root finding functions.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12754">#12754</a>: MAINT, CI: Azure windows deps multiline</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12756">#12756</a>: ENH: stats: Add an sf method to levy for improved precision in…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12757">#12757</a>: ENH: stats: Add an sf method to levy_l for improved precision.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12765">#12765</a>: TST, MAINT: infeasible_2 context</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12767">#12767</a>: Fix spline interpolation boundary handling for modes reflect…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12769">#12769</a>: DOC: syntax error in scipy.interpolate.bspl</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12770">#12770</a>: ENH: add nearest-up rounding to scipy.interpolate.interp1d</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12771">#12771</a>: TST: fix invalid input unit test for scipy.signal.gammatone</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12775">#12775</a>: ENH: Adds quadratic_assignment with two methods</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12776">#12776</a>: ENH: add grid-constant boundary handling in ndimage interpolation…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12777">#12777</a>: Add Taylor Window function - Common in Radar DSP</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12779">#12779</a>: ENH: Improvements to pocketfft thread pool and ARM neon vectorization</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12788">#12788</a>: API: Rename cKDTree n_jobs argument to workers</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12792">#12792</a>: DOC: remove THANKS.txt file in favor of scipy.org</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12793">#12793</a>: Add new flag to authors tool</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12802">#12802</a>: BENCH: add scipy.ndimage.interpolation benchmarks</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12803">#12803</a>: Do not pin the version of numpy in unsupported python versions</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12810">#12810</a>: CI: fix 32-bit Linux build failure on Azure CI runs</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12812">#12812</a>: ENH: support interpolation of complex-valued images</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12814">#12814</a>: BUG: nonlin_solve shouldn’t pass non-vector dx to tol_norm</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12818">#12818</a>: Update ckdtree.pyx</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12822">#12822</a>: MAINT: simplify directed_hausdorff</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12827">#12827</a>: DOC: Fix wrong name w being used instead of worN in docs.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12831">#12831</a>: DOC: fix typo in sparse/base.py</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12835">#12835</a>: MAINT: stats: Improve vonmises PDF calculation.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12839">#12839</a>: ENH: scipy.stats: add multivariate hypergeometric distribution</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12843">#12843</a>: changed M to N in windows.dpss</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12846">#12846</a>: MAINT: update minimum NumPy version to 1.16.5</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12847">#12847</a>: DOC: Unify the formula in docs of scipy.stats.pearsonr()</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12849">#12849</a>: DOC: polish QAP docs for consistency and readability</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12852">#12852</a>: ENH, MAINT: Bring KDTree interface to feature-parity with cKDTree</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12858">#12858</a>: DOC: use :doi: and :arxiv: directives for references</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12872">#12872</a>: lazily import multiprocessing.Pool in MapWrapper</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12878">#12878</a>: DOC: document ScalarFunction</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12882">#12882</a>: MAINT: stats: Change a test to use &lt;= instead of strictly less…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12885">#12885</a>: numpy.linspace calls edited to ensure correct spacing.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12886">#12886</a>: DOC: stats: Add ‘versionadded’ to cramervonmises docstring.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12899">#12899</a>: TST: make a couple of tests expected to fail on 32-bit architectures</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12903">#12903</a>: DOC: update Windows build guide and move into contributor guide</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12907">#12907</a>: DOC: clarify which array the precenter option applies to</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12908">#12908</a>: MAINT: spatial: Remove two occurrences of unused variables in…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12909">#12909</a>: ENH: stats: Add methods gumbel_r._sf and gumbel_r._isf</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12910">#12910</a>: CI: travis: Remove some unnecessary code from .travis.yml.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12911">#12911</a>: Minor fixes to dendrogram plotting</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12921">#12921</a>: CI: don’t run GitHub Actions on fork or in cron job</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12927">#12927</a>: MAINT: rename integrate.simps to simpson</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12934">#12934</a>: MAINT: rename trapz and cumtrapz to (cumulative_)trapezoid</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12936">#12936</a>: MAINT: fix numerical precision in nct.stats</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12938">#12938</a>: MAINT: fix linter on master</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12941">#12941</a>: Update minimum AIX pinnings to match non AIX builds</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12955">#12955</a>: BUG: Fixed wrong NaNs check in scipy.stats.weightedtau</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12958">#12958</a>: ENH: stats: Implement _logpdf, _sf and _isf for nakagami.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12962">#12962</a>: Correcting that p should be in [0,1] for a variety of discrete…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12964">#12964</a>: BUG: added line.strip() to split_data_line()</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12968">#12968</a>: ENH: stats: Use only an analytical formula or scalar root-finding…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12971">#12971</a>: MAINT: Declare support for Python 3.9</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12972">#12972</a>: MAINT: Remove redundant Python &lt; 3.6 code</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12980">#12980</a>: DOC: Update documentation on optimize.rosen</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12983">#12983</a>: ENH: improvements to stats.linregress</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12990">#12990</a>: DOC: Clarify that using sos as output type for iirdesign can…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12992">#12992</a>: DOC: capitalization and formatting in lsmr</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12995">#12995</a>: DOC: stats: Several documentation fixes.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12996">#12996</a>: BUG: Improve error messages for `range` arg of binned_statistic_dd</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/12998">#12998</a>: MAINT: approx_derivative with FP32 closes #12991</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13004">#13004</a>: TST: isinstance(OptimizeResult.message, str) closes #13001</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13006">#13006</a>: Keep correct dtype when loading empty mat arrays.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13009">#13009</a>: MAINT: clip SLSQP step within bounds</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13012">#13012</a>: DOC: fix bilinear_zpk example labels</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13013">#13013</a>: ENH: Add `subset` and `subsets` methods to `DisjointSet`…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13029">#13029</a>: MAINT: basinhopping callback for initial mininmisation</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13032">#13032</a>: DOC: fix docstring errors in in stats.wilcoxon</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13036">#13036</a>: BUG: forward port lint_diff shims</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13041">#13041</a>: MAINT: dogbox ensure x is within bounds closes #11403</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13042">#13042</a>: MAINT: forward port 1.5.4 release notes</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13046">#13046</a>: DOC: Update optimize.least_squares doc for all tolerance must…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13052">#13052</a>: Typo fix for cluster documentation</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13054">#13054</a>: BUG: fix `scipy.optimize.show_options` for unknown methods….</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13056">#13056</a>: MAINT: fft: Fix a C++ compiler warning.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13057">#13057</a>: Minor fixes on doc of function csr_tocsc</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13058">#13058</a>: DOC: stats: Replace np.float with np.float64 in a tutorial file.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13059">#13059</a>: DOC: stats: Update the “Returns” section of the linregress docstring.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13060">#13060</a>: MAINT: clip_x_for_func should be private</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13061">#13061</a>: DOC: signal.win -&gt; signal.windows.win in Examples</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13063">#13063</a>: MAINT: Add suite-sparse and sksparse installation check</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13070">#13070</a>: MAINT: stats: Remove a couple obsolete comments.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13073">#13073</a>: BUG: Fix scalar_search_wolfe2 to resolve #12157</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13078">#13078</a>: CI, MAINT: migrate Lint to Azure</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13081">#13081</a>: BLD: drop Python 3.6 support (NEP 29)</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13082">#13082</a>: MAINT: update minimum NumPy version to 1.16.5 in a couple more…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13083">#13083</a>: DOC: update toolchain.rst</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13086">#13086</a>: DOC: Update the Parameters section of the correlation docstring</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13087">#13087</a>: ENH:signal: Speed-up Cython implementation of _sosfilt</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13089">#13089</a>: BLD, BUG: add c99 compiler flag to HiGHS basiclu library</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13091">#13091</a>: BUG: Fix GIL handling in _sosfilt</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13094">#13094</a>: DOC: clarify “location” in docstring of cKDTree.query</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13095">#13095</a>: Zoom resize update</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13097">#13097</a>: BUG: fix CubicSpline(…, bc_type=”periodic”) #11758</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13100">#13100</a>: BUG: sparse: Correct output format of kron</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13107">#13107</a>: ENH: faster linear_sum_assignment for small cost matrices</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13110">#13110</a>: CI, MAINT: refguide/asv checks to azure</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13112">#13112</a>: CI: fix MacOS CI</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13113">#13113</a>: CI: Install word list package for refguide-check</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13115">#13115</a>: BUG: add value range check for signal.iirdesign()</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13116">#13116</a>: CI: Don’t report name errors after an exception in refguide-check</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13117">#13117</a>: CI: move sdist/pre-release test Azure</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13119">#13119</a>: Improve error message on friedmanchisquare function</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13121">#13121</a>: Fix factorial() for NaN on Python 3.10</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13123">#13123</a>: BLD: Specify file extension for language standard version tests</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13128">#13128</a>: TST: skip Fortran I/O test for ODR</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13130">#13130</a>: TST: skip factorial() float tests on Python 3.10</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13136">#13136</a>: CI:Add python dbg run to GH Actions</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13138">#13138</a>: CI: Port coverage, 64-bit BLAS, GCC 4.8 build to azure</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13139">#13139</a>: Fix edge case for mode=’nearest’ in ndimage.interpolation functions</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13141">#13141</a>: BUG: signal: Fix data type of the numerator returned by ss2tf.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13144">#13144</a>: MAINT: stats: restrict gausshyper z &gt; -1</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13146">#13146</a>: typo in csr.py</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13148">#13148</a>: BUG: stats: fix typo in stable rvs per gh-12870</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13149">#13149</a>: DOC: spatial/stats: cross-ref random rotation matrix functions</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13151">#13151</a>: MAINT: stats: Fix a test and a couple PEP-8 issues.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13152">#13152</a>: MAINT: stats: Use np.take_along_axis in the private function…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13154">#13154</a>: ENH: stats: Implement defined handling of constant inputs in…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13156">#13156</a>: DOC: maintain equal display range for ndimage.zoom example</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13159">#13159</a>: CI: Azure: Don’t run tests on merge commits, except for coverage</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13160">#13160</a>: DOC: stats: disambiguate location-shifted/noncentral</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13161">#13161</a>: BUG: DifferentialEvolutionSolver.__del__ can fail in garbage…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13163">#13163</a>: BUG: stats: fix bug in spearmanr nan propagation</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13167">#13167</a>: MAINT: stats: Fix a test.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13169">#13169</a>: BUG: stats: Fix handling of misaligned masks in mstats.pearsonr.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13178">#13178</a>: CI: testing.yml –&gt; macos.yml</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13181">#13181</a>: CI: fix lint</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13190">#13190</a>: BUG: optimize: fix a duplicate key bug for `test_show_options`</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13192">#13192</a>: BUG:linalg: Add overwrite option to gejsv wrapper</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13194">#13194</a>: BUG: slsqp should be able to use rel_step</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13199">#13199</a>: [skip travis] DOC: 1.6.0 release notes</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13203">#13203</a>: fix typos</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13209">#13209</a>: TST:linalg: set the seed for cossin test</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13212">#13212</a>: [DOC] Backtick and directive consistency.</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13217">#13217</a>: REL: add necessary setuptools and numpy version pins in pyproject.toml…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13226">#13226</a>: BUG: pavement.py file handle fixes</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13249">#13249</a>: Handle cval correctly for ndimage functions with complex-valued…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13253">#13253</a>: BUG,MAINT: Ensure all Pool objects are closed</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13255">#13255</a>: BUG:linalg: Fix heevx wrappers and add new tests</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13260">#13260</a>: CI: fix macOS testing</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13269">#13269</a>: CI: github actions: In the linux dbg tests, update apt before…</p></li>
+<li><p><a class="reference external" href="https://github.com/scipy/scipy/pull/13279">#13279</a>: MAINT: 1.6.0 rc2 backports</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="1.6.1-notes.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">SciPy 1.6.1 Release Notes</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="1.5.4-notes.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">SciPy 1.5.4 Release Notes</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#highlights-of-this-release">Highlights of this release</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#new-features">New features</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-special-improvements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.special</span></code> improvements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-odr-improvements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.odr</span></code> improvements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-integrate-improvements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.integrate</span></code> improvements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-cluster-improvements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.cluster</span></code> improvements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-interpolate-improvements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.interpolate</span></code> improvements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-io-improvements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.io</span></code> improvements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-linalg-improvements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code> improvements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-ndimage-improvements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code> improvements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-optimize-improvements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize</span></code> improvements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-signal-improvements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code> improvements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-sparse-improvements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse</span></code> improvements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-sparse-linalg-improvements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.linalg</span></code> improvements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-fft-improvements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.fft</span></code> improvements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-spatial-improvements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code> improvements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-stats-improvements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code> improvements</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deprecated-features">Deprecated features</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-spatial-changes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code> changes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#backwards-incompatible-changes">Backwards incompatible changes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-changes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy</span></code> changes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-interpolate-changes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.interpolate</span></code> changes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-linalg-changes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code> changes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-signal-changes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code> changes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code> changes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy-stats-changes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code> changes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#other-changes">Other changes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#authors">Authors</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#issues-closed-for-1-6-0">Issues closed for 1.6.0</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pull-requests-for-1-6-0">Pull requests for 1.6.0</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008-2024, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
