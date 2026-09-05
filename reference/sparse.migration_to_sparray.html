@@ -1,0 +1,1304 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Migration from spmatrix to sparray &#8212; SciPy v2.0.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=8ee2c72c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/scipy.css?v=242cf5df" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=d74cf641"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../_static/jupyterlite_sphinx.js?v=96e329c5"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/sparse.migration_to_sparray';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script defer="defer" src="../_static/custom-icons.js?v=6cff5f5c"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Sparse Matrix Legacy Interface (scipy.sparse)" href="sparse.spmatrix_api.html" />
+    <link rel="prev" title="scipy.sparse.linalg.ArpackError" href="generated/scipy.sparse.linalg.ArpackError.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="2.0.0.dev" />
+    <meta name="docbuild:last-update" content="Sep 05, 2026"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discuss.scientific-python.org/c/contributor/scipy/" title="Scientific Python Forum" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-SciPy_Forum fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Scientific Python Forum</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discuss.scientific-python.org/c/contributor/scipy/" title="Scientific Python Forum" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-SciPy_Forum fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Scientific Python Forum</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signal.html">scipy.signal</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stats.html">scipy.stats</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="generated/scipy.LowLevelCallable.html">LowLevelCallable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/scipy.show_config.html">show_config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generated/scipy.test.html">scipy.test</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">API Reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="sparse.html" class="nav-link">Sparse arrays (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Migration from spmatrix to sparray</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="migration-from-spmatrix-to-sparray">
+<span id="migration-to-sparray"></span><h1>Migration from spmatrix to sparray<a class="headerlink" href="#migration-from-spmatrix-to-sparray" title="Link to this heading">#</a></h1>
+<p>This document provides guidance for converting code from sparse <em>matrices</em>
+to sparse <em>arrays</em> in <code class="docutils literal notranslate"><span class="pre">scipy.sparse</span></code>.</p>
+<p>The change from sparse matrices to sparse arrays mirrors conversion from
+<code class="docutils literal notranslate"><span class="pre">np.matrix</span></code> to <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code>. Essentially we must move from an all-2D
+matrix-multiplication-centric <code class="docutils literal notranslate"><span class="pre">matrix</span></code> object to a 1D or 2D “array”
+object that supports the matrix multiplication operator and elementwise
+computation.</p>
+<p>Notation: For this guide we denote the sparse array classes generally as
+<code class="docutils literal notranslate"><span class="pre">sparray</span></code> and the sparse matrix classes <code class="docutils literal notranslate"><span class="pre">spmatrix</span></code>. Dense numpy
+arrays are denoted <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> and dense matrix classes are
+<code class="docutils literal notranslate"><span class="pre">np.matrix</span></code>. Supported sparse formats are denoted BSR, COO, CSC, CSR,
+DIA, DOK, LIL and all formats are supported by both sparray and
+spmatrix. The term <code class="docutils literal notranslate"><span class="pre">sparse</span></code> refers to either <code class="docutils literal notranslate"><span class="pre">sparray</span></code> or
+<code class="docutils literal notranslate"><span class="pre">spmatrix</span></code>, while <code class="docutils literal notranslate"><span class="pre">dense</span></code> refers to either <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> or
+<code class="docutils literal notranslate"><span class="pre">np.matrix</span></code>.</p>
+<section id="overview-and-big-picture">
+<h2>Overview and big picture<a class="headerlink" href="#overview-and-big-picture" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>The constructor names <code class="docutils literal notranslate"><span class="pre">*_matrix</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">csr_matrix</span></code>, are changed
+to <code class="docutils literal notranslate"><span class="pre">*_array</span></code>.</p></li>
+<li><p>spmatrix <code class="docutils literal notranslate"><span class="pre">M</span></code> is always 2D (rows x columns) even e.g. <code class="docutils literal notranslate"><span class="pre">M.min(axis=0)</span></code>.
+sparray <code class="docutils literal notranslate"><span class="pre">A</span></code> can be 1D or 2D.
+Numpy scalars are returned for full (0D) reductions, i.e. <code class="docutils literal notranslate"><span class="pre">M.min()</span></code>.</p></li>
+<li><p>Iterating over a sparray gives 1D sparrays. Iterating spmatrix gives 2D row spmatrices</p></li>
+<li><p>Operators that change behavior are: <code class="docutils literal notranslate"><span class="pre">*,</span> <span class="pre">&#64;,</span> <span class="pre">*=,</span> <span class="pre">&#64;=,</span> <span class="pre">**</span></code></p>
+<ul>
+<li><p>Scalar multiplication, e.g. <code class="docutils literal notranslate"><span class="pre">5</span> <span class="pre">*</span> <span class="pre">A</span></code>, uses <code class="docutils literal notranslate"><span class="pre">*</span></code>, and <code class="docutils literal notranslate"><span class="pre">5</span> <span class="pre">&#64;</span> <span class="pre">A</span></code> is not
+implemented.</p></li>
+<li><p>sparrays use <code class="docutils literal notranslate"><span class="pre">*</span></code> for elementwise multiplication and <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> for
+matrix multiplication while spmatrices use either operator
+<code class="docutils literal notranslate"><span class="pre">*</span></code> or <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> for matrix multiplication. Either can use
+<code class="docutils literal notranslate"><span class="pre">A.multiply(B)</span></code> for elementwise multiplication.</p></li>
+<li><p>Scalar exponents, e.g. <code class="docutils literal notranslate"><span class="pre">A**2</span></code>, use elementwise power for sparray and
+matrix power for spmatrix. Matrix power for sparrays uses
+<code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.matrix_power(A,</span> <span class="pre">n)</span></code>.</p></li>
+</ul>
+</li>
+<li><p>When index arrays are provided to the constructor functions, spmatrix
+selects a dtype based on dtype and values of the incoming arrays, while
+sparray only considers the dtype of the incoming arrays. For example,
+<code class="docutils literal notranslate"><span class="pre">M=csr_matrix((data,</span> <span class="pre">indices,</span> <span class="pre">indptr))</span></code> results in <code class="docutils literal notranslate"><span class="pre">int32</span></code> dtype for
+<code class="docutils literal notranslate"><span class="pre">M.indices</span></code> so long as the values in <code class="docutils literal notranslate"><span class="pre">indices</span></code> and <code class="docutils literal notranslate"><span class="pre">indptr</span></code> are small,
+even if the <code class="docutils literal notranslate"><span class="pre">dtype</span></code> of the incoming arrays are <code class="docutils literal notranslate"><span class="pre">int64</span></code>. In contrast,
+<code class="docutils literal notranslate"><span class="pre">A=csr_array((data,</span> <span class="pre">indices,</span> <span class="pre">indptr))</span></code> results in <code class="docutils literal notranslate"><span class="pre">int64</span></code> dtype for
+<code class="docutils literal notranslate"><span class="pre">A.indices</span></code> when the input arrays are <code class="docutils literal notranslate"><span class="pre">int64</span></code>. This provides more
+predictable, often larger, index dtypes in sparrays and less casting
+to match dtypes.</p></li>
+<li><p>Checking the sparse type and format:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">issparse(A)</span></code> returns <code class="docutils literal notranslate"><span class="pre">True</span></code> for any sparse array/matrix.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">isspmatrix(M)</span></code> returns <code class="docutils literal notranslate"><span class="pre">True</span></code> for any sparse matrix.
+A future proof idiom is <code class="docutils literal notranslate"><span class="pre">issparse(A)</span> <span class="pre">and</span> <span class="pre">not</span> <span class="pre">isinstance(A,</span> <span class="pre">sparray)</span></code></p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">isspmatrix*</span></code> helpers (e.g. <code class="docutils literal notranslate"><span class="pre">isspmatrix_csr</span></code>) are specific to
+the legacy spmatrix API and should be avoided.
+Use <code class="docutils literal notranslate"><span class="pre">issparse(A)</span> <span class="pre">and</span> <span class="pre">A.format</span> <span class="pre">==</span> <span class="pre">'csr'</span></code> instead.</p></li>
+</ul>
+</li>
+<li><p>Handling your software package API with sparse input/output:</p>
+<ul>
+<li><p>Inputs are fairly easy to make work with either spmatrix or sparray. So
+long as you use <code class="docutils literal notranslate"><span class="pre">A.multiply(B)</span></code> for elementwise and <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">&#64;</span> <span class="pre">B</span></code> for matrix
+multiplication, and you use <code class="docutils literal notranslate"><span class="pre">sparse.linalg.matrix_power</span></code> for matrix
+power, you should be fine after you complete the “first pass” of the
+migration steps described in the next section. Your code will handle
+both types of inputs interchangeably.</p></li>
+<li><p>Migrating sparse outputs from your functions requires a little more thought.
+Make a list of all your public functions that return spmatrix objects.
+Check whether you feel OK returning sparrays instead. That depends on
+your library and its users. If you want to allow these functions to
+continue to return spmatrix or sparray objects, you can often do that
+using a sparse input that also serves as a signal for what type of output
+should be returned. Design your function to return the type that was input.
+That approach can be extended to dense inputs. If the input is an np.matrix
+or a masked array with np.matrix as its <code class="docutils literal notranslate"><span class="pre">._baseclass</span></code> attribute, then
+return spmatrix. Otherwise return an sparray. Without those inputs, two
+other approaches are to create a keyword argument to signal which to return,
+or create a new function (like we have done with, e.g. <code class="docutils literal notranslate"><span class="pre">eye_array</span></code>) that
+has the same basic syntax, but returns sparray. Which method you choose
+should depend on your library and your users and your preferences.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="recommended-steps-for-migration">
+<h2>Recommended steps for migration<a class="headerlink" href="#recommended-steps-for-migration" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>First pass (leaving spmatrix in the code):</p>
+<ul>
+<li><p>In your spmatrix code, change <code class="docutils literal notranslate"><span class="pre">*</span></code> to <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> for matrix
+multiplication. Note that scalar multiplication with sparse should
+use <code class="docutils literal notranslate"><span class="pre">*</span></code>. (See helper-code <a class="reference internal" href="#sparse-migration-star-vs-at"><span class="std std-ref">Use tests to find * and ** spots</span></a> below)</p></li>
+<li><p>Matrix powers, e.g. <code class="docutils literal notranslate"><span class="pre">M**3</span></code>, should be converted to
+<code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.matrix_power(A,</span> <span class="pre">3)</span></code></p></li>
+<li><p>Implement alternatives to unsupported functions/methods like
+<code class="docutils literal notranslate"><span class="pre">A.getnnz()</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">A.nnz</span></code> (see <a class="reference internal" href="#sparse-migration-removed-methods"><span class="std std-ref">Removed methods and attributes</span></a>
+below).</p></li>
+<li><p>Change any logic regarding <code class="docutils literal notranslate"><span class="pre">issparse()</span></code> and <code class="docutils literal notranslate"><span class="pre">isspmatrix()</span></code> as
+needed. Usually, this means replacing <code class="docutils literal notranslate"><span class="pre">isspmatrix</span></code> with <code class="docutils literal notranslate"><span class="pre">issparse</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">isspmatrix_csr(G)</span></code> with <code class="docutils literal notranslate"><span class="pre">issparse(G)</span> <span class="pre">and</span> <span class="pre">G.format</span> <span class="pre">==</span> <span class="pre">&quot;csr&quot;</span></code>.
+If you need to see whether a sparse object is a sparray or spmatrix
+use <code class="docutils literal notranslate"><span class="pre">isinstance(G,</span> <span class="pre">sparray)</span></code>, or <code class="docutils literal notranslate"><span class="pre">issparse(G)</span> <span class="pre">and</span> <span class="pre">not</span> <span class="pre">isinstance(G,</span> <span class="pre">sparray)</span></code>
+Moreover <code class="docutils literal notranslate"><span class="pre">isspmatrix_csr(G)</span> <span class="pre">or</span> <span class="pre">isspmatrix_csc(G)</span></code> becomes
+<code class="docutils literal notranslate"><span class="pre">issparse(G)</span> <span class="pre">and</span> <span class="pre">G.format</span> <span class="pre">in</span> <span class="pre">['csr',</span> <span class="pre">'csc']</span></code>.
+The git search idiom <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">grep</span> <span class="pre">'isspm[a-z_]*('</span></code> can help find these.</p></li>
+<li><p>Convert all <code class="docutils literal notranslate"><span class="pre">spdiags</span></code> calls to <code class="docutils literal notranslate"><span class="pre">dia_matrix</span></code>.
+See docs in <a class="reference internal" href="generated/scipy.sparse.spdiags.html#scipy.sparse.spdiags" title="scipy.sparse.spdiags"><code class="xref py py-func docutils literal notranslate"><span class="pre">spdiags</span></code></a>.
+A search for <code class="docutils literal notranslate"><span class="pre">spdiags</span></code> is all you need here.</p></li>
+<li><p>Run all your tests on the resulting code. You are still using
+spmatrix, not sparray. But your code and tests are prepared for
+the change and you should be able to take sparrays as input to your
+code and have them mostly “just work”.</p></li>
+</ul>
+</li>
+<li><p>Second pass (switching to sparray):</p>
+<ul>
+<li><p>Convert construction functions like <code class="docutils literal notranslate"><span class="pre">diags</span></code> and <code class="docutils literal notranslate"><span class="pre">triu</span></code> to the
+array version (see <a class="reference internal" href="#sparse-migration-construction"><span class="std std-ref">Details: construction functions</span></a> below).</p></li>
+<li><p>Rename all <code class="docutils literal notranslate"><span class="pre">*_matrix</span></code> constructor calls to <code class="docutils literal notranslate"><span class="pre">*_array</span></code>.</p></li>
+<li><p>Check all functions/methods for which migration causes 1D return
+values. These are mostly indexing and the reduction functions
+(see <a class="reference internal" href="#sparse-migration-shapes-reductions"><span class="std std-ref">Details: shape changes and reductions</span></a> below).</p></li>
+<li><p>Check all places where you iterate over spmatrices and change them
+to account for the sparrays yielding 1D sparrays rather than 2D spmatrices.</p></li>
+<li><p>Find and change places where your code makes use of <code class="docutils literal notranslate"><span class="pre">np.matrix</span></code>
+features. Convert those to <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> features.</p></li>
+<li><p>If your code reads sparse from files with <code class="docutils literal notranslate"><span class="pre">mmread</span></code>, <code class="docutils literal notranslate"><span class="pre">hb_read</span></code>
+or <code class="docutils literal notranslate"><span class="pre">loadmat</span></code>, use the new keyword argument <code class="docutils literal notranslate"><span class="pre">spmatrix=False</span></code>
+in those functions to read to sparray.</p></li>
+<li><p>If you use sparse libraries that only accept <code class="docutils literal notranslate"><span class="pre">int32</span></code> index arrays
+for sparse representations, we suggest using just-in-time conversion.
+Convert to <code class="docutils literal notranslate"><span class="pre">int32</span></code> just before you call the code that requires <code class="docutils literal notranslate"><span class="pre">int32</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sparray</span></code> selects index dtype based on the dtype of the input array instead
+of the values in the array. So if you want your index arrays to be <code class="docutils literal notranslate"><span class="pre">int32</span></code>,
+you will need to ensure an <code class="docutils literal notranslate"><span class="pre">int32</span></code> dtype for each index array like <code class="docutils literal notranslate"><span class="pre">indptr</span></code>
+that you pass to <code class="docutils literal notranslate"><span class="pre">csr_array</span></code>. With <code class="docutils literal notranslate"><span class="pre">spmatrix</span></code> it is tempting to use the
+default int64 dtype for <code class="docutils literal notranslate"><span class="pre">numpy</span></code> arrays and rely on the sparse constructor
+to downcast if the values were small. But this downcasting leads to extra
+recasting when working with other matrices, slices or arithmetic expressions.
+For <code class="docutils literal notranslate"><span class="pre">sparray</span></code> you can still rely on the constructors to choose dtypes. But
+you are also given the power to choose your index dtype via the dtype of the
+incoming index arrays rather than their values. So, if you want <code class="docutils literal notranslate"><span class="pre">int32</span></code>,
+set the dtype, e.g. <code class="docutils literal notranslate"><span class="pre">indices</span> <span class="pre">=</span> <span class="pre">np.array([1,3,6],</span> <span class="pre">dtype=np.int32)</span></code> or
+<code class="docutils literal notranslate"><span class="pre">indptr</span> <span class="pre">=</span> <span class="pre">np.arange(9,</span> <span class="pre">dtype=np.int32)</span></code>, when creating the index arrays.
+See <a class="reference internal" href="#sparse-migration-index-array-dtypes"><span class="std std-ref">Index Array DTypes</span></a> below for more info.
+In many settings, the index array dtype isn’t crucial and you can just let
+the constructors choose the dtype for both sparray and spmatrix.</p></li>
+<li><p>Test your code. And <strong>read</strong> your code. You have migrated to sparray.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="details-construction-functions">
+<span id="sparse-migration-construction"></span><h2>Details: construction functions<a class="headerlink" href="#details-construction-functions" title="Link to this heading">#</a></h2>
+<p>These four functions are new and only handle sparrays:
+<a class="reference internal" href="generated/scipy.sparse.block_array.html#scipy.sparse.block_array" title="scipy.sparse.block_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">block_array</span></code></a>, <a class="reference internal" href="generated/scipy.sparse.diags_array.html#scipy.sparse.diags_array" title="scipy.sparse.diags_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">diags_array</span></code></a>,
+<a class="reference internal" href="generated/scipy.sparse.eye_array.html#scipy.sparse.eye_array" title="scipy.sparse.eye_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">eye_array</span></code></a>, and <a class="reference internal" href="generated/scipy.sparse.random_array.html#scipy.sparse.random_array" title="scipy.sparse.random_array"><code class="xref py py-func docutils literal notranslate"><span class="pre">random_array</span></code></a>.
+Their signatures are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">block_array</span><span class="p">(</span><span class="n">blocks</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">diags_array</span><span class="p">(</span><span class="n">diagonals</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">offsets</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">eye_array</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">random_array</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;coo&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_sampler</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">random_array</span></code> function has a <code class="docutils literal notranslate"><span class="pre">shape</span></code> (2-tuple) arg rather than
+two integers. And the <code class="docutils literal notranslate"><span class="pre">rng</span></code> arg defaults to NumPy’s new <code class="docutils literal notranslate"><span class="pre">default_rng()</span></code>.
+This differs from the spmatrix <code class="docutils literal notranslate"><span class="pre">rand</span></code> and <code class="docutils literal notranslate"><span class="pre">random</span></code> which default to
+the global RandomState instance. If you don’t care much about these things,
+leaving it as the default should work fine.  If you care about seeding your
+random numbers, you should probably add a <code class="docutils literal notranslate"><span class="pre">rng=...</span></code> keyword argument
+to this call when you switch functions. In summary, to migrate to <code class="docutils literal notranslate"><span class="pre">random_array</span></code>
+change the function name, switch the shape argument to a single tuple argument,
+leave any other parameters as before, and think about what
+sort of <code class="docutils literal notranslate"><span class="pre">rng=</span></code> argument should be used, if any.</p>
+<p>The <em class="xref py py-obj">diags_array</em> function uses keyword-only rules for arguments. So you have
+to type the <em class="xref py py-obj">offsets=</em> in front of the offsets arguments. That seems like a pain
+during migration from using <em class="xref py py-obj">diags</em>, but it helps avoid confusion and eases reading.
+A single shape parameter replaces two integers for this migration as well.</p>
+<section id="existing-functions-that-need-careful-migration">
+<h3>Existing functions that need careful migration<a class="headerlink" href="#existing-functions-that-need-careful-migration" title="Link to this heading">#</a></h3>
+<p>These functions return sparray or spmatrix, depending on the input types they
+receive: <a class="reference internal" href="generated/scipy.sparse.kron.html#scipy.sparse.kron" title="scipy.sparse.kron"><code class="xref py py-func docutils literal notranslate"><span class="pre">kron</span></code></a>, <a class="reference internal" href="generated/scipy.sparse.kronsum.html#scipy.sparse.kronsum" title="scipy.sparse.kronsum"><code class="xref py py-func docutils literal notranslate"><span class="pre">kronsum</span></code></a>,
+<a class="reference internal" href="generated/scipy.sparse.hstack.html#scipy.sparse.hstack" title="scipy.sparse.hstack"><code class="xref py py-func docutils literal notranslate"><span class="pre">hstack</span></code></a>, <a class="reference internal" href="generated/scipy.sparse.vstack.html#scipy.sparse.vstack" title="scipy.sparse.vstack"><code class="xref py py-func docutils literal notranslate"><span class="pre">vstack</span></code></a>,
+<a class="reference internal" href="generated/scipy.sparse.block_diag.html#scipy.sparse.block_diag" title="scipy.sparse.block_diag"><code class="xref py py-func docutils literal notranslate"><span class="pre">block_diag</span></code></a>, <a class="reference internal" href="generated/scipy.sparse.tril.html#scipy.sparse.tril" title="scipy.sparse.tril"><code class="xref py py-func docutils literal notranslate"><span class="pre">tril</span></code></a>, and
+<a class="reference internal" href="generated/scipy.sparse.triu.html#scipy.sparse.triu" title="scipy.sparse.triu"><code class="xref py py-func docutils literal notranslate"><span class="pre">triu</span></code></a>. Their signatures are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">kron</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">kronsum</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hstack</span><span class="p">(</span><span class="n">blocks</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">vstack</span><span class="p">(</span><span class="n">blocks</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">block_diag</span><span class="p">(</span><span class="n">mats</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">tril</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">triu</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>Use of these functions should be examined and inputs adjusted to ensure return
+values are sparrays. And in turn the outputs should be treated as sparrays.
+To return sparrays, at least one input must be an sparray. If you use
+list-of-lists or numpy arrays as input you should convert one of them
+to a sparse array to get sparse arrays out.</p>
+</section>
+<section id="functions-that-changed-names-for-the-migration">
+<h3>Functions that changed names for the migration<a class="headerlink" href="#functions-that-changed-names-for-the-migration" title="Link to this heading">#</a></h3>
+<blockquote>
+<div><div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>New function</p></th>
+<th class="head"><p>Comments</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>eye</p></td>
+<td><p>eye_array</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>identity</p></td>
+<td><p>eye_array</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>diags</p></td>
+<td><p>diags_array</p></td>
+<td><p>keyword-only input</p></td>
+</tr>
+<tr class="row-odd"><td><p>spdiags</p></td>
+<td><p>dia_array</p></td>
+<td><p>shape as 2-tuple</p></td>
+</tr>
+<tr class="row-even"><td><p>bmat</p></td>
+<td><p>block</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>rand</p></td>
+<td><p>random_array</p></td>
+<td><p>shape as 2-tuple and default_rng</p></td>
+</tr>
+<tr class="row-even"><td><p>random</p></td>
+<td><p>random_array</p></td>
+<td><p>shape as 2-tuple and default_rng</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div></blockquote>
+</section>
+</section>
+<section id="details-shape-changes-and-reductions">
+<span id="sparse-migration-shapes-reductions"></span><h2>Details: shape changes and reductions<a class="headerlink" href="#details-shape-changes-and-reductions" title="Link to this heading">#</a></h2>
+<ul>
+<li><p>Construction using 1d-list of values:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">csr_array([1,</span> <span class="pre">2,</span> <span class="pre">3]).shape</span> <span class="pre">==</span> <span class="pre">(3,)</span></code> 1D input makes a 1D array.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">csr_matrix([1,</span> <span class="pre">2,</span> <span class="pre">3]).shape</span> <span class="pre">==</span> <span class="pre">(1,</span> <span class="pre">3)</span></code> 1D input makes a 2D matrix.</p></li>
+</ul>
+</li>
+<li><p>Indexing and iteration:</p>
+<ul class="simple">
+<li><p>Indexing of sparray allows 1D objects which can be made 2D using
+<code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>. E.g., <code class="docutils literal notranslate"><span class="pre">A[3,</span> <span class="pre">None,</span> <span class="pre">:]</span></code> gives a 2D
+row. Indexing of 2D sparray with implicit (not given) column index
+gives a 1D result, e.g. <code class="docutils literal notranslate"><span class="pre">A[3]</span></code> (note: best not to do this - write it as
+<code class="docutils literal notranslate"><span class="pre">A[3,</span> <span class="pre">:]</span></code> instead). If you need a 2D result, use <code class="docutils literal notranslate"><span class="pre">np.newaxis</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">None</span></code> in your index, or wrap the integer index as a list for which
+fancy indexing gives 2D, e.g. <code class="docutils literal notranslate"><span class="pre">A[[3],</span> <span class="pre">:]</span></code>.</p></li>
+<li><p>Iteration over sparse object: <code class="docutils literal notranslate"><span class="pre">next(M)</span></code> yields a sparse 2D row matrix,
+<code class="docutils literal notranslate"><span class="pre">next(A)</span></code> yields a sparse 1D array.</p></li>
+</ul>
+</li>
+<li><p>Reduction operations along an axis reduce the shape:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">M.min(axis=1)</span></code> returns a 2D row matrix of the min along axis 1.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">A.min(axis=1)</span></code> returns a 1D <code class="docutils literal notranslate"><span class="pre">coo_array</span></code> of the min along axis 1.
+Some reductions return dense arrays/matrices instead of sparse ones:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Result</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>sum(axis)</p></td>
+<td><p>dense</p></td>
+</tr>
+<tr class="row-odd"><td><p>mean(axis)</p></td>
+<td><p>dense</p></td>
+</tr>
+<tr class="row-even"><td><p>argmin(axis)</p></td>
+<td><p>dense</p></td>
+</tr>
+<tr class="row-odd"><td><p>argmax(axis)</p></td>
+<td><p>dense</p></td>
+</tr>
+<tr class="row-even"><td><p>min(axis)</p></td>
+<td><p>sparse</p></td>
+</tr>
+<tr class="row-odd"><td><p>max(axis)</p></td>
+<td><p>sparse</p></td>
+</tr>
+<tr class="row-even"><td><p>nanmin(axis)</p></td>
+<td><p>sparse</p></td>
+</tr>
+<tr class="row-odd"><td><p>nanmax(axis)</p></td>
+<td><p>sparse</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+</ul>
+<p>Generally, 2D sparray inputs lead to 1D results. 2D spmatrix
+inputs lead to 2D results.</p>
+</li>
+<li><p>Some reductions return a scalar. Those should behave as they did
+before and shouldn’t need to be considered during migration. E.g.
+<code class="docutils literal notranslate"><span class="pre">A.min()</span></code></p></li>
+</ul>
+</section>
+<section id="removed-methods-and-attributes">
+<span id="sparse-migration-removed-methods"></span><h2>Removed methods and attributes<a class="headerlink" href="#removed-methods-and-attributes" title="Link to this heading">#</a></h2>
+<ul>
+<li><p>The methods <code class="docutils literal notranslate"><span class="pre">get_shape</span></code>, <code class="docutils literal notranslate"><span class="pre">getrow</span></code>, <code class="docutils literal notranslate"><span class="pre">getcol</span></code>, <code class="docutils literal notranslate"><span class="pre">asfptype</span></code>, <code class="docutils literal notranslate"><span class="pre">getnnz</span></code>,
+<code class="docutils literal notranslate"><span class="pre">getH</span></code> and the attributes <code class="docutils literal notranslate"><span class="pre">.A</span></code> and <code class="docutils literal notranslate"><span class="pre">.H</span></code> are only present on spmatrices,
+not sparrays. It is recommended that you replace usage of them with
+alternatives before starting the shift to sparray.</p>
+<blockquote>
+<div><div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Alternative</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>M.get_shape()</p></td>
+<td><p>A.shape</p></td>
+</tr>
+<tr class="row-odd"><td><p>M.getformat()</p></td>
+<td><p>A.format</p></td>
+</tr>
+<tr class="row-even"><td><p>M.asfptype(…)</p></td>
+<td><p>A.astype(…)</p></td>
+</tr>
+<tr class="row-odd"><td><p>M.getmaxprint()</p></td>
+<td><p>A.maxprint</p></td>
+</tr>
+<tr class="row-even"><td><p>M.getnnz()</p></td>
+<td><p>A.nnz</p></td>
+</tr>
+<tr class="row-odd"><td><p>M.getnnz(axis)</p></td>
+<td><p>A.count_nonzero(axis)</p></td>
+</tr>
+<tr class="row-even"><td><p>M.getH()</p></td>
+<td><p>A.conj().T</p></td>
+</tr>
+<tr class="row-odd"><td><p>M.getrow(i)</p></td>
+<td><p>A[i, :]</p></td>
+</tr>
+<tr class="row-even"><td><p>M.getcol(j)</p></td>
+<td><p>A[:, j]</p></td>
+</tr>
+<tr class="row-odd"><td><p>M.A</p></td>
+<td><p>A.toarray()</p></td>
+</tr>
+<tr class="row-even"><td><p>M.H</p></td>
+<td><p>A.conj().T</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div></blockquote>
+</li>
+<li><p>Shape assignment (<code class="docutils literal notranslate"><span class="pre">M.shape</span> <span class="pre">=</span> <span class="pre">(2,</span> <span class="pre">6)</span></code>) is not permitted for sparray.
+Instead you should use <code class="docutils literal notranslate"><span class="pre">A.reshape</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">M.getnnz()</span></code> returns the number of stored values – not the number
+of non-zeros. <code class="docutils literal notranslate"><span class="pre">A.nnz</span></code> does the same. To get the number of
+non-zeros, use <code class="docutils literal notranslate"><span class="pre">A.count_nonzero()</span></code>. This is not new to the
+migration, but can be confusing.</p>
+<p>To migrate from the <code class="docutils literal notranslate"><span class="pre">axis</span></code> parameter of <code class="docutils literal notranslate"><span class="pre">M.getnnz(axis=...)</span></code>,
+you can use <code class="docutils literal notranslate"><span class="pre">A.count_nonzero(axis=...)</span></code>
+but it is not an exact replacement because it counts nonzero
+values instead of stored values. The difference is the number
+of explicitly stored zero values. If you really want the number
+of stored values by axis you will need to use some numpy tools.</p>
+<p>The numpy tools approach works for COO, CSR, CSC formats, so convert
+to one of them. For CSR and CSC, the major axis is compressed and
+<code class="docutils literal notranslate"><span class="pre">np.diff(A.indptr)</span></code> returns a dense 1D array with the number of
+stored values for each major axis value (row for CSR and column
+for CSC). The minor axes can be computed using
+<code class="docutils literal notranslate"><span class="pre">np.bincount(A.indices,</span> <span class="pre">minlength=N)</span></code> where <code class="docutils literal notranslate"><span class="pre">N</span></code> is the length
+of the minor axis (e.g. <code class="docutils literal notranslate"><span class="pre">A.shape[1]</span></code> for CSR). The <code class="docutils literal notranslate"><span class="pre">bincount</span></code>
+function works for any axis of COO format using <code class="docutils literal notranslate"><span class="pre">A.coords[axis]</span></code>
+in place of <code class="docutils literal notranslate"><span class="pre">A.indices</span></code>.</p>
+</li>
+</ul>
+</section>
+<section id="use-tests-to-find-and-spots">
+<span id="sparse-migration-star-vs-at"></span><h2>Use tests to find * and ** spots<a class="headerlink" href="#use-tests-to-find-and-spots" title="Link to this heading">#</a></h2>
+<ul>
+<li><p>It can be tricky to distinguish scalar multiplication <code class="docutils literal notranslate"><span class="pre">*</span></code> from
+matrix multiplciation <code class="docutils literal notranslate"><span class="pre">*</span></code> as you migrate your code. Python solved
+this, in theory, by introducing the matrix multiplication operator
+<code class="docutils literal notranslate"><span class="pre">&#64;</span></code>. <code class="docutils literal notranslate"><span class="pre">*</span></code> is used for scalar multiplication while <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> for matrix
+multiplication. But converting expressions that use <code class="docutils literal notranslate"><span class="pre">*</span></code> for both
+can be tricky and cause eye strain. Luckily, if your code has a
+test suite that covers the expressions you need to convert, you
+can use it to find places where <code class="docutils literal notranslate"><span class="pre">*</span></code> is being used for matrix
+multiplication involving sparse matrices. Change those to <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>.</p>
+<p>The approach monkey-patches the spmatrix class dunder methods
+to raise an exception when <code class="docutils literal notranslate"><span class="pre">*</span></code> is used for matrix multiplication
+(and not raise for scalar multiplication). The test suite will
+flag a failure at these locations. And a test failure is a success
+here because it shows where to make changes. Change the offending
+<code class="docutils literal notranslate"><span class="pre">*</span></code> to <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>, look nearby for other similar changes, and run the
+tests again. Similarly, this approach helps find where <code class="docutils literal notranslate"><span class="pre">**</span></code> is
+used for matrix power. SciPy raises an exception when <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> is
+used with for scalar multiplication, so that will catch places where
+you change when you shouldn’t have. So the test suite with this
+monkey-patch checks the corrections too.</p>
+<p>Add the following code to your <code class="docutils literal notranslate"><span class="pre">conftest.py</span></code> file.
+Then run your tests locally. If there are many matrix expressions,
+you might want to test one section of your codebase at a time.
+A quick read of the code shows that it raises a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> whenever
+<code class="docutils literal notranslate"><span class="pre">*</span></code> is used between two matrix-like objects (sparse or dense),
+and whenever <code class="docutils literal notranslate"><span class="pre">**</span></code> is used for matrix power. It also produces a warning
+whenever sum/mean/min/max/argmin/argmax are used with an axis so the
+output will be 2D with spmatrix and 1D with sparray. That means you
+check that the code will handle either 1D or 2D output via
+<code class="docutils literal notranslate"><span class="pre">flatten</span></code>/<code class="docutils literal notranslate"><span class="pre">ravel</span></code>, <code class="docutils literal notranslate"><span class="pre">np.atleast_2d</span></code> or indexing.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#================== Added to check spmatrix usage ========================</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">warnings</span><span class="w"> </span><span class="kn">import</span> <span class="n">warn</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">flag_this_call</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Old spmatrix function names for rand/spdiags called&quot;</span><span class="p">)</span>
+
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_construct</span><span class="o">.</span><span class="n">rand</span> <span class="o">=</span> <span class="n">flag_this_call</span>
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_construct</span><span class="o">.</span><span class="n">spdiags</span> <span class="o">=</span> <span class="n">flag_this_call</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_strict_mul_mixin</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_sputils</span><span class="o">.</span><span class="n">isscalarlike</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Operator * used here! Change to @?&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__mul__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_sputils</span><span class="o">.</span><span class="n">isscalarlike</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Operator * used here! Change to @?&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__rmul__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_sputils</span><span class="o">.</span><span class="n">isscalarlike</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Operator * used here! Change to @?&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__imul__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;spmatrix ** found! Use linalg.matrix_power?&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">A</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;spmatrix A property found! Use .toarray()&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">H</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;spmatrix H property found! Use .conjugate().T&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">asfptype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;spmatrix asfptype found! rewrite needed&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;spmatrix get_shape found! Use .shape&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">getformat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;spmatrix getformat found! Use .format&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">getmaxprint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;spmatrix getmaxprint found! Use .shape&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">getnnz</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;spmatrix getnnz found! Use .nnz&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">getH</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;spmatrix getH found! Use .conjugate().T&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">getrow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;spmatrix getrow found! Use .row&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">getcol</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;spmatrix getcol found! Use .col&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span> <span class="k">else</span> <span class="n">args</span> <span class="k">if</span> <span class="n">args</span> <span class="k">else</span> <span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;axis&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">MIGRATION WARNING: spmatrix sum found using axis=</span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s2">. &quot;</span>
+                 <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">sparray with a single axis will produce 1D output. &quot;</span>
+                 <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Check nearby to ensure 1D output is handled OK in this spot.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">args</span><span class="si">=}</span><span class="s2"> </span><span class="si">{</span><span class="n">axis</span><span class="si">=}</span><span class="s2"> </span><span class="si">{</span><span class="n">kwds</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">mean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span> <span class="k">else</span> <span class="n">args</span> <span class="k">if</span> <span class="n">args</span> <span class="k">else</span> <span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;axis&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">MIGRATION WARNING: spmatrix mean found using axis=</span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s2">.&quot;</span>
+                 <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">sparray with a single axis will produce 1D output.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                 <span class="s2">&quot;Check nearby to ensure 1D output is handled OK in this spot.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">min</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span> <span class="k">else</span> <span class="n">args</span> <span class="k">if</span> <span class="n">args</span> <span class="k">else</span> <span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;axis&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">MIGRATION WARNING: spmatrix min found using axis=</span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s2">.&quot;</span>
+                 <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">sparray with a single axis will produce 1D output. &quot;</span>
+                 <span class="s2">&quot;Check nearby to ensure 1D output is handled OK in this spot.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span> <span class="k">else</span> <span class="n">args</span> <span class="k">if</span> <span class="n">args</span> <span class="k">else</span> <span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;axis&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">MIGRATION WARNING: spmatrix max found using axis=</span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s2">.&quot;</span>
+                 <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">sparray with a single axis will produce 1D output. &quot;</span>
+                 <span class="s2">&quot;Check nearby to ensure 1D output is handled OK in this spot.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">argmin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span> <span class="k">else</span> <span class="n">args</span> <span class="k">if</span> <span class="n">args</span> <span class="k">else</span> <span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;axis&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">MIGRATION WARNING: spmatrix argmin found using axis=</span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s2">.&quot;</span>
+                 <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">sparray with a single axis will produce 1D output. &quot;</span>
+                 <span class="s2">&quot;Check nearby to ensure 1D output is handled OK in this spot.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">argmax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="n">axis</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span> <span class="k">else</span> <span class="n">args</span> <span class="k">if</span> <span class="n">args</span> <span class="k">else</span> <span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;axis&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">MIGRATION WARNING: spmatrix argmax found using axis=</span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s2">.&quot;</span>
+                 <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">sparray with a single axis will produce 1D output. &quot;</span>
+                 <span class="s2">&quot;Check nearby to ensure 1D output is handled OK in this spot.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">coo_matrix_strict</span><span class="p">(</span><span class="n">_strict_mul_mixin</span><span class="p">,</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">bsr_matrix_strict</span><span class="p">(</span><span class="n">_strict_mul_mixin</span><span class="p">,</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">bsr_matrix</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">csr_matrix_strict</span><span class="p">(</span><span class="n">_strict_mul_mixin</span><span class="p">,</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">csc_matrix_strict</span><span class="p">(</span><span class="n">_strict_mul_mixin</span><span class="p">,</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">csc_matrix</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">dok_matrix_strict</span><span class="p">(</span><span class="n">_strict_mul_mixin</span><span class="p">,</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">dok_matrix</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">lil_matrix_strict</span><span class="p">(</span><span class="n">_strict_mul_mixin</span><span class="p">,</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">lil_matrix</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">dia_matrix_strict</span><span class="p">(</span><span class="n">_strict_mul_mixin</span><span class="p">,</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">dia_matrix</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">coo_matrix</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_coo</span><span class="o">.</span><span class="n">coo_matrix</span> <span class="o">=</span> <span class="n">coo_matrix_strict</span>
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">bsr_matrix</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_bsr</span><span class="o">.</span><span class="n">bsr_matrix</span> <span class="o">=</span> <span class="n">bsr_matrix_strict</span>
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">csr_matrix</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_csr</span><span class="o">.</span><span class="n">csr_matrix</span> <span class="o">=</span> <span class="n">csr_matrix_strict</span>
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">csc_matrix</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_csc</span><span class="o">.</span><span class="n">csc_matrix</span> <span class="o">=</span> <span class="n">csc_matrix_strict</span>
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">dok_matrix</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_dok</span><span class="o">.</span><span class="n">dok_matrix</span> <span class="o">=</span> <span class="n">dok_matrix_strict</span>
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">lil_matrix</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_lil</span><span class="o">.</span><span class="n">lil_matrix</span> <span class="o">=</span> <span class="n">lil_matrix_strict</span>
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">dia_matrix</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_dia</span><span class="o">.</span><span class="n">dia_matrix</span> <span class="o">=</span> <span class="n">dia_matrix_strict</span>
+
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_compressed</span><span class="o">.</span><span class="n">csr_matrix</span> <span class="o">=</span> <span class="n">csr_matrix_strict</span>
+
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_construct</span><span class="o">.</span><span class="n">bsr_matrix</span> <span class="o">=</span> <span class="n">bsr_matrix_strict</span>
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_construct</span><span class="o">.</span><span class="n">coo_matrix</span> <span class="o">=</span> <span class="n">coo_matrix_strict</span>
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_construct</span><span class="o">.</span><span class="n">csc_matrix</span> <span class="o">=</span> <span class="n">csc_matrix_strict</span>
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_construct</span><span class="o">.</span><span class="n">csr_matrix</span> <span class="o">=</span> <span class="n">csr_matrix_strict</span>
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_construct</span><span class="o">.</span><span class="n">dia_matrix</span> <span class="o">=</span> <span class="n">dia_matrix_strict</span>
+
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_extract</span><span class="o">.</span><span class="n">coo_matrix</span> <span class="o">=</span> <span class="n">coo_matrix_strict</span>
+
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_matrix</span><span class="o">.</span><span class="n">bsr_matrix</span> <span class="o">=</span> <span class="n">bsr_matrix_strict</span>
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_matrix</span><span class="o">.</span><span class="n">coo_matrix</span> <span class="o">=</span> <span class="n">coo_matrix_strict</span>
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_matrix</span><span class="o">.</span><span class="n">csc_matrix</span> <span class="o">=</span> <span class="n">csc_matrix_strict</span>
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_matrix</span><span class="o">.</span><span class="n">csr_matrix</span> <span class="o">=</span> <span class="n">csr_matrix_strict</span>
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_matrix</span><span class="o">.</span><span class="n">dia_matrix</span> <span class="o">=</span> <span class="n">dia_matrix_strict</span>
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_matrix</span><span class="o">.</span><span class="n">dok_matrix</span> <span class="o">=</span> <span class="n">dok_matrix_strict</span>
+<span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">_matrix</span><span class="o">.</span><span class="n">lil_matrix</span> <span class="o">=</span> <span class="n">lil_matrix_strict</span>
+
+<span class="k">del</span> <span class="n">coo_matrix_strict</span>
+<span class="k">del</span> <span class="n">bsr_matrix_strict</span>
+<span class="k">del</span> <span class="n">csr_matrix_strict</span>
+<span class="k">del</span> <span class="n">csc_matrix_strict</span>
+<span class="k">del</span> <span class="n">dok_matrix_strict</span>
+<span class="k">del</span> <span class="n">lil_matrix_strict</span>
+<span class="k">del</span> <span class="n">dia_matrix_strict</span>
+<span class="c1">#==========================================</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="index-array-dtypes">
+<span id="sparse-migration-index-array-dtypes"></span><h2>Index Array DTypes<a class="headerlink" href="#index-array-dtypes" title="Link to this heading">#</a></h2>
+<p>If you provide compressed indices to a constructor,
+e.g. <code class="docutils literal notranslate"><span class="pre">csr_array((data,</span> <span class="pre">indices,</span> <span class="pre">indptr))</span></code> sparse arrays set the index
+dtype by only checking the index arrays dtype, while sparse matrices check the
+index values too and may downcast to int32
+(see <a class="reference external" href="https://github.com/scipy/scipy/pull/18509">gh-18509</a> for more details).
+This means you may get int64 indexing when you used to get int32.
+You can control this by setting the <code class="docutils literal notranslate"><span class="pre">dtype</span></code> before instantiating, or by
+recasting after construction.</p>
+<p>Two sparse utility functions can help with handling the index dtype.
+Use <code class="docutils literal notranslate"><span class="pre">get_index_dtype(arrays,</span> <span class="pre">maxval,</span> <span class="pre">check_contents)</span></code> while creating indices
+to find an appropriate dtype (int32 or int64) to use for your compressed indices.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">safely_cast_index_arrays(A,</span> <span class="pre">idx_dtype)</span></code> for recasting after construction,
+while making sure you con’t create overflows during downcasting.
+This function doesn’t actually change the input array. The cast arrays are returned.
+And copies are only made when needed. So you can check if casting was done using
+<code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">indices</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">A.indices:</span></code></p>
+<p>The function signatures are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_index_dtype</span><span class="p">(</span><span class="n">arrays</span><span class="o">=</span><span class="p">(),</span> <span class="n">maxval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">check_contents</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">safely_cast_index_arrays</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">idx_dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>Example idioms include the following for <code class="docutils literal notranslate"><span class="pre">get_index_dtype</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">code</span><span class="o">-</span><span class="n">block</span><span class="p">::</span> <span class="n">python</span>
+
+    <span class="c1"># select index dtype before construction based on shape</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">idx_dtype</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">get_index_dtype</span><span class="p">(</span><span class="n">maxval</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">shape</span><span class="p">))</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">idx_dtype</span><span class="p">)</span>
+    <span class="n">indptr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">idx_dtype</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">csr_array</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">indptr</span><span class="p">),</span> <span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and for <code class="docutils literal notranslate"><span class="pre">safely_cast_index_arrays</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">code</span><span class="o">-</span><span class="n">block</span><span class="p">::</span> <span class="n">python</span>
+
+    <span class="c1"># rescast after construction, raising exception if shape too big</span>
+    <span class="n">indices</span><span class="p">,</span> <span class="n">indptr</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">safely_cast_index_arrays</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+    <span class="n">B</span><span class="o">.</span><span class="n">indices</span><span class="p">,</span> <span class="n">B</span><span class="o">.</span><span class="n">indptr</span> <span class="o">=</span> <span class="n">indices</span><span class="p">,</span> <span class="n">indptr</span>
+</pre></div>
+</div>
+</section>
+<section id="other">
+<h2>Other<a class="headerlink" href="#other" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Binary operators <code class="docutils literal notranslate"><span class="pre">+,</span> <span class="pre">-,</span> <span class="pre">*,</span> <span class="pre">/,</span> <span class="pre">&#64;,</span> <span class="pre">!=,</span> <span class="pre">&gt;</span></code> act on sparse and/or dense operands:</p>
+<ul>
+<li><p>If all inputs are sparse, the output is usually sparse as well. The
+exception being <code class="docutils literal notranslate"><span class="pre">/</span></code> which returns dense (dividing by the default
+value <code class="docutils literal notranslate"><span class="pre">0</span></code> is <code class="docutils literal notranslate"><span class="pre">nan</span></code>).</p></li>
+<li><p>If inputs are mixed sparse and dense, the result is usually dense
+(i.e., <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code>). Exceptions are <code class="docutils literal notranslate"><span class="pre">*</span></code> which is sparse, and <code class="docutils literal notranslate"><span class="pre">/</span></code>
+which is not implemented for <code class="docutils literal notranslate"><span class="pre">dense</span> <span class="pre">/</span> <span class="pre">sparse</span></code>, and returns sparse for
+<code class="docutils literal notranslate"><span class="pre">sparse</span> <span class="pre">/</span> <span class="pre">dense</span></code>.</p></li>
+</ul>
+</li>
+<li><p>Binary operators <code class="docutils literal notranslate"><span class="pre">+,</span> <span class="pre">-,</span> <span class="pre">*,</span> <span class="pre">/,</span> <span class="pre">&#64;,</span> <span class="pre">!=,</span> <span class="pre">&gt;</span></code> with array and/or matrix operands:</p>
+<ul>
+<li><p>If all inputs are arrays, the outputs are arrays and the same is true for
+matrices.</p></li>
+<li><p>When mixing sparse arrays with sparse matrices, the leading operand
+provides the type for the output, e.g. <code class="docutils literal notranslate"><span class="pre">sparray</span> <span class="pre">+</span> <span class="pre">spmatrix</span></code> gives a
+sparse array while reversing the order gives a sparse matrix.</p></li>
+<li><p>When mixing dense matrices with sparse arrays, the results are usually
+arrays with exceptions for comparisons, e.g. <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> which return dense
+matrices.</p></li>
+<li><p>When mixing dense arrays with sparse matrices, the results are usually
+matrices with an exception for <code class="docutils literal notranslate"><span class="pre">array</span> <span class="pre">&#64;</span> <span class="pre">sparse</span> <span class="pre">matrix</span></code> which returns a
+dense array.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="generated/scipy.sparse.linalg.ArpackError.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">scipy.sparse.linalg.ArpackError</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="sparse.spmatrix_api.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Sparse Matrix Legacy Interface (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview-and-big-picture">Overview and big picture</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-steps-for-migration">Recommended steps for migration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#details-construction-functions">Details: construction functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#existing-functions-that-need-careful-migration">Existing functions that need careful migration</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#functions-that-changed-names-for-the-migration">Functions that changed names for the migration</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#details-shape-changes-and-reductions">Details: shape changes and reductions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#removed-methods-and-attributes">Removed methods and attributes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-tests-to-find-and-spots">Use tests to find * and ** spots</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#index-array-dtypes">Index Array DTypes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other">Other</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

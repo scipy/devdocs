@@ -1,0 +1,1149 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Filling an image from a border &#8212; SciPy v2.0.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=8ee2c72c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=242cf5df" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=d74cf641"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=96e329c5"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorial/interpolate/2D_fill_from_border';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script defer="defer" src="../../_static/custom-icons.js?v=6cff5f5c"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="File IO (scipy.io)" href="../io.html" />
+    <link rel="prev" title="interp2d transition guide" href="interp_transition_guide.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="2.0.0.dev" />
+    <meta name="docbuild:last-update" content="Sep 05, 2026"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discuss.scientific-python.org/c/contributor/scipy/" title="Scientific Python Forum" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-SciPy_Forum fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Scientific Python Forum</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discuss.scientific-python.org/c/contributor/scipy/" title="Scientific Python Forum" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-SciPy_Forum fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Scientific Python Forum</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">Discrete Fourier Transforms (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.fft</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">Integration (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.integrate</span></code>)</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../interpolate.html">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">File IO (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.io</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">Linear Algebra (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">Multidimensional Image Processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">Optimization (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">Signal Processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">Sparse Arrays (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">Spatial Data Structures and Algorithms (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">Special Functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.special</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arpack.html">Sparse eigenvalue problems with ARPACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csgraph.html">Compressed Sparse Graph Routines (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.csgraph</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parallel_execution.html">Parallel execution support in SciPy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../thread_safety.html">Thread Safety in SciPy</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy User Guide</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../interpolate.html" class="nav-link">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Filling an image from a border</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="filling-an-image-from-a-border">
+<span id="tutorial-interpolate-2dfillfromborder"></span><h1>Filling an image from a border<a class="headerlink" href="#filling-an-image-from-a-border" title="Link to this heading">#</a></h1>
+<p>Suppose we have values for a function only on the border of a region,
+and we want to extend this function into the interior of the region.
+We might do this to estimate the background of a microscope image from
+the parts not covered by the sample, or as part of a boundary-value
+problem.  As a concrete example, consider the estimation of the
+(possibly uneven) background illumination on a microscope slide from
+the edge of the image, away from the specimen.  We might not have a
+model for how the function behaves in the interior of the region, so
+we must either make assumptions about that behavior or turn to
+interpolation.  Naturally, different assumptions about the function’s
+behavior on the interior of the region and different interpolation
+methods will yield different estimates of the function’s value in the
+region.  This tutorial explores many interpolation methods and a few
+assumptions to show the effects on behavior.</p>
+<p>As a concrete example, consider a square with sides of length
+<span class="math notranslate nohighlight">\(L\)</span>, with function values on the boundary given by</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{cases}
+\sin(6\pi x/L), &amp;y = 0 \text{ or } y = L \\
+\sin(6\pi y/L), &amp;x = 0 \text{ or } x = L
+\end{cases}\end{split}\]</div>
+<p>That is, a sine wave with three full periods on each side, identical
+on opposite sides of the square.</p>
+<section id="analytic-solutions">
+<h2>Analytic solutions<a class="headerlink" href="#analytic-solutions" title="Link to this heading">#</a></h2>
+<p>With this simple boundary condition, we can find a few analytic
+solutions as a baseline.</p>
+<p>On noting that each boundary condition is zero when the respective
+coordinate is zero or L and the boundary conditions on opposite sides
+of the square are the same, we can find one solution by adding the two
+boundary conditions together:</p>
+<div class="math notranslate nohighlight">
+\[\sin(6\pi x/L) + \sin(6\pi y/L)\]</div>
+<p>Since the sine is two-pi periodic and the boundary conditions reverse
+sign at opposite corners, we may also find a solution by summing the
+coordinates before taking the sine:</p>
+<div class="math notranslate nohighlight">
+\[\sin(6\pi (x+y)/L)\]</div>
+<p>Another option is the solution to the Laplace equation.  The Laplace equation is</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2} = 0.\]</div>
+<p>Solutions to the Laplace equation are such that each point has a value
+close to the mean of the values of the points around it.  As a result,
+solutions to the Laplace equation have no extrema in the interior of
+the region in which they are defined.</p>
+<p>We could build an iterative solver based on this property, or we could
+remember some complementary properties of the circular and hyperbolic
+trigonometric functions and verify that the following satisfies the
+Laplace equation:</p>
+<div class="math notranslate nohighlight">
+\[[\sin(6\pi x/L) \cosh(6\pi (y-L/2)/L) + \sin(6\pi y/L)\cosh(6\pi (x-L/2)/L)]/\cosh(3\pi)\]</div>
+<p>We now plot these functions to get a sense of their behavior.</p>
+<p>First, a bit of setup.  I choose <span class="math notranslate nohighlight">\(L = 600\)</span> because it has
+many divisors, so the zeros of the boundary will fall on the grid
+points.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">L</span> <span class="o">=</span> <span class="mi">600</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grid_x</span><span class="p">,</span> <span class="n">grid_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[:</span><span class="n">L</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:</span><span class="n">L</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Next, we define a boolean mask to check values later, and define
+the function values on the boundary.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">grid_x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mask</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edge_x</span> <span class="o">=</span> <span class="n">grid_x</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edge_y</span> <span class="o">=</span> <span class="n">grid_y</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">border_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">edge_x</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">edge_y</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next the analytic solutions and plots, with a function to ensure
+the different functions are plotted the same way:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">plot_and_check_filled_image</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;RdBu_r&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">601</span><span class="p">,</span> <span class="mi">300</span><span class="p">))</span>
+<span class="gp">... </span>    <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">601</span><span class="p">,</span> <span class="mi">300</span><span class="p">))</span>
+<span class="gp">... </span>    <span class="n">error</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">-</span> <span class="n">border_values</span>
+<span class="gp">... </span>    <span class="n">error_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">error_std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">[</span><span class="n">error_mean</span><span class="p">,</span> <span class="n">error_std</span><span class="p">]</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sum_of_sines</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">grid_x</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">grid_y</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">2.25</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
+<span class="go">&lt;Axes: &gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">plot_and_check_filled_image</span><span class="p">(</span><span class="n">sum_of_sines</span><span class="p">,</span> <span class="s2">&quot;Sum of sines&quot;</span><span class="p">))</span>
+<span class="go">array([0., 0.])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sine_of_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">grid_x</span> <span class="o">+</span> <span class="n">grid_y</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
+<span class="go">&lt;Axes: &gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">plot_and_check_filled_image</span><span class="p">(</span><span class="n">sine_of_sum</span><span class="p">,</span> <span class="s2">&quot;Sine of sum&quot;</span><span class="p">))</span>
+<span class="go">array([3.99751787e-16, 1.28432145e-15])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">laplace_solution</span> <span class="o">=</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">grid_x</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cosh</span><span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">grid_y</span> <span class="o">-</span> <span class="n">L</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">grid_y</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cosh</span><span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">grid_x</span> <span class="o">-</span> <span class="n">L</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">cosh</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
+<span class="go">&lt;Axes: &gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">plot_and_check_filled_image</span><span class="p">(</span><span class="n">laplace_solution</span><span class="p">,</span> <span class="s2">&quot;Laplace solution&quot;</span><span class="p">))</span>
+<span class="go">array([3.39669872e-16, 3.60694269e-16])</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="&quot;A visual comparison of the functions given above&quot;" class="plot-directive" src="../../_images/2D_fill_from_border-1.png" />
+</figure>
+<p>The sum of the boundary conditions produces values up to <span class="math notranslate nohighlight">\(\pm
+2\)</span>, while the others are bounded by <span class="math notranslate nohighlight">\(\pm 1\)</span>, which is the same
+range as the boundary.  The magnitudes of the mismatches are on the
+order of <span class="math notranslate nohighlight">\(10^{-15}\)</span>, which is about as small as we can expect
+from double-precision floating-point numbers.</p>
+<p>Not every boundary so readily admits analytic solutions, so we broaden
+our search to other options.</p>
+</section>
+<section id="simple-unstructured-interpolators">
+<h2>Simple unstructured interpolators<a class="headerlink" href="#simple-unstructured-interpolators" title="Link to this heading">#</a></h2>
+<p>One option for filling the border is to interpolate between the border
+points.  The simplest SciPy interpolation routines are the zero-order
+nearest-neighbor interpolator, the first-order linear interpolator,
+and the third-order Clough-Tocher interpolator.  The latter two don’t
+handle the situation with dense borders and empty interior terribly
+well and produce NaNs in the output.  Using only every other point
+along the border reduces but does not eliminate the problem, but using
+only every third point allows all interpolators to provide a value for
+every point.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">NearestNDInterpolator</span><span class="p">,</span> <span class="n">LinearNDInterpolator</span><span class="p">,</span> <span class="n">CloughTocher2DInterpolator</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">full_results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">sparse_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">grid_x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">sparse_mask</span><span class="p">[::</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">::</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">... </span>    <span class="n">sparse_mask</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="gp">... </span>    <span class="n">sparse_x</span> <span class="o">=</span> <span class="n">grid_x</span><span class="p">[</span><span class="n">sparse_mask</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="n">sparse_y</span> <span class="o">=</span> <span class="n">grid_y</span><span class="p">[</span><span class="n">sparse_mask</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="n">sparse_values</span> <span class="o">=</span> <span class="n">sum_of_sines</span><span class="p">[</span><span class="n">sparse_mask</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="n">sparse_results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">interpolator_class</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="n">NearestNDInterpolator</span><span class="p">,</span> <span class="n">LinearNDInterpolator</span><span class="p">,</span> <span class="n">CloughTocher2DInterpolator</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="p">):</span>
+<span class="gp">... </span>        <span class="n">interpolator</span> <span class="o">=</span> <span class="n">interpolator_class</span><span class="p">((</span><span class="n">sparse_x</span><span class="p">,</span> <span class="n">sparse_y</span><span class="p">),</span> <span class="n">sparse_values</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">values</span> <span class="o">=</span> <span class="n">interpolator</span><span class="p">(</span><span class="n">grid_x</span><span class="p">,</span> <span class="n">grid_y</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">interpolator_name</span> <span class="o">=</span> <span class="n">interpolator_class</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">... </span>        <span class="n">results</span> <span class="o">=</span> <span class="n">plot_and_check_filled_image</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">values</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">interpolator_name</span><span class="si">:</span><span class="s2">s</span><span class="si">}</span><span class="s2">: 1/</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="gp">... </span>        <span class="p">)</span>
+<span class="gp">... </span>        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">values</span><span class="p">)))</span>
+<span class="gp">... </span>        <span class="n">sparse_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">full_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sparse_results</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">full_results</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">array([[[ 0.00000000e+00,             nan,             nan],</span>
+<span class="go">        [ 1.85457226e-05, -1.51181151e-17, -2.78868936e-10],</span>
+<span class="go">        [-5.66098094e-18, -3.36536354e-17, -2.97769462e-09]],</span>
+
+<span class="go">       [[ 0.00000000e+00,             nan,             nan],</span>
+<span class="go">        [ 1.56979832e-02,  2.46719817e-04,  2.17605769e-06],</span>
+<span class="go">        [ 1.81372478e-02,  5.69712530e-04,  6.26343610e-06]],</span>
+
+<span class="go">       [[ 0.00000000e+00,  1.04000000e+02,  1.04000000e+02],</span>
+<span class="go">        [ 0.00000000e+00,  2.00000000e+00,  2.00000000e+00],</span>
+<span class="go">        [ 0.00000000e+00,  0.00000000e+00,  0.00000000e+00]]])</span>
+</pre></div>
+</div>
+<p>The first and second blocks show the mean and standard deviation of
+the differences from the provided points on the edge, respectively,
+and the third shows the number of NaNs produced by the interpolation.</p>
+<p>The first column shows results using nearest-neighbor
+interpolation, the second results using linear interpolation, and
+the third using third-order Clough-Tocher interpolation.</p>
+<p>The first row in each block shows the results using every point
+from the input, the second row the results from using every second
+point of the input, and the third row the result of using every
+third point in the input.</p>
+<figure class="align-default">
+<img alt="&quot;Use SciPy interpolators to fill from the boundary&quot;" class="plot-directive" src="../../_images/2D_fill_from_border-2.png" />
+</figure>
+<p>In other words, the linear and cubic interpolators have problems
+filling rectangles with more than two hundred points on a side.</p>
+<p>The errors in estimating the points on the boundary from the points
+around them are larger, and decrease as the order of the interpolator
+increases, from <span class="math notranslate nohighlight">\(\approx 10^{-2}\)</span> for the zeroth-order
+nearest-neighbor interpolator to <span class="math notranslate nohighlight">\(\approx 10^{-6}\)</span> for the
+third-order clough-tocher interpolator.</p>
+<section id="simplex-tolerance">
+<h3>Simplex tolerance<a class="headerlink" href="#simplex-tolerance" title="Link to this heading">#</a></h3>
+<p>The difficulties had with the linear and cubic interpolators arise
+from a floating-point tolerance value: increasing this tolerance will
+also reduce the problem:</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version v1.18.0.</span></p>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">full_results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">interpolator_class</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span><span class="n">LinearNDInterpolator</span><span class="p">,</span> <span class="n">CloughTocher2DInterpolator</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">interpolator</span> <span class="o">=</span> <span class="n">interpolator_class</span><span class="p">((</span><span class="n">edge_x</span><span class="p">,</span> <span class="n">edge_y</span><span class="p">),</span> <span class="n">border_values</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">multiplier</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">... </span>    <span class="n">values</span> <span class="o">=</span> <span class="n">interpolator</span><span class="p">(</span><span class="n">grid_x</span><span class="p">,</span> <span class="n">grid_y</span><span class="p">,</span> <span class="n">simplex_tolerance</span><span class="o">=</span><span class="n">multiplier</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">interpolator_name</span> <span class="o">=</span> <span class="n">interpolator_class</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="n">results</span> <span class="o">=</span> <span class="n">plot_and_check_filled_image</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">interpolator_name</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">values</span><span class="p">)))</span>
+<span class="gp">... </span>    <span class="n">full_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">full_results</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="go">array([[-1.40675962e-16, -1.42020373e-16],</span>
+<span class="go">       [ 3.23940594e-15,  3.25139344e-15],</span>
+<span class="go">       [ 0.00000000e+00,  0.00000000e+00]])</span>
+</pre></div>
+</div>
+<p>The rows give the mean and standard deviation of the errors for the
+border points, while the columns are the interpolators, linear and
+Clough-Tocher.</p>
+<figure class="align-default">
+<img alt="../../_images/2D_fill_from_border-3.png" class="plot-directive" src="../../_images/2D_fill_from_border-3.png" />
+</figure>
+</section>
+</section>
+<section id="radial-basis-functions">
+<h2>Radial basis functions<a class="headerlink" href="#radial-basis-functions" title="Link to this heading">#</a></h2>
+<p>The radial-basis-function interpolators use all input points to
+determine interpolated values, weighting nearer points more and
+farther points less.  The kernel determines exactly how much more or
+less weight a point will have based on distance: we will use the
+linear, thin-plate spline, and, cubic kernels here because they don’t
+require additional configuration for interpolation.</p>
+<p>Since this weighting must be done for each target point, this
+interpolation can get a bit slow, so we thin the target grid by a
+factor of 8 (noting that 8 divides L, so that all borders will be
+included in the output) in each direction, then use a regular-grid
+interpolator to get back to the desired density.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">RBFInterpolator</span><span class="p">,</span> <span class="n">RegularGridInterpolator</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                         <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">2.25</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">kernel</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;thin_plate_spline&quot;</span><span class="p">,</span> <span class="s2">&quot;cubic&quot;</span><span class="p">]):</span>
+<span class="gp">... </span>    <span class="n">rbf_interpolator</span> <span class="o">=</span> <span class="n">RBFInterpolator</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">edge_x</span><span class="p">,</span> <span class="n">edge_y</span><span class="p">]),</span> <span class="n">border_values</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">... </span>    <span class="n">sparse_factor</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="gp">... </span>    <span class="n">sparse_x</span> <span class="o">=</span> <span class="n">grid_x</span><span class="p">[::</span><span class="n">sparse_factor</span><span class="p">,</span> <span class="p">::</span><span class="n">sparse_factor</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">sparse_y</span> <span class="o">=</span> <span class="n">grid_y</span><span class="p">[::</span><span class="n">sparse_factor</span><span class="p">,</span> <span class="p">::</span><span class="n">sparse_factor</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">values_vector</span> <span class="o">=</span> <span class="n">rbf_interpolator</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">sparse_x</span><span class="p">,</span> <span class="n">sparse_y</span><span class="p">]))</span>
+<span class="gp">... </span>    <span class="n">sparse_side</span> <span class="o">=</span> <span class="n">L</span> <span class="o">//</span> <span class="n">sparse_factor</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">... </span>    <span class="n">sparse_values</span> <span class="o">=</span> <span class="n">values_vector</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">sparse_side</span><span class="p">,</span> <span class="n">sparse_side</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">refiner</span> <span class="o">=</span> <span class="n">RegularGridInterpolator</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="p">(</span><span class="n">grid_x</span><span class="p">[::</span><span class="n">sparse_factor</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">grid_y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">::</span><span class="n">sparse_factor</span><span class="p">]),</span>
+<span class="gp">... </span>        <span class="n">sparse_values</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">... </span>    <span class="n">values</span> <span class="o">=</span> <span class="n">refiner</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">grid_x</span><span class="p">,</span> <span class="n">grid_y</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="gp">... </span>    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plot_and_check_filled_image</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">kernel</span><span class="p">))</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<span class="go">array([[-1.56770893e-14,  4.07119969e-03],</span>
+<span class="go">       [-2.57408215e-13,  4.07119969e-03],</span>
+<span class="go">       [-2.86032633e-13,  4.07119969e-03]])</span>
+</pre></div>
+</div>
+<p>The columns show the mean and standard deviation of the differences
+from the provided frame, respectively.  The rows iterate over the
+RBF kernels: linear, thin-plate spline, and cubic.</p>
+<figure class="align-default">
+<img alt="../../_images/2D_fill_from_border-4.png" class="plot-directive" src="../../_images/2D_fill_from_border-4.png" />
+</figure>
+</section>
+<section id="multi-linear-regression">
+<h2>Multi-linear regression<a class="headerlink" href="#multi-linear-regression" title="Link to this heading">#</a></h2>
+<p>We are trying to predict the values of a function based on observed
+values, which is what linear regression is trying to do.  In
+particular, it is trying to find a linear combination of various
+functions that fits the desired function, then uses that same linear
+combination of the same provided functions at new points to predict
+the desired function there.</p>
+<p>If we collect the values of the desired function into a column vector
+with one point per line and call that <span class="math notranslate nohighlight">\(y\)</span>, and similarly collect
+the provided functions into column vectors and collect those columns
+into a matrix <span class="math notranslate nohighlight">\(X\)</span>, we seek a vector <span class="math notranslate nohighlight">\(\beta\)</span> such that
+<span class="math notranslate nohighlight">\(y = X \beta\)</span> is as close to satisfied as possible.  Statsmodels
+gives the least-squares value of <span class="math notranslate nohighlight">\(\beta\)</span> as
+<span class="math notranslate nohighlight">\(\beta = (X'X)^{-1} X' y\)</span>.</p>
+<section id="unconstrained-polynomials">
+<h3>Unconstrained polynomials<a class="headerlink" href="#unconstrained-polynomials" title="Link to this heading">#</a></h3>
+<p>For the columns of <span class="math notranslate nohighlight">\(X\)</span>, we start with polynomials from the NumPy
+polynomials package: specifically the Legendre polynomials, which are
+orthogonal on the interval <span class="math notranslate nohighlight">\([-1, 1]\)</span>, which should help the
+numerics of the inverse, and the Chebyshev polynomials which are
+frequently used for interpolation.</p>
+<p>A quadratic polynomial can produce one extrema, a cubic polynomial
+two, and a quartic three, so a seventh-degree polynomial should be
+able to produce the six extrema of the boundary conditions.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">numpy.polynomial.legendre</span><span class="w"> </span><span class="kn">import</span> <span class="n">legval2d</span><span class="p">,</span> <span class="n">leggrid2d</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">numpy.polynomial.chebyshev</span><span class="w"> </span><span class="kn">import</span> <span class="n">chebval2d</span><span class="p">,</span> <span class="n">chebgrid2d</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">la</span>
+</pre></div>
+</div>
+<p>It will be helpful to map the x and y coordinates to the interval
+<span class="math notranslate nohighlight">\([0, 1]\)</span>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">scaled_grid_x</span> <span class="o">=</span> <span class="n">grid_x</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">L</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scaled_grid_y</span> <span class="o">=</span> <span class="n">grid_y</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">L</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scaled_edge_x</span> <span class="o">=</span> <span class="n">edge_x</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">L</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scaled_edge_y</span> <span class="o">=</span> <span class="n">edge_y</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">L</span> <span class="o">-</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>A seventh-degree polynomial will require eight coefficients,
+including the zero-order term.  We try eleventh- and
+fifteenth-degree polynomials as well, to see if that improves the
+fit.</p>
+<p>Since we provide function values only along the border of the
+region, the function values may be similar: we use the
+pseudo-inverse to avoid problems from the duplication.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">full_results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">num_coeffs</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">16</span><span class="p">]):</span>
+<span class="gp">... </span>    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">polyval2d</span><span class="p">,</span> <span class="n">polygrid2d</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="p">[(</span><span class="n">legval2d</span><span class="p">,</span> <span class="n">leggrid2d</span><span class="p">),</span> <span class="p">(</span><span class="n">chebval2d</span><span class="p">,</span> <span class="n">chebgrid2d</span><span class="p">)]</span>
+<span class="gp">... </span>    <span class="p">):</span>
+<span class="gp">... </span>        <span class="n">poly_family</span> <span class="o">=</span> <span class="n">polyval2d</span><span class="o">.</span><span class="vm">__module__</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">... </span>        <span class="n">poly_edge_values</span> <span class="o">=</span> <span class="n">polyval2d</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">scaled_edge_x</span><span class="p">,</span> <span class="n">scaled_edge_y</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">num_coeffs</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">num_coeffs</span><span class="p">,</span> <span class="n">num_coeffs</span><span class="p">,</span> <span class="n">num_coeffs</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="p">)</span>
+<span class="gp">... </span>        <span class="n">coeffs</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">pinvh</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">poly_edge_values</span> <span class="o">@</span> <span class="n">poly_edge_values</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">rtol</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">poly_edge_values</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span> <span class="o">*</span> <span class="n">L</span> <span class="o">*</span> <span class="n">num_coeffs</span>
+<span class="gp">... </span>        <span class="p">)</span> <span class="o">@</span> <span class="p">(</span><span class="n">poly_edge_values</span> <span class="o">@</span> <span class="n">border_values</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">values</span> <span class="o">=</span> <span class="n">polygrid2d</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">scaled_grid_x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">scaled_grid_y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span>
+<span class="gp">... </span>            <span class="n">coeffs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">num_coeffs</span><span class="p">,</span> <span class="n">num_coeffs</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="p">)</span>
+<span class="gp">... </span>        <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+<span class="gp">... </span>        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">plot_and_check_filled_image</span><span class="p">(</span>
+<span class="gp">... </span>                <span class="n">values</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">poly_family</span><span class="si">:</span><span class="s2">s</span><span class="si">}</span><span class="s2"> degree </span><span class="si">{</span><span class="n">num_coeffs</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="gp">... </span>            <span class="p">)</span>
+<span class="gp">... </span>        <span class="p">)</span>
+<span class="gp">... </span>    <span class="n">full_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">full_results</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">array([[[-5.92118946e-17,  1.18423789e-17],</span>
+<span class="go">        [-2.37772764e-17,  1.51730480e-17],</span>
+<span class="go">        [ 2.31527760e-17, -6.11605674e-17]],</span>
+
+<span class="go">       [[ 4.07910892e-01,  4.07910892e-01],</span>
+<span class="go">        [ 2.40733605e-02,  2.40733605e-02],</span>
+<span class="go">        [ 2.99289173e-04,  2.99289173e-04]]])</span>
+</pre></div>
+</div>
+<p>The first block shows the mean error of the estimates of the
+provided points, the second the standard deviation of those
+estimates.  The first column shows estimates using Legendre
+polynomials, the second estimates using Chebyshev polynomials.  The
+rows within each block iterate over the degree of the polynomial,
+showing results for seventh-, eleventh-, and fifteenth-degree
+polynomials.</p>
+<figure class="align-default">
+<img alt="../../_images/2D_fill_from_border-5.png" class="plot-directive" src="../../_images/2D_fill_from_border-5.png" />
+</figure>
+<p>The higher-order polynomials produce interesting shapes in the
+interior of the domain, which are pretty, but slightly concerning.</p>
+</section>
+<section id="restricted-polynomials">
+<h3>Restricted polynomials<a class="headerlink" href="#restricted-polynomials" title="Link to this heading">#</a></h3>
+<p>We can further restrict the set of polynomials to those which
+introduce no new extrema in the interior of the domain, by insisting
+all monomial terms in the polynomial fit must have one degree less
+than two.  We notice that this description applies to the “sum of
+sines” described and plotted above, as it is the sum of one function
+constant in x and one function constant in y.  It is therefore likely
+that these regressions will produce results similar to that function.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">full_results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">num_coeffs</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">16</span><span class="p">]):</span>
+<span class="gp">... </span>    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">polyval2d</span><span class="p">,</span> <span class="n">polygrid2d</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="p">[(</span><span class="n">legval2d</span><span class="p">,</span> <span class="n">leggrid2d</span><span class="p">),</span> <span class="p">(</span><span class="n">chebval2d</span><span class="p">,</span> <span class="n">chebgrid2d</span><span class="p">)]</span>
+<span class="gp">... </span>    <span class="p">):</span>
+<span class="gp">... </span>        <span class="n">poly_family</span> <span class="o">=</span> <span class="n">polyval2d</span><span class="o">.</span><span class="vm">__module__</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">... </span>        <span class="n">coeff_multiplier</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">num_coeffs</span><span class="p">,</span> <span class="n">num_coeffs</span><span class="p">))</span>
+<span class="gp">... </span>        <span class="n">coeff_multiplier</span><span class="p">[</span><span class="mi">2</span><span class="p">:,</span> <span class="mi">2</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">... </span>        <span class="n">poly_edge_values</span> <span class="o">=</span> <span class="n">polyval2d</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">scaled_edge_x</span><span class="p">,</span> <span class="n">scaled_edge_y</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">num_coeffs</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">num_coeffs</span><span class="p">,</span> <span class="n">num_coeffs</span><span class="p">,</span> <span class="n">num_coeffs</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">... </span>            <span class="o">*</span> <span class="n">coeff_multiplier</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+<span class="gp">... </span>        <span class="p">)</span>
+<span class="gp">... </span>        <span class="n">coeffs</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">pinvh</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">poly_edge_values</span> <span class="o">@</span> <span class="n">poly_edge_values</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">rtol</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">poly_edge_values</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span> <span class="o">*</span> <span class="n">L</span> <span class="o">*</span> <span class="n">num_coeffs</span>
+<span class="gp">... </span>        <span class="p">)</span> <span class="o">@</span> <span class="p">(</span><span class="n">poly_edge_values</span> <span class="o">@</span> <span class="n">border_values</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">values</span> <span class="o">=</span> <span class="n">polygrid2d</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">scaled_grid_x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">scaled_grid_y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span>
+<span class="gp">... </span>            <span class="n">coeffs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">num_coeffs</span><span class="p">,</span> <span class="n">num_coeffs</span><span class="p">)</span> <span class="o">*</span> <span class="n">coeff_multiplier</span><span class="p">[:,</span> <span class="p">:]</span>
+<span class="gp">... </span>        <span class="p">)</span>
+<span class="gp">... </span>        <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+<span class="gp">... </span>        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">plot_and_check_filled_image</span><span class="p">(</span>
+<span class="gp">... </span>                <span class="n">values</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">poly_family</span><span class="si">:</span><span class="s2">s</span><span class="si">}</span><span class="s2"> degree </span><span class="si">{</span><span class="n">num_coeffs</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">:</span><span class="s2">d</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="gp">... </span>            <span class="p">)</span>
+<span class="gp">... </span>        <span class="p">)</span>
+<span class="gp">... </span>    <span class="n">full_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">full_results</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">array([[[-3.87837910e-16,  3.07901852e-16],</span>
+<span class="go">        [ 3.92926432e-16, -1.73194792e-16],</span>
+<span class="go">        [-1.33660444e-16, -3.65422391e-16]],</span>
+
+<span class="go">       [[ 4.07910892e-01,  4.07910892e-01],</span>
+<span class="go">        [ 2.40733605e-02,  2.40733605e-02],</span>
+<span class="go">        [ 2.99289173e-04,  2.99289173e-04]]])</span>
+</pre></div>
+</div>
+<p>The first block is the mean error for the provided values, the
+second is the standard deviation in the error for the provided
+values.  The columns show the kind of polynomial used, Legendre or
+Chebyshev.  The rows within each block give the degree of the
+polynomial, seventh, eleventh, or fifteenth.</p>
+<figure class="align-default">
+<img alt="../../_images/2D_fill_from_border-6.png" class="plot-directive" src="../../_images/2D_fill_from_border-6.png" />
+</figure>
+<section id="polynomials-satisfying-the-laplace-equation">
+<h4>Polynomials satisfying the Laplace equation<a class="headerlink" href="#polynomials-satisfying-the-laplace-equation" title="Link to this heading">#</a></h4>
+<p>A different way to restrict the polynomials to avoid interior extrema
+is to insist that the individual polynomials each satisfy the Laplace
+equation, as do, for example,
+<span class="math notranslate nohighlight">\(1,x,y,x^2-y^2,xy,x^3-3xy^2,y^3-3yx^2,x^4-6x^2y^2+y^4,x^3y-xy^3,\dots\)</span>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">laplace_polynomials</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span>
+<span class="gp">... </span>        <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="n">x</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">y</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">x</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">y</span><span class="o">**</span><span class="mi">3</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">y</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">x</span><span class="o">**</span><span class="mi">4</span> <span class="o">-</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">4</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">x</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="o">**</span><span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">x</span><span class="o">**</span><span class="mi">5</span> <span class="o">-</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="o">**</span><span class="mi">4</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">y</span><span class="o">**</span><span class="mi">5</span> <span class="o">-</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">y</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">y</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">4</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">x</span><span class="o">**</span><span class="mi">6</span> <span class="o">-</span> <span class="mi">15</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">4</span> <span class="o">*</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">15</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="o">**</span><span class="mi">4</span> <span class="o">-</span> <span class="n">y</span><span class="o">**</span><span class="mi">6</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">5</span> <span class="o">*</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">y</span><span class="o">**</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="o">**</span><span class="mi">5</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">x</span><span class="o">**</span><span class="mi">7</span> <span class="o">-</span> <span class="mi">21</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">5</span> <span class="o">*</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">35</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">y</span><span class="o">**</span><span class="mi">4</span> <span class="o">-</span> <span class="mi">7</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="o">**</span><span class="mi">6</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">y</span><span class="o">**</span><span class="mi">7</span> <span class="o">-</span> <span class="mi">21</span> <span class="o">*</span> <span class="n">y</span><span class="o">**</span><span class="mi">5</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">35</span> <span class="o">*</span> <span class="n">y</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">4</span> <span class="o">-</span> <span class="mi">7</span> <span class="o">*</span> <span class="n">y</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">6</span>
+<span class="gp">... </span>    <span class="p">])</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly_edge_values</span> <span class="o">=</span> <span class="n">laplace_polynomials</span><span class="p">(</span><span class="n">scaled_edge_x</span><span class="p">,</span> <span class="n">scaled_edge_y</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">coeffs</span> <span class="o">=</span> <span class="n">la</span><span class="o">.</span><span class="n">pinvh</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">poly_edge_values</span> <span class="o">@</span> <span class="n">poly_edge_values</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">rtol</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">poly_edge_values</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span> <span class="o">*</span> <span class="n">L</span> <span class="o">*</span> <span class="n">num_coeffs</span>
+<span class="gp">... </span><span class="p">)</span> <span class="o">@</span> <span class="p">(</span><span class="n">poly_edge_values</span> <span class="o">@</span> <span class="n">border_values</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tensordot</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">coeffs</span><span class="p">,</span> <span class="n">laplace_polynomials</span><span class="p">(</span><span class="n">scaled_grid_x</span><span class="p">,</span> <span class="n">scaled_grid_y</span><span class="p">),</span> <span class="mi">1</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">plot_and_check_filled_image</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="s2">&quot;Laplace polynomial&quot;</span><span class="p">))</span>
+<span class="go">array([-5.32907052e-17,  6.62820658e-01])</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/2D_fill_from_border-7.png" class="plot-directive" src="../../_images/2D_fill_from_border-7.png" />
+</figure>
+</section>
+</section>
+</section>
+<section id="other-packages">
+<h2>Other packages<a class="headerlink" href="#other-packages" title="Link to this heading">#</a></h2>
+<p>There are packages that will solve Laplace equation with given
+boundary conditions.</p>
+<p>Scikit-Image has an
+<a class="reference external" href="https://scikit-image.org/docs/stable/auto_examples/filters/plot_inpaint.html">inpaint_biharmonic</a>
+function that will solve also fill an image from the boundary
+conditions, in a manner related to the Laplace Equation.  Scikit-image
+also has a
+<a class="reference external" href="https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_rolling_ball.html">rolling_ball</a>
+function to estimate the background from nearby values, though that
+function works better with several small things rather than one large
+one as assumed here.</p>
+<p>Statsmodels offers <a class="reference external" href="https://www.statsmodels.org/stable/regression.html">regression
+functions</a> that
+hide the linear algebra and offer additional diagnostics.  The
+<a class="reference external" href="https://www.statsmodels.org/stable/example_formulas.html">formula.ols</a>
+interface hides even more of the linear algebra, and can simplify the
+setup of the regression.</p>
+</section>
+<section id="closing-notes">
+<h2>Closing notes<a class="headerlink" href="#closing-notes" title="Link to this heading">#</a></h2>
+<p>SciPy’s interpolate package has a <a class="reference internal" href="../../reference/generated/scipy.interpolate.griddata.html#scipy.interpolate.griddata" title="scipy.interpolate.griddata"><code class="xref py py-func docutils literal notranslate"><span class="pre">griddata</span></code></a> function that acts
+as a wrapper around <a class="reference internal" href="../../reference/generated/scipy.interpolate.NearestNDInterpolator.html#scipy.interpolate.NearestNDInterpolator" title="scipy.interpolate.NearestNDInterpolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">NearestNDInterpolator</span></code></a>,
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.LinearNDInterpolator.html#scipy.interpolate.LinearNDInterpolator" title="scipy.interpolate.LinearNDInterpolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearNDInterpolator</span></code></a>, or <a class="reference internal" href="../../reference/generated/scipy.interpolate.CloughTocher2DInterpolator.html#scipy.interpolate.CloughTocher2DInterpolator" title="scipy.interpolate.CloughTocher2DInterpolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">CloughTocher2DInterpolator</span></code></a>
+and so is not described separately here.  These functions work best
+with points scattered through the interior of some domain, and can
+give odd results in the situation outlined here.</p>
+<p>If we happen to be in a situation where we have more than the single
+line of information on each edge of the domain as assumed above —
+perhaps we know that, say, a five-pixel border around the edge of an
+image will always be part of the background we want to estimate —
+then the regression and radial basis function approaches will be able
+to use this information directly.  The unrestricted polynomials have a
+tendency to introduce extrema in the domain interior, but the two
+kinds of restricted polynomials are designed to minimize that problem
+and so are good alternatives.</p>
+<p>The <a class="reference internal" href="../../reference/generated/scipy.interpolate.NearestNDInterpolator.html#scipy.interpolate.NearestNDInterpolator" title="scipy.interpolate.NearestNDInterpolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">NearestNDInterpolator</span></code></a>, <a class="reference internal" href="../../reference/generated/scipy.interpolate.LinearNDInterpolator.html#scipy.interpolate.LinearNDInterpolator" title="scipy.interpolate.LinearNDInterpolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearNDInterpolator</span></code></a> and
+<a class="reference internal" href="../../reference/generated/scipy.interpolate.NearestNDInterpolator.html#scipy.interpolate.NearestNDInterpolator" title="scipy.interpolate.NearestNDInterpolator"><code class="xref py py-class docutils literal notranslate"><span class="pre">NearestNDInterpolator</span></code></a>, on the other hand, will only use the
+inmost portion of that data to fill the center of the image.  If we
+want to use these interpolators anyway, but want them to use this
+additional information, we will have to incorporate that information
+into those inmost points, perhaps by replacing those points with a
+mean of nearby points.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="interp_transition_guide.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">interp2d</span></code> transition guide</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../io.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">File IO (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.io</span></code>)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analytic-solutions">Analytic solutions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-unstructured-interpolators">Simple unstructured interpolators</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simplex-tolerance">Simplex tolerance</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#radial-basis-functions">Radial basis functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-linear-regression">Multi-linear regression</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unconstrained-polynomials">Unconstrained polynomials</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#restricted-polynomials">Restricted polynomials</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#polynomials-satisfying-the-laplace-equation">Polynomials satisfying the Laplace equation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-packages">Other packages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#closing-notes">Closing notes</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

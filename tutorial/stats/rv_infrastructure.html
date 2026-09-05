@@ -1,0 +1,2090 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Random Variable Transition Guide &#8212; SciPy v2.0.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=8ee2c72c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=242cf5df" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=d74cf641"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=96e329c5"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorial/stats/rv_infrastructure';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script defer="defer" src="../../_static/custom-icons.js?v=6cff5f5c"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Universal Non-Uniform Random Number Sampling in SciPy" href="sampling.html" />
+    <link rel="prev" title="Yule-Simon Distribution" href="discrete_yulesimon.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="2.0.0.dev" />
+    <meta name="docbuild:last-update" content="Sep 05, 2026"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discuss.scientific-python.org/c/contributor/scipy/" title="Scientific Python Forum" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-SciPy_Forum fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Scientific Python Forum</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discuss.scientific-python.org/c/contributor/scipy/" title="Scientific Python Forum" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-SciPy_Forum fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Scientific Python Forum</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">Discrete Fourier Transforms (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.fft</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">Integration (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.integrate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">File IO (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.io</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">Linear Algebra (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">Multidimensional Image Processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">Optimization (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">Signal Processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">Sparse Arrays (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">Spatial Data Structures and Algorithms (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">Special Functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.special</span></code>)</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../stats.html">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arpack.html">Sparse eigenvalue problems with ARPACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csgraph.html">Compressed Sparse Graph Routines (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.csgraph</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parallel_execution.html">Parallel execution support in SciPy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../thread_safety.html">Thread Safety in SciPy</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy User Guide</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../stats.html" class="nav-link">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Random Variable Transition Guide</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <button class="try_examples_button" onclick="window.open('../../lite/tree/../notebooks/index.html?path=rv_infrastructure.ipynb')">Open as a notebook</button><section id="random-variable-transition-guide">
+<span id="rv-infrastructure"></span><h1>Random Variable Transition Guide<a class="headerlink" href="#random-variable-transition-guide" title="Link to this heading">#</a></h1>
+<section id="background">
+<h2>Background<a class="headerlink" href="#background" title="Link to this heading">#</a></h2>
+<p>Prior to SciPy 1.15, all of SciPy’s continuous probability distributions (e.g. <code class="docutils literal notranslate"><span class="pre">scipy.stats.norm</span></code>) have been instances of subclasses of <code class="docutils literal notranslate"><span class="pre">scipy.stats.rv_continuous</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>scipy.stats._continuous_distns.norm_gen
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">rv_continuous</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<p>There were two obvious ways to work these objects.</p>
+<p>According to the more common way, both “arguments” (e.g. <code class="docutils literal notranslate"><span class="pre">x</span></code>) and “distribution parameters” (e.g. <code class="docutils literal notranslate"><span class="pre">loc</span></code>, <code class="docutils literal notranslate"><span class="pre">scale</span></code>) were provided as inputs to methods of the object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span>
+<span class="n">dist</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.24197072451914337)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The less common approach was to invoke the <code class="docutils literal notranslate"><span class="pre">__call__</span></code> method of the distribution object, which returned an instance of <code class="docutils literal notranslate"><span class="pre">rv_continuous_frozen</span></code>, regardless of the original class.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frozen</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">frozen</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>scipy.stats._distn_infrastructure.rv_continuous_frozen
+</pre></div>
+</div>
+</div>
+</div>
+<p>Methods of this new object accept only arguments, not the distribution parameters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frozen</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.24197072451914337)
+</pre></div>
+</div>
+</div>
+</div>
+<p>In a sense, the instances of <code class="docutils literal notranslate"><span class="pre">rv_continuous</span></code> like <code class="docutils literal notranslate"><span class="pre">norm</span></code> represented “distribution families”, which require parameters to identify a particular probability distribution, and an instance of <code class="docutils literal notranslate"><span class="pre">rv_continuous_frozen</span></code> was akin to a “random variable” - a mathematical object that follows a particular probability distribution.</p>
+<p>Both approaches are valid and have advantages in certain situations. For instance, <code class="docutils literal notranslate"><span class="pre">stats.norm.pdf(x)</span></code> appears more natural than <code class="docutils literal notranslate"><span class="pre">stats.norm().pdf(x)</span></code> for such a simple invocation or when methods are viewed as functions of distribution parameters rather than the usual arguments (e.g., likelihood). However, the former approach has a few inherent disadvantages; e.g., all of SciPy’s 125 continuous distributions have to be instantiated at import time, distribution parameters must be validated every time a method is called, and documentation of methods must either a) be generated separately for every method of every distribution or b) omit the shape parameters that are unique for each distribution.
+To address these and other shortcomings, <a class="reference external" href="https://github.com/scipy/scipy/issues/15928">gh-15928</a> proposed a new, separate infrastructure based on the latter (random variable) approach. This transition guide documents how users of <code class="docutils literal notranslate"><span class="pre">rv_continuous</span></code> and <code class="docutils literal notranslate"><span class="pre">rv_continuous_frozen</span></code> can migrate to the new infrastructure.</p>
+<p><em>Note: The new infrastructure may not yet be as convenient for some use cases, especially fitting distribution parameters to data. Users are welcome to continue to use the old infrastructure if it suits their needs; it is not deprecated at this time.</em></p>
+</section>
+<section id="basics">
+<h2>Basics<a class="headerlink" href="#basics" title="Link to this heading">#</a></h2>
+<p>In the new infrastructure, distribution families are classes named according to <code class="docutils literal notranslate"><span class="pre">CamelCase</span></code> conventions. They must be instantiated before use, with parameters passed as keyword-only arguments.
+<em>Instances</em> of the distribution family classes can be thought of as random variables, which are commonly denoted in mathematics using capital letters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span>
+<span class="n">X</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Normal(mu=np.float64(0.0), sigma=np.float64(1.0))
+</pre></div>
+</div>
+</div>
+</div>
+<p>Once instantiated, shape parameters can be read (but not written) as attributes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">.</span><span class="n">mu</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">sigma</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(0.0), np.float64(1.0))
+</pre></div>
+</div>
+</div>
+</div>
+<p>The documentation of <a class="reference external" href="https://scipy.github.io/devdocs/reference/generated/scipy.stats.Normal.html#scipy.stats.Normal"><code class="docutils literal notranslate"><span class="pre">scipy.stats.Normal</span></code></a> contains links to detailed documentation of each of its methods. (Compare, for instance, against the documentation of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html"><code class="docutils literal notranslate"><span class="pre">scipy.stats.norm</span></code></a>.)</p>
+<p><em>Note: Although only <a class="reference external" href="https://scipy.github.io/devdocs/reference/generated/scipy.stats.Normal.html"><code class="docutils literal notranslate"><span class="pre">Normal</span></code></a> and <a class="reference external" href="https://scipy.github.io/devdocs/reference/generated/scipy.stats.Uniform.html"><code class="docutils literal notranslate"><span class="pre">Uniform</span></code></a> have rendered documentation and can be imported directly from <code class="docutils literal notranslate"><span class="pre">stats</span></code> as of SciPy 1.15, almost all other old distributions can be used with the new interface via <a class="reference external" href="https://scipy.github.io/devdocs/reference/generated/scipy.stats.make_distribution.html"><code class="docutils literal notranslate"><span class="pre">make_distribution</span></code></a> (discussed shortly).</em></p>
+<p>Methods are then called by passing only the argument(s), if there are any, not distribution parameters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.0)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.24197072451914337)
+</pre></div>
+</div>
+</div>
+</div>
+<p>For simple calls like this (e.g. the argument is a valid float), calls to methods of the new random variables will typically be faster than comparable calls to the old distribution methods.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> X.pdf(x)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>6.7 μs ± 8.16 ns per loop (mean ± std. dev. of 7 runs, 100,000 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> frozen.pdf(x)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>56 μs ± 2.11 μs per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> dist.pdf(x, loc=mu, scale=sigma)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>53.4 μs ± 350 ns per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that the way <code class="docutils literal notranslate"><span class="pre">X.pdf</span></code> and <code class="docutils literal notranslate"><span class="pre">frozen.pdf</span></code> are called is identical, and the call to <code class="docutils literal notranslate"><span class="pre">dist.pdf</span></code> is very similar - the only difference is that the call to <code class="docutils literal notranslate"><span class="pre">dist.pdf</span></code> includes the shape parameters, whereas in the new infrastructure, shape parameters are only provided when the random variable is instantiated.</p>
+<p>Besides <code class="docutils literal notranslate"><span class="pre">pdf</span></code> and <code class="docutils literal notranslate"><span class="pre">mean</span></code>, several other methods of the new infrastructure are essentially the same as the old methods.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">logpdf</span></code> (logarithm of probability density function)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cdf</span></code> (cumulative distribution function)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">logcdf</span></code> (logarithm of cumulative distribution function)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">entropy</span></code> (differential entropy)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">median</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">support</span></code></p></li>
+</ul>
+<p>Other methods have new names, but are otherwise drop-in replacements.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sf</span></code> (survival function) <span class="math notranslate nohighlight">\(\rightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">ccdf</span></code> (complementary cumulative distribution function)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">logsf</span></code> <span class="math notranslate nohighlight">\(\rightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">logccdf</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ppf</span></code> (percent point function) <span class="math notranslate nohighlight">\(\rightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">icdf</span></code> (inverse cumulative distribution function)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">isf</span></code> (inverse survival function) <span class="math notranslate nohighlight">\(\rightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">iccdf</span></code> (inverse complementary cumulative distribution function)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">std</span></code> <span class="math notranslate nohighlight">\(\rightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">standard_deviation</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">var</span></code> <span class="math notranslate nohighlight">\(\rightarrow\)</span> <code class="docutils literal notranslate"><span class="pre">variance</span></code></p></li>
+</ul>
+<p>The new infrastructure has several <em>new</em> methods in the same vein as those above.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ilogcdf</span></code> (inverse of the logarithm of the cumulative distribution function)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ilogccdf</span></code> (inverse of the logarithm of the complementary cumulative distribution function)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">logentropy</span></code> (logarithm of the entropy)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mode</span></code> (mode of the distribution)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">skewness</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kurtosis</span></code> (<em>non-excess</em> kurtosis; see “Standardized Moments” below)</p></li>
+</ul>
+<p>And it has a new <code class="docutils literal notranslate"><span class="pre">plot</span></code> method for convenience</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">X</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/ce0f5ea6a98715225bcf5f227d6471159d46cb076e6df3479e9d646643b4f7c3.png" src="../../_images/ce0f5ea6a98715225bcf5f227d6471159d46cb076e6df3479e9d646643b4f7c3.png" />
+</div>
+</div>
+<p>Most of the remaining methods of the old infrastructure (<code class="docutils literal notranslate"><span class="pre">rvs</span></code>, <code class="docutils literal notranslate"><span class="pre">moment</span></code>, <code class="docutils literal notranslate"><span class="pre">stats</span></code>, <code class="docutils literal notranslate"><span class="pre">interval</span></code>, <code class="docutils literal notranslate"><span class="pre">fit</span></code>, <code class="docutils literal notranslate"><span class="pre">nnlf</span></code>, <code class="docutils literal notranslate"><span class="pre">fit_loc_scale</span></code>, and <code class="docutils literal notranslate"><span class="pre">expect</span></code>) have analogous functionality, but some care is required. Before describing the replacements, we briefly mention how to work with random variables that are not normally distributed: almost all old distribution objects can be converted into a new distribution class with <code class="docutils literal notranslate"><span class="pre">scipy.stats.make_distribution</span></code>, and the new distribution class can be instantiated by passing the shape parameters as keyword arguments. For instance, consider the <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.weibull_min.html#scipy.stats.weibull_min">Weibull distribution</a>. We can create a new class that is an abstraction of the distribution family like:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Weibull</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">make_distribution</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">weibull_min</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Weibull</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">[:</span><span class="mi">288</span><span class="p">])</span>  <span class="c1"># help(Weibull) prints this and (too much) more</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>This class represents `scipy.stats.weibull_min` as a subclass of `&lt;class &#39;scipy.stats._distribution_infrastructure.ContinuousDistribution&#39;&gt;`.
+The `repr`/`str` of class instances is `Weibull`.
+The PDF of the distribution is defined for :math:`x \in [0.0, \infty]`.
+This class accepts one p
+</pre></div>
+</div>
+</div>
+</div>
+<p>According to the documentation of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.weibull_min.html#scipy.stats.weibull_min"><code class="docutils literal notranslate"><span class="pre">weibull_min</span></code></a>, the shape parameter is denoted <code class="docutils literal notranslate"><span class="pre">c</span></code>, so we can instantiate a random variable by passing <code class="docutils literal notranslate"><span class="pre">c</span></code> as a keyword argument to the new <code class="docutils literal notranslate"><span class="pre">Weibull</span></code> class.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c</span> <span class="o">=</span> <span class="mf">2.</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">Weibull</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+<span class="n">X</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/84cc2230df036068912bed5037012705ec059c2ab5c157bd507948fc8d92dbee.png" src="../../_images/84cc2230df036068912bed5037012705ec059c2ab5c157bd507948fc8d92dbee.png" />
+</div>
+</div>
+<p>Previously, all distributions inherited <code class="docutils literal notranslate"><span class="pre">loc</span></code> and <code class="docutils literal notranslate"><span class="pre">scale</span></code> distribution parameters.
+<em>These are no longer accepted.</em> Instead, random variables can be shifted and scaled with arithmetic operators.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Y</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">X</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">Y</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>  <span class="c1"># note the change in the abscissae</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/00d9cc2b9bf06651d5335434c0ffdc01a4a66ff83d8faf60b2d2cb79570417b9.png" src="../../_images/00d9cc2b9bf06651d5335434c0ffdc01a4a66ff83d8faf60b2d2cb79570417b9.png" />
+</div>
+</div>
+<p>A separate distribution, <code class="docutils literal notranslate"><span class="pre">weibull_max</span></code>, was provided as the reflection of <code class="docutils literal notranslate"><span class="pre">weibull_min</span></code> about the origin. Now, this is just <code class="docutils literal notranslate"><span class="pre">-X</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Y</span> <span class="o">=</span> <span class="o">-</span><span class="n">X</span>
+<span class="n">Y</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/d9fb02cede0e01c998323018773789a11fe6391868dedbd8f7c354a06116486a.png" src="../../_images/d9fb02cede0e01c998323018773789a11fe6391868dedbd8f7c354a06116486a.png" />
+</div>
+</div>
+<section id="moments">
+<h3>Moments<a class="headerlink" href="#moments" title="Link to this heading">#</a></h3>
+<p>The old infrastructure offers a <code class="docutils literal notranslate"><span class="pre">moments</span></code> method for raw moments. When only the order is specified, the new <code class="docutils literal notranslate"><span class="pre">moment</span></code> method is a drop-in replacement.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">weibull_min</span><span class="o">.</span><span class="n">moment</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">c</span><span class="p">),</span> <span class="n">X</span><span class="o">.</span><span class="n">moment</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># first raw moment of the Weibull distribution with shape c</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(0.8862269254527579), np.float64(0.8862269254527579))
+</pre></div>
+</div>
+</div>
+</div>
+<p>However, the old infrastructure also has a <code class="docutils literal notranslate"><span class="pre">stats</span></code> method, which provided various statistics of the distribution. The following statistics were associated with the indicated characters.</p>
+<ul class="simple">
+<li><p>Mean (first raw moment about the origin, <code class="docutils literal notranslate"><span class="pre">'m'</span></code>)</p></li>
+<li><p>Variance (second central moment, <code class="docutils literal notranslate"><span class="pre">'v'</span></code>)</p></li>
+<li><p>Skewness (third standardized moment, <code class="docutils literal notranslate"><span class="pre">'s'</span></code>)</p></li>
+<li><p>Excess kurtosis (fourth standardized moment minus 3, <code class="docutils literal notranslate"><span class="pre">'k'</span></code>)</p></li>
+</ul>
+<p>For example:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">weibull_min</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">moments</span><span class="o">=</span><span class="s1">&#39;mvsk&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(0.8862269254527579),
+ np.float64(0.21460183660255183),
+ np.float64(0.6311106578189344),
+ np.float64(0.24508930068764556))
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, moments of any <code class="docutils literal notranslate"><span class="pre">order</span></code> and <code class="docutils literal notranslate"><span class="pre">kind</span></code> (raw, central, and standardized) can be computed by passing the appropriate arguments to the new <code class="docutils literal notranslate"><span class="pre">moment</span></code> method.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">moment</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;raw&#39;</span><span class="p">),</span> 
+ <span class="n">X</span><span class="o">.</span><span class="n">moment</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;central&#39;</span><span class="p">),</span> 
+ <span class="n">X</span><span class="o">.</span><span class="n">moment</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;standardized&#39;</span><span class="p">),</span> 
+ <span class="n">X</span><span class="o">.</span><span class="n">moment</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;standardized&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(0.8862269254527579),
+ np.float64(0.21460183660255183),
+ np.float64(0.6311106578189344),
+ np.float64(3.2450893006876314))
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note the difference in definition of <a class="reference external" href="https://en.wikipedia.org/wiki/Kurtosis">kurtosis</a>. Previously, the “excess” (AKA “Fisher’s”) kurtosis was provided. As a matter of convention (rather than the natural mathematical definition), this is the standardized fourth moment shifted by a constant value (<code class="docutils literal notranslate"><span class="pre">3</span></code>) to give a value of <code class="docutils literal notranslate"><span class="pre">0.0</span></code> for the normal distribution.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">moments</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.0)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The new <code class="docutils literal notranslate"><span class="pre">moment</span></code> and <code class="docutils literal notranslate"><span class="pre">kurtosis</span></code> methods do not observe this convention by default; they report the standardized fourth moment according to the mathematical definition. This is also known as the “non-excess” (or “Pearson’s”) kurtosis, and for the standard normal, it has a value of <code class="docutils literal notranslate"><span class="pre">3.0</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span><span class="o">.</span><span class="n">moment</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;standardized&#39;</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(3.0)
+</pre></div>
+</div>
+</div>
+</div>
+<p>For convenience, the <code class="docutils literal notranslate"><span class="pre">kurtosis</span></code> method offers a <code class="docutils literal notranslate"><span class="pre">convention</span></code> argument to select between the two.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span><span class="o">.</span><span class="n">kurtosis</span><span class="p">(</span><span class="n">convention</span><span class="o">=</span><span class="s1">&#39;excess&#39;</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span><span class="o">.</span><span class="n">kurtosis</span><span class="p">(</span><span class="n">convention</span><span class="o">=</span><span class="s1">&#39;non-excess&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(0.0), np.float64(3.0))
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="random-variates">
+<h3>Random Variates<a class="headerlink" href="#random-variates" title="Link to this heading">#</a></h3>
+<p>The old infrastructure’s <code class="docutils literal notranslate"><span class="pre">rvs</span></code> method has been replaced with <code class="docutils literal notranslate"><span class="pre">sample</span></code>, but there are two differences that should be noted when either 1) control of the random state is required or 2) arrays are used for shape, location, or scale parameters.</p>
+<p>First, argument <code class="docutils literal notranslate"><span class="pre">random_state</span></code> is replaced by <code class="docutils literal notranslate"><span class="pre">rng</span></code> per <a class="reference external" href="https://scientific-python.org/specs/spec-0007/">SPEC 7</a>. A pattern to control the random state in the past has been to use <code class="docutils literal notranslate"><span class="pre">numpy.random.seed</span></code> or to pass integer seeds to the <code class="docutils literal notranslate"><span class="pre">random_state</span></code> argument. The integer seeds were converted to instances of <code class="docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code>, so behavior for a given integer seed would be identical in these two cases:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span>
+<span class="n">dist</span><span class="o">.</span><span class="n">rvs</span><span class="p">(),</span> <span class="n">dist</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(1.6243453636632417), np.float64(1.6243453636632417))
+</pre></div>
+</div>
+</div>
+</div>
+<p>In the new infrastructure, pass instances of <code class="docutils literal notranslate"><span class="pre">numpy.Generator</span></code> to the <code class="docutils literal notranslate"><span class="pre">rng</span></code> argument of <code class="docutils literal notranslate"><span class="pre">sample</span></code> to control the random state. Note that integer seeds are now converted to instances of <code class="docutils literal notranslate"><span class="pre">numpy.random.Generator</span></code>, not instances of <code class="docutils literal notranslate"><span class="pre">numpy.random.RandomState</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># instantiate a numpy.random.Generator</span>
+<span class="n">X</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">),</span> <span class="n">X</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">rng</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(0.345584192064786), np.float64(0.345584192064786))
+</pre></div>
+</div>
+</div>
+</div>
+<p>Second, the argument <code class="docutils literal notranslate"><span class="pre">shape</span></code> replaces argument <code class="docutils literal notranslate"><span class="pre">size</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dist</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[-0.61175641, -0.52817175, -1.07296862,  0.86540763],
+       [-2.3015387 ,  1.74481176, -0.7612069 ,  0.3190391 ],
+       [-0.24937038,  1.46210794, -2.06014071, -0.3224172 ]])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[ 1.32986255,  0.68405606, -2.00090748,  0.06518554],
+       [ 1.05668022, -0.08525123, -0.6514321 ,  0.62501929],
+       [-0.06554485,  0.05764884, -0.58604186, -1.59480397]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Besides the difference in name, there is a difference in behavior when array shape parameters are involved. Previously, the shape of distribution parameter arrays had to be included in <code class="docutils literal notranslate"><span class="pre">size</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dist</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">loc</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">shape</span>  <span class="c1"># `loc` has shape (2,)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(3, 4, 2)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, the shape of the parameter arrays is considered to be a property of the random variable object itself. Specifying the shape of array shape parameters would be redundant, so it is not included when specifying the <code class="docutils literal notranslate"><span class="pre">shape</span></code> of the sample.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Y</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">Y</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">shape</span>  <span class="c1"># the sample has shape (3, 4); each element is of shape (2,)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(3, 4, 2)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="probability-mass-aka-confidence-intervals">
+<h3>Probability Mass (AKA “Confidence”) Intervals<a class="headerlink" href="#probability-mass-aka-confidence-intervals" title="Link to this heading">#</a></h3>
+<p>The old infrastructure offered an <code class="docutils literal notranslate"><span class="pre">interval</span></code> method which, by default, would return a symmetric (about the median) interval containing a specified percentage of the distribution’s probability mass.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="mf">0.95</span>
+<span class="n">dist</span><span class="o">.</span><span class="n">interval</span><span class="p">(</span><span class="n">confidence</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(-1.959963984540054), np.float64(1.959963984540054))
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, call the inverse CDF and complementary CDF methods with the desired probability mass in each tail.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">a</span>
+<span class="n">X</span><span class="o">.</span><span class="n">icdf</span><span class="p">(</span><span class="n">p</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="n">X</span><span class="o">.</span><span class="n">iccdf</span><span class="p">(</span><span class="n">p</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(-1.959963984540054), np.float64(1.959963984540054))
+</pre></div>
+</div>
+</div>
+</div>
+<section id="likelihood-function">
+<h4>Likelihood Function<a class="headerlink" href="#likelihood-function" title="Link to this heading">#</a></h4>
+<p>The old infrastructure offers a function to compute the <strong>n</strong>egative <strong>l</strong>og-<a class="reference external" href="https://en.wikipedia.org/wiki/Likelihood_function"><strong>l</strong>ikelihood <strong>f</strong>unction</a>, erroneously named <code class="docutils literal notranslate"><span class="pre">nnlf</span></code> (instead of <code class="docutils literal notranslate"><span class="pre">nllf</span></code>). It accepts the parameters of the distribution as a tuple and observations as an array.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span>
+<span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">nnlf</span><span class="p">((</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="p">),</span> <span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(131.07116392314364)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, simply compute the negative log-likelihood according to its mathematical definition.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span>
+<span class="o">-</span><span class="n">X</span><span class="o">.</span><span class="n">logpdf</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(131.07116392314364)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="expected-values">
+<h3>Expected Values<a class="headerlink" href="#expected-values" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">expect</span></code> method of the old infrastructure estimates a definite integral of an arbitrary function weighted by the PDF of the distribution. For instance, the fourth moment of the distribution is given by:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">4</span>
+<span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">lb</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(3.000000000000001)
+</pre></div>
+</div>
+</div>
+</div>
+<p>This provides little added convenience over what the source code does: use <code class="docutils literal notranslate"><span class="pre">scipy.integrate.quad</span></code> to perform the integration numerically.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">integrate</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">4</span> <span class="o">*</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">integrate</span><span class="o">.</span><span class="n">quad</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>  <span class="c1"># integral estimate, estimate of the error</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(3.0000000000000053, 1.2043244026618655e-08)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Of course, this can just as easily be done with the new infrastructure.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">4</span> <span class="o">*</span> <span class="n">X</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">integrate</span><span class="o">.</span><span class="n">quad</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="o">=-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>  <span class="c1"># integral estimate, estimate of the error</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(3.0000000000000053, 1.2043244043338238e-08)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">conditional</span></code> argument simply scales the result by the inverse of the probability mass contained within the interval.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">4</span>
+<span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">expect</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">conditional</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(1.657813862143119)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Using <code class="docutils literal notranslate"><span class="pre">quad</span></code> directly, that is:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">4</span> <span class="o">*</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">prob</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">-</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="n">integrate</span><span class="o">.</span><span class="n">quad</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">prob</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(1.6578138621431193)
+</pre></div>
+</div>
+</div>
+</div>
+<p>And with the new random variables:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">integrate</span><span class="o">.</span><span class="n">quad</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">X</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(1.6578138621431193)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that the <code class="docutils literal notranslate"><span class="pre">cdf</span></code> method of the new random variables accepts two arguments to compute the probability mass within the specified interval. In many cases, this can avoid subtractive error (“catastrophic cancellation”) when the probability mass is very small.</p>
+</section>
+<section id="fitting">
+<h3>Fitting<a class="headerlink" href="#fitting" title="Link to this heading">#</a></h3>
+<section id="location-scale-estimation">
+<h4>Location / Scale Estimation<a class="headerlink" href="#location-scale-estimation" title="Link to this heading">#</a></h4>
+<p>The old infrastructure offered a function to estimate location and scale parameters of the distribution from data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">91392794601852341588152500276639671056</span><span class="p">)</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">weibull_min</span>
+<span class="n">c</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">4.</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="n">loc</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+<span class="n">dist</span><span class="o">.</span><span class="n">fit_loc_scale</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+<span class="c1"># compare against 0 (default location) and 4 (specified scale)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(1.8268432669973347), np.float64(1.9640905288934327))
+</pre></div>
+</div>
+</div>
+</div>
+<p>Based on the source code, it is easy to replicate the method.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">Weibull</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_loc_scale</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">X</span><span class="o">.</span><span class="n">variance</span><span class="p">()</span>
+    <span class="n">m_</span><span class="p">,</span> <span class="n">v_</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">data</span><span class="o">.</span><span class="n">var</span><span class="p">()</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">v_</span> <span class="o">/</span> <span class="n">v</span><span class="p">)</span>
+    <span class="n">loc</span> <span class="o">=</span> <span class="n">m_</span> <span class="o">-</span> <span class="n">scale</span><span class="o">*</span><span class="n">m</span>
+    <span class="k">return</span> <span class="n">loc</span><span class="p">,</span> <span class="n">scale</span>
+
+<span class="n">fit_loc_scale</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(1.8268432669973347), np.float64(1.9640905288934327))
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that the estimates are quite poor in this example, and poor performance of the heuristic factored into the decision not to provide a replacement.</p>
+</section>
+<section id="maximum-likelihood-estimation">
+<h4>Maximum Likelihood Estimation<a class="headerlink" href="#maximum-likelihood-estimation" title="Link to this heading">#</a></h4>
+<p>The last method of the old infrastructure is <code class="docutils literal notranslate"><span class="pre">fit</span></code>, which estimates the location, scale, and shape parameters of an underlying distribution given a sample from the distribution.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c_</span><span class="p">,</span> <span class="n">loc_</span><span class="p">,</span> <span class="n">scale_</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">weibull_min</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">c_</span><span class="p">,</span> <span class="n">loc_</span><span class="p">,</span> <span class="n">scale_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(0.5960699537061247),
+ np.float64(1.8950104942593064e-05),
+ np.float64(4.015875612107546))
+</pre></div>
+</div>
+</div>
+</div>
+<p>The convenience of this method is a blessing and a curse.</p>
+<p>When it works, the simplicity is much appreciated. For some distributions, analytical expressions for the <a class="reference external" href="https://en.wikipedia.org/wiki/Maximum_likelihood_estimation">maximum likelihood estimates</a> (MLE) of the parameters have been programmed manually, and for these distributions, the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method is quite reliable.</p>
+<p>For most distributions, however, fitting is performed by numerical minimization of the negative log-likelihood function. This is not guaranteed to be successful - both because of inherent limitations of MLE and the state of the art of numerical optimization - and in these cases, the user of <code class="docutils literal notranslate"><span class="pre">fit</span></code> is stuck. However, a modicum of understanding goes a long way toward ensuring success, so here we present a mini-tutorial of fitting using the new infrastructure.</p>
+<p>First, note that MLE is one of several potential strategies for fitting distributions to data. It does nothing more than find the values of the distribution parameters for which the negative log-likelihood (NLLF) is minimized. Note that for the distribution from which the data were generated, the NLLF is:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">weibull_min</span><span class="o">.</span><span class="n">nnlf</span><span class="p">((</span><span class="n">c</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">scale</span><span class="p">),</span> <span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(246.9503871545133)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The NLLF of the parameters estimated using <code class="docutils literal notranslate"><span class="pre">fit</span></code> are lower:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">weibull_min</span><span class="o">.</span><span class="n">nnlf</span><span class="p">((</span><span class="n">c_</span><span class="p">,</span> <span class="n">loc_</span><span class="p">,</span> <span class="n">scale_</span><span class="p">),</span> <span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(230.35385152369787)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Therefore, <code class="docutils literal notranslate"><span class="pre">fit</span></code> considers its job done, whether or not this satisfies the user’s notions of a “good fit” or whether the parameters are within reasonable bounds. Besides allowing the user to specify a guess for distribution parameters, it gives little control over the process. (<em>Note: technically, the <code class="docutils literal notranslate"><span class="pre">optimizer</span></code> argument can be used for greater control, but this is not well documented, and its use negates any convenience offered by the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</em>)</p>
+<p>Another problem is that MLE is inherently poorly behaved for some distributions. In this example, for instance, we can make the NLLF as low as we please simply by setting the location to the minimum of the data - even for bogus values of the shape and scale parameters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">weibull_min</span><span class="o">.</span><span class="n">nnlf</span><span class="p">((</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="mi">10</span><span class="p">),</span> <span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(-inf)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Compounding with these issues is that <code class="docutils literal notranslate"><span class="pre">fit</span></code> estimates all distribution parameters by default, including the location. In the example above, we are probably only interested in the more common two-parameter Weibull distribution because the actual location is zero. <code class="docutils literal notranslate"><span class="pre">fit</span></code> <em>can</em> accommodate this by specifying that the location is a fixed parameter.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># c_, loc_, scale_ = stats.weibull_min.fit(data, loc=0)  # careful! this provides loc=0 as a *guess*</span>
+<span class="n">c_</span><span class="p">,</span> <span class="n">loc_</span><span class="p">,</span> <span class="n">scale_</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">weibull_min</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">floc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">c_</span><span class="p">,</span> <span class="n">loc_</span><span class="p">,</span> <span class="n">scale_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(0.5834128280886433), 0, np.float64(3.829972848420729))
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">weibull_min</span><span class="o">.</span><span class="n">nnlf</span><span class="p">((</span><span class="n">c_</span><span class="p">,</span> <span class="n">loc_</span><span class="p">,</span> <span class="n">scale_</span><span class="p">),</span> <span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(244.9617429249505)
+</pre></div>
+</div>
+</div>
+</div>
+<p>But by providing a <code class="docutils literal notranslate"><span class="pre">fit</span></code> method that purportedly “just works”, users are encouraged to neglect some of these important details.</p>
+<p>Instead, we suggest that it is almost as simple to fit distributions to data using the generic optimization tools provided by SciPy. However, this allows the user to perform the fit according to their preferred objective function, provides options when things don’t work as expected, and helps the user to avoid the most common pitfalls.</p>
+<p>For instance, suppose our desired objective function is indeed the negative log likelihood. It is simple to define as a function of the shape parameter <code class="docutils literal notranslate"><span class="pre">c</span></code> and scale only, leaving the location at its default of zero.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">nllf</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">c</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">x</span>  <span class="c1"># pass (only) `c` and `scale` as elements of `x`</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">Weibull</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">X</span><span class="o">.</span><span class="n">logpdf</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="n">nllf</span><span class="p">((</span><span class="n">c_</span><span class="p">,</span> <span class="n">scale_</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(244.96174292495053)
+</pre></div>
+</div>
+</div>
+</div>
+<p>To perform the minimization, we can use <code class="docutils literal notranslate"><span class="pre">scipy.optimize.minimize</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">optimize</span>
+<span class="n">eps</span> <span class="o">=</span> <span class="mf">1e-10</span>  <span class="c1"># numerical tolerance to avoid invalid parameters</span>
+<span class="n">lb</span> <span class="o">=</span> <span class="p">[</span><span class="n">eps</span><span class="p">,</span> <span class="n">eps</span><span class="p">]</span>  <span class="c1"># lower bound on `c` and `scale`</span>
+<span class="n">ub</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>  <span class="c1"># upper bound on `c` and `scale`</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># guess to get optimization started</span>
+<span class="n">bounds</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">Bounds</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span>
+<span class="n">res_mle</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">nllf</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
+<span class="n">res_mle</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  message: CONVERGENCE: NORM OF PROJECTED GRADIENT &lt;= PGTOL
+  success: True
+   status: 0
+      fun: 244.9617429227769
+        x: [ 5.834e-01  3.830e+00]
+      nit: 13
+      jac: [-2.842e-06 -5.684e-06]
+     nfev: 45
+     njev: 15
+ hess_inv: &lt;2x2 LbfgsInvHessProduct with dtype=float64&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>The value of the objective function is essentially identical, and the PDFs are indistinguishable.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+
+<span class="n">c_</span><span class="p">,</span> <span class="n">scale_</span> <span class="o">=</span> <span class="n">res_mle</span><span class="o">.</span><span class="n">x</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">Weibull</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">c_</span><span class="p">)</span><span class="o">*</span><span class="n">scale_</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;numerical optimization&#39;</span><span class="p">)</span>
+
+<span class="n">c_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">scale_</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">weibull_min</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">floc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">Weibull</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">c_</span><span class="p">)</span><span class="o">*</span><span class="n">scale_</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Y</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;`weibull_min.fit`&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;pdf(x)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/ad46519e328b396fb10e15e4ae3e8d23d2d33ff7938b53d82da28487ed77d3c1.png" src="../../_images/ad46519e328b396fb10e15e4ae3e8d23d2d33ff7938b53d82da28487ed77d3c1.png" />
+</div>
+</div>
+<p>However, with this approach, it is trivial to make changes to the fitting procedure to suit our needs, enabling estimation procedures other than those provided by <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rv_continuous.fit.html#scipy.stats.rv_continuous.fit"><code class="docutils literal notranslate"><span class="pre">rv_continuous.fit</span></code></a>. For instance, we can perform <a class="reference external" href="https://en.wikipedia.org/wiki/Maximum_spacing_estimation">maximum spacing estimation</a> (MSE) by changing the objective function to the <strong>n</strong>egative <strong>l</strong>og <strong>p</strong>roduct <strong>s</strong>pacing as follows.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">nlps</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">c</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">Weibull</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">support</span><span class="p">())))</span>  <span class="c1"># Append the endpoints of the support to the data</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">X</span><span class="o">.</span><span class="n">logcdf</span><span class="p">(</span><span class="n">x</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">real</span>  <span class="c1"># Minimize the sum of the logs the probability mass between points</span>
+
+<span class="n">res_mps</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">nlps</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
+<span class="n">res_mps</span><span class="o">.</span><span class="n">x</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0.55917795, 3.85548036])
+</pre></div>
+</div>
+</div>
+</div>
+<p>For method of <a class="reference external" href="https://en.wikipedia.org/wiki/L-moment">L-moments</a> (which attempts to match the distribution and sample L-moments):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">lmoment_residual</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">c</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">Weibull</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale</span>
+    <span class="n">lmoments_X</span> <span class="o">=</span> <span class="p">[</span><span class="n">X</span><span class="o">.</span><span class="n">lmoment</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">X</span><span class="o">.</span><span class="n">lmoment</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>  <span class="c1"># the first two l-moments of the distribution</span>
+    <span class="n">lmoments_x</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">lmoment</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>  <span class="c1"># first two l-moments of the data</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">lmoments_x</span> <span class="o">-</span> <span class="n">lmoments_X</span><span class="p">)</span>  <span class="c1"># Minimize the norm of the difference</span>
+
+<span class="n">x0</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>  <span class="c1"># This method is a bit sensitive to the initial guess</span>
+<span class="n">res_lmom</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">lmoment_residual</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">)</span>
+<span class="n">res_lmom</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">res_lmom</span><span class="o">.</span><span class="n">fun</span>  <span class="c1"># residual should be ~0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(array([0.60943275, 3.90234502]), np.float64(5.028046770670363e-07))
+</pre></div>
+</div>
+</div>
+</div>
+<p>The plots for all three methods look similar and seem to describe the data, giving us some confidence that we have a good fit.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">res</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">res_mle</span><span class="p">,</span> <span class="s2">&quot;MLE&quot;</span><span class="p">),</span> <span class="p">(</span><span class="n">res_mps</span><span class="p">,</span> <span class="s2">&quot;MPS&quot;</span><span class="p">),</span> <span class="p">(</span><span class="n">res_lmom</span><span class="p">,</span> <span class="s2">&quot;L-moments&quot;</span><span class="p">)]:</span>
+    <span class="n">c_</span><span class="p">,</span> <span class="n">scale_</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">x</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">Weibull</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">c_</span><span class="p">)</span><span class="o">*</span><span class="n">scale_</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;pdf(x)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/0a50dfdd0c287647bf9a1f5a8018e425505e31e58ca51f6929ce100dec50a68b.png" src="../../_images/0a50dfdd0c287647bf9a1f5a8018e425505e31e58ca51f6929ce100dec50a68b.png" />
+</div>
+</div>
+<p>Estimation does not always involve fitting distributions to data. For instance, in <a class="reference external" href="https://github.com/scipy/scipy/issues/12134">gh-12134</a>, a user needed to calculate the shape and scale parameters of the Weibull distribution to achieve a given mean and standard deviation. This fits easily into the same framework.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">moments_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">8</span><span class="p">,</span> <span class="mi">20</span><span class="p">])</span>  <span class="c1"># desired mean and standard deviation</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">c</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">Weibull</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale</span>
+    <span class="n">moments_X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">X</span><span class="o">.</span><span class="n">standard_deviation</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">moments_X</span> <span class="o">-</span> <span class="n">moments_0</span><span class="p">)</span>
+
+<span class="n">bounds</span><span class="o">.</span><span class="n">lb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">])</span>  <span class="c1"># the Weibull distribution is problematic for very small c</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;slsqp&#39;</span><span class="p">)</span>  <span class="c1"># easily change the minimization method</span>
+<span class="n">res</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     message: Optimization terminated successfully
+     success: True
+      status: 0
+         fun: 4.594829646235973e-07
+           x: [ 4.627e-01  3.430e+00]
+         nit: 21
+         jac: [ 1.322e+02 -2.331e-01]
+        nfev: 100
+        njev: 21
+ multipliers: []
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="new-and-advanced-features">
+<h2>New and Advanced Features<a class="headerlink" href="#new-and-advanced-features" title="Link to this heading">#</a></h2>
+<p><a id='Transformations'></a></p>
+<section id="transformations">
+<h3>Transformations<a class="headerlink" href="#transformations" title="Link to this heading">#</a></h3>
+<p>Mathematical transformations can be applied to random variables. For instance, many elementary arithmetic operations (<code class="docutils literal notranslate"><span class="pre">+</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code>, <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">/</span></code>, <code class="docutils literal notranslate"><span class="pre">**</span></code>) between random variables and scalars work.</p>
+<p>For instance, we can see that the reciprocal of a Weibull-distributed RV is distributed according to <code class="docutils literal notranslate"><span class="pre">scipy.stats.invweibull</span></code>. (An “inverse” distribution is typically the distribution underlying the reciprocal of a random variable.)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c</span> <span class="o">=</span> <span class="mf">10.6</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">Weibull</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">10.6</span><span class="p">)</span>  
+<span class="n">Y</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">X</span>  <span class="c1"># compare to `invweibull`</span>
+<span class="n">Y</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">2.05</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">invweibull</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;`1 / X`&#39;</span><span class="p">,</span> <span class="s1">&#39;`invweibull`&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Inverse Weibull PDF&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/circleci/repo/build-install/usr/lib/python3.14/site-packages/scipy/stats/_distribution_infrastructure.py:1887: RuntimeWarning: divide by zero encountered in divide
+  h=lambda u: 1 / u, dh=lambda u: 1 / u ** 2)
+/home/circleci/repo/build-install/usr/lib/python3.14/site-packages/scipy/stats/_continuous_distns.py:2802: RuntimeWarning: invalid value encountered in multiply
+  return c*pow(x, c-1)*np.exp(-pow(x, c))
+</pre></div>
+</div>
+<img alt="../../_images/98ae789fc54294d125008a81a13f1eeb5d460135ffe71c21fba388e1d1502d2e.png" src="../../_images/98ae789fc54294d125008a81a13f1eeb5d460135ffe71c21fba388e1d1502d2e.png" />
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">scipy.stats.chi2</span></code> describes a sum of the squares of normally-distributed random variables.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">X</span><span class="o">**</span><span class="mi">2</span>  <span class="c1"># compare to chi2</span>
+<span class="n">Y</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="mi">5</span><span class="p">));</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">chi2</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;`X**2`&#39;</span><span class="p">,</span> <span class="s1">&#39;`chi2`&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Chi-squared PDF&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/1ec9a7f6eb6208d1f93c138d5971b1f57385f16e220e3a3620304732f43b26a6.png" src="../../_images/1ec9a7f6eb6208d1f93c138d5971b1f57385f16e220e3a3620304732f43b26a6.png" />
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">scipy.stats.foldcauchy</span></code> describes the absolute value of a Cauchy-distributed random variable. (A “folded” distribution is the distribution underlying the absolute value of a random variable.)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Cauchy</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">make_distribution</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">cauchy</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="mf">4.72</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">Cauchy</span><span class="p">()</span> <span class="o">+</span> <span class="n">c</span>  
+<span class="n">Y</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>  <span class="c1"># compare to `foldcauchy`</span>
+<span class="n">Y</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">))</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">foldcauchy</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;`abs(X)`&#39;</span><span class="p">,</span> <span class="s1">&#39;`foldcauchy`&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Folded Cauchy PDF&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/d20c4efda0663d12117b4ab5768c5d91cdf71cb4a9673a74153b189a3c526783.png" src="../../_images/d20c4efda0663d12117b4ab5768c5d91cdf71cb4a9673a74153b189a3c526783.png" />
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">scipy.stats.lognormal</span></code> describes the exponential of a normally distributed random variable. It is so-named because the logarithm of the resulting random variable is normally distributed. (In general, a “log” distribution is typically the distribution underlying the <em>exponential</em> of a random variable.)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">u</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span><span class="o">*</span><span class="n">s</span> <span class="o">+</span> <span class="n">u</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>  <span class="c1"># compare to `lognorm`</span>
+<span class="n">Y</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">eps</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">lognorm</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">u</span><span class="p">))</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;`exp(X)`&#39;</span><span class="p">,</span> <span class="s1">&#39;`lognorm`&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Log-Normal PDF&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/8491d1efa9b0858e282a28421149d82653215f5a5719f1894d36ef71dadbb154.png" src="../../_images/8491d1efa9b0858e282a28421149d82653215f5a5719f1894d36ef71dadbb154.png" />
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">scipy.stats.loggamma</span></code> describes the logarithm of of a Gamma-distributed random variable. Note that according to typical conventions, the appropriate name of this distribution would be <a class="reference external" href="https://reference.wolfram.com/language/ref/ExpGammaDistribution.html.en#:~:text=The%20term%20exp%2Dgamma%20is,of%20qualitatively%20similar%20probability%20distributions.">exp-gamma</a> because the exponential of the RV is gamma-distributed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Gamma</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">make_distribution</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">gamma</span><span class="p">)</span>
+<span class="n">a</span> <span class="o">=</span> <span class="mf">0.414</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">Gamma</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>  
+<span class="n">Y</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>  <span class="c1"># compare to `loggamma`</span>
+<span class="n">Y</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">17.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">loggamma</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;`log(X)`&#39;</span><span class="p">,</span> <span class="s1">&#39;`loggamma`&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Exp-Gamma PDF&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/f0b46d5bc474e60a0bf4e5898f15d39861d8559ff4e428bcf8e9387f5ffebea5.png" src="../../_images/f0b46d5bc474e60a0bf4e5898f15d39861d8559ff4e428bcf8e9387f5ffebea5.png" />
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">scipy.stats.truncnorm</span></code> is the distribution underlying a truncated normal random variable. Note that the truncation transformation can be applied either before or after shifting and scaling the normally-distributed random variable, which can make it much easier to achieve the desired result than <code class="docutils literal notranslate"><span class="pre">scipy.stats.truncnorm</span></code> (which inherently shifts and scales <em>after</em> truncation).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">2</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span>  
+<span class="n">Y</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">truncate</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>  <span class="c1"># compare to `truncnorm`</span>
+<span class="n">Y</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">truncnorm</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;`truncate(X, a, b)`&#39;</span><span class="p">,</span> <span class="s1">&#39;`truncnorm`&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Truncated Normal PDF&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/4b132d961901cca1e594561c664d3c77f5be9d57366879008733c61369e946c2.png" src="../../_images/4b132d961901cca1e594561c664d3c77f5be9d57366879008733c61369e946c2.png" />
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">scipy.stats.dgamma</span></code> is a mixture of two gamma-distributed RVs, one of which is reflected about the origin. (Typically, a “double” distribution is the distribution underlying a mixture of RVs, one of which is reflected.)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="mf">1.1</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">Gamma</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">Mixture</span><span class="p">((</span><span class="n">X</span><span class="p">,</span> <span class="o">-</span><span class="n">X</span><span class="p">),</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="c1"># plot method not available for mixtures</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Y</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">dgamma</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;`Mixture(X, -X)`&#39;</span><span class="p">,</span> <span class="s1">&#39;`dgamma`&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Double Gamma PDF&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/53186cf4b79e2d0ef340633ab18737438010d8154c940ce9469b477d6c73df56.png" src="../../_images/53186cf4b79e2d0ef340633ab18737438010d8154c940ce9469b477d6c73df56.png" />
+</div>
+</div>
+<section id="limitations">
+<h4>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">#</a></h4>
+<p>While most arithmetic transformations between random variables and Python scalars or NumPy arrays are supported, there are a few restrictions.</p>
+<ul class="simple">
+<li><p>Raising a random variable to the power of an argument is only implemented when the argument is a positive integer.</p></li>
+<li><p>Raising an argument to the power of a random variable is only implemented when the argument is a positive scalar other than 1.</p></li>
+<li><p>Division by a random variable is only implemented when the support is either entirely non-negative or non-positive.</p></li>
+<li><p>The logarithm of a random variable is only implemented when the support is non-negative. (The logarithm of negative values is imaginary.)</p></li>
+</ul>
+<p>Arithmetic operations between two random variables are <em>not</em> yet supported. Note that such operations are much more complex mathematically; for instance, the PDF of the sum of the two random variables involves convolution of the two PDFs.</p>
+<p>Also, while transformations are composable, a) truncation and b) shifting/scaling can each be done only once. For instance, <code class="docutils literal notranslate"><span class="pre">Y</span> <span class="pre">=</span> <span class="pre">2</span> <span class="pre">*</span> <span class="pre">stats.exp(X</span> <span class="pre">+</span> <span class="pre">1)</span></code> will raise an error because this would require shifting before exponentiation and scaling after exponentiation; this is treated as “shifting/scaling” twice. However, a mathematical simplification is possible here (and in many cases) to avoid the problem: <code class="docutils literal notranslate"><span class="pre">Y</span> <span class="pre">=</span> <span class="pre">(2*math.exp(2))</span> <span class="pre">*</span> <span class="pre">stats.exp(X)</span></code> is equivalent and requires only one scaling operation.</p>
+<p>Although the transformations are fairly robust, they all rely on generic implementations which may cause numerical difficulties. If you are concerned about the accuracy of the results of a transformation, consider comparing the resulting PDF against a histogram of a random sample.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">X</span><span class="o">**</span><span class="mi">3</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Y</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">100000</span><span class="p">)</span><span class="o">**</span><span class="mi">3</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/455d30bed16c2c34464a064f355b9756a8209f735da43dcf3e6aa68307c11f5a.png" src="../../_images/455d30bed16c2c34464a064f355b9756a8209f735da43dcf3e6aa68307c11f5a.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="quasi-monte-carlo-sampling">
+<h3>Quasi-Monte Carlo Sampling<a class="headerlink" href="#quasi-monte-carlo-sampling" title="Link to this heading">#</a></h3>
+<p>Random variables enable generation of quasi-random, low-discrepancy samples from statistical distributions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">7824387278234</span><span class="p">)</span>
+<span class="n">qrng</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">qmc</span><span class="o">.</span><span class="n">Sobol</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>  <span class="c1"># instantiate a QMCEngine</span>
+
+<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">3.5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">,</span> <span class="mi">31</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">qrng</span><span class="p">),</span> <span class="n">bins</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;quasi-random&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">),</span> <span class="n">bins</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;pseudo-random&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Histogram of normally-distributed sample&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/932a411b391c3e928e3415910188f35618d38069964327865c3db5eb657fc065.png" src="../../_images/932a411b391c3e928e3415910188f35618d38069964327865c3db5eb657fc065.png" />
+</div>
+</div>
+<p>Note that when generating multiple samples (e.g. <code class="docutils literal notranslate"><span class="pre">len(shape)</span> <span class="pre">&gt;</span> <span class="pre">1</span></code>),  each slice along the zeroth axis is an independent, low-discrepancy sequency. The following generates two independent QMC samples, each of length 512.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="mi">512</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">rng</span><span class="o">=</span><span class="n">qrng</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">bins</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;sample 0&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">samples</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">bins</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;sample 1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Histograms of normally-distributed samples&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/6bbd00d19a96f734f83331ca919c26d4cf2782448025e30fe00ec51856ae39fb.png" src="../../_images/6bbd00d19a96f734f83331ca919c26d4cf2782448025e30fe00ec51856ae39fb.png" />
+</div>
+</div>
+<p>The result is quite different if we generate 512 independent QMC sequences, each of length 2.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">sample</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span> <span class="n">rng</span><span class="o">=</span><span class="n">qrng</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">samples</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bins</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;sample 0&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">samples</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">bins</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;sample 1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Histograms of normally-distributed samples&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/da70f0c082218a43225c81c519f76763857fd63593b95efd891509700bffb68d.png" src="../../_images/da70f0c082218a43225c81c519f76763857fd63593b95efd891509700bffb68d.png" />
+</div>
+</div>
+</section>
+<section id="accuracy">
+<h3>Accuracy<a class="headerlink" href="#accuracy" title="Link to this heading">#</a></h3>
+<p>For some distributions, like <code class="docutils literal notranslate"><span class="pre">scipy.stats.norm</span></code>, almost all methods of the distribution are customized to ensure accurate computation. For others, like <code class="docutils literal notranslate"><span class="pre">scipy.stats.gausshyper</span></code>, little more than the PDF is defined, and the other methods must be computed numerically based on the PDF. For example, the survival function (complementary CDF) of the Gauss hypergeometric distribution is calculated by numerically integrating the PDF from <code class="docutils literal notranslate"><span class="pre">0</span></code> (the left end of the support) to <code class="docutils literal notranslate"><span class="pre">x</span></code> to get the CDF, then the complement is taken.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span>
+<span class="n">x</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">frozen</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">gausshyper</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">)</span>
+<span class="n">frozen</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.28779340921080643)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frozen</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">integrate</span><span class="o">.</span><span class="n">quad</span><span class="p">(</span><span class="n">frozen</span><span class="o">.</span><span class="n">pdf</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.True_
+</pre></div>
+</div>
+</div>
+</div>
+<p>However, another approach would be to numerically integrate the PDF from <code class="docutils literal notranslate"><span class="pre">x</span></code> to <code class="docutils literal notranslate"><span class="pre">1</span></code> (the right end of the support).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">integrate</span><span class="o">.</span><span class="n">quad</span><span class="p">(</span><span class="n">frozen</span><span class="o">.</span><span class="n">pdf</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.28779340919669805
+</pre></div>
+</div>
+</div>
+</div>
+<p>These are distinct but equally valid approaches, so assuming the PDF is accurate, it is unlikely that the two results are inaccurate in the same way. Therefore, we can estimate the accuracy of the results by comparing them.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res1</span> <span class="o">=</span> <span class="n">frozen</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">res2</span> <span class="o">=</span> <span class="n">integrate</span><span class="o">.</span><span class="n">quad</span><span class="p">(</span><span class="n">frozen</span><span class="o">.</span><span class="n">pdf</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">abs</span><span class="p">((</span><span class="n">res1</span> <span class="o">-</span> <span class="n">res2</span><span class="p">)</span> <span class="o">/</span> <span class="n">res1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(4.902259981810363e-11)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The new infrastructure is aware of several different ways for computing most quantities. For example, this diagram illustrates the relationships between various distribution functions.</p>
+<p><img alt="image.png" src="../../_images/rv_infrastructure_1.png" /></p>
+<p>It follows a decision tree to choose what is expected to be the most accurate way of estimating the quantity. These specific decision trees for the “best” method are subject to change between versions of SciPy, but an example for computing the complementary CDF might look something like:</p>
+<p><img alt="image.png" src="../../_images/rv_infrastructure_2.png" /></p>
+<p>and for calculating a moment:</p>
+<p><img alt="image.png" src="../../_images/rv_infrastructure_3.png" /></p>
+<p>However, you can override the method it uses with the <code class="docutils literal notranslate"><span class="pre">method</span></code> argument.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">GaussHyper</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">make_distribution</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">gausshyper</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">GaussHyper</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">ccdf</span></code>, <code class="docutils literal notranslate"><span class="pre">method='quadrature'</span></code> integrates the PDF in right tail.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">.</span><span class="n">ccdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;quadrature&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">integrate</span><span class="o">.</span><span class="n">tanhsinh</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">pdf</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">integral</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.True_
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">method='complement'</span></code> takes the complement of the CDF.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">.</span><span class="n">ccdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;complement&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">integrate</span><span class="o">.</span><span class="n">tanhsinh</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">pdf</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">integral</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.True_
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">method='logexp'</span></code> takes the exponential of the logarithm of the CCDF.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">.</span><span class="n">ccdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;logexp&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">integrate</span><span class="o">.</span><span class="n">tanhsinh</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">X</span><span class="o">.</span><span class="n">logpdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">integral</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.True_
+</pre></div>
+</div>
+</div>
+</div>
+<p>When in doubt, consider trying different <code class="docutils literal notranslate"><span class="pre">method</span></code>s to compute a given quantity.</p>
+</section>
+<section id="performance">
+<h3>Performance<a class="headerlink" href="#performance" title="Link to this heading">#</a></h3>
+<p>Consider the performance of calculations involving the Gauss hypergeometric distribution. For scalar shapes and argument, performance of the new and old infrastructures are comparable. The new infrastructure is not expected to be much faster; although it reduces the “overhead” of parameter validation, it is not significantly faster at numerical integration of scalar quantities, and the latter dominates the execution time here.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> X.cdf(x)  # new infrastructure
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.1 ms ± 3.04 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> stats.gausshyper.cdf(x, a, b, c, z)  # old infrastructure
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.01 ms ± 22.8 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">stats</span><span class="o">.</span><span class="n">gausshyper</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.True_
+</pre></div>
+</div>
+</div>
+</div>
+<p>But the new infrastructure is much faster when arrays are involved. This is because the underlying integrator (<a class="reference external" href="https://scipy.github.io/devdocs/reference/generated/scipy.integrate.tanhsinh.html#scipy.integrate.tanhsinh"><code class="docutils literal notranslate"><span class="pre">scipy.integrate.tanhsinh</span></code></a>) and root finder (<a class="reference external" href="https://scipy.github.io/devdocs/reference/generated/scipy.optimize.elementwise.find_root.html"><code class="docutils literal notranslate"><span class="pre">scipy.optimize.elementwise.find_root</span></code></a>) developed for the new infrastructure are natively vectorized, whereas the legacy routines used by the old infrastructure (<code class="docutils literal notranslate"><span class="pre">scipy.integrate.quad</span></code> and <code class="docutils literal notranslate"><span class="pre">scipy.optimize.brentq</span></code>) are not.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> X.cdf(x)  # new infrastructure
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4.24 ms ± 40.7 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> stats.gausshyper.cdf(x, a, b, c, z)  # old infrastructure
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>938 ms ± 16.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Comparable performance improvements can be expected for array calculations whenever the underlying functions are computed by either numerical quadrature or inversion (root-finding).</p>
+</section>
+<section id="visualization">
+<h3>Visualization<a class="headerlink" href="#visualization" title="Link to this heading">#</a></h3>
+<p>We can readily visualize functions of the distribution underlying random variables using the convenience method, <code class="docutils literal notranslate"><span class="pre">plot</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/5dd20a77354f50da4c3b4620cc49b576d9a6b162b805699ca34d61d1f10daef6.png" src="../../_images/5dd20a77354f50da4c3b4620cc49b576d9a6b162b805699ca34d61d1f10daef6.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;cdf&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/ca784ab49c9c72ca1ad3bb6630d7ac315d21c4262dd0013416df4b2cdc05dd2d.png" src="../../_images/ca784ab49c9c72ca1ad3bb6630d7ac315d21c4262dd0013416df4b2cdc05dd2d.png" />
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">plot</span></code> method is quite flexible, with a signature inspired by <a class="reference external" href="https://books.google.com/books?id=_kRX4LoFfGQC&amp;amp;printsec=frontcover&amp;amp;source=gbs_ge_summary_r&amp;amp;cad=0#v=onepage&amp;amp;q&amp;amp;f=false">The Grammar of Graphics</a>. For instance, with the argument <span class="math notranslate nohighlight">\(x\)</span> on <span class="math notranslate nohighlight">\([-10, 10]\)</span>, plot the PDF against the CDF.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;cdf&#39;</span><span class="p">,</span> <span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/ffb8746b0853d888bd67c77eb9c6b0d25384cc2b16057e7d8794bcc4bb891e08.png" src="../../_images/ffb8746b0853d888bd67c77eb9c6b0d25384cc2b16057e7d8794bcc4bb891e08.png" />
+</div>
+</div>
+</section>
+<section id="order-statistics">
+<h3>Order Statistics<a class="headerlink" href="#order-statistics" title="Link to this heading">#</a></h3>
+<p>As seen in the “Fit” section above, there is now support for distributions of <a class="reference external" href="https://en.wikipedia.org/wiki/Order_statistic">order statistics</a> of random samples from distribution. For example, we can plot the probability density functions of the order statistics of a normal distribution with sample size 4.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">Normal</span><span class="p">()</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">order_statistic</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="n">r</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">Y</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/4cd6f9576d3c1c7e4319fb3f15446948e37ad8bb0e77ab5b443a0ab496b2356d.png" src="../../_images/4cd6f9576d3c1c7e4319fb3f15446948e37ad8bb0e77ab5b443a0ab496b2356d.png" />
+</div>
+</div>
+<p>Compute the expected values of these order statistics:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Y</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-1.02937537, -0.29701138,  0.29701138,  1.02937537])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
+<p>Although change can be uncomfortable, the new infrastructure paves the road to an improved experience for users of SciPy’s probability distributions.
+It is not complete, of course! At the time this guide was written, the following features are planned for future releases:</p>
+<ul class="simple">
+<li><p>Additional built-in distributions (besides <code class="docutils literal notranslate"><span class="pre">Normal</span></code> and <code class="docutils literal notranslate"><span class="pre">Uniform</span></code>)</p></li>
+<li><p>Discrete distributions</p></li>
+<li><p>Circular distributions, including the ability to wrap arbitrary continuous distributions around the circle</p></li>
+<li><p>Support for other Python Array API Compatible backends beyond NumPy (e.g. CuPy, PyTorch, JAX)</p></li>
+</ul>
+<p>As always, development of SciPy is done for the SciPy community <em>by</em> the SciPy community. Suggestions for other features and help implementing them are always appreciated.</p>
+<p>We hope this guide motivates the advantages of trying the new infrastructure and simplifies the process.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="discrete_yulesimon.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Yule-Simon Distribution</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="sampling.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Universal Non-Uniform Random Number Sampling in SciPy</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#background">Background</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#basics">Basics</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#moments">Moments</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#random-variates">Random Variates</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#probability-mass-aka-confidence-intervals">Probability Mass (AKA “Confidence”) Intervals</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#likelihood-function">Likelihood Function</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#expected-values">Expected Values</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitting">Fitting</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#location-scale-estimation">Location / Scale Estimation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#maximum-likelihood-estimation">Maximum Likelihood Estimation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#new-and-advanced-features">New and Advanced Features</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#transformations">Transformations</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations">Limitations</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quasi-monte-carlo-sampling">Quasi-Monte Carlo Sampling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#accuracy">Accuracy</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance">Performance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization">Visualization</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#order-statistics">Order Statistics</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conclusion">Conclusion</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

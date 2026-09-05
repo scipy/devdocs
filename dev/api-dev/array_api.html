@@ -1,0 +1,2317 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Support for the array API standard &#8212; SciPy v2.0.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=8ee2c72c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=242cf5df" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=d74cf641"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=96e329c5"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'dev/api-dev/array_api';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script defer="defer" src="../../_static/custom-icons.js?v=6cff5f5c"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Array API Standard Support: cluster.vq" href="array_api_modules_tables/cluster_vq.html" />
+    <link rel="prev" title="Beyond Python" href="../contributor/compiled_code.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="2.0.0.dev" />
+    <meta name="docbuild:last-update" content="Sep 05, 2026"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discuss.scientific-python.org/c/contributor/scipy/" title="Scientific Python Forum" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-SciPy_Forum fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Scientific Python Forum</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discuss.scientific-python.org/c/contributor/scipy/" title="Scientific Python Forum" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-SciPy_Forum fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Scientific Python Forum</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contributing Information</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../conduct/code_of_conduct.html">SciPy Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../conduct/ai_policy.html">AI Policy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hacking.html">Ways to Contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev_quickstart.html">Contributor quickstart guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributor/development_workflow.html">Development workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributor/contributor_toc.html">SciPy contributor guide</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Design &amp; Architecture</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Support for the array API standard</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nan_policy.html">A Design Specification for <code class="docutils literal notranslate"><span class="pre">nan_policy</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="special_ufuncs.html">Adding vectorized ufuncs in <code class="docutils literal notranslate"><span class="pre">scipy.special</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="design_conventions_modules.html">Design Conventions for Modules</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Roadmap</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">SciPy Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap-detailed.html">Detailed SciPy Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../toolchain.html">Toolchain Roadmap</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">SciPy Organization</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../core-dev/index.html">SciPy Core Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../governance.html">SciPy Project Governance</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Developer Documentation</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Support for the array API standard</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="support-for-the-array-api-standard">
+<span id="dev-arrayapi"></span><h1>Support for the array API standard<a class="headerlink" href="#support-for-the-array-api-standard" title="Link to this heading">#</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Array API standard support is still experimental and hidden behind an
+environment variable. Only a small part of the public API is covered
+right now.</p>
+</div>
+<p>This guide describes how to <strong>use</strong> and <strong>add support for</strong> the
+<a class="reference external" href="https://data-apis.org/array-api/latest/index.html">Python array API standard</a>.
+This standard allows users to use any array API compatible array library
+with parts of SciPy out of the box.</p>
+<p>The <a class="reference external" href="https://github.com/scipy/scipy/issues/18286">RFC</a> defines how SciPy implements support for the standard, with the main
+principle being <em>“array type in equals array type out”</em>. In addition, the
+implementation does more strict validation of allowed array-like inputs, e.g.
+rejecting numpy matrix and masked array instances, and arrays with object
+dtype.</p>
+<p>In the following, an array API compatible namespace is noted as <code class="docutils literal notranslate"><span class="pre">xp</span></code>.</p>
+<section id="using-array-api-standard-support">
+<h2>Using array API standard support<a class="headerlink" href="#using-array-api-standard-support" title="Link to this heading">#</a></h2>
+<p>To enable the array API standard support, an environment variable must be set
+before importing SciPy:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">SCIPY_ARRAY_API</span><span class="o">=</span><span class="m">1</span>
+</pre></div>
+</div>
+<p>This both enables array API standard support and the more strict input
+validation for array-like arguments. <em>Note that this environment variable is
+meant to be temporary, as a way to make incremental changes and merge them into
+``main`` without affecting backwards compatibility immediately. We do not
+intend to keep this environment variable around long-term.</em></p>
+<p>This clustering example shows usage with PyTorch tensors as inputs and return
+values:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.cluster.vq</span><span class="w"> </span><span class="kn">import</span> <span class="n">vq</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">code_book</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span>
+<span class="gp">... </span>                          <span class="p">[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">features</span>  <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">1.9</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">],</span>
+<span class="gp">... </span>                          <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">],</span>
+<span class="gp">... </span>                          <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">code</span><span class="p">,</span> <span class="n">dist</span> <span class="o">=</span> <span class="n">vq</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">code_book</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">code</span>
+<span class="go">tensor([1, 1, 0], dtype=torch.int32)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dist</span>
+<span class="go">tensor([0.4359, 0.7348, 0.8307])</span>
+</pre></div>
+</div>
+<p>Note that the above example works for PyTorch CPU tensors. For GPU tensors or
+CuPy arrays, the expected result for <code class="docutils literal notranslate"><span class="pre">vq</span></code> is a <code class="docutils literal notranslate"><span class="pre">TypeError</span></code>, because <code class="docutils literal notranslate"><span class="pre">vq</span></code>
+uses compiled code in its implementation, which won’t work on GPU, and there
+are currently no GPU specific implementations to delegate to.</p>
+<p>More strict array input validation will reject <code class="docutils literal notranslate"><span class="pre">np.matrix</span></code> and
+<code class="docutils literal notranslate"><span class="pre">np.ma.MaskedArray</span></code> instances, as well as arrays with <code class="docutils literal notranslate"><span class="pre">object</span></code> dtype:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.cluster.vq</span><span class="w"> </span><span class="kn">import</span> <span class="n">vq</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">code_book</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span>
+<span class="gp">... </span>                      <span class="p">[</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">features</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.9</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">],</span>
+<span class="gp">... </span>                      <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">],</span>
+<span class="gp">... </span>                      <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vq</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">code_book</span><span class="p">)</span>
+<span class="go">(array([1, 1, 0], dtype=int32), array([0.43588989, 0.73484692, 0.83066239]))</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># The above uses numpy arrays; trying to use np.matrix instances or object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># arrays instead will yield an exception with `SCIPY_ARRAY_API=1`:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vq</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asmatrix</span><span class="p">(</span><span class="n">features</span><span class="p">),</span> <span class="n">code_book</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">TypeError: &#39;numpy.matrix&#39; are not supported</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vq</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">features</span><span class="p">),</span> <span class="n">code_book</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">TypeError: &#39;numpy.ma.MaskedArray&#39; are not supported</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vq</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">object_</span><span class="p">),</span> <span class="n">code_book</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">TypeError: object arrays are not supported</span>
+</pre></div>
+</div>
+</section>
+<section id="example-capabilities-table">
+<h2>Example capabilities table<a class="headerlink" href="#example-capabilities-table" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Library</p></th>
+<th class="head"><p>CPU</p></th>
+<th class="head"><p>GPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>NumPy</p></td>
+<td><p>✅</p></td>
+<td><p>n/a</p></td>
+</tr>
+<tr class="row-odd"><td><p>CuPy</p></td>
+<td><p>n/a</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-even"><td><p>PyTorch</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-odd"><td><p>JAX</p></td>
+<td><p>⚠️ no JIT</p></td>
+<td><p>⛔</p></td>
+</tr>
+<tr class="row-even"><td><p>Dask</p></td>
+<td><p>⛔</p></td>
+<td><p>n/a</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>In the example above, the feature has some support for NumPy, CuPy, PyTorch, and JAX
+arrays, but no support for Dask arrays. Some backends, like JAX and PyTorch, natively
+support multiple devices (CPU and GPU), but SciPy support for such arrays may be
+limited; for instance, this SciPy feature is only expected to work with JAX arrays
+located on the CPU. Additionally, some backends can have major caveats; in the example
+the function will fail when running inside <code class="docutils literal notranslate"><span class="pre">jax.jit</span></code>.
+Additional caveats may be listed in the docstring of the function.</p>
+<p>Some functions also note support for <a class="reference external" href="https://mdhaber.github.io/marray/tutorial.html">MArray</a>,
+a library that adds “missing data” awareness to the array library of your choice. MArray
+is not an independent array library; rather, it wraps the namespace of an array API
+compatible library to add “mask” support. Consequently, where MArray support is noted,
+it is supported in conjunction with all backend/device combinations marked as supported
+in the capabilities table.</p>
+<p>While the elements of the table marked with “n/a” are inherently out of scope, we are
+continually working on filling in the rest.
+Dask wrapping around backends other than NumPy (notably, CuPy) is currently out of scope
+but this may change in the future.</p>
+<p>Please see <a class="reference external" href="https://github.com/scipy/scipy/issues/18867">the tracker issue</a> for updates.</p>
+</section>
+<section id="implementation-notes">
+<span id="dev-arrayapi-implementation-notes"></span><h2>Implementation notes<a class="headerlink" href="#implementation-notes" title="Link to this heading">#</a></h2>
+<p>A key part of the support for the array API standard and specific compatibility
+functions for Numpy, CuPy and PyTorch is provided through
+<a class="reference external" href="https://github.com/data-apis/array-api-compat">array-api-compat</a>.
+This package is included in the SciPy codebase via a git submodule (under
+<code class="docutils literal notranslate"><span class="pre">scipy/_lib</span></code>), so no new dependencies are introduced.</p>
+<p><code class="docutils literal notranslate"><span class="pre">array-api-compat</span></code> provides generic utility functions and adds aliases such
+as <code class="docutils literal notranslate"><span class="pre">xp.concat</span></code> (which, for numpy, mapped to <code class="docutils literal notranslate"><span class="pre">np.concatenate</span></code> before NumPy added
+<code class="docutils literal notranslate"><span class="pre">np.concat</span></code> in NumPy 2.0). This allows using a uniform API across NumPy, PyTorch,
+CuPy and JAX (with other libraries, such as Dask, being worked on).</p>
+<p>When the environment variable isn’t set and hence array API standard support in
+SciPy is disabled, we still use the wrapped version of the NumPy namespace,
+which is <code class="docutils literal notranslate"><span class="pre">array_api_compat.numpy</span></code>. That should not change behavior of SciPy
+functions, as it’s effectively the existing <code class="docutils literal notranslate"><span class="pre">numpy</span></code> namespace with a number of
+aliases added and a handful of functions amended/added for array API standard
+support. When support is enabled, <code class="docutils literal notranslate"><span class="pre">xp</span> <span class="pre">=</span> <span class="pre">array_namespace(input)</span></code> will
+be the standard-compatible namespace matching the input array type to a
+function (e.g., if the input to <em class="xref py py-obj">cluster.vq.kmeans</em> is a PyTorch tensor, then
+<code class="docutils literal notranslate"><span class="pre">xp</span></code> is <code class="docutils literal notranslate"><span class="pre">array_api_compat.torch</span></code>).</p>
+</section>
+<section id="adding-array-api-standard-support-to-a-scipy-function">
+<span id="dev-arrayapi-adding-support"></span><h2>Adding array API standard support to a SciPy function<a class="headerlink" href="#adding-array-api-standard-support-to-a-scipy-function" title="Link to this heading">#</a></h2>
+<p>As much as possible, new code added to SciPy should try to follow as closely as
+possible the array API standard (these functions typically are best-practice
+idioms for NumPy usage as well). By following the standard, effectively adding
+support for the array API standard is typically straightforward, and we ideally
+don’t need to maintain any customization.</p>
+<p>Various helper functions are available in <code class="docutils literal notranslate"><span class="pre">scipy._lib._array_api</span></code> - please see
+the <code class="docutils literal notranslate"><span class="pre">__all__</span></code> in that module for a list of current helpers, and their docstrings
+for more information.</p>
+<p>To add support to a SciPy function which is defined in a <code class="docutils literal notranslate"><span class="pre">.py</span></code> file, what you
+have to change is:</p>
+<ol class="arabic simple">
+<li><p>Input array validation,</p></li>
+<li><p>Using <code class="docutils literal notranslate"><span class="pre">xp</span></code> rather <code class="docutils literal notranslate"><span class="pre">np</span></code> functions,</p></li>
+<li><p>When calling into compiled code, convert the array to a NumPy array before
+and convert it back to the input array type after.</p></li>
+</ol>
+<p>Input array validation uses the following pattern:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xp</span> <span class="o">=</span> <span class="n">array_namespace</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="c1"># where arr is the input array</span>
+<span class="c1"># alternatively, if there are multiple array inputs, include them all:</span>
+<span class="n">xp</span> <span class="o">=</span> <span class="n">array_namespace</span><span class="p">(</span><span class="n">arr1</span><span class="p">,</span> <span class="n">arr2</span><span class="p">)</span>
+
+<span class="c1"># replace np.asarray with xp.asarray</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+<span class="c1"># uses of non-standard parameters of np.asarray can be replaced with _asarray</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">_asarray</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">xp</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="n">xp</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that if one input is a non-NumPy array type, all array-like inputs have to
+be of that type; trying to mix non-NumPy arrays with lists, Python scalars or
+other arbitrary Python objects will raise an exception. For NumPy arrays, those
+types will continue to be accepted for backwards compatibility reasons.</p>
+<p>If a function calls into a compiled code just once, use the following pattern:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># convert to numpy right before compiled call(s)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">_call_compiled_code</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>  <span class="c1"># convert back to original array type</span>
+</pre></div>
+</div>
+<p>If there are multiple calls to compiled code, ensure doing the conversion just
+once to avoid too much overhead.</p>
+<p>Here is an example for a hypothetical public SciPy function <code class="docutils literal notranslate"><span class="pre">toto</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">toto</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+
+    <span class="c1"># this is some C or Cython call</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">cdist</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">d</span>
+</pre></div>
+</div>
+<p>You would convert this like so:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">toto</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">xp</span> <span class="o">=</span> <span class="n">array_namespace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">c</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">-</span> <span class="n">xp</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+
+    <span class="c1"># this is some C or Cython call</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">cdist</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">d</span>
+</pre></div>
+</div>
+<p>Going through compiled code requires going back to a NumPy array, because
+SciPy’s extension modules only work with NumPy arrays (or memoryviews in the
+case of Cython). For arrays on CPU, the
+conversions should be zero-copy, while on GPU and other devices the attempt at
+conversion will raise an exception. The reason for that is that silent data
+transfer between devices is considered bad practice, as it is likely to be a
+large and hard-to-detect performance bottleneck.</p>
+<p>In some cases, compiled code can be supported on alternative backends
+through delegation to native implementations. Such delegation has currently been set
+up in <a class="reference internal" href="../../reference/fft.html#module-scipy.fft" title="scipy.fft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fft</span></code></a>, <a class="reference internal" href="../../reference/ndimage.html#module-scipy.ndimage" title="scipy.ndimage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndimage</span></code></a>, <a class="reference internal" href="../../reference/signal.html#module-scipy.signal" title="scipy.signal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">signal</span></code></a>
+(see <a class="reference internal" href="array_api_modules_tables/signal.html#array-api-support-signal-caveats"><span class="std std-ref">Caveats</span></a>),
+and <a class="reference internal" href="../../reference/special.html#module-scipy.special" title="scipy.special"><code class="xref py py-obj docutils literal notranslate"><span class="pre">special</span></code></a>, though there is not yet a
+standard approach, and support in each module has mostly evolved separately.</p>
+<p>There is also some effort being put into expanding access to native
+implementations, such as the <a class="reference external" href="https://github.com/scipy/xsf/issues/1">xsf project</a>
+to establish a library of mathematical special function implementations which support
+both CPU and GPU.</p>
+<section id="a-note-on-jax-support">
+<span id="dev-arrayapi-jax-support"></span><h3>A note on JAX support<a class="headerlink" href="#a-note-on-jax-support" title="Link to this heading">#</a></h3>
+<p>JAX was designed with deliberate restrictions to make code easier to reason about and exploits
+this to better support features like JIT-compilation and autodifferentiation. The most
+relevant restrictions for SciPy developers are:</p>
+<ul class="simple">
+<li><p>JAX arrays are immutable. Rather than performing in-place updates of arrays, one
+can use the <a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.numpy.ndarray.at.html">at</a>
+property to transform an array in an equivalent way. Inside a JIT compiled function,
+an expression like <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">x.at[idx].set(y)</span></code> will be applied in-place under the hood.</p></li>
+<li><p>Functions using the JAX JIT must be functionally pure. They cannot have side
+effects, cannot mutate data, and their outputs must be determined completely by their
+inputs. Raising a Python exception is a side-effect that is not permitted within a JITed
+function.</p></li>
+<li><p>Within the JIT, value based control flow with Python <code class="docutils literal notranslate"><span class="pre">if</span></code> statements is not permitted.
+Only static properties of arrays such as their <code class="docutils literal notranslate"><span class="pre">shape</span></code> and <code class="docutils literal notranslate"><span class="pre">dtype</span></code> are permitted to be
+used with <code class="docutils literal notranslate"><span class="pre">if</span></code>. <a class="reference external" href="https://data-apis.org/array-api/2024.12/API_specification/generated/array_api.where.html#where">xp.where</a>
+and <a class="reference external" href="https://data-apis.org/array-api-extra/generated/array_api_extra.apply_where.html">array_api_extra.apply_where</a>
+provide some basic control flow that works with the JIT.</p></li>
+<li><p>Within the JIT, the shapes of output arrays cannot depend dynamically on the <em>values</em> in input arrays.</p></li>
+</ul>
+<p>See <a class="reference external" href="https://docs.jax.dev/en/latest/notebooks/Common_Gotchas_in_JAX.html">Common Gotchas in JAX</a> for more information.</p>
+<p><strong>Recommendations for developers:</strong></p>
+<ul>
+<li><p>To work around the mutability restriction, developers adding JAX support
+to SciPy functions which make in-place updates should use
+<a class="reference external" href="https://data-apis.org/array-api-extra/generated/array_api_extra.at.html">array_api_extra.at</a>
+which works for all array API compatible backends, delegating to JAX’s <code class="docutils literal notranslate"><span class="pre">at</span></code> for
+JAX arrays and performing regular in-place operations with <code class="docutils literal notranslate"><span class="pre">__setitem__</span></code> for other kinds
+of arrays.</p></li>
+<li><p>The restriction that functions be functionally pure to support the JAX JIT necessitates
+that input-validation that raises with bad input must be skipped when <code class="docutils literal notranslate"><span class="pre">xp</span></code> is JAX.</p></li>
+<li><p>Compiled functions <code class="docutils literal notranslate"><span class="pre">f</span></code> which cannot be supported on JAX through delegation to a native
+implementation can potentially still be supported through the use of
+<a class="reference external" href="https://data-apis.org/array-api-extra/generated/array_api_extra.lazy_apply.html">array_api_extra.lazy_apply</a>, which uses JAX’s <a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.pure_callback.html">pure_callback</a>
+mechanism to enable calling Python functions within JIT-ed JAX functions.</p>
+<p>Using <code class="docutils literal notranslate"><span class="pre">lazy_apply</span></code>, the example function <code class="docutils literal notranslate"><span class="pre">toto</span></code> might be made compatible
+with the JAX JIT in the following way:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">toto</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="n">xp</span> <span class="o">=</span> <span class="n">array_namespace</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">c</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">-</span> <span class="n">xp</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+
+    <span class="c1"># this is some C or Cython call</span>
+    <span class="c1"># as_numpy=True tells lazy_apply to convert to and from NumPy.</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">xpx</span><span class="o">.</span><span class="n">lazy_apply</span><span class="p">(</span><span class="n">cdist</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">as_numpy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">d</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">lazy_apply</span></code> can be used so long as <code class="docutils literal notranslate"><span class="pre">f</span></code> is a pure function for which the output
+shape can be determined knowing only the input shapes.</p>
+</li>
+<li><p><a class="reference external" href="https://data-apis.org/array-api/2024.12/API_specification/generated/array_api.where.html#where">xp.where</a>
+and <a class="reference external" href="https://data-apis.org/array-api-extra/generated/array_api_extra.apply_where.html">array_api_extra.apply_where</a> provide a level of basic control flow that works with the JIT
+and in some cases these can be used to replace the value dependent use of <code class="docutils literal notranslate"><span class="pre">if</span></code>. In
+some cases it’s also possible to wrap code using <code class="docutils literal notranslate"><span class="pre">if</span></code> within a pure function and use
+<code class="docutils literal notranslate"><span class="pre">lazy_apply</span></code>.</p></li>
+</ul>
+<p><strong>JAX Eager:</strong></p>
+<p>It is also possible to run JAX in eager-mode without the JIT (in fact this is the
+default behavior when <code class="docutils literal notranslate"><span class="pre">&#64;jax.jit</span></code> is not applied). Eager-mode comes with serious
+performance limitations and is typically only used to debug functions which are
+ultimately intended to be run with the JIT. Do not be tempted to attempt to distinguish
+whether JAX is being used with the JIT in order to bypass some restrictions while running
+with eager-mode. There is no way to make this distinction using JAX’s public API, and any means
+of determining if JAX is running with the JIT would necessarily involve implementation
+details that SciPy should not rely upon. In general, support for eager-mode is not a high-value
+target, and it is not considered a good use of developer time to put significant effort
+into enabling eager-only support.</p>
+</section>
+<section id="a-note-on-marray-support">
+<span id="dev-arrayapi-marray-support"></span><h3>A note on MArray support<a class="headerlink" href="#a-note-on-marray-support" title="Link to this heading">#</a></h3>
+<p>MArray wraps array API compatible namespaces, so it is common for an array API compatible
+function to execute <em>without warnings or errors</em> provided MArray input. <strong>This does not
+necessarily mean that the function supports MArray input.</strong> The mask of MArrays is used
+to denote missing values; therefore, to consider a function compatible with MArray,
+numerical output with masked input must equal the numerical output expected if the
+masked values were removed entirely. MArray provides primitives to facilitate this,
+but typically, implementations must be generalized to ensure that this property holds.</p>
+<p>For instance, suppose that the function <code class="docutils literal notranslate"><span class="pre">mean</span></code> were not defined by the array API
+standard, and it had been implemented in SciPy as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">mean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">xp</span> <span class="o">=</span> <span class="n">array_namespace</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">xp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+</pre></div>
+</div>
+<p>This implementation assumes that the denominator used to normalize the sum will be the
+same for each axis-slice: the length of the array along the <code class="docutils literal notranslate"><span class="pre">axis</span></code>. This assumption
+is not valid for an array with masked values. Although MArray will ensure that masked
+values are not considered when computing the sum, the implementation still needs to be
+generalized to normalize by the <em>number of non-masked elements</em> in a slice:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy._lib._array_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">_count_nonmasked</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">mean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">xp</span> <span class="o">=</span> <span class="n">array_namespace</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="c1"># n = x.shape[axis]</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">_count_nonmasked</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="n">xp</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">xp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+</pre></div>
+</div>
+<p>Using counts of non-masked elements instead of slice lengths was by far the most common
+generalization needed to add MArray support throughout <a class="reference internal" href="../../reference/stats.html#module-scipy.stats" title="scipy.stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code></a>, and for many
+functions, it was the only generalization needed. Other common changes included:</p>
+<ul class="simple">
+<li><p>separate consideration of <em>both</em> the length along an axis and the count of non-masked
+values (e.g., see <a class="reference internal" href="../../reference/generated/scipy.stats.cramervonmises_2samp.html#scipy.stats.cramervonmises_2samp" title="scipy.stats.cramervonmises_2samp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.cramervonmises_2samp</span></code></a>),</p></li>
+<li><p>sharing a common mask between “paired-data” input arrays using
+<code class="docutils literal notranslate"><span class="pre">scipy._lib._array_api._share_masks</span></code> (e.g., see <a class="reference internal" href="../../reference/generated/scipy.stats.spearmanrho.html#scipy.stats.spearmanrho" title="scipy.stats.spearmanrho"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.spearmanrho</span></code></a>),</p></li>
+<li><p>using <code class="docutils literal notranslate"><span class="pre">scipy._lib._array_api._masked_apply</span></code> to evaluate an elementwise function
+on all data, then re-applying the common mask of the inputs to the output (e.g., see
+<a class="reference internal" href="../../reference/generated/scipy.stats.cramervonmises.html#scipy.stats.cramervonmises" title="scipy.stats.cramervonmises"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.cramervonmises</span></code></a>), and</p></li>
+<li><p>distinguishing between (built-in) <code class="docutils literal notranslate"><span class="pre">sum</span></code>, which propagates a mask, and <code class="docutils literal notranslate"><span class="pre">xp.sum</span></code>,
+which ignores masked values (e.g., see <a class="reference internal" href="../../reference/generated/scipy.stats.chisquare.html#scipy.stats.chisquare" title="scipy.stats.chisquare"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.chisquare</span></code></a>).</p></li>
+</ul>
+<p>In most cases, use of <code class="docutils literal notranslate"><span class="pre">_count_nonmasked</span></code>, <code class="docutils literal notranslate"><span class="pre">_share_masks</span></code>, and <code class="docutils literal notranslate"><span class="pre">_masked_apply</span></code> has
+been sufficient to generalize functions without treating MArray input as a special case
+or accessing the <code class="docutils literal notranslate"><span class="pre">mask</span></code> or <code class="docutils literal notranslate"><span class="pre">data</span></code> attributes of an MArray directly. In exceptional
+cases, <code class="docutils literal notranslate"><span class="pre">scipy._lib._array_api.is_marray</span></code> is available to determine when the namespace
+has been wrapped with MArray, and the namespace of the underlying array library
+can be accessed using the <code class="docutils literal notranslate"><span class="pre">_xp</span></code> attribute of an MArray variable (e.g. see
+<a class="reference internal" href="../../reference/generated/scipy.stats.mode.html#scipy.stats.mode" title="scipy.stats.mode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats.mode</span></code></a>).</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>NumPy masked arrays tend to mask the output of calculations that would otherwise
+return infinite or NaN output. This is unsafe because subsequent calculations will
+treat these “invalid” outputs as “missing”, erroneously producing seemingly valid
+numerical output when the correct calculation would propagate the infinite or NaN
+value. When adding MArray support to SciPy functions, ensure that masked values of
+the output arise due to masked input (e.g., the output of an elementwise function on
+a masked input value is masked; the output of a reducing function on an all-masked
+slice is masked) and <em>only</em> due to masked input.</p>
+</div>
+</section>
+<section id="default-datatypes">
+<span id="dev-arrayapi-default-dtype"></span><h3>Default Datatypes<a class="headerlink" href="#default-datatypes" title="Link to this heading">#</a></h3>
+<p>The Array API Standard allows conforming libraries to have
+<a class="reference external" href="https://data-apis.org/array-api/latest/API_specification/data_types.html#default-data-types">default datatypes</a>
+for integers and real and complex floating point numbers which differ from the
+<code class="docutils literal notranslate"><span class="pre">int64</span></code>, <code class="docutils literal notranslate"><span class="pre">float64</span></code>, <code class="docutils literal notranslate"><span class="pre">complex128</span></code> defaults used by NumPy. Our aim is to
+have array API supporting SciPy functions with array inputs have behavior which
+is independent of the default dtype to the extent that this is practical. This means
+that when using array creation functions from the <code class="docutils literal notranslate"><span class="pre">xp</span></code> namespace such as <code class="docutils literal notranslate"><span class="pre">xp.zeros</span></code>
+or <code class="docutils literal notranslate"><span class="pre">xp.arange</span></code>, one should take care to explicitly set a dtype with the <code class="docutils literal notranslate"><span class="pre">dtype</span></code>
+kwarg; otherwise, the result will depend on the default dtype.</p>
+<p>Note that SciPy is currently only tested in CI on platforms/backends/backend-configurations
+where a <code class="docutils literal notranslate"><span class="pre">float64</span></code> dtype is available. At the moment, <code class="docutils literal notranslate"><span class="pre">float32</span></code>-only support
+varies from function to function and is not well-documented. Some examples of
+<code class="docutils literal notranslate"><span class="pre">float32</span></code>-only backends are JAX in its
+<a class="reference external" href="https://docs.jax.dev/en/latest/default_dtypes.html">default configuration</a>,
+and PyTorch with the
+<a class="reference external" href="https://pytorch.org/blog/introducing-accelerated-pytorch-training-on-mac/">Metal performance shader backend</a>
+on ARM Mac. We are open to expanding and improving <code class="docutils literal notranslate"><span class="pre">float32</span></code>-only
+support in cases where this is feasible and there is sufficient user interest.</p>
+<p>It is therefore recommended that those using SciPy with the JAX backend set the X64 flag by one
+of the means JAX provides since the default <code class="docutils literal notranslate"><span class="pre">float32</span></code>-only configuration is not
+currently tested.</p>
+<p>Though not directly related to default dtypes, it may be useful to know that JAX defaults to using
+<a class="reference external" href="https://github.com/jax-ml/jax/issues/4873">TensorFloat32</a>
+precision for matrix multiplication of <code class="docutils literal notranslate"><span class="pre">float32</span></code> arrays on GPUs that support TensorFloat32.
+The half-precision mantissas used in this format can cause accuracy issues in scientific applications.
+SciPy sets <a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.default_matmul_precision.html">jax_default_matmul_precision</a> to
+<code class="docutils literal notranslate"><span class="pre">&quot;float32&quot;</span></code> in its JAX GPU tests and we recommend this configuration for users
+of the JAX backend. This configuration option does not affect matrix multiplications of <code class="docutils literal notranslate"><span class="pre">float64</span></code>
+arrays when the X64 flag is enabled.</p>
+</section>
+<section id="array-creation-functions-without-array-inputs">
+<h3>Array creation functions without array inputs<a class="headerlink" href="#array-creation-functions-without-array-inputs" title="Link to this heading">#</a></h3>
+<p>For array creation functions without array inputs,
+adding array API standard support can be accomplished by adding keyword
+only arguments <code class="docutils literal notranslate"><span class="pre">xp</span></code> and <code class="docutils literal notranslate"><span class="pre">device</span></code> to specify the desired backend and
+device respectively. See for instance <a class="reference internal" href="../../reference/generated/scipy.signal.buttap.html#scipy.signal.buttap" title="scipy.signal.buttap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">buttap</span></code></a> which
+constructs the analog prototype of an Nth-order Butterworth filter. It may also
+be desirable to add a <code class="docutils literal notranslate"><span class="pre">dtype</span></code> kwarg to control the output <code class="docutils literal notranslate"><span class="pre">dtype</span></code> for
+such functions.</p>
+<p>Note that none of these keyword arguments are necessary when
+there are array arguments from which the backend, device, and desired output dtype
+can be inferred (ideally, output dtype should follow input dtypes through the expected
+<a class="reference external" href="https://data-apis.org/array-api/latest/API_specification/type_promotion.html">type promotion rules</a>).
+For the sake of API simplicity and consistency and in the
+spirit of “There should be one– and preferably only one –obvious way to do it.”,
+it is recommended to avoid the use of these kwargs in functions which take
+at least one array argument.</p>
+<p>It is still under debate how array creation functions without array inputs should
+behave with respect to <a class="reference internal" href="#dev-arrayapi-default-dtype"><span class="std std-ref">default dtypes</span></a>.
+Should they respect default dtype or should the output dtype be fixed across
+backends and defaults? Should there be a <code class="docutils literal notranslate"><span class="pre">dtype</span></code> kwarg for controlling the output
+dtype or is being able to apply <code class="docutils literal notranslate"><span class="pre">xp.astype</span></code> on the output sufficient?
+Since there is not yet a consistent pattern to follow, for now it’s
+important to clearly document how such functions behave with respect to the
+default dtype in the <a class="reference internal" href="#dev-arrayapi-extra-note"><span class="std std-ref">extra_note</span></a> described below.</p>
+</section>
+</section>
+<section id="documenting-array-api-standard-support">
+<h2>Documenting array API standard support<a class="headerlink" href="#documenting-array-api-standard-support" title="Link to this heading">#</a></h2>
+<p>Support for alternative array API standard backends can be registered and
+documented using the <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> decorator which has the following
+signature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">xp_capabilities</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="c1"># Alternative capabilities table.</span>
+    <span class="c1"># Used only for testing this decorator.</span>
+    <span class="n">capabilities_table</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="c1"># Generate pytest.mark.skip/xfail_xp_backends.</span>
+    <span class="c1"># See documentation in conftest.py.</span>
+    <span class="c1"># lists of tuples [(module name, reason), ...]</span>
+    <span class="n">skip_backends</span><span class="o">=</span><span class="p">(),</span> <span class="n">xfail_backends</span><span class="o">=</span><span class="p">(),</span>
+    <span class="n">cpu_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">np_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">out_of_scope</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">exceptions</span><span class="o">=</span><span class="p">(),</span>
+    <span class="c1"># lists of tuples [(module name, reason), ...]</span>
+    <span class="n">warnings</span><span class="o">=</span><span class="p">(),</span>
+    <span class="c1"># xpx.testing.lazy_xp_function kwargs.</span>
+    <span class="c1"># Refer to array-api-extra documentation.</span>
+    <span class="n">allow_dask_compute</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">jax_jit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="c1"># Extra note to inject into the docstring</span>
+    <span class="n">extra_note</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="c1"># Dictionary mapping method names to dictionaries of method</span>
+    <span class="c1"># specific capabilities for use when xp_capabilities is</span>
+    <span class="c1"># applied to a class with varying capabilities per method</span>
+    <span class="n">method_capabilities</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="c1"># Whether the function supports MArrays (used only in documentation)</span>
+    <span class="n">marray</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+</pre></div>
+</div>
+<p>This is available in <code class="docutils literal notranslate"><span class="pre">scipy._lib._array_api</span></code> and can be applied to functions,
+methods, and classes to declare the current extent of their array API standard
+support. For the sake of brevity, in the remainder of this document, we write
+as if <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> only applies to functions.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> decorator is what inserts the capabilities table into
+docstrings. It also allows developers to tag tests with the
+<code class="docutils literal notranslate"><span class="pre">&#64;make_xp_test_case</span></code> decorator or apply <code class="docutils literal notranslate"><span class="pre">make_xp_pytest_param</span></code> to pytest
+parameters to automatically generate backend specific SKIP/XFAIL markers, and
+setting up testing that functions work with the JAX JIT or work in Dask lazily
+(i.e. without materializing arrays with <code class="docutils literal notranslate"><span class="pre">dask.compute</span></code> or otherwise triggering
+computation with <code class="docutils literal notranslate"><span class="pre">dask.persist</span></code>).</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The modification of docstrings by <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> can potentially break
+intersphinx references because it currently has the side effect of replacing
+implicit roles with <code class="docutils literal notranslate"><span class="pre">:func:</span></code>. This can be avoided by explicitly
+setting the role for references to classes and methods that are
+outside of SciPy. The following snippet is taken from the docstring for
+<a class="reference internal" href="../../reference/generated/scipy.signal.detrend.html#scipy.signal.detrend" title="scipy.signal.detrend"><code class="xref py py-obj docutils literal notranslate"><span class="pre">detrend</span></code></a> where the role <code class="docutils literal notranslate"><span class="pre">:meth:</span></code> for a class method is
+needed.</p>
+<div class="highlight-rst notranslate"><div class="highlight"><pre><span></span><span class="gh">See Also</span>
+<span class="gh">--------</span>
+<span class="na">:meth:</span><span class="nv">`numpy.polynomial.polynomial.Polynomial.fit`</span> : Create least squares fit polynomial
+</pre></div>
+</div>
+</div>
+<p>Note that in some modules a systematic process for delegation to native
+implementations is set up, where functions are replaced with wrappers
+that perform delegation. In this case, <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> is not always
+applied as a decorator with <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> syntax, but may instead be applied
+programmatically on the wrappers. When working on array API standard
+support within a module, it’s important to be aware of how such delegation
+is set up, if any, and how <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> is being applied. A common
+practice currently is to have a file, <code class="docutils literal notranslate"><span class="pre">_support_alternative_backends.py</span></code>
+within a module that sets up such delegation. See for instance
+<a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/signal/_support_alternative_backends.py">scipy/signal/_support_alternative_backends.py</a>.</p>
+<section id="basic-behavior">
+<h3>Basic behavior<a class="headerlink" href="#basic-behavior" title="Link to this heading">#</a></h3>
+<p>Using <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code>  with no arguments, like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@xp_capabilities</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>declares that a function works on all supported backends, on JAX with the JIT
+and lazily in Dask. This is most likely to occur if a function is written
+entirely in terms of the array API standard as described earlier in this
+document. Such functions are commonly referred to as array-agnostic. For
+functions which are written mostly in terms of the array API standard, but
+include calls to compiled code sandwiched between conversions to and from NumPy,
+<code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> should be given the <code class="docutils literal notranslate"><span class="pre">cpu_only=True</span></code> option. Backends
+which are supported on GPU by such a function <code class="docutils literal notranslate"><span class="pre">f</span></code> through delegation to a
+native implementation can be specified with the <code class="docutils literal notranslate"><span class="pre">exceptions</span></code> kwarg, which
+in this case takes a list of strings specifying GPU-capable backends. The
+currently supported string values when using <code class="docutils literal notranslate"><span class="pre">cpu_only=True</span></code> are
+<code class="docutils literal notranslate"><span class="pre">&quot;cupy&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;torch&quot;</span></code>, and <code class="docutils literal notranslate"><span class="pre">&quot;jax.numpy&quot;</span></code>.</p>
+<p>It is recommended to reserve <code class="docutils literal notranslate"><span class="pre">cpu_only=False</span></code> (the default) for
+array-agnostic functions which are expected to work on all array API compliant
+backends, including ones not tested in SciPy and ones that do not yet exist.
+If a function is supported on GPU on all tested backends through delegation to
+respective native implementations, one should use <code class="docutils literal notranslate"><span class="pre">cpu_only=True</span></code> while listing
+each backend in the list of <code class="docutils literal notranslate"><span class="pre">exceptions</span></code> like so:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@xp_capabilities</span><span class="p">(</span><span class="n">cpu_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exceptions</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cupy&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>When setting <code class="docutils literal notranslate"><span class="pre">cpu_only=True</span></code>, one may list a reason by passing a string with
+the <code class="docutils literal notranslate"><span class="pre">reason</span></code> kwarg. This can be helpful for documenting why something is not
+supported for other developers. The reason will appear in the <code class="docutils literal notranslate"><span class="pre">pytest</span></code> output
+when the SciPy test suite is run with <code class="docutils literal notranslate"><span class="pre">pytest</span></code> in verbose mode
+(with the <code class="docutils literal notranslate"><span class="pre">-v</span></code> flag).</p>
+</section>
+<section id="jax-jit">
+<h3>JAX JIT<a class="headerlink" href="#jax-jit" title="Link to this heading">#</a></h3>
+<p>One may declare a function as not supporting the JAX JIT with the option
+<code class="docutils literal notranslate"><span class="pre">jax_jit=False</span></code>. See the earlier note on <a class="reference internal" href="#dev-arrayapi-jax-support"><span class="std std-ref">JAX support</span></a>
+for more information.</p>
+</section>
+<section id="unsupported-functions">
+<h3>Unsupported functions<a class="headerlink" href="#unsupported-functions" title="Link to this heading">#</a></h3>
+<p>Functions which do not support the array API standard through the means
+described earlier in this document should either receive the <code class="docutils literal notranslate"><span class="pre">np_only=True</span></code>
+option or the <code class="docutils literal notranslate"><span class="pre">out_of_scope=True</span></code> option. The former should be used for
+functions which are not currently supported but which are considered in-scope
+for future support.</p>
+<p>Functions for which array API support has <em>not</em> been added following the
+procedures described earlier in this document, but for which delegation to a
+native implementation has been set up for one or more array API backends, should
+still use <code class="docutils literal notranslate"><span class="pre">np_only=True</span></code> in their <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> entries. Just as for
+<code class="docutils literal notranslate"><span class="pre">cpu_only=True</span></code>, exceptions can be passed with the <code class="docutils literal notranslate"><span class="pre">exceptions</span></code> kwarg (and
+also just as for <code class="docutils literal notranslate"><span class="pre">cpu_only=True</span></code> one can pass a reason with the <code class="docutils literal notranslate"><span class="pre">reason</span></code>
+kwarg):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@xp_capabilities</span><span class="p">(</span>
+    <span class="n">np_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exceptions</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cupy&quot;</span><span class="p">],</span>
+    <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;not converted yet but has CuPy delegation.&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Valid strings to pass in the exceptions list are <code class="docutils literal notranslate"><span class="pre">&quot;array_api_strict&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;cupy&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;dask.array&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;jax.numpy&quot;</span></code>, and <code class="docutils literal notranslate"><span class="pre">&quot;torch&quot;</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">np_only=True</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;torch&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;jax.numpy&quot;</span></code> is added to
+the lists of exceptions, it will be declared as supported on both CPU and
+GPU.</p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3" id="dev-arrayapi-jax-jit-no-gpu">
+<summary class="sd-summary-title sd-card-header sd-bg-warning sd-bg-text-warning">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-alert" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg></span><span class="sd-summary-text">Functions with JAX JIT support but no GPU support</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">It’s possible for a function to be natively available in JAX,
+support <code class="docutils literal notranslate"><span class="pre">jax.jit</span></code>, but not be supported on GPU. Thus, it may be
+possible for JAX delegation to be set up in a function which has
+not yet received the array API standard compatibility treatment,
+and for the JIT to be supported but not the GPU.</p>
+<p class="sd-card-text">Because <code class="docutils literal notranslate"><span class="pre">exceptions</span></code> does double
+duty declaring exceptions to <code class="docutils literal notranslate"><span class="pre">cpu_only=True</span></code> and <code class="docutils literal notranslate"><span class="pre">np_only=True</span></code>, it is not
+possible to express this situation using <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> in the way
+described above. This is not too serious of an issue because the intention is
+that <code class="docutils literal notranslate"><span class="pre">np_only=True</span></code> is only a temporary state. Through the means described
+above in the section on <a class="reference internal" href="#dev-arrayapi-adding-support"><span class="std std-ref">adding array API support</span></a>,
+it is a reasonable goal for all functions in SciPy’s public API to at least reach
+the state <code class="docutils literal notranslate"><span class="pre">cpu_only=True</span></code>. For functions still waiting in the <code class="docutils literal notranslate"><span class="pre">np_only=True</span></code> state,
+<code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code>’s <code class="docutils literal notranslate"><span class="pre">skip_backends</span></code> kwarg can be used as an escape hatch to
+allow more fine grained declaration of capabilities. See the section on
+<a class="reference internal" href="#dev-arrayapi-skip-xfail-backends"><span class="std std-ref">skip_backends and xfail_backends</span></a>.</p>
+</div>
+</details><p><code class="docutils literal notranslate"><span class="pre">out_of_scope=True</span></code> signals that there is no intention to ever provide array
+API support for a given function. There is not yet a formal policy for which
+functions should be considered out-of-scope. Some general rules of thumb that are
+being followed are to exclude:</p>
+<ul class="simple">
+<li><p>functions which do not operate on arrays such as <a class="reference internal" href="../../reference/generated/scipy.constants.value.html"><span class="doc">scipy.constants.value</span></a></p></li>
+<li><p>functions which are too implementation specific such as those in <a class="reference internal" href="../../reference/linalg.blas.html#module-scipy.linalg.blas" title="scipy.linalg.blas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg.blas</span></code></a> which give direct wrappers to low-level BLAS routines.</p></li>
+<li><p>functions which would inherently be very difficult or even impossible to compute efficiently on accelerated computing devices.</p></li>
+</ul>
+<p>Considerations of what to consider in-scope are evolving, and something which is now
+considered out-of-scope may be decided to be in-scope in the future if sufficient user
+interest and feasibility are demonstrated.</p>
+</section>
+<section id="skip-backends-and-xfail-backends">
+<span id="dev-arrayapi-skip-xfail-backends"></span><h3><code class="docutils literal notranslate"><span class="pre">skip_backends</span></code> and <code class="docutils literal notranslate"><span class="pre">xfail_backends</span></code><a class="headerlink" href="#skip-backends-and-xfail-backends" title="Link to this heading">#</a></h3>
+<p>One may pass lists of tuples of backend string, reason pairs to <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code>
+with the <code class="docutils literal notranslate"><span class="pre">skip_backends</span></code> and <code class="docutils literal notranslate"><span class="pre">xfail_backends</span></code> kwargs. The valid backend strings
+are <code class="docutils literal notranslate"><span class="pre">&quot;array_api_strict&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;cupy&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;dask.array&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;jax.numpy&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;torch&quot;</span></code>
+(note that one should almost never want to skip tests for
+<a class="reference external" href="https://data-apis.org/array-api-strict/">array_api_strict</a> as failures with this
+backend most likely indicate a failure to correctly follow the array API standard).</p>
+<p>Any backend passed in such a way with either kwarg is declared as unsupported with both
+CPU and GPU. The difference between <code class="docutils literal notranslate"><span class="pre">skip_backends</span></code> and <code class="docutils literal notranslate"><span class="pre">xfail_backends</span></code> is that for
+tests using the <code class="docutils literal notranslate"><span class="pre">xp</span></code> fixture, <code class="docutils literal notranslate"><span class="pre">skip_backends</span></code> adds <code class="docutils literal notranslate"><span class="pre">pytest.skip</span></code> markers for
+backends and the corresponding tests are skipped entirely, while with <code class="docutils literal notranslate"><span class="pre">xfail_backends</span></code>,
+<code class="docutils literal notranslate"><span class="pre">pytest.xfail</span></code> markers are added, and tests are still run but expected to fail.</p>
+<p>One example in which it is pertinent to use
+<code class="docutils literal notranslate"><span class="pre">skip_backends</span></code> is for functions which otherwise support the array API standard, but
+use features which are not available on a particular backend, such as mutation of
+arrays through item assignment, which is not supported in JAX. For instance the following
+can be used to signify a function which is otherwise array-agnostic, but uses
+in-place item-assignment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@xp_capabilities</span><span class="p">(</span>
+    <span class="n">skip_backends</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;jax.numpy&quot;</span><span class="p">,</span> <span class="s2">&quot;in-place item assignment&quot;</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">function_with_internal_mutation</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Another case is when there is a bug in the corresponding array library, in which
+case the <code class="docutils literal notranslate"><span class="pre">reason</span></code> string should contain a link to the upstream issue.</p>
+<p>In the caveat above about functions with JAX JIT support but no JAX GPU support
+we discussed the edge-case of a function which has not been given array
+API standard support in the usual way, is available on JAX through delegation to
+a native implementation which supports <code class="docutils literal notranslate"><span class="pre">jax.jit</span></code>, but does not work on the GPU.
+For now, such situations can in principle be handled by using <code class="docutils literal notranslate"><span class="pre">cpu_only=True</span></code>
+and passing in any backends which are not supported even on CPU to <code class="docutils literal notranslate"><span class="pre">skip_backends</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@xp_capabilities</span><span class="p">(</span>
+    <span class="n">cpu_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">skip_backends</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;array_api_strict&quot;</span><span class="p">,</span> <span class="s2">&quot;not supported&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;cupy&quot;</span><span class="p">,</span> <span class="s2">&quot;not supported&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;dask.array&quot;</span><span class="p">,</span> <span class="s2">&quot;not supported&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;torch&quot;</span><span class="p">,</span> <span class="s2">&quot;not supported&quot;</span><span class="p">),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">oddball_function</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Such situations are hopefully rare enough that special handling isn’t needed.
+<code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> has evolved naturally over time to meet developer needs; good
+suggestions for ways to improve developer ergonomics are welcome.</p>
+</section>
+<section id="dask-compute">
+<h3>Dask Compute<a class="headerlink" href="#dask-compute" title="Link to this heading">#</a></h3>
+<p>The default, <code class="docutils literal notranslate"><span class="pre">allow_dask_compute=False</span></code> declares that a function works lazily
+in Dask and will not materialize any Dask arrays with <code class="docutils literal notranslate"><span class="pre">dask.compute</span></code> or
+otherwise initiate computation with <code class="docutils literal notranslate"><span class="pre">dask.persist</span></code>. Use
+<code class="docutils literal notranslate"><span class="pre">allow_dask_compute=True</span></code> to declare that a function supports Dask arrays but
+not lazily. Developers can also pass an integer to give a cap for the number of
+combined calls to <code class="docutils literal notranslate"><span class="pre">dask.compute</span></code> and <code class="docutils literal notranslate"><span class="pre">dask.persist</span></code> that are allowed. If a function
+is not array-agnostic, then it will typically be the case that
+<code class="docutils literal notranslate"><span class="pre">allow_dask_compute=True</span></code> should be set, unless Dask specific codepaths have been added.</p>
+<p>Dask support is currently deprioritized due to structural barriers
+that make the development of meaningful Dask support particularly challenging. At present,
+developers should feel free to reflexively add <code class="docutils literal notranslate"><span class="pre">skip_backends=[(&quot;dask.array&quot;,</span> <span class="pre">&quot;deprioritized&quot;)]</span></code>
+to the <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> entry of any function they are working on. Reprioritization may
+be considered in the future if a champion emerges and the structural outlook improves.
+See <a class="reference external" href="https://github.com/scipy/scipy/issues/24205">RFC: Should Dask support remain a priority? #24205</a>
+for relevant discussion.</p>
+</section>
+<section id="extra-note">
+<span id="dev-arrayapi-extra-note"></span><h3><code class="docutils literal notranslate"><span class="pre">extra_note</span></code><a class="headerlink" href="#extra-note" title="Link to this heading">#</a></h3>
+<p>Some functions may be supported on an alternative backend, but only in particular
+cases, perhaps only for some values of a kwarg, for real arrays but not complex ones,
+or only for arrays with fewer than a given number of dimensions. Such caveats should
+be supplied with the <code class="docutils literal notranslate"><span class="pre">extra_note</span></code> kwarg of <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code>. Note that the
+implementation of <code class="docutils literal notranslate"><span class="pre">extra_note</span></code> simply inserts a string directly into the Notes section
+of the docstring, and one must be careful about whitespace. This is perhaps
+best demonstrated with an example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">uses_choose_conv_extra_note</span> <span class="o">=</span> <span class="p">(</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;CuPy does not support inputs with ``ndim&gt;1`` when ``method=&quot;auto&quot;``</span>
+<span class="sd">  but does support higher dimensional arrays for ``method=&quot;direct&quot;``</span>
+<span class="sd">  and ``method=&quot;fft&quot;``.</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="marray">
+<span id="dev-arrayapi-marray"></span><h3><code class="docutils literal notranslate"><span class="pre">marray</span></code><a class="headerlink" href="#marray" title="Link to this heading">#</a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">marray=True</span></code> to document support for MArrays below the backend capabilities
+table. Unless noted in <code class="docutils literal notranslate"><span class="pre">extra_note</span></code>, MArrays are understood to be supported by
+all features of the function and in conjunction with all supported backends.</p>
+</section>
+<section id="applying-xp-capabilities-to-classes">
+<h3>Applying <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> to classes<a class="headerlink" href="#applying-xp-capabilities-to-classes" title="Link to this heading">#</a></h3>
+<p>For classes with array API standard support, one must apply <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code>
+once to the class itself, not separately to individual methods. The class level
+capabilities should be decided based on best judgment of which backends
+are generally usable with the class in a holistic sense. If individual methods
+differ in their capabilities, this can be specified using the
+<code class="docutils literal notranslate"><span class="pre">method_capabilities</span></code> kwarg of <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> like in the example
+below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@xp_capabilities</span><span class="p">(</span>
+    <span class="n">method_capabilities</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;__init__&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">jax_jit</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+        <span class="s2">&quot;bar&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">cpu_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exceptions</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cupy&quot;</span><span class="p">],</span> <span class="n">jax_jit</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Foo</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="c1"># not array-agnostic but has delegation to CuPy to set up</span>
+        <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">baz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="c1"># array-agnostic method</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+<p>Adding <code class="docutils literal notranslate"><span class="pre">method_capabilities</span></code> makes no changes to the documentation but does
+make it possible to access method level capabilities when adding tests and
+to test class methods with the JAX JIT. Documentation of
+method specific support and limitations should be added to the <code class="docutils literal notranslate"><span class="pre">extra_note</span></code>
+described above.</p>
+<p><code class="docutils literal notranslate"><span class="pre">method_capabilities</span></code> should be a dictionary mapping method names to
+dictionaries with keys corresponding to the usual arguments of <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code>.
+Keys that are not supplied in the inner dictionaries will be filled with the
+<code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> default values. Entries in <code class="docutils literal notranslate"><span class="pre">method_capabilities</span></code> completely
+override the class level capabilities entry so that one can declare that some
+methods are supported on backends for which the class itself is considered
+unsupported; this is useful for incremental development. If a method has no
+corresponding entry in <code class="docutils literal notranslate"><span class="pre">method_capabilities</span></code>, then by default, its capabilities
+will be the same as the class level capabilities.</p>
+</section>
+</section>
+<section id="adding-tests">
+<span id="dev-arrayapi-adding-tests"></span><h2>Adding tests<a class="headerlink" href="#adding-tests" title="Link to this heading">#</a></h2>
+<p>To run a test on multiple array backends, you should add the <code class="docutils literal notranslate"><span class="pre">xp</span></code> fixture to
+it. <code class="docutils literal notranslate"><span class="pre">xp</span></code> currently supports testing with the following backends:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://data-apis.org/array-api-strict/">array_api_strict</a></p></li>
+<li><p><a class="reference external" href="https://cupy.dev/">cupy</a></p></li>
+<li><p><a class="reference external" href="https://www.dask.org/">dask.array</a></p></li>
+<li><p><a class="reference external" href="https://docs.jax.dev/en/latest/">jax.numpy</a>,</p></li>
+<li><p><a class="reference external" href="https://numpy.org/">numpy</a></p></li>
+<li><p><a class="reference external" href="https://pytorch.org/">torch</a></p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">xp</span></code> is a
+<a class="reference external" href="https://docs.pytest.org/en/6.2.x/fixture.html">pytest fixture</a>
+which is parameterized over all currently installed backends among
+those listed above. Note that <code class="docutils literal notranslate"><span class="pre">xp</span></code> takes values from the set of “raw”
+namespaces, not the wrapped namespaces from
+<a class="reference internal" href="#dev-arrayapi-implementation-notes"><span class="std std-ref">array_api_compat</span></a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">scipy._lib._array_api</span></code> provides the <code class="docutils literal notranslate"><span class="pre">make_xp_test_case</span></code>
+decorator, and the <code class="docutils literal notranslate"><span class="pre">make_xp_pytest_param</span></code> and <code class="docutils literal notranslate"><span class="pre">make_xp_pytest_marks</span></code>
+functions to declare which functions are being tested by a test.  These draw on
+the <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> entries for a function (or in some cases those for a
+list of functions) to insert the relevant backend specific skip and xfail
+markers.</p>
+<p><strong>make_xp_test_case:</strong></p>
+<p>In most cases, developers should use <code class="docutils literal notranslate"><span class="pre">make_xp_test_case</span></code>, which is applied as a
+decorator to a test function, test method, or entire test class. Applying it to a
+test class is equivalent to applying it to each method separately. The decorator can
+be applied at both the class and method level as below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@make_xp_test_case</span><span class="p">(</span><span class="n">my_function</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestMyFunction</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xp</span><span class="p">):</span>
+        <span class="o">...</span>
+
+    <span class="nd">@make_xp_test_case</span><span class="p">(</span><span class="n">other_function</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_integration_with_other_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xp</span><span class="p">)</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+<p>Applying <code class="docutils literal notranslate"><span class="pre">&#64;make_xp_test_case(my_function)</span></code> to <code class="docutils literal notranslate"><span class="pre">TestMyFunction</span></code> causes
+all skips and xfails from the <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> entry for <code class="docutils literal notranslate"><span class="pre">my_function</span></code>
+to be applied to all methods in the class. Additional applications of
+<code class="docutils literal notranslate"><span class="pre">&#64;make_xp_test_case</span></code> to individual methods will add additional skips and
+xfails and not override the class level decorator. Below is an equivalent
+way to write the above example. This style can become unwieldy when there
+are many methods in a class testing the same function.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">TestMyFunction</span><span class="p">:</span>
+    <span class="nd">@make_xp_test_case</span><span class="p">(</span><span class="n">my_function</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test1</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xp</span><span class="p">):</span>
+        <span class="o">...</span>
+
+    <span class="nd">@make_xp_test_case</span><span class="p">(</span><span class="n">my_function</span><span class="p">,</span> <span class="n">other_function</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_integration_with_other_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xp</span><span class="p">)</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+<p><strong>make_xp_pytest_param:</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">make_xp_pytest_param</span></code> covers the situation where a common test body is
+parametrized over a list of functions using <code class="docutils literal notranslate"><span class="pre">pytest.mark.parametrize</span></code>.
+It is not used as frequently as <code class="docutils literal notranslate"><span class="pre">make_xp_test_case</span></code> but this kind of
+situation is not too uncommon.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="s2">&quot;func&quot;</span><span class="p">,</span>
+    <span class="p">[</span><span class="n">make_xp_pytest_param</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">tested_funcs</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_foo</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">xp</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Without access to <code class="docutils literal notranslate"><span class="pre">make_xp_pytest_param</span></code>, one might instead have to do
+something like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@make_xp_test_case</span><span class="p">(</span><span class="o">*</span><span class="n">test_funcs</span><span class="p">)</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="s2">&quot;func&quot;</span><span class="p">,</span> <span class="n">tested_funcs</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_foo</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">xp</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>But then <code class="docutils literal notranslate"><span class="pre">test_foo</span></code> would take on the collective skips and xfails
+for all of the functions in <code class="docutils literal notranslate"><span class="pre">test_funcs</span></code> taken together, leading to
+tests being run with unnecessary skips and xfails.</p>
+<p>Unlike <code class="docutils literal notranslate"><span class="pre">make_xp_test_case</span></code>, only a single function can be passed to any given
+call to <code class="docutils literal notranslate"><span class="pre">make_xp_pytest_param</span></code>. Additional arguments specify additional
+parameters for <code class="docutils literal notranslate"><span class="pre">pytest.mark.parametrize</span></code>, such as in the example
+below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="s2">&quot;func,norm&quot;</span><span class="p">,</span>
+    <span class="p">[</span>
+        <span class="n">make_xp_pytest_param</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">norm</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">func</span><span class="p">,</span> <span class="n">norm</span> <span class="ow">in</span> <span class="n">it</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">tested_functions</span><span class="p">,</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
+    <span class="p">]</span>
+ <span class="p">)</span>
+ <span class="k">def</span><span class="w"> </span><span class="nf">test_normed_foo</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">xp</span><span class="p">):</span>
+     <span class="o">...</span>
+</pre></div>
+</div>
+<p><strong>make_xp_pytest_marks:</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">make_xp_pytest_marks</span></code> is rarely used. It directly returns a list of
+pytest marks which can be used with the <code class="docutils literal notranslate"><span class="pre">pytestmark</span> <span class="pre">=</span> <span class="pre">...</span></code> variable
+to set marks for all tests in a file.</p>
+<p><strong>Strict checks:</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">xp</span></code> fixture should almost always be used along with <code class="docutils literal notranslate"><span class="pre">make_xp_test_case</span></code>
+or one of the similar functions listed above and the <code class="docutils literal notranslate"><span class="pre">xp</span></code> fixture has
+strict checks to enforce this. If one had accidentally written:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="s2">&quot;func&quot;</span><span class="p">,</span> <span class="n">tested_funcs</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_foo</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">xp</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>without using <code class="docutils literal notranslate"><span class="pre">make_xp_pytest_param</span></code> then running this test would result
+in an error with the message:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ERROR scipy/my_module/tests/test_foo.py::test_foo[numpy] - UserWarning: test uses `xp`
+fixture without drawing from `xp_capabilities`  but is not explicitly marked with ``pytest.mark...
+</pre></div>
+</div>
+<p>Since <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> is used to declare alternative backend support for the
+purpose of both testing and documentation, this strict check in the <code class="docutils literal notranslate"><span class="pre">xp</span></code>
+fixture ensures that documentation of tested array API capabilities does not
+become out-of-date. There may be cases where one cannot or intentionally does
+not want to use <code class="docutils literal notranslate"><span class="pre">make_xp_test_case</span></code> or an equivalent, such as for private
+functions which do not have associated <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> entries. To bypass
+the strict checks, one can explicitly mark a test with
+<code class="docutils literal notranslate"><span class="pre">&#64;pytest.mark.uses_xp_capabilities(False)</span></code>. An optional <code class="docutils literal notranslate"><span class="pre">reason</span></code> string can
+be passed to this mark. Tests of private functionality for which there are no
+relevant <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> entries, one should use <code class="docutils literal notranslate"><span class="pre">reason=&quot;private&quot;</span></code>.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">uses_xp_capabilities</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;private&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_private_toto_helper</span><span class="p">(</span><span class="n">xp</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<section id="marray-testing">
+<h3>MArray testing<a class="headerlink" href="#marray-testing" title="Link to this heading">#</a></h3>
+<p>Note that tests for MArray support are not added automatically by any of the mechanisms
+above; support must be tested manually. A common pattern is property-based testing:
+rather than testing the output of a function with particular MArray input against
+manually calculated reference values, compare the output of the function with
+randomly-generated MArray input against the output of a reference implementation,
+such as the same function with <code class="docutils literal notranslate"><span class="pre">nan_policy='omit'</span></code> or with the masked data removed
+programmatically. For reducing functions, it is also important to test the behavior of
+the function when some slices have insufficient (e.g. zero or one) element remaining
+after masked elements have been removed. Typically, MArray tests use the <code class="docutils literal notranslate"><span class="pre">xp</span></code> fixture
+to test MArray used <em>in conjunction</em> with all array backends supported by the function
+being tested. See <code class="docutils literal notranslate"><span class="pre">scipy/stats/tests/test_marray.py</span></code> for examples.</p>
+</section>
+<section id="directly-adding-pytest-markers">
+<h3>Directly adding pytest markers<a class="headerlink" href="#directly-adding-pytest-markers" title="Link to this heading">#</a></h3>
+<p>Though most of the time it’s sufficient to use <code class="docutils literal notranslate"><span class="pre">make_xp_test_case</span></code> and
+<code class="docutils literal notranslate"><span class="pre">make_xp_pytest_param</span></code>, the following <code class="docutils literal notranslate"><span class="pre">pytest</span></code> markers are available and can
+be added directly to tests. (<code class="docutils literal notranslate"><span class="pre">make_xp_test_case</span></code> and its equivalents provide a
+declarative means of adding <code class="docutils literal notranslate"><span class="pre">skip_xp_backends</span></code> and <code class="docutils literal notranslate"><span class="pre">xfail_xp_backends</span></code>
+markers).</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">skip_xp_backends(backend=None,</span> <span class="pre">reason=None,</span> <span class="pre">np_only=False,</span> <span class="pre">cpu_only=False,</span> <span class="pre">eager_only=False,</span> <span class="pre">exceptions=None)</span></code>:
+skip certain backends or categories of backends.
+See docstring of <code class="docutils literal notranslate"><span class="pre">scipy.conftest.skip_or_xfail_xp_backends</span></code> for information on how
+to use this marker to skip tests.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xfail_xp_backends(backend=None,</span> <span class="pre">reason=None,</span> <span class="pre">np_only=False,</span> <span class="pre">cpu_only=False,</span> <span class="pre">eager_only=False,</span> <span class="pre">exceptions=None)</span></code>:
+xfail certain backends or categories of backends.
+See docstring of <code class="docutils literal notranslate"><span class="pre">scipy.conftest.skip_or_xfail_xp_backends</span></code> for information on how
+to use this marker to xfail tests.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">skip_xp_invalid_arg</span></code> is used to skip tests that use arguments which
+are invalid when <code class="docutils literal notranslate"><span class="pre">SCIPY_ARRAY_API</span></code> is enabled. For instance, some tests of
+<a class="reference internal" href="../../reference/stats.html#module-scipy.stats" title="scipy.stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code></a> functions pass masked arrays to the function being tested, but
+masked arrays are incompatible with the array API. Use of the
+<code class="docutils literal notranslate"><span class="pre">skip_xp_invalid_arg</span></code> decorator allows these tests to protect against
+regressions when <code class="docutils literal notranslate"><span class="pre">SCIPY_ARRAY_API</span></code> is not used without resulting in failures
+when <code class="docutils literal notranslate"><span class="pre">SCIPY_ARRAY_API</span></code> is used. In time, we will want these functions to emit
+deprecation warnings when they receive array API invalid input, and this
+decorator will check that the deprecation warning is emitted without it
+causing the test to fail. When <code class="docutils literal notranslate"><span class="pre">SCIPY_ARRAY_API=1</span></code> behavior becomes the
+default and only behavior, these tests (and the decorator itself) will be
+removed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">array_api_backends</span></code>: this marker is automatically added by the <code class="docutils literal notranslate"><span class="pre">xp</span></code> fixture to
+all tests that use it. This is useful e.g. to select all and only such tests:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spin</span> <span class="n">test</span> <span class="o">-</span><span class="n">b</span> <span class="nb">all</span> <span class="o">-</span><span class="n">m</span> <span class="n">array_api_backends</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">uses_xp_capabilities(status,</span> <span class="pre">funcs=None,</span> <span class="pre">reason=None)</span></code>: discussed above.
+<code class="docutils literal notranslate"><span class="pre">make_xp_test_case</span></code> and its equivalents apply the marker
+<code class="docutils literal notranslate"><span class="pre">uses_xp_capabilities(True)</span></code> and direct use of <code class="docutils literal notranslate"><span class="pre">uses_xp_capabilities(False)</span></code>
+can be used to declare a test intentionally does not use <code class="docutils literal notranslate"><span class="pre">make_xp_test_case</span></code>
+or one of its equivalents.</p></li>
+</ul>
+</section>
+<section id="test-specific-skips-and-xfails">
+<h3>Test specific skips and xfails<a class="headerlink" href="#test-specific-skips-and-xfails" title="Link to this heading">#</a></h3>
+<p>For a public function <code class="docutils literal notranslate"><span class="pre">f</span></code>, <code class="docutils literal notranslate"><span class="pre">skip_xp_backends</span></code> and <code class="docutils literal notranslate"><span class="pre">xfail_xp_backends</span></code> should
+only be used directly for backend related skips and xfails which are needed for
+the specific test but which do not reflect the general capabilities of
+<code class="docutils literal notranslate"><span class="pre">f</span></code>. Reasons to directly use <code class="docutils literal notranslate"><span class="pre">skip_xp_backends</span></code> include when:</p>
+<ol class="arabic simple">
+<li><p>the test body itself contains unsupported functionality (though one should
+try to avoid this whenever possible, see the subsection on testing
+practice below).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">f</span></code> is only partially supported on a backend and the test relies on
+cases which are not supported, e.g. tests involving complex values for
+functions which only support real values on a given backend, tests involving
+higher dimensional arrays for functions which only support arrays of size 2d
+or less on a given backend.</p></li>
+<li><p>the test exposes a bug in <code class="docutils literal notranslate"><span class="pre">f</span></code> on a given backend which crashes test
+execution.</p></li>
+</ol>
+<p>For tests exposing bugs on alternative backends that do not crash test
+execution, such as bugs that lead to numerical errors, it is preferable to use
+<code class="docutils literal notranslate"><span class="pre">xfail_xp_backends</span></code> so we can be notified with an <code class="docutils literal notranslate"><span class="pre">XPASS</span></code> when the
+upstream bug is fixed.</p>
+<p><code class="docutils literal notranslate"><span class="pre">xfail_xp_backends</span></code> should not be used for test failures for an alternative
+backend which are actually unrelated to <code class="docutils literal notranslate"><span class="pre">f</span></code> but are instead due to bugs
+outside <code class="docutils literal notranslate"><span class="pre">f</span></code> exposed by other parts of the test body. To avoid such situations,
+we recommend as a general practice to attempt to isolate use of the alternative
+backend only to the function <code class="docutils literal notranslate"><span class="pre">f</span></code> being tested with a caveat that there are
+situations where it is necessary or desired to do otherwise: see the section
+on <a class="reference internal" href="#dev-arrayapi-backend-isolation"><span class="std std-ref">backend isolation</span></a> below for more
+information.</p>
+<p>Tests which are inherently NumPy only should avoid the <code class="docutils literal notranslate"><span class="pre">xp</span></code> fixture
+altogether rather than using it with an <code class="docutils literal notranslate"><span class="pre">np_only=True</span></code> skip marker.</p>
+<p>Note that, in one case, <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> offers more granularity than
+<code class="docutils literal notranslate"><span class="pre">skip_xp_backends</span></code> and <code class="docutils literal notranslate"><span class="pre">xfail_xp_backends</span></code>. <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> allows
+developers to separately declare support for the JAX JIT and support for lazy
+computation with Dask with the respective <code class="docutils literal notranslate"><span class="pre">jax_jit</span></code> and <code class="docutils literal notranslate"><span class="pre">allow_dask_compute</span></code>
+kwargs.  <code class="docutils literal notranslate"><span class="pre">skip_xp_backends</span></code> (<code class="docutils literal notranslate"><span class="pre">xfail_xp_backends</span></code>) offers only an
+<code class="docutils literal notranslate"><span class="pre">eager_only</span></code> kwarg which can only add skips (xfails) for both the JAX JIT and
+lazy Dask together. The current state is that one cannot add test specific skips
+(xfails) for the JAX JIT without also adding them for lazy Dask and vice
+versa. This is a known limitation that arose through the historical process
+through which <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code>, <code class="docutils literal notranslate"><span class="pre">skip_xp_backends</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">xfail_xp_backends</span></code> were developed, and it may be addressed in the future if
+there is sufficient developer need.</p>
+</section>
+<section id="array-agnostic-assertions">
+<h3>Array-agnostic assertions<a class="headerlink" href="#array-agnostic-assertions" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">scipy._lib._array_api</span></code> contains array-agnostic assertions such as <code class="docutils literal notranslate"><span class="pre">xp_assert_close</span></code>
+which can be used to replace assertions from <a class="reference external" href="https://numpy.org/doc/stable/reference/routines.testing.html#module-numpy.testing" title="(in NumPy v2.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.testing</span></code></a>.</p>
+<p>When these assertions are executed within a test that uses the <code class="docutils literal notranslate"><span class="pre">xp</span></code> fixture, they
+enforce that the namespaces of both the actual and desired arrays match the namespace
+which was set by the fixture. Tests without the <code class="docutils literal notranslate"><span class="pre">xp</span></code> fixture infer the namespace from
+the desired array. This machinery can be overridden by explicitly passing the <code class="docutils literal notranslate"><span class="pre">xp=</span></code>
+parameter to the assertion functions.</p>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Link to this heading">#</a></h3>
+<p>The following examples demonstrate how to use direct markers together with
+<code class="docutils literal notranslate"><span class="pre">make_xp_test_case</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.conftest</span><span class="w"> </span><span class="kn">import</span> <span class="n">skip_xp_invalid_arg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy._lib._array_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">xp_assert_close</span><span class="p">,</span> <span class="n">make_xp_test_case</span>
+
+<span class="nd">@make_xp_test_case</span><span class="p">(</span><span class="n">toto</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestToto</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_toto_list_input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># This test is inherently NumPy only so avoids the xp fixture altogether.</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">]</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">]</span>
+        <span class="n">xp_assert_close</span><span class="p">(</span><span class="n">toto</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+<span class="o">...</span>
+    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">skip_xp_backends</span><span class="p">(</span>
+        <span class="s1">&#39;cupy&#39;</span><span class="p">,</span>
+        <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;cupy does not support inputs with ndim&gt;2&#39;</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_toto2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xp</span><span class="p">):</span>
+        <span class="o">...</span>
+<span class="o">...</span>
+    <span class="c1"># Do not run when SCIPY_ARRAY_API=1 is used since calling toto on masked</span>
+    <span class="c1"># arrays will raise in this case.</span>
+    <span class="nd">@skip_xp_invalid_arg</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_toto_masked_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+</section>
+<section id="running-tests">
+<h3>Running tests<a class="headerlink" href="#running-tests" title="Link to this heading">#</a></h3>
+<p>After applying these markers, either through <code class="docutils literal notranslate"><span class="pre">make_xp_test_case</span></code> or one of its
+equivalents, or directly,
+<code class="docutils literal notranslate"><span class="pre">spin</span> <span class="pre">test</span></code> can be used with the option <code class="docutils literal notranslate"><span class="pre">-b</span></code> or <code class="docutils literal notranslate"><span class="pre">--array-api-backend</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spin</span> <span class="n">test</span> <span class="o">-</span><span class="n">b</span> <span class="n">numpy</span> <span class="o">-</span><span class="n">b</span> <span class="n">torch</span> <span class="o">-</span><span class="n">s</span> <span class="n">cluster</span>
+</pre></div>
+</div>
+<p>This automatically sets <code class="docutils literal notranslate"><span class="pre">SCIPY_ARRAY_API</span></code> appropriately and will cause
+tests with the <code class="docutils literal notranslate"><span class="pre">xp</span></code> fixture to run only for the selected backends to be
+collected. Valid backends are <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">array_api_strict</span></code>, <code class="docutils literal notranslate"><span class="pre">cupy</span></code>,
+<code class="docutils literal notranslate"><span class="pre">dask.array</span></code>, <code class="docutils literal notranslate"><span class="pre">jax.numpy</span></code>, and <code class="docutils literal notranslate"><span class="pre">torch</span></code>. One may also use the
+<code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">array_api_backends</span></code> option to restrict collection to only tests using
+the <code class="docutils literal notranslate"><span class="pre">xp</span></code> fixture. For instance the following command causes pytest to only
+collect tests using the <code class="docutils literal notranslate"><span class="pre">xp</span></code> fixture with the CuPy backend:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spin</span> <span class="n">test</span> <span class="o">-</span><span class="n">b</span> <span class="n">cupy</span> <span class="o">-</span><span class="n">m</span> <span class="n">array_api_backends</span>
+</pre></div>
+</div>
+<p>To test a library
+that has multiple devices with a non-default device, a second environment
+variable (<code class="docutils literal notranslate"><span class="pre">SCIPY_DEVICE</span></code>, only used in the test suite) can be set. Valid
+values depend on the array library under test, e.g. for PyTorch, valid values are
+<code class="docutils literal notranslate"><span class="pre">&quot;cpu&quot;,</span> <span class="pre">&quot;cuda&quot;,</span> <span class="pre">&quot;mps&quot;</span></code>. To run the test suite with the PyTorch MPS
+backend, use: <code class="docutils literal notranslate"><span class="pre">SCIPY_DEVICE=mps</span> <span class="pre">spin</span> <span class="pre">test</span> <span class="pre">-b</span> <span class="pre">torch</span></code>.</p>
+<p>Note that in SciPy’s GitHub Actions workflows, there are regular tests
+with array-api-strict, Dask, PyTorch, and JAX on CPU, and tests with
+CuPy, PyTorch, and JAX on GPU.</p>
+<p>A third environment variable (<code class="docutils literal notranslate"><span class="pre">SCIPY_DEFAULT_DTYPE</span></code>, again only used in the
+test suite) can be used to control the <a class="reference internal" href="#dev-arrayapi-default-dtype"><span class="std std-ref">default dtype</span></a>
+used by <code class="docutils literal notranslate"><span class="pre">torch</span></code> in tests. Valid values are <code class="docutils literal notranslate"><span class="pre">&quot;float64&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;float32&quot;</span></code>.
+If <code class="docutils literal notranslate"><span class="pre">SCIPY_DEFAULT_DTYPE</span></code> is unset, then <code class="docutils literal notranslate"><span class="pre">torch</span></code>’s default dtype will be <code class="docutils literal notranslate"><span class="pre">float64</span></code>.</p>
+<p>The intention behind testing with different default dtypes is primarily to catch
+subtle bugs that can arise with the <code class="docutils literal notranslate"><span class="pre">torch</span></code> backend due to internal array creation
+that does not explicitly specify a dtype. The intention is not to implicitly test
+that functions are numerically accurate with both <code class="docutils literal notranslate"><span class="pre">float32</span></code> and <code class="docutils literal notranslate"><span class="pre">float64</span></code> inputs,
+or that input dtype controls output dtype. These tasks, if done, should instead be accomplished
+mindfully by explicitly setting dtypes within tests. For the sake of consistency,
+tests intended to be run with the <code class="docutils literal notranslate"><span class="pre">torch</span></code> backend should not use array creation
+functions without explicitly setting the dtype. At the time of writing, there are many
+tests in the test suite which do not follow this practice, and this could be a good source
+of first issues for new contributors.</p>
+</section>
+<section id="tests-are-not-optional">
+<h3>Tests are not optional<a class="headerlink" href="#tests-are-not-optional" title="Link to this heading">#</a></h3>
+<p>It is not permitted for a function <code class="docutils literal notranslate"><span class="pre">f</span></code> to have an <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code>
+entry advertising some level of alternative backend support if there are
+no tests in the test suite for <code class="docutils literal notranslate"><span class="pre">f</span></code> that use the <code class="docutils literal notranslate"><span class="pre">xp</span></code> fixture along with
+<code class="docutils literal notranslate"><span class="pre">make_xp_test_case(f)</span></code> or one of its equivalents. All documented alternative
+backend support must be tested and the only valid <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> entries
+for a function without tests of the form described above are <code class="docutils literal notranslate"><span class="pre">np_only=True</span></code>
+with no <code class="docutils literal notranslate"><span class="pre">exceptions</span></code>, or <code class="docutils literal notranslate"><span class="pre">out_of_scope=True</span></code>.</p>
+<p>The command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spin</span> <span class="n">check</span> <span class="o">--</span><span class="n">xp</span><span class="o">-</span><span class="n">markers</span>
+</pre></div>
+</div>
+<p>can be used to check that all functions advertising alternative backend
+support have at least one test using the <code class="docutils literal notranslate"><span class="pre">xp</span></code> fixture that draws from
+<code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> through <code class="docutils literal notranslate"><span class="pre">make_xp_test_case</span></code> or one of its equivalents.
+This check is run in CI.</p>
+</section>
+<section id="backend-isolation-in-tests">
+<span id="dev-arrayapi-backend-isolation"></span><h3>Backend isolation in tests<a class="headerlink" href="#backend-isolation-in-tests" title="Link to this heading">#</a></h3>
+<p>In most cases, it’s important that for any supported function <code class="docutils literal notranslate"><span class="pre">f</span></code>, there exist
+tests using the <code class="docutils literal notranslate"><span class="pre">xp</span></code> fixture that restrict use of alternative backends to only
+the function <code class="docutils literal notranslate"><span class="pre">f</span></code> being tested. Other functions evaluated within a test, for
+the purpose of producing reference values, inputs, round-trip calculations,
+etc. should instead use the NumPy backend. This helps ensure that any failures
+that occur on a backend actually relate to the function of interest, and avoids
+the need to skip backends due to lack of support for functions other than
+<code class="docutils literal notranslate"><span class="pre">f</span></code>. Property based integration tests which check that some invariant holds
+using the same alternative backend across different functions can also have
+value, giving a window into the general health of backend support for a module,
+but in order to ensure the test suite actually reflects the state of backend
+support for each function, it’s usually vital to have tests which isolate use
+of the alternative backend only to the function being tested.</p>
+<p>To help facilitate such backend isolation, there is a function
+<code class="docutils literal notranslate"><span class="pre">xp_copy_to_numpy</span></code> in <code class="docutils literal notranslate"><span class="pre">scipy._lib._array_api</span></code> which can copy an arbitrary
+<code class="docutils literal notranslate"><span class="pre">xp</span></code> array to a NumPy array, bypassing any device transfer guards, while
+preserving dtypes. It is essential that this function is only used in
+tests. Attempts to copy a device array to NumPy outside of tests should fail,
+because otherwise it is opaque as to whether a function is working on GPU or
+not. Creation of input arrays and reference output arrays, and computations that
+verify that the output of the function being tested satisfies an invariant (such
+as round trip tests that a function composed with its inverse gives the identity
+function), should all be done with NumPy (using the <code class="docutils literal notranslate"><span class="pre">xp_copy_to_numpy</span></code>
+function if necessary).</p>
+<p>Such backend isolation should not be applied blindly. Consider for example a
+vectorized root finding function like <a class="reference internal" href="../../reference/generated/scipy.optimize.elementwise.find_root.html#scipy.optimize.elementwise.find_root" title="scipy.optimize.elementwise.find_root"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.optimize.elementwise.find_root</span></code></a>.
+When testing such a function on alternative backends, isolating use of the
+alternative backend only to <code class="docutils literal notranslate"><span class="pre">find_root</span></code> by using an input callable <code class="docutils literal notranslate"><span class="pre">f</span></code> (the
+function for which roots are sought) that converts to and from NumPy would not
+be desirable since <code class="docutils literal notranslate"><span class="pre">find_root</span></code> and <code class="docutils literal notranslate"><span class="pre">f</span></code> are so tightly coupled in this
+case. In other cases, a function <code class="docutils literal notranslate"><span class="pre">h</span></code> used in the tests of a function <code class="docutils literal notranslate"><span class="pre">g</span></code> may
+be known to be so simple and rock solid that there is no point in going through
+the trouble of backend isolation. Maintainers are free to use their discretion to
+decide whether backend isolation is necessary or desirable.</p>
+</section>
+<section id="testing-the-jax-jit-compiler-and-lazy-evaluation-with-dask">
+<h3>Testing the JAX JIT compiler (and lazy evaluation with Dask)<a class="headerlink" href="#testing-the-jax-jit-compiler-and-lazy-evaluation-with-dask" title="Link to this heading">#</a></h3>
+<p>The <a class="reference external" href="https://jax.readthedocs.io/en/latest/jit-compilation.html">JAX JIT compiler</a>
+introduces special restrictions to all code wrapped by <code class="docutils literal notranslate"><span class="pre">&#64;jax.jit</span></code>, which are not
+present when running JAX in eager mode. Notably, boolean masks in <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>
+and <code class="docutils literal notranslate"><span class="pre">.at</span></code> aren’t supported, and you can’t materialize the arrays by applying
+<code class="docutils literal notranslate"><span class="pre">bool()</span></code>, <code class="docutils literal notranslate"><span class="pre">float()</span></code>, <code class="docutils literal notranslate"><span class="pre">np.asarray()</span></code> etc. to them.</p>
+<p>To properly test scipy with JAX, the tested scipy functions must be wrapped
+with <code class="docutils literal notranslate"><span class="pre">&#64;jax.jit</span></code> before they are called by the unit tests. This is done
+automatically when using <code class="docutils literal notranslate"><span class="pre">make_xp_test_case</span></code> and its friends when the
+associated <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> entry (or entries) have <code class="docutils literal notranslate"><span class="pre">jax_jit=True</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy._lib._array_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_xp_test_case</span><span class="p">,</span> <span class="n">xp_assert_close</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.mymodule</span><span class="w"> </span><span class="kn">import</span> <span class="n">toto</span>
+
+<span class="nd">@make_xp_test_case</span><span class="p">(</span><span class="n">toto</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_toto</span><span class="p">(</span><span class="n">xp</span><span class="p">):</span>
+   <span class="n">a</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">])</span>
+   <span class="n">b</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+   <span class="c1"># When xp==jax.numpy, toto is wrapped with @jax.jit</span>
+   <span class="c1"># so long as the xp_capabilities entry for toto has</span>
+   <span class="c1"># jax_jit=True.</span>
+   <span class="n">xp_assert_close</span><span class="p">(</span><span class="n">toto</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To achieve this for private functions without <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> entries,
+you should tag them as follows in your test module:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy._lib._array_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">xp_assert_close</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy._external.array_api_extra.testing</span><span class="w"> </span><span class="kn">import</span> <span class="n">lazy_xp_function</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.mymodule</span><span class="w"> </span><span class="kn">import</span> <span class="n">_private_toto_helper</span>
+
+<span class="n">lazy_xp_function</span><span class="p">(</span><span class="n">_private_toto_helper</span><span class="p">)</span>
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">uses_xp_capabilities</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;private&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_private_toto_helper</span><span class="p">(</span><span class="n">xp</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+    <span class="c1"># When xp==jax.numpy, _private_toto_helper is wrapped with @jax.jit</span>
+    <span class="n">xp_assert_close</span><span class="p">(</span><span class="n">_private_toto_helper</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If instead of importing the functions from <code class="docutils literal notranslate"><span class="pre">scipy.mymodule</span></code>, the above example
+imported <code class="docutils literal notranslate"><span class="pre">mymodule</span></code> and called <code class="docutils literal notranslate"><span class="pre">toto</span></code> through the qualified name
+<code class="docutils literal notranslate"><span class="pre">mymodule.toto</span></code>, <code class="docutils literal notranslate"><span class="pre">&#64;jax.jit</span></code> would not be applied to <code class="docutils literal notranslate"><span class="pre">toto</span></code>.  This is due to an
+implementation specific quirk which limits the application of <code class="docutils literal notranslate"><span class="pre">&#64;jax.jit</span></code> only
+to functions in the globals of the module that defines the current test.
+If one wishes to use a pattern like <code class="docutils literal notranslate"><span class="pre">mymodule.toto</span></code> in a test, one must define a
+variable <code class="docutils literal notranslate"><span class="pre">lazy_xp_modules</span></code> at the top of the test file to specify additional places
+the testing framework should look for functions tagged with <code class="docutils literal notranslate"><span class="pre">lazy_xp_function</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">scipy.mymodule</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mymodule</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy._lib._array_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_xp_test_case</span><span class="p">,</span> <span class="n">xp_assert_close</span>
+
+<span class="n">lazy_xp_modules</span> <span class="o">=</span> <span class="p">[</span><span class="n">mymodule</span><span class="p">]</span>
+
+<span class="nd">@make_xp_test_case</span><span class="p">(</span><span class="n">mymodule</span><span class="o">.</span><span class="n">toto</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_toto</span><span class="p">(</span><span class="n">xp</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">])</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="c1"># When xp==jax.numpy, toto is wrapped with @jax.jit</span>
+    <span class="c1"># so long as the xp_capabilities entry for toto has</span>
+    <span class="c1"># jax_jit=True.</span>
+    <span class="n">xp_assert_close</span><span class="p">(</span><span class="n">toto</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This can be slightly annoying to remember at first, but in practice isn’t too bad
+once one gets in the habit of checking for this. The essential complexity of
+<code class="docutils literal notranslate"><span class="pre">lazy_xp_function</span></code> is actually quite high, and the current design trades off on
+developer ergonomics to allow for a simpler implementation.</p>
+</div>
+<p>Testing lazy evaluation with Dask works similarly, except <code class="docutils literal notranslate"><span class="pre">lazy_xp_function</span></code> wraps
+functions with a decorator that disables <code class="docutils literal notranslate"><span class="pre">compute()</span></code> and <code class="docutils literal notranslate"><span class="pre">persist()</span></code> and ensures
+that exceptions and warnings are raised eagerly. Similarly as for the JAX JIT,
+<code class="docutils literal notranslate"><span class="pre">make_xp_test_case</span></code> and friends will automatically do this when the associated
+<code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> entry has <code class="docutils literal notranslate"><span class="pre">allow_dask_compute=False</span></code>. The same warning about
+requiring <code class="docutils literal notranslate"><span class="pre">lazy_xp_modules</span></code> applies to tests of lazy evaluation with Dask, just
+as it does to tests of the JAX JIT.</p>
+<p>See full documentation <a class="reference external" href="https://data-apis.org/array-api-extra/generated/array_api_extra.testing.lazy_xp_function.html">here</a>.</p>
+</section>
+<section id="testing-device-propagation-with-a-torch-meta-default-device">
+<h3>Testing device propagation with a torch meta default device<a class="headerlink" href="#testing-device-propagation-with-a-torch-meta-default-device" title="Link to this heading">#</a></h3>
+<p>Under the array API standard, arrays created without an explicit <code class="docutils literal notranslate"><span class="pre">device</span></code>
+land on the backend’s <em>default</em> device. If SciPy code creates an array
+internally without propagating the input’s device (<code class="docutils literal notranslate"><span class="pre">device=xp_device(x)</span></code>),
+the result only breaks when the input lives on a <em>non-default</em> device - a
+situation regular CPU test runs never exercise as there is only one CPU device.</p>
+<p>Using the PyTorch <code class="docutils literal notranslate"><span class="pre">'meta'</span></code> device (through <code class="docutils literal notranslate"><span class="pre">SCIPY_DEVICE=meta</span></code>) closes that
+gap without needing extra hardware. E.g., running:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pixi</span> <span class="n">run</span> <span class="n">test</span><span class="o">-</span><span class="n">torch</span><span class="o">-</span><span class="n">meta</span>
+</pre></div>
+</div>
+<p>makes torch’s data-free <code class="docutils literal notranslate"><span class="pre">meta</span></code> device the default while the <code class="docutils literal notranslate"><span class="pre">xp</span></code> fixture
+hands tests a wrapper namespace that creates input arrays on CPU.
+SciPy-internal code resolves the real namespace from its input arrays, so any
+internal creation that omits <code class="docutils literal notranslate"><span class="pre">device=</span></code> lands on <code class="docutils literal notranslate"><span class="pre">meta</span></code> and fails with an
+exception (<code class="docutils literal notranslate"><span class="pre">Expected</span> <span class="pre">all</span> <span class="pre">tensors</span> <span class="pre">to</span> <span class="pre">be</span> <span class="pre">on</span> <span class="pre">the</span> <span class="pre">same</span> <span class="pre">device</span></code>) at the first
+combination with input data.</p>
+<p>In other words: testing with the PyTorch meta device provides a
+device-propagation leak detector. It simulates running the test suite on a
+machine whose default device is a GPU while all test arrays are created in CPU
+memory - a situation in which a missing <code class="docutils literal notranslate"><span class="pre">device=</span></code> actually breaks - without
+needing a GPU.
+This includes <code class="docutils literal notranslate"><span class="pre">cpu_only</span></code> functions: their NumPy round-trip must
+return results on the <em>input’s</em> device (not the default device), so they run
+and are value-checked in this mode.</p>
+<p>When triaging a failure in this mode:</p>
+<ul class="simple">
+<li><p>An <code class="docutils literal notranslate"><span class="pre">Expected</span> <span class="pre">all</span> <span class="pre">tensors</span> <span class="pre">to</span> <span class="pre">be</span> <span class="pre">on</span> <span class="pre">the</span> <span class="pre">same</span> <span class="pre">device</span></code> error (<code class="docutils literal notranslate"><span class="pre">meta</span></code> and
+<code class="docutils literal notranslate"><span class="pre">cpu</span></code>) inside SciPy code is a real leak; fix it by propagating the input
+device at the creation site.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Tensor.item()</span> <span class="pre">cannot</span> <span class="pre">be</span> <span class="pre">called</span> <span class="pre">on</span> <span class="pre">meta</span> <span class="pre">tensors</span></code> / <code class="docutils literal notranslate"><span class="pre">Cannot</span> <span class="pre">copy</span> <span class="pre">out</span> <span class="pre">of</span>
+<span class="pre">meta</span> <span class="pre">tensor</span></code>: check where the offending tensor was created. Most often it
+is also a real leak, one step removed: an internal conversion omitted
+<code class="docutils literal notranslate"><span class="pre">device=</span></code> (e.g. a host parameter - one that lives in CPU memory - converted
+with a bare <code class="docutils literal notranslate"><span class="pre">xp.asarray(p)</span></code> and then validated with <code class="docutils literal notranslate"><span class="pre">xp.any(p</span> <span class="pre">&lt;=</span> <span class="pre">0)</span></code>),
+and the fix is again to pin the creation site. Only when the device-to-host transfer
+is inherent to the implementation - a computed value genuinely needed on the
+host, which is a legal synchronization on real devices but impossible on the
+data-free <code class="docutils literal notranslate"><span class="pre">meta</span></code> device - mark the test with
+<code class="docutils literal notranslate"><span class="pre">&#64;pytest.mark.skip_xp_backends(skip_meta=True,</span> <span class="pre">reason=...)</span></code>.</p></li>
+<li><p>A value assertion comparing a <code class="docutils literal notranslate"><span class="pre">meta</span></code> result against a <code class="docutils literal notranslate"><span class="pre">cpu</span></code> reference
+means the function constructs its output on the default device because it
+takes no array input (e.g. the window functions). If the function has a
+<code class="docutils literal notranslate"><span class="pre">device</span></code> keyword, do not skip: pass the device of test-created arrays
+explicitly (see the <code class="docutils literal notranslate"><span class="pre">device</span></code> fixture in <code class="docutils literal notranslate"><span class="pre">test_windows.py</span></code>), which both
+fixes the test and actively verifies the keyword is threaded through every
+internal creation. Only functions without a <code class="docutils literal notranslate"><span class="pre">device</span></code> keyword need the
+<code class="docutils literal notranslate"><span class="pre">skip_meta=True</span></code> mark.</p></li>
+</ul>
+</section>
+<section id="adding-tests-for-class-methods">
+<h3>Adding tests for class methods<a class="headerlink" href="#adding-tests-for-class-methods" title="Link to this heading">#</a></h3>
+<p>To declare that a test is testing a particular method of a class,
+one can pass a tuple of the form <code class="docutils literal notranslate"><span class="pre">tuple[type,</span> <span class="pre">str]</span></code> as an entry of
+<code class="docutils literal notranslate"><span class="pre">funcs</span></code> in <code class="docutils literal notranslate"><span class="pre">make_xp_test_case</span></code> and <code class="docutils literal notranslate"><span class="pre">make_xp_pytest_marks</span></code> or as
+the argument <code class="docutils literal notranslate"><span class="pre">func</span></code> of <code class="docutils literal notranslate"><span class="pre">make_xp_pytest_param</span></code>. The tuple
+<code class="docutils literal notranslate"><span class="pre">(A,</span> <span class="pre">&quot;f&quot;)</span></code> signifies that one is testing the method <code class="docutils literal notranslate"><span class="pre">A.f</span></code> of the
+class <code class="docutils literal notranslate"><span class="pre">A</span></code>. Such a tuple is used rather than simply <code class="docutils literal notranslate"><span class="pre">A.f</span></code>
+in order to allow unambiguous specification of what is being tested in
+cases where a method is inherited from a parent class.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@make_xp_test_case</span><span class="p">((</span><span class="n">Foo</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_Foo_bar</span><span class="p">(</span><span class="n">xp</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>When passing such a tuple to <code class="docutils literal notranslate"><span class="pre">make_xp_pytest_param</span></code>, only the first
+entry of the tuple is actually used in the resulting pytest param:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">&quot;cls&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="n">A</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">),</span> <span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">),</span> <span class="n">C</span><span class="p">])</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">xp</span><span class="p">):</span>
+        <span class="c1"># cls iterates over A, B, C.</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+<p>When using such tuple arguments, the pytest skips and xfails will be
+taken from the class level capabilities, unless a method specific
+override was added in the <code class="docutils literal notranslate"><span class="pre">method_capabilities</span></code> kwarg of
+<code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code>.</p>
+<p>If the capabilities for <code class="docutils literal notranslate"><span class="pre">(A,</span> <span class="pre">&quot;f&quot;)</span></code> have
+<code class="docutils literal notranslate"><span class="pre">jax_jit=True</span></code> (or if Dask is not in <code class="docutils literal notranslate"><span class="pre">skip_backends</span></code>) then using
+<code class="docutils literal notranslate"><span class="pre">&#64;make_xp_test_case((A,</span> <span class="pre">&quot;f&quot;))</span></code> or one of its equivalents
+will cause <code class="docutils literal notranslate"><span class="pre">lazy_xp_function</span></code> to be applied to <code class="docutils literal notranslate"><span class="pre">(A,</span> <span class="pre">&quot;f&quot;)</span></code>.
+(<code class="docutils literal notranslate"><span class="pre">lazy_xp_function</span></code> will in this case replace <code class="docutils literal notranslate"><span class="pre">A.f</span></code> with
+a clone to avoid unintentional modification of a parent
+in cases where a method is inherited from a parent class).</p>
+</section>
+</section>
+<section id="additional-information">
+<h2>Additional information<a class="headerlink" href="#additional-information" title="Link to this heading">#</a></h2>
+<p>Here are some additional resources which motivated some design decisions and
+helped during the development phase:</p>
+<ul class="simple">
+<li><p>Initial <a class="reference external" href="https://github.com/tupui/scipy/pull/24">PR</a> with some discussions</p></li>
+<li><p>Quick started from this <a class="reference external" href="https://github.com/scipy/scipy/pull/15395">PR</a> and
+some inspiration taken from
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/utils/_array_api.py">scikit-learn</a>.</p></li>
+<li><p><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/issues/22352">PR</a> adding Array
+API support to scikit-learn</p></li>
+<li><p>Some other relevant scikit-learn PRs:
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/22554">#22554</a> and
+<a class="reference external" href="https://github.com/scikit-learn/scikit-learn/pull/25956">#25956</a></p></li>
+</ul>
+</section>
+<section id="api-coverage">
+<span id="dev-arrayapi-coverage"></span><h2>API Coverage<a class="headerlink" href="#api-coverage" title="Link to this heading">#</a></h2>
+<p>The below tables show the current state of alternative backend support across
+SciPy’s modules. Public functions, function-like callables, and classes are
+included in the tables. Parts of the public API which are deemed out-of-scope
+are excluded from consideration when calculating coverage percentages. If a
+module or submodule contains no in-scope functions, it is excluded from the
+tables. For example, <a class="reference internal" href="../../reference/datasets.html#module-scipy.datasets" title="scipy.datasets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.datasets</span></code></a> is excluded because its contents are
+considered out-of-scope.</p>
+<div class="toctree-wrapper compound">
+</div>
+<section id="support-on-cpu">
+<h3>Support on CPU<a class="headerlink" href="#support-on-cpu" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>module</p></th>
+<th class="head"><p>torch</p></th>
+<th class="head"><p>jax</p></th>
+<th class="head"><p>dask</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/cluster_vq.html#array-api-support-cluster-vq-cpu"><span class="std std-ref">cluster.vq</span></a> (4)</p></td>
+<td><p>100%</p></td>
+<td><p>100%</p></td>
+<td><p>100%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/cluster_hierarchy.html#array-api-support-cluster-hierarchy-cpu"><span class="std std-ref">cluster.hierarchy</span></a> (29)</p></td>
+<td><p>97%</p></td>
+<td><p>97%</p></td>
+<td><p>97%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/constants.html#array-api-support-constants-cpu"><span class="std std-ref">constants</span></a> (3)</p></td>
+<td><p>100%</p></td>
+<td><p>100%</p></td>
+<td><p>100%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/differentiate.html#array-api-support-differentiate-cpu"><span class="std std-ref">differentiate</span></a> (3)</p></td>
+<td><p>100%</p></td>
+<td><p>100%</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/fft.html#array-api-support-fft-cpu"><span class="std std-ref">fft</span></a> (32)</p></td>
+<td><p>100%</p></td>
+<td><p>94%</p></td>
+<td><p>100%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/integrate.html#array-api-support-integrate-cpu"><span class="std std-ref">integrate</span></a> (30)</p></td>
+<td><p>30%</p></td>
+<td><p>27%</p></td>
+<td><p>23%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/interpolate.html#array-api-support-interpolate-cpu"><span class="std std-ref">interpolate</span></a> (30)</p></td>
+<td><p>53%</p></td>
+<td><p>53%</p></td>
+<td><p>20%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/linalg.html#array-api-support-linalg-cpu"><span class="std std-ref">linalg</span></a> (95)</p></td>
+<td><p>4%</p></td>
+<td><p>4%</p></td>
+<td><p>3%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/linalg_interpolative.html#array-api-support-linalg-interpolative-cpu"><span class="std std-ref">linalg.interpolative</span></a> (9)</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/ndimage.html#array-api-support-ndimage-cpu"><span class="std std-ref">ndimage</span></a> (73)</p></td>
+<td><p>99%</p></td>
+<td><p>99%</p></td>
+<td><p>99%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/optimize.html#array-api-support-optimize-cpu"><span class="std std-ref">optimize</span></a> (70)</p></td>
+<td><p>7%</p></td>
+<td><p>6%</p></td>
+<td><p>6%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/optimize_elementwise.html#array-api-support-optimize-elementwise-cpu"><span class="std std-ref">optimize.elementwise</span></a> (4)</p></td>
+<td><p>75%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/signal.html#array-api-support-signal-cpu"><span class="std std-ref">signal</span></a> (149)</p></td>
+<td><p>62%</p></td>
+<td><p>62%</p></td>
+<td><p>60%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/signal_windows.html#array-api-support-signal-windows-cpu"><span class="std std-ref">signal.windows</span></a> (26)</p></td>
+<td><p>96%</p></td>
+<td><p>96%</p></td>
+<td><p>92%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/sparse.html#array-api-support-sparse-cpu"><span class="std std-ref">sparse</span></a> (52)</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/sparse_linalg.html#array-api-support-sparse-linalg-cpu"><span class="std std-ref">sparse.linalg</span></a> (35)</p></td>
+<td><p>6%</p></td>
+<td><p>6%</p></td>
+<td><p>6%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/sparse_csgraph.html#array-api-support-sparse-csgraph-cpu"><span class="std std-ref">sparse.csgraph</span></a> (25)</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/spatial.html#array-api-support-spatial-cpu"><span class="std std-ref">spatial</span></a> (10)</p></td>
+<td><p>10%</p></td>
+<td><p>10%</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/spatial_distance.html#array-api-support-spatial-distance-cpu"><span class="std std-ref">spatial.distance</span></a> (27)</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/spatial_transform.html#array-api-support-spatial-transform-cpu"><span class="std std-ref">spatial.transform</span></a> (4)</p></td>
+<td><p>75%</p></td>
+<td><p>75%</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/special.html#array-api-support-special-cpu"><span class="std std-ref">special</span></a> (343)</p></td>
+<td><p>29%</p></td>
+<td><p>29%</p></td>
+<td><p>28%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/stats.html#array-api-support-stats-cpu"><span class="std std-ref">stats</span></a> (148)</p></td>
+<td><p>61%</p></td>
+<td><p>59%</p></td>
+<td><p>34%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/stats_contingency.html#array-api-support-stats-contingency-cpu"><span class="std std-ref">stats.contingency</span></a> (7)</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/stats_qmc.html#array-api-support-stats-qmc-cpu"><span class="std std-ref">stats.qmc</span></a> (11)</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="support-on-gpu">
+<h3>Support on GPU<a class="headerlink" href="#support-on-gpu" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>module</p></th>
+<th class="head"><p>cupy</p></th>
+<th class="head"><p>torch</p></th>
+<th class="head"><p>jax</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/cluster_vq.html#array-api-support-cluster-vq-gpu"><span class="std std-ref">cluster.vq</span></a> (4)</p></td>
+<td><p>25%</p></td>
+<td><p>25%</p></td>
+<td><p>25%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/cluster_hierarchy.html#array-api-support-cluster-hierarchy-gpu"><span class="std std-ref">cluster.hierarchy</span></a> (29)</p></td>
+<td><p>28%</p></td>
+<td><p>28%</p></td>
+<td><p>28%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/constants.html#array-api-support-constants-gpu"><span class="std std-ref">constants</span></a> (3)</p></td>
+<td><p>100%</p></td>
+<td><p>100%</p></td>
+<td><p>100%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/differentiate.html#array-api-support-differentiate-gpu"><span class="std std-ref">differentiate</span></a> (3)</p></td>
+<td><p>100%</p></td>
+<td><p>100%</p></td>
+<td><p>100%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/fft.html#array-api-support-fft-gpu"><span class="std std-ref">fft</span></a> (32)</p></td>
+<td><p>75%</p></td>
+<td><p>75%</p></td>
+<td><p>75%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/integrate.html#array-api-support-integrate-gpu"><span class="std std-ref">integrate</span></a> (30)</p></td>
+<td><p>33%</p></td>
+<td><p>30%</p></td>
+<td><p>27%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/interpolate.html#array-api-support-interpolate-gpu"><span class="std std-ref">interpolate</span></a> (30)</p></td>
+<td><p>30%</p></td>
+<td><p>3%</p></td>
+<td><p>3%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/linalg.html#array-api-support-linalg-gpu"><span class="std std-ref">linalg</span></a> (95)</p></td>
+<td><p>4%</p></td>
+<td><p>4%</p></td>
+<td><p>4%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/linalg_interpolative.html#array-api-support-linalg-interpolative-gpu"><span class="std std-ref">linalg.interpolative</span></a> (9)</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/ndimage.html#array-api-support-ndimage-gpu"><span class="std std-ref">ndimage</span></a> (73)</p></td>
+<td><p>93%</p></td>
+<td><p>0%</p></td>
+<td><p>1%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/optimize.html#array-api-support-optimize-gpu"><span class="std std-ref">optimize</span></a> (70)</p></td>
+<td><p>7%</p></td>
+<td><p>7%</p></td>
+<td><p>6%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/optimize_elementwise.html#array-api-support-optimize-elementwise-gpu"><span class="std std-ref">optimize.elementwise</span></a> (4)</p></td>
+<td><p>100%</p></td>
+<td><p>75%</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/signal.html#array-api-support-signal-gpu"><span class="std std-ref">signal</span></a> (149)</p></td>
+<td><p>65%</p></td>
+<td><p>33%</p></td>
+<td><p>21%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/signal_windows.html#array-api-support-signal-windows-gpu"><span class="std std-ref">signal.windows</span></a> (26)</p></td>
+<td><p>96%</p></td>
+<td><p>96%</p></td>
+<td><p>96%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/sparse.html#array-api-support-sparse-gpu"><span class="std std-ref">sparse</span></a> (52)</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/sparse_linalg.html#array-api-support-sparse-linalg-gpu"><span class="std std-ref">sparse.linalg</span></a> (35)</p></td>
+<td><p>6%</p></td>
+<td><p>6%</p></td>
+<td><p>6%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/sparse_csgraph.html#array-api-support-sparse-csgraph-gpu"><span class="std std-ref">sparse.csgraph</span></a> (25)</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/spatial.html#array-api-support-spatial-gpu"><span class="std std-ref">spatial</span></a> (10)</p></td>
+<td><p>10%</p></td>
+<td><p>10%</p></td>
+<td><p>10%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/spatial_distance.html#array-api-support-spatial-distance-gpu"><span class="std std-ref">spatial.distance</span></a> (27)</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/spatial_transform.html#array-api-support-spatial-transform-gpu"><span class="std std-ref">spatial.transform</span></a> (4)</p></td>
+<td><p>75%</p></td>
+<td><p>75%</p></td>
+<td><p>75%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/special.html#array-api-support-special-gpu"><span class="std std-ref">special</span></a> (343)</p></td>
+<td><p>27%</p></td>
+<td><p>12%</p></td>
+<td><p>13%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/stats.html#array-api-support-stats-gpu"><span class="std std-ref">stats</span></a> (148)</p></td>
+<td><p>51%</p></td>
+<td><p>45%</p></td>
+<td><p>49%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/stats_contingency.html#array-api-support-stats-contingency-gpu"><span class="std std-ref">stats.contingency</span></a> (7)</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/stats_qmc.html#array-api-support-stats-qmc-gpu"><span class="std std-ref">stats.qmc</span></a> (11)</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+<td><p>0%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="support-with-jit">
+<h3>Support with JIT<a class="headerlink" href="#support-with-jit" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>module</p></th>
+<th class="head"><p>jax</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/cluster_vq.html#array-api-support-cluster-vq-jit"><span class="std std-ref">cluster.vq</span></a> (4)</p></td>
+<td><p>25%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/cluster_hierarchy.html#array-api-support-cluster-hierarchy-jit"><span class="std std-ref">cluster.hierarchy</span></a> (29)</p></td>
+<td><p>79%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/constants.html#array-api-support-constants-jit"><span class="std std-ref">constants</span></a> (3)</p></td>
+<td><p>100%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/differentiate.html#array-api-support-differentiate-jit"><span class="std std-ref">differentiate</span></a> (3)</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/fft.html#array-api-support-fft-jit"><span class="std std-ref">fft</span></a> (32)</p></td>
+<td><p>94%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/integrate.html#array-api-support-integrate-jit"><span class="std std-ref">integrate</span></a> (30)</p></td>
+<td><p>17%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/interpolate.html#array-api-support-interpolate-jit"><span class="std std-ref">interpolate</span></a> (30)</p></td>
+<td><p>3%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/linalg.html#array-api-support-linalg-jit"><span class="std std-ref">linalg</span></a> (95)</p></td>
+<td><p>3%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/linalg_interpolative.html#array-api-support-linalg-interpolative-jit"><span class="std std-ref">linalg.interpolative</span></a> (9)</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/ndimage.html#array-api-support-ndimage-jit"><span class="std std-ref">ndimage</span></a> (73)</p></td>
+<td><p>1%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/optimize.html#array-api-support-optimize-jit"><span class="std std-ref">optimize</span></a> (70)</p></td>
+<td><p>6%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/optimize_elementwise.html#array-api-support-optimize-elementwise-jit"><span class="std std-ref">optimize.elementwise</span></a> (4)</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/signal.html#array-api-support-signal-jit"><span class="std std-ref">signal</span></a> (149)</p></td>
+<td><p>21%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/signal_windows.html#array-api-support-signal-windows-jit"><span class="std std-ref">signal.windows</span></a> (26)</p></td>
+<td><p>96%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/sparse.html#array-api-support-sparse-jit"><span class="std std-ref">sparse</span></a> (52)</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/sparse_linalg.html#array-api-support-sparse-linalg-jit"><span class="std std-ref">sparse.linalg</span></a> (35)</p></td>
+<td><p>6%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/sparse_csgraph.html#array-api-support-sparse-csgraph-jit"><span class="std std-ref">sparse.csgraph</span></a> (25)</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/spatial.html#array-api-support-spatial-jit"><span class="std std-ref">spatial</span></a> (10)</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/spatial_distance.html#array-api-support-spatial-distance-jit"><span class="std std-ref">spatial.distance</span></a> (27)</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/spatial_transform.html#array-api-support-spatial-transform-jit"><span class="std std-ref">spatial.transform</span></a> (4)</p></td>
+<td><p>75%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/special.html#array-api-support-special-jit"><span class="std std-ref">special</span></a> (343)</p></td>
+<td><p>29%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/stats.html#array-api-support-stats-jit"><span class="std std-ref">stats</span></a> (148)</p></td>
+<td><p>51%</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="array_api_modules_tables/stats_contingency.html#array-api-support-stats-contingency-jit"><span class="std std-ref">stats.contingency</span></a> (7)</p></td>
+<td><p>0%</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="array_api_modules_tables/stats_qmc.html#array-api-support-stats-qmc-jit"><span class="std std-ref">stats.qmc</span></a> (11)</p></td>
+<td><p>0%</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../contributor/compiled_code.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Beyond Python</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="array_api_modules_tables/cluster_vq.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Array API Standard Support: <code class="docutils literal notranslate"><span class="pre">cluster.vq</span></code></p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#using-array-api-standard-support">Using array API standard support</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-capabilities-table">Example capabilities table</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-notes">Implementation notes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-array-api-standard-support-to-a-scipy-function">Adding array API standard support to a SciPy function</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-note-on-jax-support">A note on JAX support</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-note-on-marray-support">A note on MArray support</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#default-datatypes">Default Datatypes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#array-creation-functions-without-array-inputs">Array creation functions without array inputs</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#documenting-array-api-standard-support">Documenting array API standard support</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-behavior">Basic behavior</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jax-jit">JAX JIT</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unsupported-functions">Unsupported functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skip-backends-and-xfail-backends"><code class="docutils literal notranslate"><span class="pre">skip_backends</span></code> and <code class="docutils literal notranslate"><span class="pre">xfail_backends</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dask-compute">Dask Compute</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#extra-note"><code class="docutils literal notranslate"><span class="pre">extra_note</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#marray"><code class="docutils literal notranslate"><span class="pre">marray</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#applying-xp-capabilities-to-classes">Applying <code class="docutils literal notranslate"><span class="pre">xp_capabilities</span></code> to classes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-tests">Adding tests</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#marray-testing">MArray testing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#directly-adding-pytest-markers">Directly adding pytest markers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-specific-skips-and-xfails">Test specific skips and xfails</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#array-agnostic-assertions">Array-agnostic assertions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-tests">Running tests</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tests-are-not-optional">Tests are not optional</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#backend-isolation-in-tests">Backend isolation in tests</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-the-jax-jit-compiler-and-lazy-evaluation-with-dask">Testing the JAX JIT compiler (and lazy evaluation with Dask)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#testing-device-propagation-with-a-torch-meta-default-device">Testing device propagation with a torch meta default device</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-tests-for-class-methods">Adding tests for class methods</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-information">Additional information</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#api-coverage">API Coverage</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#support-on-cpu">Support on CPU</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#support-on-gpu">Support on GPU</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#support-with-jit">Support with JIT</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

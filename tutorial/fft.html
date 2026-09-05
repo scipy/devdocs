@@ -1,0 +1,1505 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Discrete Fourier Transforms (scipy.fft) &#8212; SciPy v2.0.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../_static/jupyterlite_sphinx.css?v=8ee2c72c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/scipy.css?v=242cf5df" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=d74cf641"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../_static/jupyterlite_sphinx.js?v=96e329c5"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorial/fft';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script defer="defer" src="../_static/custom-icons.js?v=6cff5f5c"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Integration (scipy.integrate)" href="integrate.html" />
+    <link rel="prev" title="SciPy User Guide" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="2.0.0.dev" />
+    <meta name="docbuild:last-update" content="Sep 05, 2026"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discuss.scientific-python.org/c/contributor/scipy/" title="Scientific Python Forum" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-SciPy_Forum fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Scientific Python Forum</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discuss.scientific-python.org/c/contributor/scipy/" title="Scientific Python Forum" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-SciPy_Forum fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Scientific Python Forum</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Discrete Fourier Transforms (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.fft</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="integrate.html">Integration (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.integrate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interpolate.html">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="io.html">File IO (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.io</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linalg.html">Linear Algebra (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ndimage.html">Multidimensional Image Processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="optimize.html">Optimization (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="signal.html">Signal Processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sparse.html">Sparse Arrays (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial.html">Spatial Data Structures and Algorithms (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="special.html">Special Functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.special</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stats.html">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="arpack.html">Sparse eigenvalue problems with ARPACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csgraph.html">Compressed Sparse Graph Routines (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.csgraph</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parallel_execution.html">Parallel execution support in SciPy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="thread_safety.html">Thread Safety in SciPy</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">SciPy User Guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Discrete Fourier Transforms (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.fft</span></code>)</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="discrete-fourier-transforms-scipy-fft">
+<span id="tutorial-fft"></span><h1><a class="toc-backref" href="#id11" role="doc-backlink">Discrete Fourier Transforms (<a class="reference internal" href="../reference/fft.html#module-scipy.fft" title="scipy.fft"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.fft</span></code></a>)</a><a class="headerlink" href="#discrete-fourier-transforms-scipy-fft" title="Link to this heading">#</a></h1>
+<div class="math notranslate nohighlight">
+\[\newcommand{\IC}{{\mathbb{C}}}  % set of complex numbers
+\newcommand{\IN}{{\mathbb{N}}}  % set of natural numbers
+\newcommand{\IR}{{\mathbb{R}}}  % set of real numbers
+\newcommand{\IZ}{{\mathbb{Z}}}  % set of integers
+\newcommand{\jj}{{\mathbb{j}}}  % imaginary unit
+\newcommand{\e}{\operatorname{e}}  % Euler's number
+\newcommand{\dd}{\operatorname{d}} % infinitesimal operator
+\newcommand{\abs}[1]{\left|#1\right|} % absolute value
+\newcommand{\conj}[1]{\overline{#1}} % complex conjugate
+\newcommand{\conjT}[1]{\overline{#1^T}} % transposed complex conjugate
+\newcommand{\inv}[1]{\left(#1\right)^{\!-1}} % inverse
+\newcommand{\rect}{\operatorname{rect}}  % rect or boxcar function
+\newcommand{\sinc}{\operatorname{sinc}}  % sinc(t) := sin(pi*t) / (pi*t)
+% overwrite macros:
+\renewcommand{\Re}{\operatorname{Re}}  % real part of a complex number
+\renewcommand{\Im}{\operatorname{Im}}  % imaginary part of a complex number
+% Since the physics package is not loaded, we define the macros ourselves:
+\newcommand{\vb}[1]{\mathbf{#1}} % vectors  are bold
+\newcommand{\mat}[1]{\mathrm{#1}} % matrices are upright
+%
+% Abbreviations of matrices and vectors :
+\newcommand{\mF}{\mat{F}}  % matrix with DFT coefficients
+\newcommand{\mI}{\mat{I}}  % unity matrix\]</div>
+<p>Fourier analysis is a method for expressing a function as a sum of periodic
+components, and for recovering the signal from those components. When both
+the function and its Fourier transform are replaced with discretized
+counterparts, it is called the discrete Fourier transform (DFT). The DFT has
+become a mainstay of numerical computing in part because of a very fast
+algorithm for computing it, called the Fast Fourier Transform (FFT), which was
+known to Gauss (1805) and was brought to light in its current form by Cooley
+and Tukey <a class="footnote-reference brackets" href="#ct65" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. Press et al. <a class="footnote-reference brackets" href="#nr07" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> provide an accessible introduction to
+Fourier analysis and its applications.</p>
+<p>This chapter is structured as follows: The first section defines the discrete Fourier
+transform and presents its key properties. The second section discusses the
+relationship to continuous Fourier series and introduces various forms of its Fourier
+transform. Then practical implications, which mainly results from the DFT’s periodicity
+properties, are discussed in the <a class="reference internal" href="#tutorial-fft-caveats"><span class="std std-ref">Caveats</span></a> section. The remaining
+sections give definitions of higher-dimensional DFTs, discrete sine and cosine
+transforms as well as the Hankel transform.</p>
+<nav class="contents" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#discrete-fourier-transforms-scipy-fft" id="id11">Discrete Fourier Transforms (<a class="reference internal" href="../reference/fft.html#module-scipy.fft" title="scipy.fft"><code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.fft</span></code></a>)</a></p>
+<ul>
+<li><p><a class="reference internal" href="#the-discrete-fourier-transform" id="id12">The Discrete Fourier Transform</a></p></li>
+<li><p><a class="reference internal" href="#fourier-series-and-the-dft" id="id13">Fourier Series and the DFT</a></p></li>
+<li><p><a class="reference internal" href="#caveats" id="id14">Caveats</a></p>
+<ul>
+<li><p><a class="reference internal" href="#periodicity-in-the-time-domain" id="id15">Periodicity in the Time Domain</a></p></li>
+<li><p><a class="reference internal" href="#periodicity-in-the-frequency-domain" id="id16">Periodicity in the Frequency Domain</a></p></li>
+<li><p><a class="reference internal" href="#speed-considerations" id="id17">Speed Considerations</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#and-n-d-discrete-fourier-transforms" id="id18">2- and N-D discrete Fourier transforms</a></p></li>
+<li><p><a class="reference internal" href="#discrete-cosine-transforms" id="id19">Discrete Cosine Transforms</a></p>
+<ul>
+<li><p><a class="reference internal" href="#type-i-dct" id="id20">Type I DCT</a></p></li>
+<li><p><a class="reference internal" href="#type-ii-dct" id="id21">Type II DCT</a></p></li>
+<li><p><a class="reference internal" href="#type-iii-dct" id="id22">Type III DCT</a></p></li>
+<li><p><a class="reference internal" href="#type-iv-dct" id="id23">Type IV DCT</a></p></li>
+<li><p><a class="reference internal" href="#dct-and-idct" id="id24">DCT and IDCT</a></p></li>
+<li><p><a class="reference internal" href="#example" id="id25">Example</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#discrete-sine-transforms" id="id26">Discrete Sine Transforms</a></p>
+<ul>
+<li><p><a class="reference internal" href="#type-i-dst" id="id27">Type I DST</a></p></li>
+<li><p><a class="reference internal" href="#type-ii-dst" id="id28">Type II DST</a></p></li>
+<li><p><a class="reference internal" href="#type-iii-dst" id="id29">Type III DST</a></p></li>
+<li><p><a class="reference internal" href="#type-iv-dst" id="id30">Type IV DST</a></p></li>
+<li><p><a class="reference internal" href="#dst-and-idst" id="id31">DST and IDST</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#fast-hankel-transform" id="id32">Fast Hankel Transform</a></p></li>
+<li><p><a class="reference internal" href="#references" id="id33">References</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="the-discrete-fourier-transform">
+<span id="tutorial-fft-dft"></span><h2><a class="toc-backref" href="#id12" role="doc-backlink">The Discrete Fourier Transform</a><a class="headerlink" href="#the-discrete-fourier-transform" title="Link to this heading">#</a></h2>
+<p>The discrete Fourier Transform <a class="footnote-reference brackets" href="#wiki-dft" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> is a one-to-one mapping between two
+complex-valued sequences of length <span class="math notranslate nohighlight">\(N\)</span>. The mappings between <span class="math notranslate nohighlight">\(x[k],
+X[l]\in\IC\)</span>, with <span class="math notranslate nohighlight">\(k, l \in\{0, \ldots, N-1\}\)</span>, are defined by</p>
+<div class="math notranslate nohighlight" id="equation-eq-fft-dft">
+<span class="eqno">(1)<a class="headerlink" href="#equation-eq-fft-dft" title="Link to this equation">#</a></span>\[X[l] = \frac{1}{\gamma} \sum_{k=0}^{N-1} x[n] \e^{-\jj 2 \pi l k / N}\,,\qquad
+x[k] = \frac{\gamma}{N}\sum_{l=0}^{N-1} X[l] \e^{\jj 2 \pi k l / N}\,,\]</div>
+<p>which are implemented by the <a class="reference internal" href="../reference/generated/scipy.fft.fft.html#scipy.fft.fft" title="scipy.fft.fft"><code class="xref py py-func docutils literal notranslate"><span class="pre">fft</span></code></a> / <a class="reference internal" href="../reference/generated/scipy.fft.ifft.html#scipy.fft.ifft" title="scipy.fft.ifft"><code class="xref py py-func docutils literal notranslate"><span class="pre">ifft</span></code></a>
+functions. <span class="math notranslate nohighlight">\(\gamma\)</span> is a normalization constant, which is set by the <em class="xref py py-obj">norm</em>
+parameter. It may have the values <span class="math notranslate nohighlight">\(1\)</span> (<code class="docutils literal notranslate"><span class="pre">norm='backward'</span></code>, default),
+<span class="math notranslate nohighlight">\(N\)</span> (<code class="docutils literal notranslate"><span class="pre">norm='forward'</span></code>), or <span class="math notranslate nohighlight">\(\sqrt{N}\)</span> (<code class="docutils literal notranslate"><span class="pre">norm='ortho'</span></code>).</p>
+<p>Note that <span class="math notranslate nohighlight">\(X[l]\)</span> can be continued periodically outside its domain <span class="math notranslate nohighlight">\(\{0,
+\ldots, N-1\}\)</span>. I.e., <span class="math notranslate nohighlight">\(X[l+pN] = X[l]\)</span> for <span class="math notranslate nohighlight">\(p\in\IZ\)</span>  when <span class="math notranslate nohighlight">\(X[l]\)</span> is
+calculated with Eq. <a class="reference internal" href="#equation-eq-fft-dft">(1)</a>. This allows to define the DFT over
+shifted coefficients, e.g., using <span class="math notranslate nohighlight">\(l\in\{-N//2, \ldots, (N-1)-N//2\}\)</span>. The same
+holds for <span class="math notranslate nohighlight">\(x[k]\)</span>: When determined with Eq. <a class="reference internal" href="#equation-eq-fft-dft">(1)</a>, <span class="math notranslate nohighlight">\(x[k
++ pN] = x[k]\)</span>, <span class="math notranslate nohighlight">\(p \in\IZ\)</span> is true.</p>
+<p>This DFT can be rewritten in vector-matrix form as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\underbrace{\begin{bmatrix} X[0]\\ X[1]\\ \vdots\\ X[N-1] \end{bmatrix}}_{=:\vb{X}}
+  = \frac{1}{\gamma}\underbrace{\begin{bmatrix}
+     \e^{-\jj 2 \pi \cdot 0 \cdot 0 / N} &amp; \cdots &amp; \e^{-\jj 2 \pi \cdot 0 \cdot (N-1) / N}\\
+     \vdots &amp; \ddots &amp; \vdots\\
+     \e^{-\jj 2 \pi (N-1) \cdot 0 / N} &amp; \cdots &amp; \e^{-\jj 2 \pi (N-1) (N-1) / N}
+   \end{bmatrix}}_{=:\mF}
+\underbrace{\begin{bmatrix} x[0]\\ x[1]\\ \vdots\\ x[N-1] \end{bmatrix}}_{=:\vb{x}}\,,\end{split}\]</div>
+<p>with the matrix <span class="math notranslate nohighlight">\(\mF\in\IC^{N\times N}\)</span> being symmetric, i.e., <span class="math notranslate nohighlight">\(\mF^T=\mF\)</span>.
+It has the elements <span class="math notranslate nohighlight">\(F[l, k] = \exp(-\jj2\pi l k / N)\)</span> and allows the DFT and its
+inverse to be expressed as</p>
+<div class="math notranslate nohighlight">
+\[\vb{X} = \frac{1}{\gamma}\mF\,\vb{x}\,, \qquad
+\vb{x} = \frac{\gamma}{N}\conj{\mF}\,\vb{X}
+       = \frac{\gamma}{N}\conjT{\mF}\,\vb{X} \,,\]</div>
+<p>with <span class="math notranslate nohighlight">\(\conjT{\mF}\)</span> being the conjugate transpose of <span class="math notranslate nohighlight">\(\mF\)</span>. It can be shown
+that <span class="math notranslate nohighlight">\(\conjT{\mF}\mF = N\mI\)</span> holds and thus <span class="math notranslate nohighlight">\(\mF^{-1} = \conjT{\mF}/N\)</span>,
+which makes it straightforward to verify that the two relations of Eq.
+<a class="reference internal" href="#equation-eq-fft-dft">(1)</a> are inverses of each other. The <a class="reference internal" href="../reference/linalg.html#module-scipy.linalg" title="scipy.linalg"><code class="xref py py-mod docutils literal notranslate"><span class="pre">linalg</span></code></a> module
+provides the function <a class="reference internal" href="../reference/generated/scipy.linalg.dft.html#scipy.linalg.dft" title="scipy.linalg.dft"><code class="xref py py-func docutils literal notranslate"><span class="pre">dft</span></code></a> to calculate the matrix <span class="math notranslate nohighlight">\(\mF /
+\gamma\)</span>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">dft</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">fft</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">suppress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># for compact output</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dft</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">array([[ 1.+0.j,  1.+0.j,  1.+0.j,  1.+0.j],</span>
+<span class="go">       [ 1.+0.j,  0.-1.j, -1.-0.j, -0.+1.j],</span>
+<span class="go">       [ 1.+0.j, -1.-0.j,  1.+0.j, -1.-0.j],</span>
+<span class="go">       [ 1.+0.j, -0.+1.j, -1.-0.j,  0.-1.j]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fft</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span> <span class="c1"># produces the same matrix</span>
+<span class="go">array([[ 1.-0.j,  1.+0.j,  1.-0.j,  1.-0.j],</span>
+<span class="go">       [ 1.-0.j,  0.-1.j, -1.-0.j,  0.+1.j],</span>
+<span class="go">       [ 1.-0.j, -1.+0.j,  1.-0.j, -1.-0.j],</span>
+<span class="go">       [ 1.-0.j,  0.+1.j, -1.-0.j,  0.-1.j]])</span>
+</pre></div>
+</div>
+<p>This notation makes it also easy to show that the DFT changes the inner product (or
+scalar product) only by the scaling factor <span class="math notranslate nohighlight">\(N/\gamma^2\)</span>. I.e., expressing the
+inner product of <span class="math notranslate nohighlight">\(\vb{X}\)</span> and <span class="math notranslate nohighlight">\(\vb{Y}\)</span> in terms of <span class="math notranslate nohighlight">\(\vb{x}\)</span> and
+<span class="math notranslate nohighlight">\(\vb{y}\)</span> gives</p>
+<div class="math notranslate nohighlight">
+\[\langle \vb{X}, \vb{Y}\rangle := \conjT{\vb{X}}\vb{Y} =
+ \conjT{\big(\frac{1}{\gamma}\mF\,\vb{x}\big)}
+        \big(\frac{1}{\gamma}\mF\,\vb{y}\big) =
+\frac{1}{\gamma^2}\conjT{\vb{x}} \conjT{\mF} \mF \vb{y} =
+\frac{N}{\gamma^2}\conjT{\vb{x}} \vb{y} =
+\frac{N}{\gamma^2} \langle \vb{x}, \vb{y}\rangle\,.\]</div>
+<p>This illustrates that the DFT is a unitary transform for <span class="math notranslate nohighlight">\(\gamma = \sqrt{N}\)</span>.
+The sums of the absolute squares are a special case, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[\sum_{l=0}^{N-1} \abs{X[l]}^2 =
+\langle \vb{X}, \vb{X}\rangle =
+\frac{N}{\gamma^2} \langle \vb{x}, \vb{x}\rangle =
+\frac{N}{\gamma^2} \sum_{k=0}^{N-1} \abs{x[k]}^2\,.\]</div>
+<p>Note that the sum of the unsquared values can be retrieved from the zeroth DFT
+component, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[X[0] = \frac{1}{\gamma} \sum_{k=0}^{N-1} x[n]\,,\qquad
+x[0] = \frac{\gamma}{N}\sum_{l=0}^{N-1} X[l]\,.\]</div>
+<p>The circular convolution of two sequences of length <span class="math notranslate nohighlight">\(N\)</span>, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[z[k] = x[k] \ast y[k] := \sum_{q=0}^{N-1} x[q]\, y\big[(k-q) \bmod N\big]\]</div>
+<p>can be expressed as a multiplication of their DFTs and vice versa, i.e.,</p>
+<div class="math notranslate nohighlight" id="equation-eq-fft-convolution-relation">
+<span class="eqno">(2)<a class="headerlink" href="#equation-eq-fft-convolution-relation" title="Link to this equation">#</a></span>\[\begin{split}\begin{align}
+   z[k] &amp;= x[k] \ast y[k] &amp; \Leftrightarrow &amp;&amp;
+   Z[l] &amp;= \gamma\, X[l]\, Y[l] \,,\\
+   Z[l] &amp;= X[l] \ast Y[l]  &amp; \Leftrightarrow &amp;&amp;
+   z[l] &amp;= \frac{N}{\gamma} x[k] \,y[k] \,.
+\end{align}\end{split}\]</div>
+<p>Here, the circular convolution is defined over finite length sequences, whereas in
+literature it is often defined over infinite length sequences. For sufficiently large
+<span class="math notranslate nohighlight">\(N\)</span> (roughly: <span class="math notranslate nohighlight">\(N &gt; 500\)</span>), it is typically computationally more efficient to
+use this multiplication together with the <a class="reference internal" href="../reference/generated/scipy.fft.fft.html#scipy.fft.fft" title="scipy.fft.fft"><code class="xref py py-func docutils literal notranslate"><span class="pre">fft</span></code></a> /
+<a class="reference internal" href="../reference/generated/scipy.fft.ifft.html#scipy.fft.ifft" title="scipy.fft.ifft"><code class="xref py py-func docutils literal notranslate"><span class="pre">ifft</span></code></a> functions than to calculate the convolution directly. Note that
+<a class="reference internal" href="../reference/generated/scipy.signal.convolve.html#scipy.signal.convolve" title="scipy.signal.convolve"><code class="xref py py-func docutils literal notranslate"><span class="pre">convolve</span></code></a>, <a class="reference internal" href="../reference/generated/scipy.signal.fftconvolve.html#scipy.signal.fftconvolve" title="scipy.signal.fftconvolve"><code class="xref py py-func docutils literal notranslate"><span class="pre">fftconvolve</span></code></a> and
+<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.convolve.html#numpy.convolve" title="(in NumPy v2.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.convolve</span></code></a> implement the non-circular convolution by using appropriate
+zero-padding before applying the FFT.</p>
+</section>
+<section id="fourier-series-and-the-dft">
+<h2><a class="toc-backref" href="#id13" role="doc-backlink">Fourier Series and the DFT</a><a class="headerlink" href="#fourier-series-and-the-dft" title="Link to this heading">#</a></h2>
+<p>A Fourier series</p>
+<div class="math notranslate nohighlight" id="equation-eq-fft-fseries">
+<span class="eqno">(3)<a class="headerlink" href="#equation-eq-fft-fseries" title="Link to this equation">#</a></span>\[z(t) = \frac{\gamma}{N}
+         \sum_{l=-N_2}^{N_2} c_l\, \e^{\jj2\pi l t/\tau}\,, \qquad t\in[0, \tau]\,,\]</div>
+<p>with <span class="math notranslate nohighlight">\(N=2N_2+1\)</span> complex-valued Fourier coefficients <span class="math notranslate nohighlight">\(c_l\)</span> represents a
+closed curve <span class="math notranslate nohighlight">\(z: [0, \tau] \mapsto \IC\)</span>. Determining the values of <span class="math notranslate nohighlight">\(N\)</span>
+equidistant samples with sampling interval <span class="math notranslate nohighlight">\(T := \tau / N\)</span>, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[z[k] := z(kT) = \frac{\gamma}{N}
+    \sum_{l=-N_2}^{N_2} c_l\, \e^{\jj2\pi l k / N}\,, \qquad
+    k \in \{0,\ldots,N-1\}\,,\]</div>
+<p>may be interpreted as a shifted version the inverse DFT of Eq.
+<a class="reference internal" href="#equation-eq-fft-dft">(1)</a>. Since the (inverse) DFT is a one-to-one mapping, the
+<span class="math notranslate nohighlight">\(N\)</span> samples are an alternative representation of the <span class="math notranslate nohighlight">\(N\)</span> Fourier
+coefficients. Here, the scaling factor <span class="math notranslate nohighlight">\(\gamma/N\)</span> exists only to ensure
+notational consistency with Eq. <a class="reference internal" href="#equation-eq-fft-dft">(1)</a>.</p>
+<p>The following example produces a closed curve <span class="math notranslate nohighlight">\(z(t)\)</span> resembling the letter ω by
+utilizing a Fourier series: The Fourier coefficients are calculated by the
+<a class="reference internal" href="../reference/generated/scipy.fft.fft.html#scipy.fft.fft" title="scipy.fft.fft"><code class="xref py py-func docutils literal notranslate"><span class="pre">fft</span></code></a> function from 31 provided samples. In the plot, the dots
+represent the samples <span class="math notranslate nohighlight">\(z[k]\)</span> and the coloration of the line the value of the
+parameter <span class="math notranslate nohighlight">\(t\in[0, 1]\)</span>. Since the <a class="reference internal" href="../reference/generated/scipy.fft.fft.html#scipy.fft.fft" title="scipy.fft.fft"><code class="xref py py-func docutils literal notranslate"><span class="pre">fft</span></code></a> function expects indexes
+<span class="math notranslate nohighlight">\(\{0,\ldots,N-1\}\)</span> but <span class="math notranslate nohighlight">\(z(t)\)</span> is defined on the indexes
+<span class="math notranslate nohighlight">\(\{-N_2,\ldots,N_2\}\)</span>, the <a class="reference internal" href="../reference/generated/scipy.fft.fftshift.html#scipy.fft.fftshift" title="scipy.fft.fftshift"><code class="xref py py-func docutils literal notranslate"><span class="pre">fftshift</span></code></a> function is utilized.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">LineCollection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">fft</span><span class="p">,</span> <span class="n">fftshift</span>
+
+<span class="n">z_pts</span> <span class="o">=</span> <span class="p">[</span>  <span class="mf">0.1</span><span class="o">-</span><span class="mf">27.8</span><span class="n">j</span><span class="p">,</span>  <span class="mf">12.5</span><span class="o">-</span><span class="mf">48.9</span><span class="n">j</span><span class="p">,</span>  <span class="mf">40.3</span><span class="o">-</span><span class="mf">60.8</span><span class="n">j</span><span class="p">,</span>  <span class="mf">69.0</span><span class="o">-</span><span class="mf">36.8</span><span class="n">j</span><span class="p">,</span>  <span class="mf">77.1</span><span class="o">-</span> <span class="mf">8.1</span><span class="n">j</span><span class="p">,</span>  <span class="mf">77.5</span><span class="o">+</span><span class="mf">24.1</span><span class="n">j</span><span class="p">,</span>
+          <span class="mf">62.2</span><span class="o">+</span><span class="mf">54.2</span><span class="n">j</span><span class="p">,</span>  <span class="mf">37.8</span><span class="o">+</span><span class="mf">67.4</span><span class="n">j</span><span class="p">,</span>  <span class="mf">41.7</span><span class="o">+</span><span class="mf">56.2</span><span class="n">j</span><span class="p">,</span>  <span class="mf">53.1</span><span class="o">+</span><span class="mf">29.6</span><span class="n">j</span><span class="p">,</span>  <span class="mf">55.3</span><span class="o">-</span> <span class="mf">3.1</span><span class="n">j</span><span class="p">,</span>  <span class="mf">49.4</span><span class="o">-</span><span class="mf">39.3</span><span class="n">j</span><span class="p">,</span>
+          <span class="mf">24.2</span><span class="o">-</span><span class="mf">47.3</span><span class="n">j</span><span class="p">,</span>   <span class="mf">7.8</span><span class="o">-</span><span class="mf">23.3</span><span class="n">j</span><span class="p">,</span>   <span class="mf">9.7</span><span class="o">+</span> <span class="mf">8.8</span><span class="n">j</span><span class="p">,</span>   <span class="mf">5.6</span><span class="o">+</span><span class="mf">40.9</span><span class="n">j</span><span class="p">,</span>  <span class="o">-</span><span class="mf">5.2</span><span class="o">+</span><span class="mf">40.5</span><span class="n">j</span><span class="p">,</span>  <span class="o">-</span><span class="mf">9.5</span><span class="o">+</span> <span class="mf">8.5</span><span class="n">j</span><span class="p">,</span>
+          <span class="o">-</span><span class="mf">7.7</span><span class="o">-</span><span class="mf">23.5</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">24.4</span><span class="o">-</span><span class="mf">47.7</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">49.6</span><span class="o">-</span><span class="mf">39.2</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">55.6</span><span class="o">-</span> <span class="mf">2.8</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">53.4</span><span class="o">+</span><span class="mf">29.8</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">41.4</span><span class="o">+</span><span class="mf">56.3</span><span class="n">j</span><span class="p">,</span>
+         <span class="o">-</span><span class="mf">37.8</span><span class="o">+</span><span class="mf">67.6</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">62.3</span><span class="o">+</span><span class="mf">54.7</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">77.4</span><span class="o">+</span><span class="mf">24.2</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">77.3</span><span class="o">-</span> <span class="mf">7.9</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">69.1</span><span class="o">-</span><span class="mf">36.4</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">40.2</span><span class="o">-</span><span class="mf">60.9</span><span class="n">j</span><span class="p">,</span>
+         <span class="o">-</span><span class="mf">12.4</span><span class="o">-</span><span class="mf">48.9</span><span class="n">j</span><span class="p">]</span>
+<span class="n">z_pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">z_pts</span><span class="p">)</span>  <span class="c1"># the samples</span>
+<span class="n">cc</span> <span class="o">=</span> <span class="n">fftshift</span><span class="p">(</span><span class="n">fft</span><span class="p">(</span><span class="n">z_pts</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;forward&#39;</span><span class="p">))</span>  <span class="c1"># calculate Fourier coefficients</span>
+
+<span class="c1"># Use Fourier series to calculate curve points:</span>
+<span class="n">N</span><span class="p">,</span> <span class="n">k0</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">z_pts</span><span class="p">),</span> <span class="o">-</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># number of samples, first Fourier series index</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span> <span class="o">*</span> <span class="mi">8</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c_k</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">c_k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cc</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">k0</span><span class="p">))</span>
+
+<span class="n">fg0</span><span class="p">,</span> <span class="n">ax0</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">tight_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Parametric Closed Curve $z(t)$ created from </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2"> Samples&quot;</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Re$\{z(t)\}$&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Im$\{z(t)\}$&quot;</span><span class="p">)</span>
+
+<span class="n">ax0</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">z_pts</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">z_pts</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;twilight&#39;</span><span class="p">)</span>
+
+<span class="n">lpts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">z</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">z</span><span class="o">.</span><span class="n">imag</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># extract 2d points</span>
+<span class="n">ln0</span> <span class="o">=</span> <span class="n">ax0</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">LineCollection</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">lpts</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">lpts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                                        <span class="n">array</span><span class="o">=</span><span class="n">t</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;twilight&#39;</span><span class="p">))</span>
+<span class="n">cb0</span> <span class="o">=</span> <span class="n">fg0</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">ln0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Parameter $t$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../_images/fft_ParametricClosedCurve.png" class="plot-directive" src="../_images/fft_ParametricClosedCurve.png" />
+</figure>
+<p>Remarks:</p>
+<ul class="simple">
+<li><p>That the plot is a closed curve is due to the periodic nature of Fourier series,
+i.e., <span class="math notranslate nohighlight">\(z(t+p\tau) = z(t)\,,\ p\in\IZ\)</span>. As a consequence, a given closed curve
+can be represented by various Fourier series and with that by various sets of
+samples. E.g., increasing the number of samples can be achieved by adding zero-valued
+Fourier coefficients to their DFT and then calculating the corresponding inverse DFT.
+This technique is used in the <a class="reference internal" href="../reference/generated/scipy.signal.resample.html#scipy.signal.resample" title="scipy.signal.resample"><code class="xref py py-func docutils literal notranslate"><span class="pre">resample</span></code></a> function.</p></li>
+<li><p>A Fourier series is a decomposition of a complex-valued closed curve into circular
+closed curves with various frequencies: The <span class="math notranslate nohighlight">\(l\)</span>-th term <span class="math notranslate nohighlight">\(z_l(t) :=
+\tfrac{\gamma}{N} c_l\, \exp(\jj2\pi l t / \tau)\)</span> may be interpreted as a circular
+curve centered at the origin with radius <span class="math notranslate nohighlight">\(|\gamma c_l / N|\)</span> and starting point
+<span class="math notranslate nohighlight">\(z_l(0)= \gamma c_l / N\)</span>. For <span class="math notranslate nohighlight">\(t\in[0,\tau]\)</span>, it cycles the circle
+<span class="math notranslate nohighlight">\(l\)</span> times in counterclockwise direction if <span class="math notranslate nohighlight">\(l &gt; 0\)</span> or clockwise direction
+if <span class="math notranslate nohighlight">\(l &lt; 0\)</span>. The number of cycles per unit interval, i.e, <span class="math notranslate nohighlight">\(f_l := l /
+\tau\)</span>, is usually called the frequency of <span class="math notranslate nohighlight">\(z_l(t)\)</span> (having the same sign as
+<span class="math notranslate nohighlight">\(l\)</span>). The <a class="reference internal" href="../reference/generated/scipy.fft.fftfreq.html#scipy.fft.fftfreq" title="scipy.fft.fftfreq"><code class="xref py py-func docutils literal notranslate"><span class="pre">fftfreq</span></code></a> function determines those corresponding
+frequencies for the Fourier coefficients.</p></li>
+<li><p>Especially in signal processing, <span class="math notranslate nohighlight">\(t\)</span> frequently represents time. Hence, the
+sample values <span class="math notranslate nohighlight">\(z[k]\)</span> with their associated sample times <span class="math notranslate nohighlight">\(t[k] = k T\)</span> are
+commonly referred to as being in the so-called “time-domain”, whereas coefficients
+<span class="math notranslate nohighlight">\(c_l\)</span> with their associated frequency values <span class="math notranslate nohighlight">\(f_l = l \Delta f\)</span> with
+<span class="math notranslate nohighlight">\(\Delta f := 1/\tau = 1 / (NT)\)</span>, are referred as to being in the so-called
+“frequency domain” or “Fourier domain”.</p></li>
+<li><p>If only real-valued curves are of interest, then
+<span class="math notranslate nohighlight">\(\Im\{z(t)\} = \big(z(t) - \conj{z(t)}\big)/2\jj \equiv 0\)</span> holds. This is
+equivalent to <span class="math notranslate nohighlight">\(z(t) = \conj{z(t)}\)</span> as well as to <span class="math notranslate nohighlight">\(c_l = \conj{c_{-l}}\)</span>.
+As a consequence, for DFTs with real-valued inputs only the non-negative DFT
+coefficients need to be calculated. This is implemented by the
+<a class="reference internal" href="../reference/generated/scipy.fft.rfft.html#scipy.fft.rfft" title="scipy.fft.rfft"><code class="xref py py-func docutils literal notranslate"><span class="pre">rfft</span></code></a> / <a class="reference internal" href="../reference/generated/scipy.fft.irfft.html#scipy.fft.irfft" title="scipy.fft.irfft"><code class="xref py py-func docutils literal notranslate"><span class="pre">irfft</span></code></a> / <a class="reference internal" href="../reference/generated/scipy.fft.rfftfreq.html#scipy.fft.rfftfreq" title="scipy.fft.rfftfreq"><code class="xref py py-func docutils literal notranslate"><span class="pre">rfftfreq</span></code></a>
+functions.</p></li>
+</ul>
+<p>Besides the DFT, other variations for calculating a Fourier transform of a Fourier
+series exist. The important case of extending the domain from the fixed interval
+<span class="math notranslate nohighlight">\([0, \tau]\)</span> to the real axis <span class="math notranslate nohighlight">\(\IR\)</span> is discussed in the following: When
+assuming <span class="math notranslate nohighlight">\(z(t)\equiv 0\)</span> holds for <span class="math notranslate nohighlight">\(t \not\in[0, \tau]\)</span>, it is
+straightforward to apply the continuous Fourier transform to the Fourier Series of Eq.
+<a class="reference internal" href="#equation-eq-fft-fseries">(3)</a>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}Z(f) &amp;:= \int_\IR z(t)\, \e^{-\jj2\pi t f} \dd t
+  = \frac{\gamma}{N}\sum_{l=-N_2}^{N_2}
+           c_l \int_0^\tau \exp\!\big(\jj2\pi (l - f\tau) t / \tau\big)\,  \dd t \\
+ &amp;=  \frac{\gamma}{N} \sum_{l=-N_2}^{N_2}
+                 c_l\frac{\tau (\e^{\jj2\pi (l - f\tau)} - 1)}{\jj2\pi (l - f\tau)}
+  = \tau \frac{\gamma}{N}\sum_{l=-N_2}^{N_2}
+                               c_l\, \sinc(l - f\tau)\, \e^{\jj\pi (l - f\tau)} \,,\end{split}\]</div>
+<p>with <span class="math notranslate nohighlight">\(\sinc(f) := \sin(\pi f) / (\pi f)\)</span>. Note that <span class="math notranslate nohighlight">\(Z(f)\)</span> is continuous
+and its support extends over the complete real axis. The DFT may be interpreted as
+sampling the continuous Fourier transform due to</p>
+<div class="math notranslate nohighlight" id="equation-eq-fft-samplingfouriertrafo">
+<span class="eqno">(4)<a class="headerlink" href="#equation-eq-fft-samplingfouriertrafo" title="Link to this equation">#</a></span>\[Z(l \Delta f) = \tau\frac{\gamma}{N} c_l = T \gamma c_l
+                                                     \quad\text{ for }\quad l\in\IZ\]</div>
+<p>being true. When continuing <span class="math notranslate nohighlight">\(z(t)\)</span> periodically outside the interval <span class="math notranslate nohighlight">\([0,
+\tau]\)</span>, i.e.,</p>
+<div class="math notranslate nohighlight">
+\[z_p(t) = \sum_{p\in\IZ} z(t + p\tau) \,,\]</div>
+<p>then the continuous Fourier transform can be expressed as</p>
+<div class="math notranslate nohighlight">
+\[Z_p(f) = \frac{\gamma}{N}\sum_{l=-N_2}^{N_2} c_l\, \delta(f- l \Delta f) \,,\qquad
+         \Delta f = 1 / \tau = 1/ (NT) \,,\]</div>
+<p>where <span class="math notranslate nohighlight">\(\delta(.)\)</span> denotes the Dirac delta function. Note that <span class="math notranslate nohighlight">\(Z_p(f)\)</span> is
+only non-zero at multiples of <span class="math notranslate nohighlight">\(\Delta f\)</span>. Furthermore, <span class="math notranslate nohighlight">\(Z_p(f)\)</span> is
+bandlimited, i.e., <span class="math notranslate nohighlight">\(Z_p(f)\equiv 0\)</span> for <span class="math notranslate nohighlight">\(|f| &gt; N \Delta f / 2 = 1 / (2T)\)</span>.
+In signal processing, <span class="math notranslate nohighlight">\(f_S := 1/T\)</span> is usually referred to as sampling frequency
+and <span class="math notranslate nohighlight">\(f_\text{Ny} := f_S / 2 = 1 / (2T)\)</span> is called the Nyquist frequency.</p>
+<p>The so-called “discrete-time Fourier transform” (DTFT) <a class="footnote-reference brackets" href="#wiki-dtft" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a> of the sampled
+signal <span class="math notranslate nohighlight">\(z_p[k] := z_p(kT)\)</span> is defined as</p>
+<div class="math notranslate nohighlight">
+\[Z_p^\text{DTFT}(f) := \sum_{k\in\IZ}  z_p[k] \e^{-2\jj\pi f k T}
+\quad\text{ or }\quad
+Z_p^\text{DTFT}(\jj\Omega) := \sum_{k\in\IZ}  z_p[k] \e^{-\jj k \Omega}\,,\]</div>
+<p>with <span class="math notranslate nohighlight">\(\Omega:= 2\pi f/f_S = 2\pi f T\)</span>. The convention of using the normalized
+frequency <span class="math notranslate nohighlight">\(\Omega\)</span> instead of <span class="math notranslate nohighlight">\(f\)</span> is common in signal processing.
+<span class="math notranslate nohighlight">\(Z_p^\text{DTFT}(f)\)</span> is a continuous function in <span class="math notranslate nohighlight">\(f\)</span> with a periodicity of
+<span class="math notranslate nohighlight">\(f_S\)</span>. Due to <span class="math notranslate nohighlight">\(z_p[k]\)</span> being periodic in <span class="math notranslate nohighlight">\(N\)</span>, it can be expressed in
+terms of the Fourier coefficients as</p>
+<div class="math notranslate nohighlight">
+\[Z_p^\text{DTFT}(f) = \frac{\gamma}{N T} \sum_{l=-N_2}^{N_2} \sum_{p\in\IZ}
+                                  c_l\, \delta(f - \frac{l}{N T} - \frac{p}{T})
+                   = \frac{1}{T} \sum_{p\in\IZ}  Z_p(f - \frac{p}{T}) \,.\]</div>
+<p>Hence, the DTFT may be interpreted as a periodic continuation of <span class="math notranslate nohighlight">\(Z_p(f)\)</span>, i.e.,
+as the periodic continuation in <span class="math notranslate nohighlight">\(f\)</span> of the Fourier transform of the
+continuous-time periodic signal.</p>
+<p>A brief introduction about analyzing the spectral properties of sampled signals can be
+found in the <a class="reference internal" href="signal.html#tutorial-spectralanalysis"><span class="std std-ref">Spectral Analysis</span></a> section.</p>
+</section>
+<section id="caveats">
+<span id="tutorial-fft-caveats"></span><h2><a class="toc-backref" href="#id14" role="doc-backlink">Caveats</a><a class="headerlink" href="#caveats" title="Link to this heading">#</a></h2>
+<p>This subsection briefly discusses practical implications of the periodicity properties
+of Fourier transforms and provides recommendations for improving computational
+efficiency.</p>
+<section id="periodicity-in-the-time-domain">
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">Periodicity in the Time Domain</a><a class="headerlink" href="#periodicity-in-the-time-domain" title="Link to this heading">#</a></h3>
+<p>When working with sampled signals, it is typically assumed that the underlying
+continuous signals are represented by Fourier series. The circumstance that to
+accurately model signals with discontinuities requires many Fourier coefficients is
+known as Gibbs phenomenon. Since Fourier series are inherently periodic, representing
+non-periodic signals introduces artificial discontinuities. A common technique to make
+non-periodic signals “more” periodic is subtracting a best-fit polynomial.
+<a class="reference internal" href="../reference/generated/scipy.signal.detrend.html#scipy.signal.detrend" title="scipy.signal.detrend"><code class="xref py py-func docutils literal notranslate"><span class="pre">detrend</span></code></a> can be used to subtract a signal’s mean (0<sup>th</sup>
+order polynomial) or linear trend (1<sup>st</sup> order polynomial). NumPy’s
+<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.polynomial.polynomial.Polynomial.html#numpy.polynomial.polynomial.Polynomial" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Polynomial</span></code></a> class provides means to
+<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.polynomial.polynomial.Polynomial.fit.html#numpy.polynomial.polynomial.Polynomial.fit" title="(in NumPy v2.5)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit</span></code></a> higher order polynomials.</p>
+<p>The following example illustrates the effect of removing the linear trend from a noisy
+signal on its spectrum: The signal <span class="math notranslate nohighlight">\(x(t)\)</span> is represented by <span class="math notranslate nohighlight">\(N=1000\)</span>
+samples with a sampling interval of <span class="math notranslate nohighlight">\(T=0.1\,\)</span>ms. The first row depicts
+<span class="math notranslate nohighlight">\(x(t)\)</span> (with linear trend) and <span class="math notranslate nohighlight">\(x_d(t)\)</span> (with removed linear trend). To
+determine the periodic components, a magnitude spectrum of <span class="math notranslate nohighlight">\(x(t)\)</span> and of
+<span class="math notranslate nohighlight">\(x_d(t)\)</span> is calculated and drawn is second and third row.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">rfft</span><span class="p">,</span> <span class="n">rfftfreq</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.signal</span><span class="w"> </span><span class="kn">import</span> <span class="n">detrend</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span>  <span class="c1"># seeding with default seed for reproducibility</span>
+
+<span class="n">N</span><span class="p">,</span> <span class="n">tau</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="mf">0.1</span> <span class="c1"># number of samples and signal duration in seconds</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">tau</span> <span class="o">/</span> <span class="n">N</span>  <span class="c1"># sampling interval</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">*</span> <span class="n">T</span>  <span class="c1"># sample times</span>
+
+<span class="c1"># Create signal:</span>
+<span class="n">x_sines</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">f_</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">f_</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">400</span><span class="p">])</span>
+<span class="n">x_drift</span> <span class="o">=</span> <span class="mf">1e3</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">t</span><span class="p">))</span>  <span class="c1"># almost linear drift</span>
+<span class="n">x_noise</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">t</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># Gaussian noise</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">x_drift</span> <span class="o">+</span> <span class="n">x_sines</span> <span class="o">+</span> <span class="n">x_noise</span>  <span class="c1"># the signal</span>
+<span class="n">x_d</span> <span class="o">=</span> <span class="n">detrend</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span>  <span class="c1"># signal with linear trend removed</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="n">rfftfreq</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>  <span class="c1"># frequency values</span>
+<span class="n">aX</span><span class="p">,</span> <span class="n">aX_d</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">rfft</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">rfft</span><span class="p">(</span><span class="n">x_d</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span><span class="p">)</span>  <span class="c1"># Magnitude spectrum</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">))</span>
+<span class="n">ax0</span><span class="p">,</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span> <span class="o">=</span> <span class="p">[</span><span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">((</span><span class="mf">0.11</span><span class="p">,</span> <span class="n">bottom</span><span class="p">,</span> <span class="mf">.85</span><span class="p">,</span> <span class="mf">.2</span><span class="p">))</span> <span class="k">for</span> <span class="n">bottom</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">.7</span><span class="p">,</span> <span class="mf">.33</span><span class="p">,</span> <span class="mf">.1</span><span class="p">]]</span>
+<span class="k">for</span> <span class="n">c_</span><span class="p">,</span> <span class="p">(</span><span class="n">x_</span><span class="p">,</span> <span class="n">n_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">x_d</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;$x(t)$&quot;</span><span class="p">,</span> <span class="s2">&quot;$x_d(t)$&quot;</span><span class="p">))):</span>
+    <span class="n">ax0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">x_</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;C</span><span class="si">{</span><span class="n">c_</span><span class="si">}</span><span class="s1">-&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">n_</span><span class="p">)</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Signal $x(t)$ and detrended signal $x_d(t)$&quot;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Amplitude&quot;</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="sa">rf</span><span class="s2">&quot;Time $t$ in seconds ($T=</span><span class="si">{</span><span class="mf">1e3</span><span class="o">*</span><span class="n">T</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">\,$ms, </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2"> samples)&quot;</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">tau</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">c_</span><span class="p">,</span> <span class="p">(</span><span class="n">ax_</span><span class="p">,</span> <span class="n">aX_</span><span class="p">,</span> <span class="n">n_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">((</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">),</span> <span class="p">(</span><span class="n">aX</span><span class="p">,</span> <span class="n">aX_d</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;X_d&quot;</span><span class="p">))):</span>
+    <span class="n">ax_</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">aX_</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;C</span><span class="si">{</span><span class="n">c_</span><span class="si">}</span><span class="s1">-&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;$|</span><span class="si">{</span><span class="n">n_</span><span class="si">}</span><span class="s2">(f)|$&quot;</span><span class="p">)</span>
+    <span class="n">ax_</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">),</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;Magnitude&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Magnitude Spectrum&quot;</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="p">[])</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;Frequency $f$ in hertz ($Δf=</span><span class="si">{</span><span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">\,$Hz, $f_S=</span><span class="si">{</span><span class="mf">1e-3</span><span class="o">/</span><span class="n">T</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">\,$kHz)&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax_</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ax0</span><span class="p">,</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">):</span>
+    <span class="n">ax_</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ax_</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../_images/fft_remove_trend.png" class="plot-directive" src="../_images/fft_remove_trend.png" />
+</figure>
+<p>The signal’s trend manifests as a decreasing slope in the spectrum’s low-frequency part.
+Removing the linear trend steepens this slope significantly, making the peaks at
+<span class="math notranslate nohighlight">\(200\)</span>, <span class="math notranslate nohighlight">\(300\)</span>, and <span class="math notranslate nohighlight">\(400\,\)</span>Hz much better distinguishable. These peaks, which
+correspond to the sinusoidal components of <span class="math notranslate nohighlight">\(x(t)\)</span>, would have a magnitude of
+<span class="math notranslate nohighlight">\(0.5\)</span> in a noise- and trend-free signal.</p>
+<p>Note that detrending a signal does not necessarily improve its spectrum. I.e., periodic
+components whose frequencies are not integer multiples of the frequency resolution
+<span class="math notranslate nohighlight">\(\Delta f\)</span> produce a trend that should not be removed. More information on
+calculating and interpreting spectra can be found in the
+<a class="reference internal" href="signal.html#tutorial-spectralanalysis"><span class="std std-ref">Spectral Analysis</span></a> section.</p>
+</section>
+<section id="periodicity-in-the-frequency-domain">
+<h3><a class="toc-backref" href="#id16" role="doc-backlink">Periodicity in the Frequency Domain</a><a class="headerlink" href="#periodicity-in-the-frequency-domain" title="Link to this heading">#</a></h3>
+<p>The following plot compares <a class="reference internal" href="../reference/generated/scipy.fft.fft.html#scipy.fft.fft" title="scipy.fft.fft"><code class="xref py py-func docutils literal notranslate"><span class="pre">fft</span></code></a> and <a class="reference internal" href="../reference/generated/scipy.fft.rfft.html#scipy.fft.rfft" title="scipy.fft.rfft"><code class="xref py py-func docutils literal notranslate"><span class="pre">rfft</span></code></a>
+representations of two signals made up of an odd number (<span class="math notranslate nohighlight">\(N=5\)</span>, left column) and
+an even number of samples (<span class="math notranslate nohighlight">\(N=4\)</span>, right column). The real-valued input signals
+were chosen in such a way so that their Fourier transforms are real-valued, i.e.,
+<code class="docutils literal notranslate"><span class="pre">x[k]</span> <span class="pre">=</span> <span class="pre">x[N-k]</span></code>. The first row shows the DFTs of Eq. <a class="reference internal" href="#equation-eq-fft-dft">(1)</a> with
+its non-negative frequencies. The gray stems represent the periodic continuation to the
+left and to the right. The center row shows the <a class="reference internal" href="../reference/generated/scipy.fft.fft.html#scipy.fft.fft" title="scipy.fft.fft"><code class="xref py py-func docutils literal notranslate"><span class="pre">fft</span></code></a> with the shifted
+frequencies produced by <a class="reference internal" href="../reference/generated/scipy.fft.fftfreq.html#scipy.fft.fftfreq" title="scipy.fft.fftfreq"><code class="xref py py-func docutils literal notranslate"><span class="pre">fftfreq</span></code></a>, where the two highest frequencies
+are shifted to the negative side. The last row depicts the one-sided
+<a class="reference internal" href="../reference/generated/scipy.fft.rfft.html#scipy.fft.rfft" title="scipy.fft.rfft"><code class="xref py py-func docutils literal notranslate"><span class="pre">rfft</span></code></a>, which produces only the non-negative frequencies of the
+(two-sided) <a class="reference internal" href="../reference/generated/scipy.fft.fft.html#scipy.fft.fft" title="scipy.fft.fft"><code class="xref py py-func docutils literal notranslate"><span class="pre">fft</span></code></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">fft</span><span class="p">,</span> <span class="n">fftfreq</span><span class="p">,</span> <span class="n">irfft</span><span class="p">,</span> <span class="n">rfft</span><span class="p">,</span> <span class="n">rfftfreq</span>
+
+<span class="c1"># Create signals:</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="n">irfft</span><span class="p">(</span><span class="n">rfft</span><span class="p">(</span><span class="n">x0</span><span class="p">),</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># Here: rfft(x1) == rfft(x0)</span>
+<span class="n">tau</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># signal duration in seconds</span>
+
+<span class="n">ll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>  <span class="c1"># indices of DFT coefficients</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">ax01</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="s1">&#39;col&#39;</span><span class="p">,</span> <span class="n">tight_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">axx</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">((</span><span class="n">x1</span><span class="p">,</span> <span class="n">x0</span><span class="p">),</span> <span class="n">ax01</span><span class="o">.</span><span class="n">T</span><span class="p">):</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># number of samples</span>
+    <span class="n">T</span><span class="p">,</span> <span class="n">delta_f</span> <span class="o">=</span> <span class="n">tau</span> <span class="o">/</span> <span class="n">N</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">tau</span>  <span class="c1"># sampling interval and frequency resolution</span>
+    <span class="n">kk</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>  <span class="c1"># sample indices of DFT</span>
+
+    <span class="n">X_DFT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">l_</span> <span class="o">*</span> <span class="n">kk</span> <span class="o">/</span> <span class="n">N</span><span class="p">))</span> <span class="k">for</span> <span class="n">l_</span> <span class="ow">in</span> <span class="n">ll</span><span class="p">])</span>
+    <span class="n">f_DFT</span> <span class="o">=</span> <span class="n">ll</span> <span class="o">*</span> <span class="n">delta_f</span>  <span class="c1"># frequencies of DFT</span>
+
+    <span class="n">XX</span> <span class="o">=</span> <span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">fft</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">rfft</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># DFT values and FFT values coincide</span>
+    <span class="n">ff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta_f</span><span class="p">,</span> <span class="n">fftfreq</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">T</span><span class="p">),</span> <span class="n">rfftfreq</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
+
+    <span class="n">t_strs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DFT&quot;</span><span class="p">,</span> <span class="s2">&quot;fft / fftfreq&quot;</span><span class="p">,</span> <span class="s2">&quot;rfft / rfftfreq&quot;</span><span class="p">]</span>  <span class="c1"># do the plotting:</span>
+    <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">ts</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">axx</span><span class="p">,</span> <span class="n">ff</span><span class="p">,</span> <span class="n">XX</span><span class="p">,</span> <span class="n">t_strs</span><span class="p">)):</span>
+        <span class="n">lns</span> <span class="o">=</span> <span class="n">axx</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">f_DFT</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">X_DFT</span><span class="p">),</span> <span class="n">linefmt</span><span class="o">=</span><span class="s1">&#39;k-&#39;</span><span class="p">,</span> <span class="n">markerfmt</span><span class="o">=</span><span class="s2">&quot;k.&quot;</span><span class="p">,</span> <span class="n">basefmt</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="p">[</span><span class="n">ln_</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span> <span class="k">for</span> <span class="n">ln_</span> <span class="ow">in</span> <span class="n">lns</span><span class="p">]</span>  <span class="c1"># set transparency</span>
+        <span class="n">axx</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">linefmt</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;C</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s1">-&#39;</span><span class="p">,</span> <span class="n">markerfmt</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;C</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">,</span> <span class="n">basefmt</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ts</span><span class="si">}</span><span class="s2"> for len(x) = </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">yticks</span><span class="o">=</span><span class="p">[],</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">6.5</span><span class="p">))</span>
+    <span class="n">axx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xticks</span><span class="o">=</span><span class="n">f_DFT</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="n">f_DFT</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">f_DFT</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mf">0.5</span><span class="p">))</span>
+    <span class="n">axx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">rf</span><span class="s2">&quot;Frequency $f$ in hertz ($\Delta f =</span><span class="si">{</span><span class="n">delta_f</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">\,$Hz)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../_images/fft_compare_DFT_fft_rfft.png" class="plot-directive" src="../_images/fft_compare_DFT_fft_rfft.png" />
+</figure>
+<p>This plot illustrates the following two aspects:</p>
+<ul>
+<li><p>For an odd number of samples (here: <span class="math notranslate nohighlight">\(N=5\)</span>), <a class="reference internal" href="../reference/generated/scipy.fft.fftfreq.html#scipy.fft.fftfreq" title="scipy.fft.fftfreq"><code class="xref py py-func docutils literal notranslate"><span class="pre">fftfreq</span></code></a> produces
+an equal number of positive and negative frequencies, i.e. <code class="docutils literal notranslate"><span class="pre">[-2,</span> <span class="pre">-1,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">2]</span></code>. For
+an even number of samples (here: <span class="math notranslate nohighlight">\(N=4\)</span>), it would be valid to have either the
+frequencies,  <code class="docutils literal notranslate"><span class="pre">[-2,</span> <span class="pre">-1,</span> <span class="pre">0,</span> <span class="pre">1]</span></code> or the frequencies <code class="docutils literal notranslate"><span class="pre">[-1,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">2]</span></code> due to the FFT
+values at <span class="math notranslate nohighlight">\(f = \pm2\,\)</span>Hz being identical. By convention,
+<a class="reference internal" href="../reference/generated/scipy.fft.fftfreq.html#scipy.fft.fftfreq" title="scipy.fft.fftfreq"><code class="xref py py-func docutils literal notranslate"><span class="pre">fftfreq</span></code></a> places the Nyquist frequency
+<span class="math notranslate nohighlight">\(f_\text{Ny} = \Delta f\, N/2 = 2\,\)</span>Hz on the negative side.</p></li>
+<li><p>Here, the <a class="reference internal" href="../reference/generated/scipy.fft.rfft.html#scipy.fft.rfft" title="scipy.fft.rfft"><code class="xref py py-func docutils literal notranslate"><span class="pre">rfft</span></code></a> values for input lengths of <span class="math notranslate nohighlight">\(N=4,5\)</span> are equal
+in spite of the input signals being different. This illustrates that the number
+of signal samples <em class="xref py py-obj">N</em> need to be passed to <a class="reference internal" href="../reference/generated/scipy.fft.irfft.html#scipy.fft.irfft" title="scipy.fft.irfft"><code class="xref py py-func docutils literal notranslate"><span class="pre">irfft</span></code></a> to be able
+reconstruct the original signal, e.g.:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">fft</span><span class="p">,</span> <span class="n">irfft</span><span class="p">,</span> <span class="n">rfft</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>  <span class="c1"># n = 4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">rfft</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">irfft</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span> <span class="n">irfft</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">y1</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># signals differ</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">rfft</span><span class="p">(</span><span class="n">y1</span><span class="p">),</span> <span class="n">rfft</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>  <span class="c1"># one-sided FFTs are equal</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="speed-considerations">
+<h3><a class="toc-backref" href="#id17" role="doc-backlink">Speed Considerations</a><a class="headerlink" href="#speed-considerations" title="Link to this heading">#</a></h3>
+<p>The efficiency of the FFT algorithm depends on how well the number of input samples
+<span class="math notranslate nohighlight">\(N\)</span> can be factored into small prime factors. I.e., it is slowest if <span class="math notranslate nohighlight">\(N\)</span> is
+prime and fastest if <span class="math notranslate nohighlight">\(N\)</span> is a power of 2. The <a class="reference internal" href="../reference/fft.html#module-scipy.fft" title="scipy.fft"><code class="xref py py-mod docutils literal notranslate"><span class="pre">fft</span></code></a> module provides
+the functions <a class="reference internal" href="../reference/generated/scipy.fft.prev_fast_len.html#scipy.fft.prev_fast_len" title="scipy.fft.prev_fast_len"><code class="xref py py-func docutils literal notranslate"><span class="pre">prev_fast_len</span></code></a> and <a class="reference internal" href="../reference/generated/scipy.fft.next_fast_len.html#scipy.fft.next_fast_len" title="scipy.fft.next_fast_len"><code class="xref py py-func docutils literal notranslate"><span class="pre">next_fast_len</span></code></a> for
+determining adequate input lengths for fast execution.</p>
+<p>Furthermore, the <a class="reference internal" href="../reference/fft.html#module-scipy.fft" title="scipy.fft"><code class="xref py py-mod docutils literal notranslate"><span class="pre">fft</span></code></a> module provides also the context manager
+<a class="reference internal" href="../reference/generated/scipy.fft.set_workers.html#scipy.fft.set_workers" title="scipy.fft.set_workers"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_workers</span></code></a> to set the maximum number of allowed threads when
+calculating the FFT. Note that some third-party FFT libraries provide SciPy backends,
+which can be activated by utilizing <a class="reference internal" href="../reference/generated/scipy.fft.set_backend.html#scipy.fft.set_backend" title="scipy.fft.set_backend"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_backend</span></code></a>.</p>
+</section>
+</section>
+<section id="and-n-d-discrete-fourier-transforms">
+<h2><a class="toc-backref" href="#id18" role="doc-backlink">2- and N-D discrete Fourier transforms</a><a class="headerlink" href="#and-n-d-discrete-fourier-transforms" title="Link to this heading">#</a></h2>
+<p>The functions <a class="reference internal" href="../reference/generated/scipy.fft.fft2.html#scipy.fft.fft2" title="scipy.fft.fft2"><code class="xref py py-func docutils literal notranslate"><span class="pre">fft2</span></code></a> and <a class="reference internal" href="../reference/generated/scipy.fft.ifft2.html#scipy.fft.ifft2" title="scipy.fft.ifft2"><code class="xref py py-func docutils literal notranslate"><span class="pre">ifft2</span></code></a> provide 2-D FFT and
+IFFT, respectively. Similarly, <a class="reference internal" href="../reference/generated/scipy.fft.fftn.html#scipy.fft.fftn" title="scipy.fft.fftn"><code class="xref py py-func docutils literal notranslate"><span class="pre">fftn</span></code></a> and <a class="reference internal" href="../reference/generated/scipy.fft.ifftn.html#scipy.fft.ifftn" title="scipy.fft.ifftn"><code class="xref py py-func docutils literal notranslate"><span class="pre">ifftn</span></code></a> provide
+N-D FFT, and IFFT, respectively.</p>
+<p>For real-input signals, similarly to <a class="reference internal" href="../reference/generated/scipy.fft.rfft.html#scipy.fft.rfft" title="scipy.fft.rfft"><code class="xref py py-func docutils literal notranslate"><span class="pre">rfft</span></code></a>, we have the functions
+<a class="reference internal" href="../reference/generated/scipy.fft.rfft2.html#scipy.fft.rfft2" title="scipy.fft.rfft2"><code class="xref py py-func docutils literal notranslate"><span class="pre">rfft2</span></code></a> and <a class="reference internal" href="../reference/generated/scipy.fft.irfft2.html#scipy.fft.irfft2" title="scipy.fft.irfft2"><code class="xref py py-func docutils literal notranslate"><span class="pre">irfft2</span></code></a> for 2-D real transforms;
+<a class="reference internal" href="../reference/generated/scipy.fft.rfftn.html#scipy.fft.rfftn" title="scipy.fft.rfftn"><code class="xref py py-func docutils literal notranslate"><span class="pre">rfftn</span></code></a> and <a class="reference internal" href="../reference/generated/scipy.fft.irfftn.html#scipy.fft.irfftn" title="scipy.fft.irfftn"><code class="xref py py-func docutils literal notranslate"><span class="pre">irfftn</span></code></a> for N-D real transforms.</p>
+<p>The example below demonstrates a 2-D IFFT and plots the resulting
+(2-D) time-domain signals.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">ifftn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.cm</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cm</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">N</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="p">,</span> <span class="p">((</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">),</span> <span class="p">(</span><span class="n">ax4</span><span class="p">,</span> <span class="n">ax5</span><span class="p">,</span> <span class="n">ax6</span><span class="p">))</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="s1">&#39;col&#39;</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="n">N</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xf</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xf</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Z</span> <span class="o">=</span> <span class="n">ifftn</span><span class="p">(</span><span class="n">xf</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">xf</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">Reds</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax4</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">Z</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xf</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xf</span><span class="p">[</span><span class="n">N</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Z</span> <span class="o">=</span> <span class="n">ifftn</span><span class="p">(</span><span class="n">xf</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">xf</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">Reds</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax5</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">Z</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xf</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xf</span><span class="p">[</span><span class="n">N</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="n">N</span><span class="o">-</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Z</span> <span class="o">=</span> <span class="n">ifftn</span><span class="p">(</span><span class="n">xf</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax3</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">xf</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">Reds</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax6</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">Z</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">gray</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="&quot;This code generates six heatmaps arranged in a 2x3 grid. The top row shows mostly blank canvases with the exception of two tiny red peaks on each image. The bottom row shows the real-part of the inverse FFT of each image above it. The first column has two dots arranged horizontally in the top image and in the bottom image a smooth grayscale plot of 5 black vertical stripes representing the 2-D time domain signal. The second column has two dots arranged vertically in the top image and in the bottom image a smooth grayscale plot of 5 horizontal black stripes representing the 2-D time domain signal. In the last column the top image has two dots diagonally located; the corresponding image below has perhaps 20 black stripes at a 60 degree angle.&quot;" class="plot-directive" src="../_images/fft-1.png" />
+</figure>
+</section>
+<section id="discrete-cosine-transforms">
+<h2><a class="toc-backref" href="#id19" role="doc-backlink">Discrete Cosine Transforms</a><a class="headerlink" href="#discrete-cosine-transforms" title="Link to this heading">#</a></h2>
+<p>SciPy provides a DCT with the function <a class="reference internal" href="../reference/generated/scipy.fft.dct.html#scipy.fft.dct" title="scipy.fft.dct"><code class="xref py py-func docutils literal notranslate"><span class="pre">dct</span></code></a> and a corresponding IDCT
+with the function <a class="reference internal" href="../reference/generated/scipy.fft.idct.html#scipy.fft.idct" title="scipy.fft.idct"><code class="xref py py-func docutils literal notranslate"><span class="pre">idct</span></code></a>. There are 8 types of the DCT <a class="footnote-reference brackets" href="#wiki-dct" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a> <a class="footnote-reference brackets" href="#mak" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>;
+however, only the first 4 types are implemented in SciPy. “The” DCT generally
+refers to DCT type 2, and “the” Inverse DCT generally refers to DCT type 3. In
+addition, the DCT coefficients can be normalized differently (for most types,
+scipy provides <code class="docutils literal notranslate"><span class="pre">None</span></code> and <code class="docutils literal notranslate"><span class="pre">ortho</span></code>). Two parameters of the dct/idct
+function calls allow setting the DCT type and coefficient normalization.</p>
+<p>For a single dimension array <em class="xref py py-obj">x</em>, <code class="docutils literal notranslate"><span class="pre">dct(x,</span> <span class="pre">norm='ortho')</span></code> is equal to
+MATLAB’s “dct(x)”.</p>
+<section id="type-i-dct">
+<h3><a class="toc-backref" href="#id20" role="doc-backlink">Type I DCT</a><a class="headerlink" href="#type-i-dct" title="Link to this heading">#</a></h3>
+<p>SciPy uses the following definition of the unnormalized DCT-I
+(<code class="docutils literal notranslate"><span class="pre">norm=None</span></code>):</p>
+<div class="math notranslate nohighlight">
+\[y[k] = x_0 + (-1)^k x_{N-1} + 2\sum_{n=1}^{N-2} x[n]
+\cos\left(\frac{\pi nk}{N-1}\right),
+\qquad 0 \le k &lt; N.\]</div>
+<p>Note that the DCT-I is only supported for input size &gt; 1.</p>
+</section>
+<section id="type-ii-dct">
+<h3><a class="toc-backref" href="#id21" role="doc-backlink">Type II DCT</a><a class="headerlink" href="#type-ii-dct" title="Link to this heading">#</a></h3>
+<p>SciPy uses the following definition of the unnormalized DCT-II
+(<code class="docutils literal notranslate"><span class="pre">norm=None</span></code>):</p>
+<div class="math notranslate nohighlight">
+\[y[k] = 2 \sum_{n=0}^{N-1} x[n] \cos \left({\pi(2n+1)k \over 2N} \right)
+\qquad 0 \le k &lt; N.\]</div>
+<p>In case of the normalized DCT (<code class="docutils literal notranslate"><span class="pre">norm='ortho'</span></code>), the DCT coefficients
+<span class="math notranslate nohighlight">\(y[k]\)</span> are multiplied by a scaling factor <em class="xref py py-obj">f</em>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}f = \begin{cases} \sqrt{1/(4N)}, &amp; \text{if $k = 0$} \\    \sqrt{1/(2N)},
+&amp; \text{otherwise} \end{cases} \, .\end{split}\]</div>
+<p>In this case, the DCT “base functions” <span class="math notranslate nohighlight">\(\phi_k[n] = 2 f \cos
+\left({\pi(2n+1)k \over 2N} \right)\)</span> become orthonormal:</p>
+<div class="math notranslate nohighlight">
+\[\sum_{n=0}^{N-1} \phi_k[n] \phi_l[n] = \delta_{lk}.\]</div>
+</section>
+<section id="type-iii-dct">
+<h3><a class="toc-backref" href="#id22" role="doc-backlink">Type III DCT</a><a class="headerlink" href="#type-iii-dct" title="Link to this heading">#</a></h3>
+<p>SciPy uses the following definition of the unnormalized DCT-III
+(<code class="docutils literal notranslate"><span class="pre">norm=None</span></code>):</p>
+<div class="math notranslate nohighlight">
+\[y[k] = x_0 + 2 \sum_{n=1}^{N-1} x[n] \cos\left({\pi n(2k+1) \over 2N}\right)
+\qquad 0 \le k &lt; N,\]</div>
+<p>or, for <code class="docutils literal notranslate"><span class="pre">norm='ortho'</span></code>:</p>
+<div class="math notranslate nohighlight">
+\[y[k] = {x_0\over\sqrt{N}} + {2\over\sqrt{N}} \sum_{n=1}^{N-1} x[n]
+\cos\left({\pi n(2k+1) \over 2N}\right) \qquad 0 \le k &lt; N.\]</div>
+</section>
+<section id="type-iv-dct">
+<h3><a class="toc-backref" href="#id23" role="doc-backlink">Type IV DCT</a><a class="headerlink" href="#type-iv-dct" title="Link to this heading">#</a></h3>
+<p>SciPy uses the following definition of the unnormalized DCT-IV
+(<code class="docutils literal notranslate"><span class="pre">norm=None</span></code>):</p>
+<div class="math notranslate nohighlight">
+\[y[k] = 2 \sum_{n=0}^{N-1} x[n] \cos\left({\pi (2n+1)(2k+1) \over 4N}\right)
+\qquad 0 \le k &lt; N,\]</div>
+<p>or, for <code class="docutils literal notranslate"><span class="pre">norm='ortho'</span></code>:</p>
+<div class="math notranslate nohighlight">
+\[y[k] = \sqrt{2\over N}\sum_{n=0}^{N-1} x[n] \cos\left({\pi (2n+1)(2k+1) \over 4N}\right)
+\qquad 0 \le k &lt; N\]</div>
+</section>
+<section id="dct-and-idct">
+<h3><a class="toc-backref" href="#id24" role="doc-backlink">DCT and IDCT</a><a class="headerlink" href="#dct-and-idct" title="Link to this heading">#</a></h3>
+<p>The (unnormalized) DCT-III is the inverse of the (unnormalized) DCT-II, up to a
+factor of <code class="docutils literal notranslate"><span class="pre">2N</span></code>. The orthonormalized DCT-III is exactly the inverse of the
+orthonormalized DCT- II. The function <a class="reference internal" href="../reference/generated/scipy.fft.idct.html#scipy.fft.idct" title="scipy.fft.idct"><code class="xref py py-func docutils literal notranslate"><span class="pre">idct</span></code></a> performs the mappings between
+the DCT and IDCT types, as well as the correct normalization.</p>
+<p>The following example shows the relation between DCT and IDCT for different
+types and normalizations.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">dct</span><span class="p">,</span> <span class="n">idct</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The DCT-II and DCT-III are each other’s inverses, so for an orthonormal transform
+we return back to the original signal.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dct</span><span class="p">(</span><span class="n">dct</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;ortho&#39;</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;ortho&#39;</span><span class="p">)</span>
+<span class="go">array([ 1. ,  2. ,  1. , -1. ,  1.5])</span>
+</pre></div>
+</div>
+<p>Doing the same under default normalization, however, we pick up an extra scaling
+factor of <span class="math notranslate nohighlight">\(2N=10\)</span> since the forward transform is unnormalized.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dct</span><span class="p">(</span><span class="n">dct</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">array([ 10.,  20.,  10., -10.,  15.])</span>
+</pre></div>
+</div>
+<p>For this reason, we should use the function <a class="reference internal" href="../reference/generated/scipy.fft.idct.html#scipy.fft.idct" title="scipy.fft.idct"><code class="xref py py-obj docutils literal notranslate"><span class="pre">idct</span></code></a> using the same type for both,
+giving a correctly normalized result.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Normalized inverse: no scaling factor</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idct</span><span class="p">(</span><span class="n">dct</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">array([ 1. ,  2. ,  1. , -1. ,  1.5])</span>
+</pre></div>
+</div>
+<p>Analogous results can be seen for the DCT-I, which is its own inverse up to a
+factor of <span class="math notranslate nohighlight">\(2(N-1)\)</span>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dct</span><span class="p">(</span><span class="n">dct</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;ortho&#39;</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;ortho&#39;</span><span class="p">)</span>
+<span class="go">array([ 1. ,  2. ,  1. , -1. ,  1.5])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Unnormalized round-trip via DCT-I: scaling factor 2*(N-1) = 8</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dct</span><span class="p">(</span><span class="n">dct</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">array([ 8. ,  16.,  8. , -8. ,  12.])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Normalized inverse: no scaling factor</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idct</span><span class="p">(</span><span class="n">dct</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">array([ 1. ,  2. ,  1. , -1. ,  1.5])</span>
+</pre></div>
+</div>
+<p>And for the DCT-IV, which is also its own inverse up to a factor of <span class="math notranslate nohighlight">\(2N\)</span>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dct</span><span class="p">(</span><span class="n">dct</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;ortho&#39;</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;ortho&#39;</span><span class="p">)</span>
+<span class="go">array([ 1. ,  2. ,  1. , -1. ,  1.5])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Unnormalized round-trip via DCT-IV: scaling factor 2*N = 10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dct</span><span class="p">(</span><span class="n">dct</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">array([ 10.,  20.,  10., -10.,  15.])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Normalized inverse: no scaling factor</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idct</span><span class="p">(</span><span class="n">dct</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">array([ 1. ,  2. ,  1. , -1. ,  1.5])</span>
+</pre></div>
+</div>
+</section>
+<section id="example">
+<h3><a class="toc-backref" href="#id25" role="doc-backlink">Example</a><a class="headerlink" href="#example" title="Link to this heading">#</a></h3>
+<p>The DCT exhibits the “energy compaction property”, meaning that for many
+signals only the first few DCT coefficients have significant magnitude.
+Zeroing out the other coefficients leads to a small reconstruction error, a
+fact which is exploited in lossy signal compression (e.g. JPEG compression).</p>
+<p>The example below shows a signal x and two reconstructions (<span class="math notranslate nohighlight">\(x_{20}\)</span> and
+<span class="math notranslate nohighlight">\(x_{15}\)</span>) from the signal’s DCT coefficients. The signal <span class="math notranslate nohighlight">\(x_{20}\)</span>
+is reconstructed from the first 20 DCT coefficients, <span class="math notranslate nohighlight">\(x_{15}\)</span> is
+reconstructed from the first 15 DCT coefficients. It can be seen that the
+relative error of using 20 coefficients is still very small (~0.1%), but
+provides a five-fold compression rate.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">dct</span><span class="p">,</span> <span class="n">idct</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="n">N</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">t</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">dct</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;ortho&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">window</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">window</span><span class="p">[:</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yr</span> <span class="o">=</span> <span class="n">idct</span><span class="p">(</span><span class="n">y</span><span class="o">*</span><span class="n">window</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;ortho&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sum</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">yr</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">0.0009872817275276098</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;-bx&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">yr</span><span class="p">,</span> <span class="s1">&#39;ro&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">window</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">window</span><span class="p">[:</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yr</span> <span class="o">=</span> <span class="n">idct</span><span class="p">(</span><span class="n">y</span><span class="o">*</span><span class="n">window</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;ortho&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sum</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">yr</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">0.06196643004256714</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">yr</span><span class="p">,</span> <span class="s1">&#39;g+&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;$x_</span><span class="si">{20}</span><span class="s1">$&#39;</span><span class="p">,</span> <span class="s1">&#39;$x_</span><span class="si">{15}</span><span class="s1">$&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="&quot;This code generates an X-Y plot showing amplitude on the Y axis and time on the X axis. The first blue trace is the original signal and starts at amplitude 1 and oscillates down to 0 amplitude over the duration of the plot resembling a frequency chirp. The second red trace is the x_20 reconstruction using the DCT and closely follows the original signal in the high amplitude region but it is unclear to the right side of the plot. The third green trace is the x_15 reconstruction using the DCT and is less precise than the x_20 reconstruction but still similar to x.&quot;" class="plot-directive" src="../_images/fft-2.png" />
+</figure>
+</section>
+</section>
+<section id="discrete-sine-transforms">
+<h2><a class="toc-backref" href="#id26" role="doc-backlink">Discrete Sine Transforms</a><a class="headerlink" href="#discrete-sine-transforms" title="Link to this heading">#</a></h2>
+<p>SciPy provides a DST <a class="footnote-reference brackets" href="#mak" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a> with the function <a class="reference internal" href="../reference/generated/scipy.fft.dst.html#scipy.fft.dst" title="scipy.fft.dst"><code class="xref py py-func docutils literal notranslate"><span class="pre">dst</span></code></a> and a corresponding IDST
+with the function <a class="reference internal" href="../reference/generated/scipy.fft.idst.html#scipy.fft.idst" title="scipy.fft.idst"><code class="xref py py-func docutils literal notranslate"><span class="pre">idst</span></code></a>.</p>
+<p>There are, theoretically, 8 types of the DST for different combinations of
+even/odd boundary conditions and boundary offsets <a class="footnote-reference brackets" href="#wiki-dst" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>, only the first 4
+types are implemented in SciPy.</p>
+<section id="type-i-dst">
+<h3><a class="toc-backref" href="#id27" role="doc-backlink">Type I DST</a><a class="headerlink" href="#type-i-dst" title="Link to this heading">#</a></h3>
+<p>DST-I assumes the input is odd around n=-1 and n=N. SciPy uses the following
+definition of the unnormalized DST-I (<code class="docutils literal notranslate"><span class="pre">norm=None</span></code>):</p>
+<div class="math notranslate nohighlight">
+\[y[k] = 2\sum_{n=0}^{N-1} x[n]  \sin\left( \pi {(n+1) (k+1)}\over{N+1}
+\right), \qquad 0 \le k &lt; N.\]</div>
+<p>Note also that the DST-I is only supported for input size &gt; 1. The
+(unnormalized) DST-I is its own inverse, up to a factor of <code class="docutils literal notranslate"><span class="pre">2(N+1)</span></code>.</p>
+</section>
+<section id="type-ii-dst">
+<h3><a class="toc-backref" href="#id28" role="doc-backlink">Type II DST</a><a class="headerlink" href="#type-ii-dst" title="Link to this heading">#</a></h3>
+<p>DST-II assumes the input is odd around n=-1/2 and even around n=N. SciPy uses
+the following definition of the unnormalized DST-II (<code class="docutils literal notranslate"><span class="pre">norm=None</span></code>):</p>
+<div class="math notranslate nohighlight">
+\[y[k] = 2 \sum_{n=0}^{N-1} x[n]  \sin\left( {\pi (n+1/2)(k+1)} \over N
+\right), \qquad 0 \le k &lt; N.\]</div>
+</section>
+<section id="type-iii-dst">
+<h3><a class="toc-backref" href="#id29" role="doc-backlink">Type III DST</a><a class="headerlink" href="#type-iii-dst" title="Link to this heading">#</a></h3>
+<p>DST-III assumes the input is odd around n=-1 and even around n=N-1. SciPy uses
+the following definition of the unnormalized DST-III (<code class="docutils literal notranslate"><span class="pre">norm=None</span></code>):</p>
+<div class="math notranslate nohighlight">
+\[y[k] = (-1)^k x[N-1] + 2 \sum_{n=0}^{N-2} x[n] \sin \left( {\pi
+(n+1)(k+1/2)} \over N \right), \qquad 0 \le k &lt; N.\]</div>
+</section>
+<section id="type-iv-dst">
+<h3><a class="toc-backref" href="#id30" role="doc-backlink">Type IV DST</a><a class="headerlink" href="#type-iv-dst" title="Link to this heading">#</a></h3>
+<p>SciPy uses the following definition of the unnormalized DST-IV
+(<code class="docutils literal notranslate"><span class="pre">norm=None</span></code>):</p>
+<div class="math notranslate nohighlight">
+\[y[k] = 2 \sum_{n=0}^{N-1} x[n] \sin\left({\pi (2n+1)(2k+1) \over 4N}\right)
+\qquad 0 \le k &lt; N,\]</div>
+<p>or, for <code class="docutils literal notranslate"><span class="pre">norm='ortho'</span></code>:</p>
+<div class="math notranslate nohighlight">
+\[y[k] = \sqrt{2\over N}\sum_{n=0}^{N-1} x[n] \sin\left({\pi (2n+1)(2k+1) \over 4N}\right)
+\qquad 0 \le k &lt; N,\]</div>
+</section>
+<section id="dst-and-idst">
+<span id="tutorial-fft-dst-and-idst"></span><h3><a class="toc-backref" href="#id31" role="doc-backlink">DST and IDST</a><a class="headerlink" href="#dst-and-idst" title="Link to this heading">#</a></h3>
+<p>The following example shows the relation between DST and IDST for
+different types and normalizations.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">dst</span><span class="p">,</span> <span class="n">idst</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The DST-II and DST-III are each other’s inverses, so for an orthonormal transform
+we return back to the original signal.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dst</span><span class="p">(</span><span class="n">dst</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;ortho&#39;</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;ortho&#39;</span><span class="p">)</span>
+<span class="go">array([ 1. ,  2. ,  1. , -1. ,  1.5])</span>
+</pre></div>
+</div>
+<p>Doing the same under default normalization, however, we pick up an extra scaling
+factor of <span class="math notranslate nohighlight">\(2N=10\)</span> since the forward transform is unnormalized.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dst</span><span class="p">(</span><span class="n">dst</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">array([ 10.,  20.,  10., -10.,  15.])</span>
+</pre></div>
+</div>
+<p>For this reason, we should use the function <a class="reference internal" href="../reference/generated/scipy.fft.idst.html#scipy.fft.idst" title="scipy.fft.idst"><code class="xref py py-obj docutils literal notranslate"><span class="pre">idst</span></code></a> using the same type for both,
+giving a correctly normalized result.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">idst</span><span class="p">(</span><span class="n">dst</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">array([ 1. ,  2. ,  1. , -1. ,  1.5])</span>
+</pre></div>
+</div>
+<p>Analogous results can be seen for the DST-I, which is its own inverse up to a
+factor of <span class="math notranslate nohighlight">\(2(N-1)\)</span>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dst</span><span class="p">(</span><span class="n">dst</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;ortho&#39;</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;ortho&#39;</span><span class="p">)</span>
+<span class="go">array([ 1. ,  2. ,  1. , -1. ,  1.5])</span>
+<span class="gp">&gt;&gt;&gt; </span> <span class="c1"># scaling factor 2*(N+1) = 12</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dst</span><span class="p">(</span><span class="n">dst</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">array([ 12.,  24.,  12., -12.,  18.])</span>
+<span class="gp">&gt;&gt;&gt; </span> <span class="c1"># no scaling factor</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idst</span><span class="p">(</span><span class="n">dst</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">array([ 1. ,  2. ,  1. , -1. ,  1.5])</span>
+</pre></div>
+</div>
+<p>And for the DST-IV, which is also its own inverse up to a factor of <span class="math notranslate nohighlight">\(2N\)</span>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dst</span><span class="p">(</span><span class="n">dst</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;ortho&#39;</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;ortho&#39;</span><span class="p">)</span>
+<span class="go">array([ 1. ,  2. ,  1. , -1. ,  1.5])</span>
+<span class="gp">&gt;&gt;&gt; </span> <span class="c1"># scaling factor 2*N = 10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dst</span><span class="p">(</span><span class="n">dst</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">array([ 10.,  20.,  10., -10.,  15.])</span>
+<span class="gp">&gt;&gt;&gt; </span> <span class="c1"># no scaling factor</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idst</span><span class="p">(</span><span class="n">dst</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="go">array([ 1. ,  2. ,  1. , -1. ,  1.5])</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="fast-hankel-transform">
+<h2><a class="toc-backref" href="#id32" role="doc-backlink">Fast Hankel Transform</a><a class="headerlink" href="#fast-hankel-transform" title="Link to this heading">#</a></h2>
+<p>SciPy provides the functions <code class="docutils literal notranslate"><span class="pre">fht</span></code> and <code class="docutils literal notranslate"><span class="pre">ifht</span></code> to perform the Fast
+Hankel Transform (FHT) and its inverse (IFHT) on logarithmically-spaced input
+arrays.</p>
+<p>The FHT is the discretized version of the continuous Hankel transform defined
+by <a class="footnote-reference brackets" href="#ham00" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a></p>
+<div class="math notranslate nohighlight">
+\[A(k) = \int_{0}^{\infty} \! a(r) \, J_{\mu}(kr) \, k \, dr \;,\]</div>
+<p>with <span class="math notranslate nohighlight">\(J_{\mu}\)</span> the Bessel function of order <span class="math notranslate nohighlight">\(\mu\)</span>. Under a change
+of variables <span class="math notranslate nohighlight">\(r \to \log r\)</span>, <span class="math notranslate nohighlight">\(k \to \log k\)</span>, this becomes</p>
+<div class="math notranslate nohighlight">
+\[A(e^{\log k})
+= \int_{0}^{\infty} \! a(e^{\log r}) \, J_{\mu}(e^{\log k + \log r})
+                                    \, e^{\log k + \log r} \, d{\log r}\]</div>
+<p>which is a convolution in logarithmic space. The FHT algorithm uses the FFT
+to perform this convolution on discrete input data.</p>
+<p>Care must be taken to minimise numerical ringing due to the circular nature
+of FFT convolution. To ensure that the low-ringing condition <a class="footnote-reference brackets" href="#ham00" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a> holds,
+the output array can be slightly shifted by an offset computed using the
+<code class="docutils literal notranslate"><span class="pre">fhtoffset</span></code> function.</p>
+</section>
+<section id="references">
+<h2><a class="toc-backref" href="#id33" role="doc-backlink">References</a><a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="ct65" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Cooley, James W., and John W. Tukey, 1965, “An algorithm for the
+machine calculation of complex Fourier series,” <em>Math. Comput.</em>
+19: 297-301.</p>
+</aside>
+<aside class="footnote brackets" id="nr07" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Press, W., Teukolsky, S., Vetterline, W.T., and Flannery, B.P.,
+2007, <em>Numerical Recipes: The Art of Scientific Computing</em>, ch.
+12-13.  Cambridge Univ. Press, Cambridge, UK.</p>
+</aside>
+<aside class="footnote brackets" id="wiki-dft" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p>“Discrete Fourier transform”, Wikipedia,
+<a class="reference external" href="https://en.wikipedia.org/wiki/Discrete_Fourier_transform">https://en.wikipedia.org/wiki/Discrete_Fourier_transform</a></p>
+</aside>
+<aside class="footnote brackets" id="wiki-dtft" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
+<p>“Discrete-time Fourier transform”, Wikipedia,
+<a class="reference external" href="https://en.wikipedia.org/wiki/Discrete-time_Fourier_transform">https://en.wikipedia.org/wiki/Discrete-time_Fourier_transform</a></p>
+</aside>
+<aside class="footnote brackets" id="wiki-dct" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">5</a><span class="fn-bracket">]</span></span>
+<p>“Discrete cosine transform”, Wikipedia,
+<a class="reference external" href="https://en.wikipedia.org/wiki/Discrete_cosine_transform">https://en.wikipedia.org/wiki/Discrete_cosine_transform</a></p>
+</aside>
+<aside class="footnote brackets" id="mak" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id6">1</a>,<a role="doc-backlink" href="#id7">2</a>)</span>
+<p>J. Makhoul, 1980, ‘A Fast Cosine Transform in One and Two Dimensions’,
+<em class="xref py py-obj">IEEE Transactions on acoustics, speech and signal processing</em>
+vol. 28(1), pp. 27-34, <a class="reference external" href="https://doi.org/10.1109/TASSP.1980.1163351">DOI:10.1109/TASSP.1980.1163351</a></p>
+</aside>
+<aside class="footnote brackets" id="wiki-dst" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">7</a><span class="fn-bracket">]</span></span>
+<p>“Discrete sine transform”, Wikipedia,
+<a class="reference external" href="https://en.wikipedia.org/wiki/Discrete_sine_transform">https://en.wikipedia.org/wiki/Discrete_sine_transform</a></p>
+</aside>
+<aside class="footnote brackets" id="ham00" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id9">1</a>,<a role="doc-backlink" href="#id10">2</a>)</span>
+<p>A. J. S. Hamilton, 2000, “Uncorrelated modes of the non-linear power
+spectrum”, <em>MNRAS</em>, 312, 257. <a class="reference external" href="https://doi.org/10.1046/j.1365-8711.2000.03071.x">DOI:10.1046/j.1365-8711.2000.03071.x</a></p>
+</aside>
+</aside>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">SciPy User Guide</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="integrate.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Integration (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.integrate</span></code>)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-discrete-fourier-transform">The Discrete Fourier Transform</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fourier-series-and-the-dft">Fourier Series and the DFT</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#caveats">Caveats</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#periodicity-in-the-time-domain">Periodicity in the Time Domain</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#periodicity-in-the-frequency-domain">Periodicity in the Frequency Domain</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#speed-considerations">Speed Considerations</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#and-n-d-discrete-fourier-transforms">2- and N-D discrete Fourier transforms</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-cosine-transforms">Discrete Cosine Transforms</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#type-i-dct">Type I DCT</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#type-ii-dct">Type II DCT</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#type-iii-dct">Type III DCT</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#type-iv-dct">Type IV DCT</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dct-and-idct">DCT and IDCT</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discrete-sine-transforms">Discrete Sine Transforms</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#type-i-dst">Type I DST</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#type-ii-dst">Type II DST</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#type-iii-dst">Type III DST</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#type-iv-dst">Type IV DST</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dst-and-idst">DST and IDST</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fast-hankel-transform">Fast Hankel Transform</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,1607 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Trimming and winsorization transition guide &#8212; SciPy v2.0.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=8ee2c72c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=242cf5df" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=d74cf641"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=96e329c5"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script async="async" src="../../_static/scipy-mathjax/MathJax.js?config=scipy-mathjax"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorial/stats/outliers';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script defer="defer" src="../../_static/custom-icons.js?v=6cff5f5c"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Analysing one sample" href="analysing_one_sample.html" />
+    <link rel="prev" title="Quasi-Monte Carlo" href="quasi_monte_carlo.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="2.0.0.dev" />
+    <meta name="docbuild:last-update" content="Sep 05, 2026"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discuss.scientific-python.org/c/contributor/scipy/" title="Scientific Python Forum" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-SciPy_Forum fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Scientific Python Forum</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../reference/index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discuss.scientific-python.org/c/contributor/scipy/" title="Scientific Python Forum" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-SciPy_Forum fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Scientific Python Forum</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">Discrete Fourier Transforms (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.fft</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">Integration (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.integrate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">Interpolation (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">File IO (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.io</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">Linear Algebra (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.linalg</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">Multidimensional Image Processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.ndimage</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">Optimization (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.optimize</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">Signal Processing (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.signal</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">Sparse Arrays (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">Spatial Data Structures and Algorithms (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.spatial</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">Special Functions (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.special</span></code>)</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../stats.html">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../arpack.html">Sparse eigenvalue problems with ARPACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../csgraph.html">Compressed Sparse Graph Routines (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.sparse.csgraph</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../parallel_execution.html">Parallel execution support in SciPy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../thread_safety.html">Thread Safety in SciPy</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">SciPy User Guide</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../stats.html" class="nav-link">Statistics (<code class="xref py py-obj docutils literal notranslate"><span class="pre">scipy.stats</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Trimming and winsorization transition guide</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <button class="try_examples_button" onclick="window.open('../../lite/tree/../notebooks/index.html?path=outliers.ipynb')">Open as a notebook</button><section id="trimming-and-winsorization-transition-guide">
+<span id="outliers"></span><h1>Trimming and winsorization transition guide<a class="headerlink" href="#trimming-and-winsorization-transition-guide" title="Link to this heading">#</a></h1>
+<p>An outlier is an observation that differs substantially from other observations in a sample. There are many references available about identifying outliers, whether to make adjustments for outliers, and if so, what adjustments to make. This guide does not make any recommendations on these topics. Instead, the focus is on how to perform two of the most common procedures:</p>
+<ul class="simple">
+<li><p>trimming: removing outliers from the dataset, and</p></li>
+<li><p>winsorization: replacing outliers with a more central value,</p></li>
+</ul>
+<p>using tools available in SciPy, with an emphasis on transitioning from use of legacy functions to the preferred approach.</p>
+<section id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">#</a></h2>
+<p>In the past, SciPy has offered several “convenience functions” that combine trimming with computation of a statistic. Consider, for instance, <a class="reference internal" href="../../reference/generated/scipy.stats.trim_mean.html#scipy.stats.trim_mean" title="scipy.stats.trim_mean"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.trim_mean</span></code></a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;SCIPY_ARRAY_API&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">20.</span><span class="p">)</span>
+<span class="n">stats</span><span class="o">.</span><span class="n">trim_mean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">proportiontocut</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(9.5)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Without carefully reading the documentation, it is not immediately obvious how the operation was performed: does <code class="docutils literal notranslate"><span class="pre">proportiontocut</span></code> refer to the proportion to cut from each tail, or is it the total proportion of the data to remove?</p>
+<p>Likewise, when the proportion multiplied by the number of elements would not result in an integer, is the number to remove rounded up or down?</p>
+<p>What if instead of removing a proportion, we want to remove data below and above specified thresholds. It turns out that we cannot achieve this with <a class="reference internal" href="../../reference/generated/scipy.stats.trim_mean.html#scipy.stats.trim_mean" title="scipy.stats.trim_mean"><code class="xref py py-func docutils literal notranslate"><span class="pre">trim_mean</span></code></a>; we would need to use <a class="reference internal" href="../../reference/generated/scipy.stats.tmean.html#scipy.stats.tmean" title="scipy.stats.tmean"><code class="xref py py-func docutils literal notranslate"><span class="pre">tmean</span></code></a> or (the similarly-named, but curiously relegated to a separate namespace) <a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trimmed_mean.html#scipy.stats.mstats.trimmed_mean" title="scipy.stats.mstats.trimmed_mean"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.mstats.trimmed_mean</span></code></a>, instead.</p>
+<p>What if we want to remove data outside a “confidence interval” estimate. Do any of these functions offer anything to facilitate that?  No, not really.</p>
+<p>One could take the mean after using one of the seven functions for trimming data. But which one(s) will do what we need?</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trim.html#scipy.stats.mstats.trim" title="scipy.stats.mstats.trim"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.mstats.trim</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trima.html#scipy.stats.mstats.trima" title="scipy.stats.mstats.trima"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.mstats.trima</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trimr.html#scipy.stats.mstats.trimr" title="scipy.stats.mstats.trimr"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.mstats.trimr</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trimtail.html#scipy.stats.mstats.trimtail" title="scipy.stats.mstats.trimtail"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.mstats.trimtail</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trimboth.html#scipy.stats.mstats.trimboth" title="scipy.stats.mstats.trimboth"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.mstats.trimboth</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../reference/generated/scipy.stats.trimboth.html#scipy.stats.trimboth" title="scipy.stats.trimboth"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.trimboth</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../reference/generated/scipy.stats.trim1.html#scipy.stats.trim1" title="scipy.stats.trim1"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.trim1</span></code></a></p></li>
+</ul>
+<p>So at the time of writing, SciPy offers at least half a dozen ways of taking a trimmed mean, but deciding which to use requires a lot of research, and none are able to perform <em>all</em> variations of the trimmed mean that we might reasonably expect them.</p>
+<p>What about other statistics - should we use <a class="reference internal" href="../../reference/generated/scipy.stats.tvar.html#scipy.stats.tvar" title="scipy.stats.tvar"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.tvar</span></code></a>, <a class="reference internal" href="../../reference/generated/scipy.stats.mstats.tvar.html#scipy.stats.mstats.tvar" title="scipy.stats.mstats.tvar"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.mstats.tvar</span></code></a>, or <a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trimmed_var.html#scipy.stats.mstats.trimmed_var" title="scipy.stats.mstats.trimmed_var"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.mstats.trimmed_var</span></code></a> to compute the trimmed variance? If there are three functions for that and three for the mean, surely there is at least one function for computing the trimmed skewness? (Nope!)</p>
+<p>In the spirit of the Zen of Python, we suggest the new “one– and preferably only one –obvious way” to calculate the trimmed version of many statistics: manually, in two or three lines of code, using more familiar, general-purpose features of NumPy and SciPy. Whether calculating a trimmed or winsorized statistic, there will be three steps:</p>
+<ol class="arabic simple">
+<li><p>Identify the outlier threshold.</p></li>
+<li><p>Trim or winsorize.</p></li>
+<li><p>Compute the statistic.</p></li>
+</ol>
+</section>
+<section id="identifying-the-threshold">
+<h2>Identifying the threshold<a class="headerlink" href="#identifying-the-threshold" title="Link to this heading">#</a></h2>
+<p>SciPy now offers a <a class="reference internal" href="../../reference/generated/scipy.stats.quantile.html#scipy.stats.quantile" title="scipy.stats.quantile"><code class="xref py py-func docutils literal notranslate"><span class="pre">quantile</span></code></a> function with several methods useful for identifying thresholds beyond which data are to be trimmed or winsorized. The most common thresholds are those corresponding with a certain <em>percentage</em> of the data in each tail. To set the threshold at <span class="math notranslate nohighlight">\(p=10\%\)</span> of the data in each tail, rounding the number of points to trim <em>down</em>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">22.</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">stats</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;round_outward&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 2., 19.])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Rounding the number of points to trim <em>up</em>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;round_inward&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 3., 18.])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Rounding the number of points to trim to the nearest integer:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;round_nearest&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 2., 19.])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that these methods are all subtly different from estimating the 10th and 90th percentiles of the data, which might be called for in different circumstances. Using the default method:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 2.1, 18.9])
+</pre></div>
+</div>
+</div>
+</div>
+<p>The Harrell-Davis method:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;harrell-davis&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 1.69917358, 19.30082642])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that <a class="reference internal" href="../../reference/generated/scipy.stats.quantile.html#scipy.stats.quantile" title="scipy.stats.quantile"><code class="xref py py-func docutils literal notranslate"><span class="pre">quantile</span></code></a> is fully vectorized. Suppose we have two rows of data, and we wish to set different thresholds for each row.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x2d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">])</span>
+<span class="n">p2d</span> <span class="o">=</span> <span class="p">[[</span><span class="n">p</span>  <span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">p</span>  <span class="p">],</span>  <span class="c1"># thresholds for zeroth row</span>
+       <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">p</span><span class="p">]]</span>  <span class="c1"># thresholds for next row</span>
+<span class="n">stats</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="n">p2d</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;round_outward&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[ 2., 19.],
+       [ 4., 17.]])
+</pre></div>
+</div>
+</div>
+</div>
+<section id="missing-data">
+<h3>Missing data<a class="headerlink" href="#missing-data" title="Link to this heading">#</a></h3>
+<p>When there are missing or ignorable values but omitting them would lead to a ragged array, the two historical options have been to:</p>
+<ul class="simple">
+<li><p>cover the missing/ignorable values with the “mask” of a NumPy masked array and use <code class="docutils literal notranslate"><span class="pre">stats.mstats</span></code> functions for analysis, or</p></li>
+<li><p>replace missing/ignorable values with NaNs and use <code class="docutils literal notranslate"><span class="pre">stats</span></code> functions with <code class="docutils literal notranslate"><span class="pre">nan_policy='omit'</span></code> for analysis.</p></li>
+</ul>
+<p>The downsides of these approaches are documented elsewhere; here, we recommend using an <a class="reference external" href="https://mdhaber.github.io/marray/tutorial.html">MArray</a> with <code class="docutils literal notranslate"><span class="pre">stats</span></code> functions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">marray</span><span class="w"> </span><span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">mxp</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="p">((</span><span class="n">x2d</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># ignore odd elements</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">mxp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[  _  1.   _  3.   _  5.   _  7.   _  9.   _ 11.   _ 13.   _ 15.   _ 17.   _ 19.   _ 21.]
+ [  _  1.   _  3.   _  5.   _  7.   _  9.   _ 11.   _ 13.   _ 15.   _ 17.   _ 19.   _ 21.]]
+</pre></div>
+</div>
+</div>
+</div>
+<p><a class="reference internal" href="../../reference/generated/scipy.stats.quantile.html#scipy.stats.quantile" title="scipy.stats.quantile"><code class="xref py py-func docutils literal notranslate"><span class="pre">quantile</span></code></a> and many other <code class="docutils literal notranslate"><span class="pre">scipy.stats</span></code> functions natively support <code class="docutils literal notranslate"><span class="pre">MArray</span></code>s, and support grows with each version of SciPy.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">mxp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">p2d</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;round_outward&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MArray(
+    array([[ 3., 19.],
+           [ 5., 17.]]),
+    array([[False, False],
+           [False, False]])
+)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="trimming-and-winsorizing">
+<h2>Trimming and winsorizing<a class="headerlink" href="#trimming-and-winsorizing" title="Link to this heading">#</a></h2>
+<section id="winsorizing-is-cliping">
+<h3>Winsorizing is <code class="docutils literal notranslate"><span class="pre">clip</span></code>ing<a class="headerlink" href="#winsorizing-is-cliping" title="Link to this heading">#</a></h3>
+<p>Once a numerical threshold has been identified, winsorizing is simply an application of a fundamental data operation: <code class="docutils literal notranslate"><span class="pre">clip</span></code>.</p>
+<p>Suppose we have <span class="math notranslate nohighlight">\(n=22\)</span> observations and we wish to winsorize <span class="math notranslate nohighlight">\(p=10\%\)</span> from each side of the data. Rounding down with <code class="docutils literal notranslate"><span class="pre">method='round_outward'</span></code>, we would expect to winsorize <span class="math notranslate nohighlight">\(\left \lfloor{pn}\right \rfloor = 2\)</span> points on each side. In this case, <a class="reference internal" href="../../reference/generated/scipy.stats.quantile.html#scipy.stats.quantile" title="scipy.stats.quantile"><code class="xref py py-func docutils literal notranslate"><span class="pre">quantile</span></code></a> returns the <em>third</em> data point from the left (at index <code class="docutils literal notranslate"><span class="pre">2</span></code>) as the lower limit. <code class="docutils literal notranslate"><span class="pre">clip</span></code>ing to this limit will winsorize the two lower observations, leaving the third observation unchanged. The story is similar on the right.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">22.</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;round_outward&#39;</span><span class="p">)</span>
+<span class="n">x_winsorized</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)</span>
+<span class="n">x_winsorized</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 2.,  2.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 19., 19.])
+</pre></div>
+</div>
+</div>
+</div>
+<p>When extracting the <code class="docutils literal notranslate"><span class="pre">low</span></code> and <code class="docutils literal notranslate"><span class="pre">high</span></code> thresholds from the result of quantile, just remember that their positions correspond with the positions of values in the <code class="docutils literal notranslate"><span class="pre">p</span></code> argument.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="n">p2d</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;round_outward&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[ 2., 19.],
+       [ 4., 17.]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here, we want the columns, and we want to preserve their shape so they still align with the shape of <code class="docutils literal notranslate"><span class="pre">x2d</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">low_high</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="n">p2d</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;round_outward&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">low2d</span> <span class="o">=</span> <span class="n">low_high</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">high2d</span> <span class="o">=</span> <span class="n">low_high</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
+<span class="n">low2d</span><span class="p">,</span> <span class="n">high2d</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(array([[2.],
+        [4.]]),
+ array([[19.],
+        [17.]]))
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x2d_winsorized</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="n">low2d</span><span class="p">,</span> <span class="n">high2d</span><span class="p">)</span>
+<span class="n">x2d_winsorized</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[ 2.,  2.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 19., 19.],
+       [ 4.,  4.,  4.,  4.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13., 14., 15., 16., 17., 17., 17., 17., 17.]])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="trimming">
+<h3>Trimming<a class="headerlink" href="#trimming" title="Link to this heading">#</a></h3>
+<p>Like winsorization, trimming is also a straightforward application of fundamental array operations.</p>
+<p>For 1-D data, trimming is just indexing with a boolean mask that selects data to be retained.</p>
+<p>As in the 1-D winsorization example above, suppose we want to trim two points on either side. <code class="docutils literal notranslate"><span class="pre">low</span></code> is the <em>third</em> observation from the left - the first we want to keep. Therefore, we’ll form a boolean mask with <em>non-strict</em> inequalities to select the data to be kept.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;round_outward&#39;</span><span class="p">)</span>  <span class="c1"># get the threshold values</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="n">low</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">high</span><span class="p">)</span>
+<span class="n">x_trimmed</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+<span class="n">x_trimmed</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19.])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Rather than changing to strict inequalities, use <code class="docutils literal notranslate"><span class="pre">method='round_inward'</span></code> if you want to round the other way.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;round_inward&#39;</span><span class="p">)</span>  <span class="c1"># get the threshold values</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="n">low</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">high</span><span class="p">)</span>
+<span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13., 14., 15., 16., 17., 18.])
+</pre></div>
+</div>
+</div>
+</div>
+<p>In 2-D, this approach of retaining only certain data <em>may</em> be possible if the number of elements retained in each row happen to be identical. There is one complication: boolean indexing results in a 1-D array:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">x2d</span> <span class="o">&gt;=</span> <span class="n">low</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x2d</span> <span class="o">&lt;=</span> <span class="n">high</span><span class="p">)</span>
+<span class="n">x2d</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13., 14., 15., 16., 17., 18.,  3.,  4.,  5.,  6.,  7.,  8.,
+        9., 10., 11., 12., 13., 14., 15., 16., 17., 18.])
+</pre></div>
+</div>
+</div>
+</div>
+<p><em>When the number of elements retained in each row are identical (and only then)</em>, it is safe to reshape the output to an array with the original number of rows.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x2d</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x2d</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># -1 means &quot;infer from the number of elements&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[ 3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13., 14., 15., 16., 17., 18.],
+       [ 3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13., 14., 15., 16., 17., 18.]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>The more general option is to keep the trimmed elements in their original locations but to <em>mask</em> them.</p>
+<p>Note that the mask of elements to <em>remove</em> is the logical NOT of the elements to be kept. Since we used <em>non-strict</em> inequalities to retain elements, we use <em>strict</em> inequalities to trim them.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask2d</span> <span class="o">=</span> <span class="p">(</span><span class="n">x2d</span> <span class="o">&lt;</span> <span class="n">low2d</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">x2d</span> <span class="o">&gt;</span> <span class="n">high2d</span><span class="p">)</span>
+<span class="n">x2d_masked</span> <span class="o">=</span> <span class="n">mxp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x2d</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask2d</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x2d_masked</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[  _   _  2.  3.  4.  5.  6.  7.  8.  9. 10. 11. 12. 13. 14. 15. 16. 17. 18. 19.   _   _]
+ [  _   _   _   _  4.  5.  6.  7.  8.  9. 10. 11. 12. 13. 14. 15. 16. 17.   _   _   _   _]]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="computing-the-statistic">
+<h2>Computing the statistic<a class="headerlink" href="#computing-the-statistic" title="Link to this heading">#</a></h2>
+<p>When the data is winsorized or trimmed data has actually been removed, working with it is no different than any other data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x_trimmed</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(10.5)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x_winsorized</span><span class="p">)</span>  <span class="c1"># result happens to be identical *for this data*</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(10.5)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x2d_winsorized</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># results happen to be identical *for this data*</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([10.5, 10.5])
+</pre></div>
+</div>
+</div>
+</div>
+<p>When the trimmed values are represented as masked elements of a masked array, only slightly more care is needed. For simple statistics like <code class="docutils literal notranslate"><span class="pre">mean</span></code> and <code class="docutils literal notranslate"><span class="pre">var</span></code>, use the corresponding function of the MArray namespace, <code class="docutils literal notranslate"><span class="pre">mxp</span></code>, rather than the NumPy namespace.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mxp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x2d_masked</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MArray(array([10.5, 10.5]), array([False, False]))
+</pre></div>
+</div>
+</div>
+</div>
+<p>Many SciPy functions also natively support masked arrays (see the documentation of the desired function).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">kurtosis</span><span class="p">(</span><span class="n">x2d_masked</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MArray(array([-1.20743034, -1.21230769]), array([False, False]))
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="recipes">
+<h2>Recipes<a class="headerlink" href="#recipes" title="Link to this heading">#</a></h2>
+<p>Here, we reproduce the results of several legacy trimming functions using the preferred approach.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">339759635264198322188079188741355346875</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">22</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="mf">0.1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="stats-trim-mean">
+<h3><a class="reference internal" href="../../reference/generated/scipy.stats.trim_mean.html#scipy.stats.trim_mean" title="scipy.stats.trim_mean"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.trim_mean</span></code></a><a class="headerlink" href="#stats-trim-mean" title="Link to this heading">#</a></h3>
+<p><a class="reference internal" href="../../reference/generated/scipy.stats.trim_mean.html#scipy.stats.trim_mean" title="scipy.stats.trim_mean"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.trim_mean</span></code></a> accepts a proportion of the total number of elements to cut from <em>each</em> side.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">trim_mean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">proportiontocut</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.5040176765501222)
+</pre></div>
+</div>
+</div>
+</div>
+<p>It always rounds the number of elements to cut <em>down</em>, so we choose <code class="docutils literal notranslate"><span class="pre">round_outward</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;round_outward&#39;</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">low</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">high</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.5040176765501222)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="stats-tmean">
+<h3><a class="reference internal" href="../../reference/generated/scipy.stats.tmean.html#scipy.stats.tmean" title="scipy.stats.tmean"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.tmean</span></code></a><a class="headerlink" href="#stats-tmean" title="Link to this heading">#</a></h3>
+<p><a class="reference internal" href="../../reference/generated/scipy.stats.tmean.html#scipy.stats.tmean" title="scipy.stats.tmean"><code class="xref py py-func docutils literal notranslate"><span class="pre">tmean</span></code></a> accepts absolute lower and upper <code class="docutils literal notranslate"><span class="pre">limits</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">limits</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">)</span>
+<span class="n">stats</span><span class="o">.</span><span class="n">tmean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">limits</span><span class="p">,</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.47320792896720426)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">inclusive</span></code> argument has no effect unless one of the limits exactly equals an observation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">tmean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">limits</span><span class="p">,</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.47320792896720426)
+</pre></div>
+</div>
+</div>
+</div>
+<p>As an example of when it would matter:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">limits</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+<span class="n">tmean_inclusive</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">tmean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">limits</span><span class="p">,</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+<span class="n">tmean_exclusive</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">tmean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">limits</span><span class="p">,</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
+<span class="n">tmean_inclusive</span><span class="p">,</span> <span class="n">tmean_exclusive</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(0.5040176765501222), np.float64(0.5009240752836592))
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">inclusive</span></code> refers to the elements to <em>keep</em>, so use <em>non-strict</em> inequality to be inclusive:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">limits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">limits</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.5040176765501222)
+</pre></div>
+</div>
+</div>
+</div>
+<p>and <em>strict</em> inequality to be exclusive.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">limits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">limits</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.5009240752836591)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="stats-mstats-trimmed-mean">
+<h3><a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trimmed_mean.html#scipy.stats.mstats.trimmed_mean" title="scipy.stats.mstats.trimmed_mean"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trimmed_mean</span></code></a><a class="headerlink" href="#stats-mstats-trimmed-mean" title="Link to this heading">#</a></h3>
+<p><a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trimmed_mean.html#scipy.stats.mstats.trimmed_mean" title="scipy.stats.mstats.trimmed_mean"><code class="xref py py-func docutils literal notranslate"><span class="pre">trimmed_mean</span></code></a> is, in some ways, a mash-up of <a class="reference internal" href="../../reference/generated/scipy.stats.tmean.html#scipy.stats.tmean" title="scipy.stats.tmean"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.tmean</span></code></a> and <a class="reference internal" href="../../reference/generated/scipy.stats.trim_mean.html#scipy.stats.trim_mean" title="scipy.stats.trim_mean"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.trim_mean</span></code></a>. It accepts <code class="docutils literal notranslate"><span class="pre">limits</span></code>, like <a class="reference internal" href="../../reference/generated/scipy.stats.tmean.html#scipy.stats.tmean" title="scipy.stats.tmean"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.tmean</span></code></a>, but by default, these are relative, like <a class="reference internal" href="../../reference/generated/scipy.stats.trim_mean.html#scipy.stats.trim_mean" title="scipy.stats.trim_mean"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.trim_mean</span></code></a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trimmed_mean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="n">relative</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.5040176765501222)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Surprisingly, <code class="docutils literal notranslate"><span class="pre">inclusive</span></code> has no effect when <code class="docutils literal notranslate"><span class="pre">p*len(x)</span></code> is integral and <code class="docutils literal notranslate"><span class="pre">relative</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> (default).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trimmed_mean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.5040176765501222)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Rather, it affects the method of rounding <code class="docutils literal notranslate"><span class="pre">p*len(x)</span></code>. So let’s consider a case in which it would matter.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">324589234958293486245</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">19</span><span class="p">)</span>
+<span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trimmed_mean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.6172768003503452)
+</pre></div>
+</div>
+</div>
+</div>
+<p>According to the documentation, <code class="docutils literal notranslate"><span class="pre">inclusive=(True,</span> <span class="pre">True)</span></code> means that the number of elements “masked” on each side should be rounded. In our case, <code class="docutils literal notranslate"><span class="pre">p*len(x)</span> <span class="pre">=</span> <span class="pre">1.9</span></code>, so we would round to 2 on each side for a total of four.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;round_nearest&#39;</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">low</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">high</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.int64(4)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mxp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mxp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MArray(array(0.62423841), array(False))
+</pre></div>
+</div>
+</div>
+</div>
+<p>What happened? Apparently the documentation has been wrong since the function was added in 2008. If we trim <em>less</em> data, we get the answer we expect.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;round_outward&#39;</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">low</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">high</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.int64(2)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mxp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mxp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MArray(array(0.6172768), array(False))
+</pre></div>
+</div>
+</div>
+</div>
+<p>What about <code class="docutils literal notranslate"><span class="pre">inclusive=(False,</span> <span class="pre">False)</span></code>? According to the documentation, the number of elements “masked” should be truncated. In our case, <code class="docutils literal notranslate"><span class="pre">p*len(x)</span> <span class="pre">=</span> <span class="pre">1.9</span></code>, so we would truncate to 1 on each side for a total of two. This should give us the same result as the <code class="docutils literal notranslate"><span class="pre">round_outward</span></code> calculation just above.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trimmed_mean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.6242384075150735)
+</pre></div>
+</div>
+</div>
+</div>
+<p>But instead, it gives us the same result as the <code class="docutils literal notranslate"><span class="pre">round_nearest</span></code> (or a <code class="docutils literal notranslate"><span class="pre">round_inward</span></code>) calculation. Apparently, the documentation is backwards.</p>
+<p>As it turns out, <a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trimmed_mean.html#scipy.stats.mstats.trimmed_mean" title="scipy.stats.mstats.trimmed_mean"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trimmed_mean</span></code></a> is a convenience function equivalent to:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trim</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">limits</span><span class="o">=</span><span class="n">limits</span><span class="p">,</span> <span class="n">inclusive</span><span class="o">=</span><span class="n">inclusive</span><span class="p">,</span> <span class="n">relative</span><span class="o">=</span><span class="n">relative</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>So the behavior is best understood in terms of <a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trim.html#scipy.stats.mstats.trim" title="scipy.stats.mstats.trim"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.mstats.trim</span></code></a>.</p>
+</section>
+<section id="stats-mstats-trim">
+<h3><a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trim.html#scipy.stats.mstats.trim" title="scipy.stats.mstats.trim"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trim</span></code></a><a class="headerlink" href="#stats-mstats-trim" title="Link to this heading">#</a></h3>
+<p>The entire implementation of <a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trim.html#scipy.stats.mstats.trim" title="scipy.stats.mstats.trim"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trim</span></code></a> is:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">relative</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">trimr</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">limits</span><span class="o">=</span><span class="n">limits</span><span class="p">,</span> <span class="n">inclusive</span><span class="o">=</span><span class="n">inclusive</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">trima</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">limits</span><span class="o">=</span><span class="n">limits</span><span class="p">,</span> <span class="n">inclusive</span><span class="o">=</span><span class="n">inclusive</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>So it is also a convenience function that simply wraps the functions <a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trimr.html#scipy.stats.mstats.trimr" title="scipy.stats.mstats.trimr"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trimr</span></code></a> and <a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trima.html#scipy.stats.mstats.trima" title="scipy.stats.mstats.trima"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trima</span></code></a>.</p>
+</section>
+<section id="stats-mstats-trima">
+<h3><a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trima.html#scipy.stats.mstats.trima" title="scipy.stats.mstats.trima"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trima</span></code></a><a class="headerlink" href="#stats-mstats-trima" title="Link to this heading">#</a></h3>
+<p><a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trima.html#scipy.stats.mstats.trima" title="scipy.stats.mstats.trima"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trima</span></code></a> is itself a convenience function that simply masks values outside of a given interval.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">18</span><span class="p">)</span>
+<span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trima</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">),</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>masked_array(data=[--, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, --],
+             mask=[ True, False, False, False, False, False, False, False, False, False, False, False, False, False,
+                   False, False, False, False, False,  True],
+       fill_value=999999)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The definition of <code class="docutils literal notranslate"><span class="pre">inclusive</span></code> is ambiguous at best:</p>
+<blockquote>
+<div><p>Tuple of (lower flag, upper flag), indicating whether values exactly equal to the lower (upper) limit are allowed.</p>
+</div></blockquote>
+<p>What does <em>allowed</em> mean? Are values equal to the limits included in the data that is <em>trimmed</em> or <em>retained</em>? Apparently, since only one point has been masked on each side, it refers to elements being <em>retained</em>.</p>
+<p>Generating and applying the mask manually is much more explicit. It also tends to be more concise.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mxp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">low</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">high</span><span class="p">))</span>  <span class="c1"># mask values *strictly* less than 1; also mask values *strictly* greater than 18</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MArray(
+    array([ _,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18,  _]),
+    array([ True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False,
+           False, False, False,  True])
+)
+</pre></div>
+</div>
+</div>
+</div>
+<p>To reproduce the results we’d get with <code class="docutils literal notranslate"><span class="pre">inclusive=(False,</span> <span class="pre">False)</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trima</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">18</span><span class="p">),</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>masked_array(data=[--, --, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, --, --],
+             mask=[ True,  True, False, False, False, False, False, False, False, False, False, False, False, False,
+                   False, False, False, False,  True,  True],
+       fill_value=999999)
+</pre></div>
+</div>
+</div>
+</div>
+<p>we simply adjust the inequalities.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mxp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">low</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="n">high</span><span class="p">))</span>  <span class="c1"># mask values 1 or less; also mask values 18 or greater</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MArray(
+    array([ _,  _,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17,  _,  _]),
+    array([ True,  True, False, False, False, False, False, False, False, False, False, False, False, False, False, False,
+           False, False,  True,  True])
+)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="stats-mstats-trimr">
+<h3><a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trimr.html#scipy.stats.mstats.trimr" title="scipy.stats.mstats.trimr"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trimr</span></code></a><a class="headerlink" href="#stats-mstats-trimr" title="Link to this heading">#</a></h3>
+<p><a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trimr.html#scipy.stats.mstats.trimr" title="scipy.stats.mstats.trimr"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trimr</span></code></a> is also a convenience function that trims a specified proportion of the <em>total</em> number of elements from each tail. <code class="docutils literal notranslate"><span class="pre">inclusive</span></code> has no effect when the product of the proportion and the total number of elements is integral.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trimr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>masked_array(data=[--, --, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, --, --],
+             mask=[ True,  True, False, False, False, False, False, False, False, False, False, False, False, False,
+                   False, False, False, False,  True,  True],
+       fill_value=999999)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trimr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>masked_array(data=[--, --, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, --, --],
+             mask=[ True,  True, False, False, False, False, False, False, False, False, False, False, False, False,
+                   False, False, False, False,  True,  True],
+       fill_value=999999)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The documentation for <code class="docutils literal notranslate"><span class="pre">inclusive</span></code> states that it is a:</p>
+<blockquote>
+<div><p>Tuple of flags indicating whether the number of data being masked on the left (right) end should be truncated (True) or rounded (False) to integers.</p>
+</div></blockquote>
+<p>Suppose we have <span class="math notranslate nohighlight">\(n=19\)</span> and the proportion to mask is <span class="math notranslate nohighlight">\(p = 0.1\)</span>. In that case, <span class="math notranslate nohighlight">\(pn = 1.9\)</span>. With <code class="docutils literal notranslate"><span class="pre">inclusive=(False,</span> <span class="pre">False)</span></code>, we round the number of elements to be masked to <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mf">19.</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trimr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>masked_array(data=[--, --, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, --, --],
+             mask=[ True,  True, False, False, False, False, False, False, False, False, False, False, False, False,
+                   False, False, False,  True,  True],
+       fill_value=1e+20)
+</pre></div>
+</div>
+</div>
+</div>
+<p>This is equivalent to:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;round_nearest&#39;</span><span class="p">)</span>
+<span class="n">mxp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">low</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">high</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MArray(
+    array([  _,   _,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13., 14., 15., 16.,   _,   _]),
+    array([ True,  True, False, False, False, False, False, False, False, False, False, False, False, False, False, False,
+           False,  True,  True])
+)
+</pre></div>
+</div>
+</div>
+</div>
+<p>With <code class="docutils literal notranslate"><span class="pre">inclusive=(True,</span> <span class="pre">True)</span></code>, the number of elements to be masked is truncated to <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trimr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>masked_array(data=[--, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, --],
+             mask=[ True, False, False, False, False, False, False, False, False, False, False, False, False, False,
+                   False, False, False, False,  True],
+       fill_value=1e+20)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;round_outward&#39;</span><span class="p">)</span>
+<span class="n">mxp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">low</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">high</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MArray(
+    array([  _,  1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13., 14., 15., 16., 17.,   _]),
+    array([ True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False,
+           False, False,  True])
+)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="stats-mstats-trimboth-stats-trimboth-stats-mstats-trimtail-and-stats-trim1">
+<h3><a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trimboth.html#scipy.stats.mstats.trimboth" title="scipy.stats.mstats.trimboth"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trimboth</span></code></a>, <a class="reference internal" href="../../reference/generated/scipy.stats.trimboth.html#scipy.stats.trimboth" title="scipy.stats.trimboth"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.trimboth</span></code></a>,  <a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trimtail.html#scipy.stats.mstats.trimtail" title="scipy.stats.mstats.trimtail"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trimtail</span></code></a>, and <a class="reference internal" href="../../reference/generated/scipy.stats.trim1.html#scipy.stats.trim1" title="scipy.stats.trim1"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.trim1</span></code></a>.<a class="headerlink" href="#stats-mstats-trimboth-stats-trimboth-stats-mstats-trimtail-and-stats-trim1" title="Link to this heading">#</a></h3>
+<p>For your convenience, <a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trimboth.html#scipy.stats.mstats.trimboth" title="scipy.stats.mstats.trimboth"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trimboth</span></code></a> passes <code class="docutils literal notranslate"><span class="pre">proportiontocut</span></code> to <a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trimr.html#scipy.stats.mstats.trimr" title="scipy.stats.mstats.trimr"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trimr</span></code></a> twice!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trimboth</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trimr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.True_
+</pre></div>
+</div>
+</div>
+</div>
+<p><a class="reference internal" href="../../reference/generated/scipy.stats.trimboth.html#scipy.stats.trimboth" title="scipy.stats.trimboth"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.trimboth</span></code></a> does the same job, but it removes (rather than masking) the trimmed data, and shuffles the elements.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trimboth</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">trimboth</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">compressed</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.True_
+</pre></div>
+</div>
+</div>
+</div>
+<p><a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trimtail.html#scipy.stats.mstats.trimtail" title="scipy.stats.mstats.trimtail"><code class="xref py py-func docutils literal notranslate"><span class="pre">trimtail</span></code></a> performs the arduous task of passing <code class="docutils literal notranslate"><span class="pre">proportiontocut</span></code> and <code class="docutils literal notranslate"><span class="pre">None</span></code> as a tuple.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trimtail</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">tail</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trimr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="kc">None</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.True_
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trimtail</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">tail</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trimr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">p</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.True_
+</pre></div>
+</div>
+</div>
+</div>
+<p><a class="reference internal" href="../../reference/generated/scipy.stats.trim1.html#scipy.stats.trim1" title="scipy.stats.trim1"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.trim1</span></code></a> is to <a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trimtail.html#scipy.stats.mstats.trimtail" title="scipy.stats.mstats.trimtail"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trimtail</span></code></a> as <a class="reference internal" href="../../reference/generated/scipy.stats.trimboth.html#scipy.stats.trimboth" title="scipy.stats.trimboth"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.trimboth</span></code></a> is to <a class="reference internal" href="../../reference/generated/scipy.stats.mstats.trimboth.html#scipy.stats.mstats.trimboth" title="scipy.stats.mstats.trimboth"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trimboth</span></code></a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">trimtail</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">tail</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">trim1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">tail</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">compressed</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.True_
+</pre></div>
+</div>
+</div>
+</div>
+<p>Replicating these results using <code class="docutils literal notranslate"><span class="pre">quantile</span></code> and <code class="docutils literal notranslate"><span class="pre">MArray</span></code> is left as an exercise for the reader.</p>
+</section>
+<section id="stats-mstats-winsorize">
+<h3><a class="reference internal" href="../../reference/generated/scipy.stats.mstats.winsorize.html#scipy.stats.mstats.winsorize" title="scipy.stats.mstats.winsorize"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.winsorize</span></code></a><a class="headerlink" href="#stats-mstats-winsorize" title="Link to this heading">#</a></h3>
+<p>In almost all cases, <a class="reference internal" href="../../reference/generated/scipy.stats.mstats.winsorize.html#scipy.stats.mstats.winsorize" title="scipy.stats.mstats.winsorize"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.winsorize</span></code></a> is equivalent to:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">winsorize</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">limits</span><span class="p">,</span> <span class="n">inclusive</span><span class="p">,</span> <span class="n">nan_policy</span><span class="o">=</span><span class="s1">&#39;propagate&#39;</span><span class="p">):</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;round_outward&#39;</span> <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">inclusive</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;round_nearest&#39;</span>
+    <span class="n">low_high</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="n">limits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="o">-</span><span class="n">limits</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">nan_policy</span><span class="o">=</span><span class="n">nan_policy</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">low_high</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="n">low_high</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">:])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">winsorize</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span><span class="o">.</span><span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 2.,  2.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13., 14., 15., 16., 16., 16.])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">winsorize</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 2.,  2.,  2.,  3.,  4.,  5.,  6.,  7.,  8.,  9., 10., 11., 12., 13., 14., 15., 16., 16., 16.])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Minor generalizations would be needed to support <code class="docutils literal notranslate"><span class="pre">axis</span></code> other than <code class="docutils literal notranslate"><span class="pre">-1</span></code>, different left and right values of <code class="docutils literal notranslate"><span class="pre">inclusive</span></code>, and the <code class="docutils literal notranslate"><span class="pre">inplace</span></code> argument.</p>
+<p>Results may be different when NaNs are present and <code class="docutils literal notranslate"><span class="pre">nan_policy='omit'</span></code>. This is because <a class="reference internal" href="../../reference/generated/scipy.stats.mstats.winsorize.html#scipy.stats.mstats.winsorize" title="scipy.stats.mstats.winsorize"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.winsorize</span></code></a> is incorrect. If we have two NaNs to be omitted, we would have 17 elements left, so <span class="math notranslate nohighlight">\(np = 1.7\)</span>, and <code class="docutils literal notranslate"><span class="pre">inclusive=(False,</span> <span class="pre">False)</span></code> would round this number up to 2. This means that two of the values <em>on each side</em> would be replaced with the next more central element.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">[</span><span class="mi">9</span><span class="p">:</span><span class="mi">11</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="n">stats</span><span class="o">.</span><span class="n">mstats</span><span class="o">.</span><span class="n">winsorize</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span> <span class="n">nan_policy</span><span class="o">=</span><span class="s1">&#39;omit&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 2.,  2.,  2.,  3.,  4.,  5.,  6.,  7.,  8., nan, nan, 11., 12., 13., 14., 15., 16., 17., 18.])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Clearly, no elements in the right tail have been replaced. Our simple implementation fixes the problem.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">winsorize</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span> <span class="n">nan_policy</span><span class="o">=</span><span class="s1">&#39;omit&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 2.,  2.,  2.,  3.,  4.,  5.,  6.,  7.,  8., nan, nan, 11., 12., 13., 14., 15., 16., 16., 16.])
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="quasi_monte_carlo.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Quasi-Monte Carlo</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="analysing_one_sample.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Analysing one sample</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#motivation">Motivation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#identifying-the-threshold">Identifying the threshold</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#missing-data">Missing data</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trimming-and-winsorizing">Trimming and winsorizing</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#winsorizing-is-cliping">Winsorizing is <code class="docutils literal notranslate"><span class="pre">clip</span></code>ing</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trimming">Trimming</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#computing-the-statistic">Computing the statistic</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recipes">Recipes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stats-trim-mean"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.trim_mean</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stats-tmean"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.tmean</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stats-mstats-trimmed-mean"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trimmed_mean</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stats-mstats-trim"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trim</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stats-mstats-trima"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trima</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stats-mstats-trimr"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trimr</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stats-mstats-trimboth-stats-trimboth-stats-mstats-trimtail-and-stats-trim1"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trimboth</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">stats.trimboth</span></code>,  <code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.trimtail</span></code>, and <code class="xref py py-func docutils literal notranslate"><span class="pre">stats.trim1</span></code>.</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stats-mstats-winsorize"><code class="xref py py-func docutils literal notranslate"><span class="pre">stats.mstats.winsorize</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

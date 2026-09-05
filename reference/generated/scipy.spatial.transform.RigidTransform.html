@@ -1,0 +1,1055 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>RigidTransform &#8212; SciPy v2.0.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=8ee2c72c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=242cf5df" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=d74cf641"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=96e329c5"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.spatial.transform.RigidTransform';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script defer="defer" src="../../_static/custom-icons.js?v=6cff5f5c"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="__len__" href="scipy.spatial.transform.RigidTransform.__len__.html" />
+    <link rel="prev" title="Spatial Transformations (scipy.spatial.transform)" href="../spatial.transform.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="2.0.0.dev" />
+    <meta name="docbuild:last-update" content="Sep 05, 2026"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discuss.scientific-python.org/c/contributor/scipy/" title="Scientific Python Forum" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-SciPy_Forum fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Scientific Python Forum</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discuss.scientific-python.org/c/contributor/scipy/" title="Scientific Python Forum" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-SciPy_Forum fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Scientific Python Forum</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="scipy.LowLevelCallable.html">LowLevelCallable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scipy.show_config.html">show_config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scipy.test.html">scipy.test</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">API Reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../spatial.html" class="nav-link">Spatial algorithms and data structures (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.spatial</span></code>)</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../spatial.transform.html" class="nav-link">Spatial Transformations (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.spatial.transform</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">RigidTransform</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.spatial.transform.</div>
+<div class="empty"></div><section id="rigidtransform">
+<h1>RigidTransform<a class="headerlink" href="#rigidtransform" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="scipy.spatial.transform.RigidTransform">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scipy.spatial.transform.</span></span><span class="sig-name descname"><span class="pre">RigidTransform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scipy/scipy/blob/main/scipy/spatial/transform/_rigid_transform.py#L65-L1973"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scipy.spatial.transform.RigidTransform" title="Link to this definition">#</a></dt>
+<dd><p>Rigid transform in 3 dimensions.</p>
+<p>This class provides an interface to initialize from and represent rigid
+transforms (rotation and translation) in 3D space. In different fields,
+this type of transform may be referred to as “<em>pose</em>” (especially in
+robotics), “<em>extrinsic parameters</em>”, or the “<em>model matrix</em>” (especially in
+computer graphics), but the core concept is the same: a rotation and
+translation describing the orientation of one 3D coordinate frame relative
+to another. Mathematically, these transforms belong to the Special
+Euclidean group SE(3), which encodes rotation (SO(3)) plus translation.</p>
+<p>The following operations on rigid transforms are supported:</p>
+<ul class="simple">
+<li><p>Application on vectors</p></li>
+<li><p>Transformation composition</p></li>
+<li><p>Transformation inversion</p></li>
+<li><p>Transformation indexing</p></li>
+</ul>
+<p>Note that coordinate systems must be right-handed. Because of this, this
+class more precisely represents <em>proper</em> rigid transformations in SE(3)
+rather than rigid transforms in E(3) more generally <a class="reference internal" href="#r7b5effdab711-1" id="id1">[1]</a>.</p>
+<p>Indexing within a transform is supported since multiple transforms can be
+stored within a single <a class="reference internal" href="#scipy.spatial.transform.RigidTransform" title="scipy.spatial.transform.RigidTransform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RigidTransform</span></code></a> instance.</p>
+<p>Multiple transforms can be stored in a single <a class="reference internal" href="#scipy.spatial.transform.RigidTransform" title="scipy.spatial.transform.RigidTransform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RigidTransform</span></code></a> object, which can be
+initialized using N-dimensional arrays and supports broadcasting for all
+operations.</p>
+<p>To create <a class="reference internal" href="#scipy.spatial.transform.RigidTransform" title="scipy.spatial.transform.RigidTransform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RigidTransform</span></code></a> objects use <code class="docutils literal notranslate"><span class="pre">from_...</span></code> methods (see examples
+below). <code class="docutils literal notranslate"><span class="pre">RigidTransform(...)</span></code> is not supposed to be instantiated directly.</p>
+<p>For rigorous introductions to rigid transforms, see <a class="reference internal" href="#r7b5effdab711-2" id="id2">[2]</a>, <a class="reference internal" href="#r7b5effdab711-3" id="id3">[3]</a>, and <a class="reference internal" href="#r7b5effdab711-4" id="id4">[4]</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>matrix</strong><span class="classifier">array_like, shape (…, 4, 4)</span></dt><dd><p>A single transformation matrix or a stack of transformation
+matrices.</p>
+</dd>
+<dt><strong>normalize</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, orthonormalize the rotation matrix using singular value
+decomposition. If False, the rotation matrix is not checked for
+orthogonality or right-handedness.</p>
+</dd>
+<dt><strong>copy</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, copy the input matrix. If False, a reference to the input
+matrix is used. If normalize is True, the input matrix is always
+copied regardless of the value of copy.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference internal" href="scipy.spatial.transform.RigidTransform.single.html#scipy.spatial.transform.RigidTransform.single" title="scipy.spatial.transform.RigidTransform.single"><code class="xref py py-obj docutils literal notranslate"><span class="pre">single</span></code></a></dt><dd><p>Whether this instance represents a single transform.</p>
+</dd>
+<dt><a class="reference internal" href="scipy.spatial.transform.RigidTransform.rotation.html#scipy.spatial.transform.RigidTransform.rotation" title="scipy.spatial.transform.RigidTransform.rotation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotation</span></code></a></dt><dd><p>Return the rotation component of the transform.</p>
+</dd>
+<dt><a class="reference internal" href="scipy.spatial.transform.RigidTransform.translation.html#scipy.spatial.transform.RigidTransform.translation" title="scipy.spatial.transform.RigidTransform.translation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">translation</span></code></a></dt><dd><p>Return the translation component of the transform.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.__len__.html#scipy.spatial.transform.RigidTransform.__len__" title="scipy.spatial.transform.RigidTransform.__len__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__len__</span></code></a>()</p></td>
+<td><p>Return the length of the leading transform dimension.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.__getitem__.html#scipy.spatial.transform.RigidTransform.__getitem__" title="scipy.spatial.transform.RigidTransform.__getitem__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getitem__</span></code></a>(indexer)</p></td>
+<td><p>Extract transform(s) at given index(es) from this object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.__mul__.html#scipy.spatial.transform.RigidTransform.__mul__" title="scipy.spatial.transform.RigidTransform.__mul__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__mul__</span></code></a>(other)</p></td>
+<td><p>Compose this transform with the other.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.__pow__.html#scipy.spatial.transform.RigidTransform.__pow__" title="scipy.spatial.transform.RigidTransform.__pow__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__pow__</span></code></a>(n)</p></td>
+<td><p>Compose this transform with itself <em class="xref py py-obj">n</em> times.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.from_matrix.html#scipy.spatial.transform.RigidTransform.from_matrix" title="scipy.spatial.transform.RigidTransform.from_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_matrix</span></code></a>(matrix)</p></td>
+<td><p>Initialize from a 4x4 transformation matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.from_rotation.html#scipy.spatial.transform.RigidTransform.from_rotation" title="scipy.spatial.transform.RigidTransform.from_rotation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_rotation</span></code></a>(rotation)</p></td>
+<td><p>Initialize from a rotation, without a translation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.from_translation.html#scipy.spatial.transform.RigidTransform.from_translation" title="scipy.spatial.transform.RigidTransform.from_translation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_translation</span></code></a>(translation)</p></td>
+<td><p>Initialize from a translation numpy array, without a rotation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.from_components.html#scipy.spatial.transform.RigidTransform.from_components" title="scipy.spatial.transform.RigidTransform.from_components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_components</span></code></a>(translation, rotation)</p></td>
+<td><p>Initialize a rigid transform from translation and rotation components.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.from_exp_coords.html#scipy.spatial.transform.RigidTransform.from_exp_coords" title="scipy.spatial.transform.RigidTransform.from_exp_coords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_exp_coords</span></code></a>(exp_coords)</p></td>
+<td><p>Initialize from exponential coordinates of transform.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.from_dual_quat.html#scipy.spatial.transform.RigidTransform.from_dual_quat" title="scipy.spatial.transform.RigidTransform.from_dual_quat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_dual_quat</span></code></a>(dual_quat, *[, scalar_first])</p></td>
+<td><p>Initialize from a unit dual quaternion.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.as_matrix.html#scipy.spatial.transform.RigidTransform.as_matrix" title="scipy.spatial.transform.RigidTransform.as_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">as_matrix</span></code></a>()</p></td>
+<td><p>Return a copy of the matrix representation of the transform.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.as_components.html#scipy.spatial.transform.RigidTransform.as_components" title="scipy.spatial.transform.RigidTransform.as_components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">as_components</span></code></a>()</p></td>
+<td><p>Return the translation and rotation components of the transform, where the rotation is applied first, followed by the translation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.as_exp_coords.html#scipy.spatial.transform.RigidTransform.as_exp_coords" title="scipy.spatial.transform.RigidTransform.as_exp_coords"><code class="xref py py-obj docutils literal notranslate"><span class="pre">as_exp_coords</span></code></a>()</p></td>
+<td><p>Return the exponential coordinates of the transform.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.as_dual_quat.html#scipy.spatial.transform.RigidTransform.as_dual_quat" title="scipy.spatial.transform.RigidTransform.as_dual_quat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">as_dual_quat</span></code></a>(*[, scalar_first])</p></td>
+<td><p>Return the dual quaternion representation of the transform.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.concatenate.html#scipy.spatial.transform.RigidTransform.concatenate" title="scipy.spatial.transform.RigidTransform.concatenate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">concatenate</span></code></a>(transforms)</p></td>
+<td><p>Concatenate a sequence of <a class="reference internal" href="#scipy.spatial.transform.RigidTransform" title="scipy.spatial.transform.RigidTransform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RigidTransform</span></code></a> objects into a single object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.mean.html#scipy.spatial.transform.RigidTransform.mean" title="scipy.spatial.transform.RigidTransform.mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mean</span></code></a>([weights, axis])</p></td>
+<td><p>Get the mean of the transforms.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.apply.html#scipy.spatial.transform.RigidTransform.apply" title="scipy.spatial.transform.RigidTransform.apply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply</span></code></a>(vector[, inverse])</p></td>
+<td><p>Apply the transform to a vector.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.inv.html#scipy.spatial.transform.RigidTransform.inv" title="scipy.spatial.transform.RigidTransform.inv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inv</span></code></a>()</p></td>
+<td><p>Invert this transform.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="scipy.spatial.transform.RigidTransform.identity.html#scipy.spatial.transform.RigidTransform.identity" title="scipy.spatial.transform.RigidTransform.identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">identity</span></code></a>([num, shape])</p></td>
+<td><p>Initialize an identity transform.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Notes</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.16.0.</span></p>
+</div>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header sd-bg-primary sd-bg-text-primary">
+<span class="sd-summary-text">Array API Standard Support</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text"><a class="reference internal" href="#scipy.spatial.transform.RigidTransform" title="scipy.spatial.transform.RigidTransform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RigidTransform</span></code></a> has support for Python Array API Standard compatible
+backends in addition to NumPy. The following
+combinations of backend and device (or other capability) are supported.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p class="sd-card-text">Library</p></th>
+<th class="head"><p class="sd-card-text">CPU</p></th>
+<th class="head"><p class="sd-card-text">GPU</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p class="sd-card-text">NumPy</p></td>
+<td><p class="sd-card-text">✅</p></td>
+<td><p class="sd-card-text">n/a</p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">CuPy</p></td>
+<td><p class="sd-card-text">n/a</p></td>
+<td><p class="sd-card-text">✅</p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">PyTorch</p></td>
+<td><p class="sd-card-text">✅</p></td>
+<td><p class="sd-card-text">✅</p></td>
+</tr>
+<tr class="row-odd"><td><p class="sd-card-text">JAX</p></td>
+<td><p class="sd-card-text">✅</p></td>
+<td><p class="sd-card-text">✅</p></td>
+</tr>
+<tr class="row-even"><td><p class="sd-card-text">Dask</p></td>
+<td><p class="sd-card-text">⛔</p></td>
+<td><p class="sd-card-text">n/a</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="sd-card-text">The method <code class="docutils literal notranslate"><span class="pre">apply</span></code> is not supported with cupy&lt;14.*.</p>
+<p class="sd-card-text">See <a class="reference internal" href="../../dev/api-dev/array_api.html#dev-arrayapi"><span class="std std-ref">Support for the array API standard</span></a> for more information.</p>
+</div>
+</details><p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r7b5effdab711-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Rigid_transformation">https://en.wikipedia.org/wiki/Rigid_transformation</a></p>
+</div>
+<div class="citation" id="r7b5effdab711-2" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://motion.cs.illinois.edu/RoboticSystems/CoordinateTransformations.html">https://motion.cs.illinois.edu/RoboticSystems/CoordinateTransformations.html</a></p>
+</div>
+<div class="citation" id="r7b5effdab711-3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html">https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html</a></p>
+</div>
+<div class="citation" id="r7b5effdab711-4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
+<p>Kevin M. Lynch and Frank C. Park, “Modern Robotics: Mechanics,
+Planning, and Control” Chapter 3.3, 2017, Cambridge University Press.
+<a class="reference external" href="https://hades.mech.northwestern.edu/images/2/25/MR-v2.pdf#page=107.31">https://hades.mech.northwestern.edu/images/2/25/MR-v2.pdf#page=107.31</a></p>
+</div>
+<div class="citation" id="r7b5effdab711-5" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">5</a><span class="fn-bracket">]</span></span>
+<p>Paul Furgale, “Representing Robot Pose: The good, the bad, and the
+ugly”, June 9, 2014.
+<a class="reference external" href="https://rpg.ifi.uzh.ch/docs/teaching/2024/FurgaleTutorial.pdf">https://rpg.ifi.uzh.ch/docs/teaching/2024/FurgaleTutorial.pdf</a></p>
+</div>
+</div>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="0e467157-5a2f-47a5-b754-a36e92242ae9">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('0e467157-5a2f-47a5-b754-a36e92242ae9','447adbbd-4a39-4613-8852-96bf4a4a082b','2656d525-9672-4630-973f-e3871588a7f4','../../lite/tree/../notebooks/index.html?path=24f32f03_40d0_42cd_b5fb_415a1a355f37.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<p>A <a class="reference internal" href="#scipy.spatial.transform.RigidTransform" title="scipy.spatial.transform.RigidTransform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RigidTransform</span></code></a> instance can be initialized in any of the above formats
+and converted to any of the others. The underlying object is independent of
+the representation used for initialization.</p>
+<p><strong>Notation Conventions and Composition</strong></p>
+<p>The notation here largely follows the convention defined in <a class="reference internal" href="#r7b5effdab711-5" id="id10">[5]</a>. When we
+name transforms, we read the subscripts from right to left. So <code class="docutils literal notranslate"><span class="pre">tf_A_B</span></code>
+represents a transform A &lt;- B and can be interpreted as:</p>
+<ul class="simple">
+<li><p>the coordinates and orientation of B relative to A</p></li>
+<li><p>the transformation of points from B to A</p></li>
+<li><p>the pose of B described in A’s coordinate system</p></li>
+</ul>
+<div class="highlight-none highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tf_A_B</span>
+   <span class="o">^</span> <span class="o">^</span>
+   <span class="o">|</span> <span class="o">|</span>
+   <span class="o">|</span> <span class="o">---</span> <span class="kn">from</span><span class="w"> </span><span class="nn">B</span>
+   <span class="o">|</span>
+   <span class="o">-----</span> <span class="n">to</span> <span class="n">A</span>
+</pre></div>
+</div>
+<p>When composing transforms, the order is important. Transforms are not
+commutative, so in general <code class="docutils literal notranslate"><span class="pre">tf_A_B</span> <span class="pre">*</span> <span class="pre">tf_B_C</span></code> is not the same as
+<code class="docutils literal notranslate"><span class="pre">tf_B_C</span> <span class="pre">*</span> <span class="pre">tf_A_B</span></code>. Transforms are composed and applied to vectors
+right-to-left. So <code class="docutils literal notranslate"><span class="pre">(tf_A_B</span> <span class="pre">*</span> <span class="pre">tf_B_C).apply(p_C)</span></code> is the same as
+<code class="docutils literal notranslate"><span class="pre">tf_A_B.apply(tf_B_C.apply(p_C))</span></code>.</p>
+<p>When composed, transforms should be ordered such that the multiplication
+operator is surrounded by a single frame, so the frame “cancels out” and
+the outside frames are left. In the example below, B cancels out and the
+outside frames A and C are left. Or to put it another way, A &lt;- C is the
+same as A &lt;- B &lt;- C.</p>
+<div class="highlight-none highlight-default notranslate"><div class="highlight"><pre><span></span>              <span class="o">-----------</span> <span class="n">B</span> <span class="n">cancels</span> <span class="n">out</span>
+              <span class="o">|</span>      <span class="o">|</span>
+              <span class="n">v</span>      <span class="n">v</span>
+<span class="n">tf_A_C</span> <span class="o">=</span> <span class="n">tf_A_B</span> <span class="o">*</span> <span class="n">tf_B_C</span>
+            <span class="o">^</span>          <span class="o">^</span>
+            <span class="o">|</span>          <span class="o">|</span>
+            <span class="o">------------</span> <span class="n">to</span> <span class="n">A</span><span class="p">,</span> <span class="kn">from</span><span class="w"> </span><span class="nn">C</span> <span class="n">are</span> <span class="n">left</span>
+</pre></div>
+</div>
+<p>When we notate vectors, we write the subscript of the frame that the vector
+is defined in. So <code class="docutils literal notranslate"><span class="pre">p_B</span></code> means the point <code class="docutils literal notranslate"><span class="pre">p</span></code> defined in frame B. To
+transform this point from frame B to coordinates in frame A, we apply the
+transform <code class="docutils literal notranslate"><span class="pre">tf_A_B</span></code> to the vector, lining things up such that the notated
+B frames are next to each other and “cancel out”.</p>
+<div class="highlight-none highlight-default notranslate"><div class="highlight"><pre><span></span>           <span class="o">------------</span> <span class="n">B</span> <span class="n">cancels</span> <span class="n">out</span>
+           <span class="o">|</span>         <span class="o">|</span>
+           <span class="n">v</span>         <span class="n">v</span>
+<span class="n">p_A</span> <span class="o">=</span> <span class="n">tf_A_B</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">p_B</span><span class="p">)</span>
+         <span class="o">^</span>
+         <span class="o">|</span>
+         <span class="o">--------------</span> <span class="n">A</span> <span class="ow">is</span> <span class="n">left</span>
+</pre></div>
+</div>
+<p><strong>Visualization</strong></p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial.transform</span><span class="w"> </span><span class="kn">import</span> <span class="n">RigidTransform</span> <span class="k">as</span> <span class="n">Tf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial.transform</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rotation</span> <span class="k">as</span> <span class="n">R</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</pre></div>
+</div>
+<p>The following function can be used to plot transforms with Matplotlib
+by showing how they transform the standard x, y, z coordinate axes:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">colors</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;#FF6666&quot;</span><span class="p">,</span> <span class="s2">&quot;#005533&quot;</span><span class="p">,</span> <span class="s2">&quot;#1199EE&quot;</span><span class="p">)</span>  <span class="c1"># Colorblind-safe RGB</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">plot_transformed_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">tf</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">r</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">rotation</span>
+<span class="gp">... </span>    <span class="n">t</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">translation</span>
+<span class="gp">... </span>    <span class="n">loc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">t</span><span class="p">,</span> <span class="n">t</span><span class="p">])</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">((</span><span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">zaxis</span><span class="p">),</span>
+<span class="gp">... </span>                                      <span class="n">colors</span><span class="p">)):</span>
+<span class="gp">... </span>        <span class="n">axlabel</span> <span class="o">=</span> <span class="n">axis</span><span class="o">.</span><span class="n">axis_name</span>
+<span class="gp">... </span>        <span class="n">axis</span><span class="o">.</span><span class="n">set_label_text</span><span class="p">(</span><span class="n">axlabel</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">axis</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">axis</span><span class="o">.</span><span class="n">line</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">axis</span><span class="o">.</span><span class="n">set_tick_params</span><span class="p">(</span><span class="n">colors</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">line</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="gp">... </span>        <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">scale</span>
+<span class="gp">... </span>        <span class="n">line_rot</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">line_plot</span> <span class="o">=</span> <span class="n">line_rot</span> <span class="o">+</span> <span class="n">loc</span>
+<span class="gp">... </span>        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">line_plot</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">line_plot</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">line_plot</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">c</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">text_loc</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mf">1.2</span>
+<span class="gp">... </span>        <span class="n">text_loc_rot</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">text_loc</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">text_plot</span> <span class="o">=</span> <span class="n">text_loc_rot</span> <span class="o">+</span> <span class="n">t</span>
+<span class="gp">... </span>        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">*</span><span class="n">text_plot</span><span class="p">,</span> <span class="n">axlabel</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">*</span><span class="n">tf</span><span class="o">.</span><span class="n">translation</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="n">bbox</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;fc&quot;</span><span class="p">:</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span> <span class="s2">&quot;boxstyle&quot;</span><span class="p">:</span> <span class="s2">&quot;circle&quot;</span><span class="p">})</span>
+</pre></div>
+</div>
+<p><strong>Defining Frames</strong></p>
+<p>Let’s work through an example.</p>
+<p>First, define the “world frame” A, also called the “base frame”.
+All frames are the identity transform from their own perspective.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tf_A</span> <span class="o">=</span> <span class="n">Tf</span><span class="o">.</span><span class="n">identity</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We will visualize a new frame B in A’s coordinate system. So we need to
+define the transform that converts coordinates from frame B to frame A
+(A &lt;- B).</p>
+<p>Physically, let’s imagine constructing B from A by:</p>
+<ol class="arabic simple">
+<li><p>Rotating A by +90 degrees around its x-axis.</p></li>
+<li><p>Translating the rotated frame 2 units in A’s -x direction.</p></li>
+</ol>
+<p>From A’s perspective, B is at [-2, 0, 0] and rotated +90 degrees about the
+x-axis, which is exactly the transform A &lt;- B.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">t_A_B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r_A_B</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">from_euler</span><span class="p">(</span><span class="s1">&#39;xyz&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tf_A_B</span> <span class="o">=</span> <span class="n">Tf</span><span class="o">.</span><span class="n">from_components</span><span class="p">(</span><span class="n">t_A_B</span><span class="p">,</span> <span class="n">r_A_B</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Let’s plot these frames.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;projection&quot;</span><span class="p">:</span> <span class="s2">&quot;3d&quot;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plot_transformed_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">tf_A</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tfA&quot;</span><span class="p">)</span>     <span class="c1"># A plotted in A</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plot_transformed_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">tf_A_B</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tfAB&quot;</span><span class="p">)</span>  <span class="c1"># B plotted in A</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;A, B frames with respect to A&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-spatial-transform-RigidTransform-1_00_00.png" class="plot-directive" src="../../_images/scipy-spatial-transform-RigidTransform-1_00_00.png" />
+</figure>
+<p>Now let’s visualize a new frame C in B’s coordinate system.
+Let’s imagine constructing C from B by:</p>
+<ol class="arabic simple">
+<li><p>Translating B by 2 units in its +z direction.</p></li>
+<li><p>Rotating B by +30 degrees around its z-axis.</p></li>
+</ol>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">t_B_C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r_B_C</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">from_euler</span><span class="p">(</span><span class="s1">&#39;xyz&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tf_B_C</span> <span class="o">=</span> <span class="n">Tf</span><span class="o">.</span><span class="n">from_components</span><span class="p">(</span><span class="n">t_B_C</span><span class="p">,</span> <span class="n">r_B_C</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In order to plot these frames from a consistent perspective, we need to
+calculate the transform between A and C. Note that we do not make this
+transform directly, but instead compose intermediate transforms that let us
+get from C to A:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tf_A_C</span> <span class="o">=</span> <span class="n">tf_A_B</span> <span class="o">*</span> <span class="n">tf_B_C</span>  <span class="c1"># A &lt;- B &lt;- C</span>
+</pre></div>
+</div>
+<p>Now we can plot these three frames from A’s perspective.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;projection&quot;</span><span class="p">:</span> <span class="s2">&quot;3d&quot;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plot_transformed_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">tf_A</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tfA&quot;</span><span class="p">)</span>     <span class="c1"># A plotted in A</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plot_transformed_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">tf_A_B</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tfAB&quot;</span><span class="p">)</span>  <span class="c1"># B plotted in A</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plot_transformed_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">tf_A_C</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tfAC&quot;</span><span class="p">)</span>  <span class="c1"># C plotted in A</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;A, B, C frames with respect to A&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-spatial-transform-RigidTransform-1_01_00.png" class="plot-directive" src="../../_images/scipy-spatial-transform-RigidTransform-1_01_00.png" />
+</figure>
+<p><strong>Transforming Vectors</strong></p>
+<p>Let’s transform a vector from A, to B and C. To do this, we will first
+invert the transforms we already have from B and C, to A.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tf_B_A</span> <span class="o">=</span> <span class="n">tf_A_B</span><span class="o">.</span><span class="n">inv</span><span class="p">()</span>  <span class="c1"># B &lt;- A</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tf_C_A</span> <span class="o">=</span> <span class="n">tf_A_C</span><span class="o">.</span><span class="n">inv</span><span class="p">()</span>  <span class="c1"># C &lt;- A</span>
+</pre></div>
+</div>
+<p>Now we can define a point in A and use the above transforms to get its
+coordinates in B and C:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p1_A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># +1 in x_A direction</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p1_B</span> <span class="o">=</span> <span class="n">tf_B_A</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">p1_A</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p1_C</span> <span class="o">=</span> <span class="n">tf_C_A</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">p1_A</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p1_A</span><span class="p">)</span>  <span class="c1"># Original point 1 in A</span>
+<span class="go">[1 0 0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p1_B</span><span class="p">)</span>  <span class="c1"># Point 1 in B</span>
+<span class="go">[3. 0. 0.]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p1_C</span><span class="p">)</span>  <span class="c1"># Point 1 in C</span>
+<span class="go">[ 2.59807621 -1.5       -2.        ]</span>
+</pre></div>
+</div>
+<p>We can also do the reverse. We define a point in C and transform it to A:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p2_C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># +1 in y_C direction</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2_A</span> <span class="o">=</span> <span class="n">tf_A_C</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">p2_C</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p2_C</span><span class="p">)</span>  <span class="c1"># Original point 2 in C</span>
+<span class="go">[0 1 0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">p2_A</span><span class="p">)</span>  <span class="c1"># Point 2 in A</span>
+<span class="go">[-2.5       -2.         0.8660254]</span>
+</pre></div>
+</div>
+<p>Plot the frames with respect to A again, but also plot these two points:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;projection&quot;</span><span class="p">:</span> <span class="s2">&quot;3d&quot;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plot_transformed_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">tf_A</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tfA&quot;</span><span class="p">)</span>     <span class="c1"># A plotted in A</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plot_transformed_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">tf_A_B</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tfAB&quot;</span><span class="p">)</span>  <span class="c1"># B plotted in A</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plot_transformed_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">tf_A_C</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tfAC&quot;</span><span class="p">)</span>  <span class="c1"># C plotted in A</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">p1_A</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p1_A</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p1_A</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># +1 x_A</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">p2_A</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p2_A</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p2_A</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># +1 y_C</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;A, B, C frames and points with respect to A&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-spatial-transform-RigidTransform-1_02_00.png" class="plot-directive" src="../../_images/scipy-spatial-transform-RigidTransform-1_02_00.png" />
+</figure>
+<p><strong>Switching Base Frames</strong></p>
+<p>Up to this point, we have been visualizing frames from A’s perspective.
+Let’s use the transforms we defined to visualize the frames from C’s
+perspective.</p>
+<p>Now C is the “base frame” or “world frame”. All frames are the identity
+transform from their own perspective.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tf_C</span> <span class="o">=</span> <span class="n">Tf</span><span class="o">.</span><span class="n">identity</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We’ve already defined the transform C &lt;- A, and can obtain C &lt;- B by
+inverting the existing transform B &lt;- C.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tf_C_B</span> <span class="o">=</span> <span class="n">tf_B_C</span><span class="o">.</span><span class="n">inv</span><span class="p">()</span>  <span class="c1"># C &lt;- B</span>
+</pre></div>
+</div>
+<p>This lets us plot everything from C’s perspective:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;projection&quot;</span><span class="p">:</span> <span class="s2">&quot;3d&quot;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plot_transformed_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">tf_C</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tfC&quot;</span><span class="p">)</span>     <span class="c1"># C plotted in C</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plot_transformed_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">tf_C_B</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tfCB&quot;</span><span class="p">)</span>  <span class="c1"># B plotted in C</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plot_transformed_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">tf_C_A</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tfCA&quot;</span><span class="p">)</span>  <span class="c1"># A plotted in C</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">p1_C</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p1_C</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p1_C</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">p2_C</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p2_C</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p2_C</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;A, B, C frames and points with respect to C&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../../_images/scipy-spatial-transform-RigidTransform-1_03_00.png" class="plot-directive" src="../../_images/scipy-spatial-transform-RigidTransform-1_03_00.png" />
+</figure>
+</div>
+</div>
+<div id="2656d525-9672-4630-973f-e3871588a7f4" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('0e467157-5a2f-47a5-b754-a36e92242ae9','2656d525-9672-4630-973f-e3871588a7f4')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('0e467157-5a2f-47a5-b754-a36e92242ae9','2656d525-9672-4630-973f-e3871588a7f4')">Open In Tab</button></div><div id="447adbbd-4a39-4613-8852-96bf4a4a082b" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../spatial.transform.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Spatial Transformations (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.spatial.transform</span></code>)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.spatial.transform.RigidTransform.__len__.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">__len__</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.spatial.transform.RigidTransform"><code class="docutils literal notranslate"><span class="pre">RigidTransform</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

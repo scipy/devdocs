@@ -1,0 +1,804 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>shortest_path &#8212; SciPy v2.0.0.dev Manual</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=8ee2c72c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/scipy.css?v=242cf5df" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=d74cf641"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fe3c738c"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=96e329c5"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script data-domain="docs.scipy.org" defer="defer" src="https://views.scientific-python.org/js/script.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/generated/scipy.sparse.csgraph.shortest_path';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://scipy.github.io/devdocs/_static/version_switcher.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = 'development';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+    <script defer="defer" src="../../_static/custom-icons.js?v=6cff5f5c"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="dijkstra" href="scipy.sparse.csgraph.dijkstra.html" />
+    <link rel="prev" title="laplacian" href="scipy.sparse.csgraph.laplacian.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="2.0.0.dev" />
+    <meta name="docbuild:last-update" content="Sep 05, 2026"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/logo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">SciPy</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+      
+        <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discuss.scientific-python.org/c/contributor/scipy/" title="Scientific Python Forum" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-SciPy_Forum fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Scientific Python Forum</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://scipy.org/install/">
+    Installing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../tutorial/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../building/index.html">
+    Building from source
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../dev/index.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../release.html">
+    Release notes
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/scipy/scipy" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discuss.scientific-python.org/c/contributor/scipy/" title="Scientific Python Forum" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-custom fa-SciPy_Forum fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Scientific Python Forum</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links" aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav">
+    <p aria-level="2" class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../cluster.html">scipy.cluster</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constants.html">scipy.constants</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets.html">scipy.datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../differentiate.html">scipy.differentiate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fft.html">scipy.fft</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fftpack.html">scipy.fftpack</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../integrate.html">scipy.integrate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../interpolate.html">scipy.interpolate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../io.html">scipy.io</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../linalg.html">scipy.linalg</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ndimage.html">scipy.ndimage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../optimize.html">scipy.optimize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../signal.html">scipy.signal</a></li>
+<li class="toctree-l1 current active"><a class="reference internal" href="../sparse.html">scipy.sparse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spatial.html">scipy.spatial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../special.html">scipy.special</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../stats.html">scipy.stats</a></li>
+</ul>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="scipy.LowLevelCallable.html">LowLevelCallable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scipy.show_config.html">show_config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scipy.test.html">scipy.test</a></li>
+</ul>
+
+  </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">API Reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../sparse.html" class="nav-link">Sparse arrays (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.sparse</span></code>)</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../sparse.csgraph.html" class="nav-link">Compressed sparse graph routines (<code class="xref py py-mod docutils literal notranslate"><span class="pre">scipy.sparse.csgraph</span></code>)</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">shortest_path</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="prename">scipy.sparse.csgraph.</div>
+<div class="empty"></div><section id="shortest-path">
+<h1>shortest_path<a class="headerlink" href="#shortest-path" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="scipy.sparse.csgraph.shortest_path">
+<span class="sig-prename descclassname"><span class="pre">scipy.sparse.csgraph.</span></span><span class="sig-name descname"><span class="pre">shortest_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csgraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_predecessors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unweighted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#scipy.sparse.csgraph.shortest_path" title="Link to this definition">#</a></dt>
+<dd><p>Perform a shortest-path graph search on a positive directed or
+undirected graph.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 0.11.0.</span></p>
+</div>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>csgraph</strong><span class="classifier">array_like, or sparse array or matrix, 2 dimensions</span></dt><dd><p>The N x N array of distances representing the input graph.</p>
+</dd>
+<dt><strong>method</strong><span class="classifier">str [‘auto’|’FW’|’D’], optional</span></dt><dd><p>Algorithm to use for shortest paths.  Options are:</p>
+<dl class="simple">
+<dt>‘auto’ – (default) select the best among ‘FW’, ‘D’, ‘BF’, or ‘J’</dt><dd><p>based on the input data.</p>
+</dd>
+<dt>‘FW’   – Floyd-Warshall algorithm.</dt><dd><p>Computational cost is approximately <code class="docutils literal notranslate"><span class="pre">O[N^3]</span></code>.
+The input csgraph will be converted to a dense representation.</p>
+</dd>
+<dt>‘D’    – Dijkstra’s algorithm with priority queue.</dt><dd><p>Computational cost is approximately <code class="docutils literal notranslate"><span class="pre">O[I</span> <span class="pre">*</span> <span class="pre">(E</span> <span class="pre">+</span> <span class="pre">N)</span> <span class="pre">*</span> <span class="pre">log(N)]</span></code>,
+where <code class="docutils literal notranslate"><span class="pre">E</span></code> is the number of edges in the graph,
+and <code class="docutils literal notranslate"><span class="pre">I</span> <span class="pre">=</span> <span class="pre">len(indices)</span></code> if <code class="docutils literal notranslate"><span class="pre">indices</span></code> is passed. Otherwise,
+<code class="docutils literal notranslate"><span class="pre">I</span> <span class="pre">=</span> <span class="pre">N</span></code>.
+The input csgraph will be converted to a csr representation.</p>
+</dd>
+<dt>‘BF’   – Bellman-Ford algorithm.</dt><dd><p>This algorithm can be used when weights are negative.
+If a negative cycle is encountered, an error will be raised.
+Computational cost is approximately <code class="docutils literal notranslate"><span class="pre">O[N(N^2</span> <span class="pre">k)]</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">k</span></code> is the average number of connected edges per node.
+The input csgraph will be converted to a csr representation.</p>
+</dd>
+<dt>‘J’    – Johnson’s algorithm.</dt><dd><p>Like the Bellman-Ford algorithm, Johnson’s algorithm is
+designed for use when the weights are negative. It combines
+the Bellman-Ford algorithm with Dijkstra’s algorithm for
+faster computation.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>directed</strong><span class="classifier">bool, optional</span></dt><dd><p>If True (default), then find the shortest path on a directed graph:
+only move from point i to point j along paths csgraph[i, j].
+If False, then find the shortest path on an undirected graph: the
+algorithm can progress from point i to j along csgraph[i, j] or
+csgraph[j, i]</p>
+</dd>
+<dt><strong>return_predecessors</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, return the size (N, N) predecessor matrix.</p>
+</dd>
+<dt><strong>unweighted</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, then find unweighted distances.  That is, rather than finding
+the path between each point such that the sum of weights is minimized,
+find the path such that the number of edges is minimized.</p>
+</dd>
+<dt><strong>overwrite</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, overwrite csgraph with the result.  This applies only if
+method == ‘FW’ and csgraph is a dense, c-ordered array with
+dtype=float64.</p>
+</dd>
+<dt><strong>indices</strong><span class="classifier">array_like or int, optional</span></dt><dd><p>If specified, only compute the paths from the points at the given
+indices. Incompatible with method == ‘FW’.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>dist_matrix</strong><span class="classifier">ndarray</span></dt><dd><p>The N x N matrix of distances between graph nodes. dist_matrix[i,j]
+gives the shortest distance from point i to point j along the graph.</p>
+</dd>
+<dt><strong>predecessors</strong><span class="classifier">ndarray, shape (n_indices, n_nodes,)</span></dt><dd><p>Returned only if return_predecessors == True.
+If <em class="xref py py-obj">indices</em> is None then <code class="docutils literal notranslate"><span class="pre">n_indices</span> <span class="pre">=</span> <span class="pre">n_nodes</span></code> and the shape of
+the matrix becomes <code class="docutils literal notranslate"><span class="pre">(n_nodes,</span> <span class="pre">n_nodes)</span></code>.
+The matrix of predecessors, which can be used to reconstruct
+the shortest paths.  Row i of the predecessor matrix contains
+information on the shortest paths from point i: each entry
+predecessors[i, j] gives the index of the previous node in the
+path from point i to point j.  If no path exists between point
+i and j, then predecessors[i, j] = -9999</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>NegativeCycleError:</dt><dd><p>if there are negative cycles in the graph</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="../../tutorial/csgraph.html#word-ladders-example"><span class="std std-ref">Example: Word Ladders</span></a></dt><dd><p>An illustratation of the <code class="docutils literal notranslate"><span class="pre">shortest_path</span></code> API with a meaningful example. It also reconstructs the shortest path by using predecessors matrix returned by this function.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>As currently implemented, Dijkstra’s algorithm and Johnson’s algorithm
+do not work for graphs with direction-dependent distances when
+directed == False.  i.e., if csgraph[i,j] and csgraph[j,i] are non-equal
+edges, method=’D’ may yield an incorrect result.</p>
+<p>If multiple valid solutions are possible, output may vary with SciPy and
+Python version.</p>
+<p class="rubric">Examples</p>
+<div class="try_examples_outer_container docutils container" id="0e4367ba-e5d8-4fba-a407-eb47d96b24c7">
+<div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesShowIframe('0e4367ba-e5d8-4fba-a407-eb47d96b24c7','cae5de04-e27c-4f5f-b8cf-55fdc4b4bd94','78e111a5-2882-4ba8-9ecd-63a82021a86a','../../lite/tree/../notebooks/index.html?path=9e78c936_3d1b_4e71_953b_f2a526d9e991.ipynb','None')">Try it in your browser!</button></div><div class="try_examples_content docutils container">
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">csr_array</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse.csgraph</span><span class="w"> </span><span class="kn">import</span> <span class="n">shortest_path</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">... </span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+<span class="gp">... </span><span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span> <span class="o">=</span> <span class="n">csr_array</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="go">&lt;Compressed Sparse Row sparse array of dtype &#39;int64&#39;</span>
+<span class="go">    with 6 stored elements and shape (4, 4)&gt;</span>
+<span class="go">    Coords  Values</span>
+<span class="go">    (0, 2)  7</span>
+<span class="go">    (1, 2)  8</span>
+<span class="go">    (1, 3)  5</span>
+<span class="go">    (2, 0)  7</span>
+<span class="go">    (2, 1)  8</span>
+<span class="go">    (3, 1)  5</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sources</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dist_matrix</span><span class="p">,</span> <span class="n">predecessors</span> <span class="o">=</span> <span class="n">shortest_path</span><span class="p">(</span><span class="n">csgraph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indices</span><span class="o">=</span><span class="n">sources</span><span class="p">,</span> <span class="n">return_predecessors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dist_matrix</span>
+<span class="go">array([[ 0., 15.,  7., 20.],</span>
+<span class="go">       [ 7.,  8.,  0., 13.]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">predecessors</span>
+<span class="go">array([[-9999,     2,     0,     1],</span>
+<span class="go">       [    2,     2, -9999,     1]], dtype=int32)</span>
+</pre></div>
+</div>
+<p>Reconstructing shortest paths from sources to all the nodes of the graph.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shortest_paths</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sources</span><span class="p">)):</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="n">curr_node</span> <span class="o">=</span> <span class="n">node</span> <span class="c1"># start from the destination node</span>
+<span class="gp">... </span>        <span class="n">path</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">... </span>        <span class="k">while</span> <span class="n">curr_node</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">9999</span><span class="p">:</span> <span class="c1"># no previous node available, exit the loop</span>
+<span class="gp">... </span>            <span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">curr_node</span><span class="p">]</span> <span class="o">+</span> <span class="n">path</span> <span class="c1"># prefix the previous node obtained from the last iteration</span>
+<span class="gp">... </span>            <span class="n">curr_node</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">predecessors</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="n">curr_node</span><span class="p">])</span> <span class="c1"># set current node to previous node</span>
+<span class="gp">... </span>        <span class="n">shortest_paths</span><span class="p">[(</span><span class="n">sources</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">node</span><span class="p">)]</span> <span class="o">=</span> <span class="n">path</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>Computing the length of the shortest path from node 0 to node 3
+of the graph. It can be observed that computed length and the
+<code class="docutils literal notranslate"><span class="pre">dist_matrix</span></code> value are exactly same.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shortest_paths</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+<span class="go">[0, 2, 1, 3]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path03</span> <span class="o">=</span> <span class="n">shortest_paths</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sum</span><span class="p">([</span><span class="n">graph</span><span class="p">[</span><span class="n">path03</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">path03</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">graph</span><span class="p">[</span><span class="n">path03</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">path03</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span> <span class="n">graph</span><span class="p">[</span><span class="n">path03</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">path03</span><span class="p">[</span><span class="mi">3</span><span class="p">]]])</span>
+<span class="go">np.int64(20)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dist_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
+<span class="go">np.float64(20.0)</span>
+</pre></div>
+</div>
+<p>Another example of computing shortest path length from node 2 to node 3.
+Here, <code class="docutils literal notranslate"><span class="pre">dist_matrix[1][3]</span></code> is used to get the length of the path returned by
+<code class="docutils literal notranslate"><span class="pre">shortest_path</span></code>. This is because node 2 is the second source, so the
+lengths of the path from it to other nodes in the graph will be at index 1
+in <code class="docutils literal notranslate"><span class="pre">dist_matrix</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shortest_paths</span><span class="p">[(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+<span class="go">[2, 1, 3]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">path23</span> <span class="o">=</span> <span class="n">shortest_paths</span><span class="p">[(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sum</span><span class="p">([</span><span class="n">graph</span><span class="p">[</span><span class="n">path23</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">path23</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">graph</span><span class="p">[</span><span class="n">path23</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">path23</span><span class="p">[</span><span class="mi">2</span><span class="p">]]])</span>
+<span class="go">np.int64(13)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dist_matrix</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
+<span class="go">np.float64(13.0)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div id="78e111a5-2882-4ba8-9ecd-63a82021a86a" class="try_examples_outer_iframe  hidden"><div class="try_examples_button_container"><button class="try_examples_button" onclick="window.tryExamplesHideIframe('0e4367ba-e5d8-4fba-a407-eb47d96b24c7','78e111a5-2882-4ba8-9ecd-63a82021a86a')">Go Back</button><button class="try_examples_button" onclick="window.openInNewTab('0e4367ba-e5d8-4fba-a407-eb47d96b24c7','78e111a5-2882-4ba8-9ecd-63a82021a86a')">Open In Tab</button></div><div id="cae5de04-e27c-4f5f-b8cf-55fdc4b4bd94" class="jupyterlite_sphinx_iframe_container"></div></div><script>document.addEventListener("DOMContentLoaded", function() {window.loadTryExamplesConfig("../../try_examples.json");});</script></dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="scipy.sparse.csgraph.laplacian.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">laplacian</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="scipy.sparse.csgraph.dijkstra.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">dijkstra</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scipy.sparse.csgraph.shortest_path"><code class="docutils literal notranslate"><span class="pre">shortest_path</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2008, The SciPy community.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
